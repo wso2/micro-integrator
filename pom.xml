@@ -716,9 +716,9 @@
                 <version>${saxon.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>xerces.wso2</groupId>
+                <groupId>org.wso2.orbit.xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
-                <version>${version.xercesImpl}</version>
+                <version>${xercesImpl.orbit.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
@@ -1040,11 +1040,6 @@
                 <groupId>org.apache.tomcat.wso2</groupId>
                 <artifactId>jdbc-pool</artifactId>
                 <version>${jdbc-pool.orbit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>xerces</groupId>
-                <artifactId>xercesImpl</artifactId>
-                <version>${xerces.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.json.wso2</groupId>
@@ -1602,12 +1597,11 @@
         <jdbc-pool.orbit.version>7.0.34.wso2v2</jdbc-pool.orbit.version>
         <jdbc-pool.orbit.imp.pkg.version>[1.7.0,2.0.0)</jdbc-pool.orbit.imp.pkg.version>
 
-        <xerces.version>2.11.0</xerces.version>
         <antlr4.runtime.version>4.5.1.wso2v1</antlr4.runtime.version>
 
         <atomikos.version>3.8.0.wso2v1</atomikos.version>
         <saxon.wso2.version>9.5.1-8</saxon.wso2.version>
-        <version.xercesImpl>2.8.1.wso2v2</version.xercesImpl>
+        <xercesImpl.orbit.version>2.12.0.wso2v1</xercesImpl.orbit.version>
         <commons-logging.version>1.2</commons-logging.version>
         <mockito.version>2.23.4</mockito.version>
         <wrapper.version>3.2.3</wrapper.version>
