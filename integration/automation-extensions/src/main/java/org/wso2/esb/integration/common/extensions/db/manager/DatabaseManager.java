@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.esb.integration.common.extensions.coordination;
+package org.wso2.esb.integration.common.extensions.db.manager;
 
 import com.moandjiezana.toml.Toml;
 import org.apache.commons.io.FileUtils;
@@ -37,9 +37,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class CoordinationDatabase extends ExecutionListenerExtension {
+/**
+ * Manages the MySQL , MSSQL , Postgres , DB2 and Oracle dbs for integration tests.
+ */
+public class DatabaseManager extends ExecutionListenerExtension {
 
-    private static final Log logger = LogFactory.getLog(CoordinationDatabase.class);
+    private static final Log logger = LogFactory.getLog(DatabaseManager.class);
 
     private String dbName;
     private String scriptPath;
@@ -48,8 +51,16 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     private static String userName;
     private String dbType;
     private String dataSource;
-    private String scriptbaseDir;
+    private String scriptBaseDir;
     private String scriptSuffix;
+    private String delimiter;
+
+    private static final String ALLOW_MULTIPLE_QUERIES = "allowMultiQueries=true";
+    private static final String MY_SQL = "mysql";
+    private static final String MS_SQL = "sqlserver";
+    private static final String POSTGRE_SQL = "postgresql";
+    private static final String DB2 = "db2";
+    private static final String ORACLE = "oracle";
 
     @Override
     public void initiate() throws AutomationFrameworkException {
@@ -60,36 +71,33 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     @Override
     public void onExecutionStart() throws AutomationFrameworkException {
 
-        if ("mysql".equals(dbType)) {
+        logger.info("Database type : " + dbType);
+        logger.info("Database name : " + dbName);
+
+        if (MY_SQL.equals(dbType)) {
             setUpMysql();
-        }
-        if ("sqlserver".equals(dbType)) {
+        } else if (MS_SQL.equals(dbType)) {
             setUpMssql();
-        }
-        if ("postgresql".equals(dbType)) {
+        } else if (POSTGRE_SQL.equals(dbType)) {
             setUpPostgres();
+        } else if (DB2.equals(dbType) || ORACLE.equals(dbType)) {
+            executeScript(scriptBaseDir + "/" + dbType + "/" + dbType + "_" + scriptSuffix);
+        } else {
+            logger.error("Not supported db type : " + dbType);
         }
-        if ("oracle".equals(dbType)) {
-            setUpOracle();
-        }
-        if ("db2".equals(dbType)) {
-            setUpDB2();
-        }
+
+        logger.info("Coordination database configured successfully.");
     }
 
-    private void setUpDB2() throws AutomationFrameworkException {
-        executeScript(scriptbaseDir + "/db2/db2_" + scriptSuffix);
-    }
-
-    private void setUpOracle() throws AutomationFrameworkException {
-
-        executeScript(scriptbaseDir + "/oracle/oracle_" + scriptSuffix);
-    }
-
+    /**
+     * Removes all tables from the database and creates them again.
+     *
+     * @throws AutomationFrameworkException Exception
+     */
     private void setUpPostgres() throws AutomationFrameworkException {
 
-        String dbUrl = connectionUrl.concat("?allowMultiQueries=true");
-        scriptPath = scriptbaseDir + "/postgres/postgresql_" + scriptSuffix;
+        String dbUrl = connectionUrl.concat("?" + ALLOW_MULTIPLE_QUERIES);
+        scriptPath = scriptBaseDir + "/postgres/postgresql_" + scriptSuffix;
         scriptPath = getSystemDependentPath(scriptPath);
         File file = new File(scriptPath);
         try {
@@ -101,26 +109,30 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
                     PreparedStatement preparedStatement = conn.prepareStatement(String.join("", schema))) {
                 preparedStatement.executeUpdate();
             }
-            logger.info("Coordination database configured successfully.");
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }
     }
 
+    /**
+     * Create the database with given name first and then source the db script in it. The db will be removed upon
+     * execution end.
+     *
+     * @throws AutomationFrameworkException Exception
+     */
     private void setUpMssql() throws AutomationFrameworkException {
 
-        scriptPath = scriptbaseDir + "/mssql/mssql_" + scriptSuffix;
         // create db
-        String dbUrl = connectionUrl.concat(";allowMultiQueries=true").replace(";databaseName=" + dbName, "");
+        String dbUrl = connectionUrl.concat(";" + ALLOW_MULTIPLE_QUERIES).replace(";databaseName=" + dbName, "");
         try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
                 PreparedStatement preparedStatement = conn.prepareStatement("CREATE DATABASE " + dbName + ";")) {
             preparedStatement.executeUpdate();
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }
-
         // create tables
-        dbUrl = connectionUrl.concat(";allowMultiQueries=true");
+        dbUrl = connectionUrl.concat(";" + ALLOW_MULTIPLE_QUERIES);
+        scriptPath = scriptBaseDir + "/mssql/mssql_" + scriptSuffix;
         scriptPath = getSystemDependentPath(scriptPath);
         File file = new File(scriptPath);
         try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
@@ -130,13 +142,17 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }
-
     }
 
+    /**
+     * Drop the data base if it exits and creates a new one and source db the script.
+     *
+     * @throws AutomationFrameworkException Exception
+     */
     private void setUpMysql() throws AutomationFrameworkException {
 
-        scriptPath = scriptbaseDir + "/mysql/mysql_" + scriptSuffix;
-        String dbUrl = connectionUrl.replace("/" + dbName, "").concat("&allowMultiQueries=true");
+        scriptPath = scriptBaseDir + "/mysql/mysql_" + scriptSuffix;
+        String dbUrl = connectionUrl.replace("/" + dbName, "").concat("&" + ALLOW_MULTIPLE_QUERIES);
         scriptPath = getSystemDependentPath(scriptPath);
         File file = new File(scriptPath);
         try {
@@ -149,7 +165,6 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
                     PreparedStatement preparedStatement = conn.prepareStatement(String.join("", schema))) {
                 preparedStatement.executeUpdate();
             }
-            logger.info("Coordination database configured successfully.");
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }
@@ -157,28 +172,34 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
 
     @Override
     public void onExecutionFinish() throws AutomationFrameworkException {
-        if ("sqlserver".equals(dbType)) {
+
+        // remove ms sql db upon suite execution end.
+        if (MS_SQL.equals(dbType)) {
             // drop db
-            String dbUrl = connectionUrl.concat(";allowMultiQueries=true").replace(";databaseName=" + dbName, "");
+            String dbUrl = connectionUrl.concat(";" + ALLOW_MULTIPLE_QUERIES).replace(";databaseName=" + dbName, "");
             try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
                     PreparedStatement preparedStatement = conn.prepareStatement("DROP DATABASE " + dbName + ";")) {
                 preparedStatement.executeUpdate();
             } catch (Exception ex) {
                 throw new AutomationFrameworkException(ex);
             }
-        }
-        if ("oracle".equals(dbType)) {
-            executeScript(scriptbaseDir + "/unset/oracle/oracle_" + scriptSuffix);
-        }
-        if ("db2".equals(dbType)) {
-            executeScript(scriptbaseDir + "/unset/db2/db2_" + scriptSuffix);
+        } else if (DB2.equals(dbType) || ORACLE.equals(dbType)) {
+            // remove all tables from db2 and oracle upon end. The scripts need to be in /unset dir.
+            executeScript(scriptBaseDir + "/unset/" + dbType + "/" + dbType + "_" + scriptSuffix);
         }
     }
 
+    /**
+     * Delimits the script with "script-delimiter" and executes all query in db.
+     *
+     * @param scriptFilePath path of script
+     * @throws AutomationFrameworkException Exception
+     */
     private void executeScript(String scriptFilePath) throws AutomationFrameworkException {
+
         File file = new File(getSystemDependentPath(scriptFilePath));
         try {
-            String[] queries = FileUtils.readFileToString(file, StandardCharsets.UTF_8).split(";");
+            String[] queries = FileUtils.readFileToString(file, StandardCharsets.UTF_8).split(delimiter);
             for (String query : queries) {
                 query = query.trim();
                 if (!query.isEmpty()) {
@@ -209,13 +230,16 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
                 parseToml(value);
                 break;
             case "script-basedir":
-                scriptbaseDir = value;
+                scriptBaseDir = value;
                 break;
             case "script-suffix":
                 scriptSuffix = value;
                 break;
             case "data-source":
                 dataSource = value;
+                break;
+            case "script-delimiter":
+                delimiter = value;
                 break;
             default:
                 logger.error("Unknown property : " + key);
@@ -240,17 +264,20 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             connectionUrl = parseToml.getString("datasource[0].url").replaceAll("amp;", "");
             userName = parseToml.getString("datasource[0].username");
             pwd = parseToml.getString("datasource[0].password");
+
             URI uri = URI.create(connectionUrl.substring(5));
             dbType = uri.getScheme();
             String path = uri.getPath();
+
             if (path != null) {
-                if (Stream.of("mysql", "db2", "postgresql").anyMatch(s -> s.equals(dbType))) {
+                if (Stream.of(MY_SQL, DB2, POSTGRE_SQL).anyMatch(s -> s.equals(dbType))) {
                     dbName = path.replace("/", "");
-                } else if ("sqlserver".equals(dbType)) {
+                } else if (MS_SQL.equals(dbType)) {
                     String[] splits = connectionUrl.split("databaseName=");
                     dbName = splits[1].substring(0, splits[1].indexOf(';'));
                 }
             }
+
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }
