@@ -856,6 +856,16 @@
                 <module>mediation-tests/tests-platform/tests-coordination</module>
             </modules>
         </profile>
+        <profile>
+            <id>db-tests</id>
+            <modules>
+                <module>samples/product</module>
+                <module>automation-extensions</module>
+                <module>tests-common</module>
+                <module>mediation-tests/tests-platform/tests-coordination</module>
+                <module>mediation-tests/tests-platform/tests-userstore</module>
+            </modules>
+        </profile>
     </profiles>
 
 </project>
