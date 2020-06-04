@@ -187,7 +187,7 @@
 <!--                                <bundleDef>org.slf4j:slf4j-log4j12:${slf4j.version}</bundleDef>-->
                                 <bundleDef>com.sun.xml.bind.wso2:jaxb:${version.jaxb}</bundleDef>
 <!--                                <bundleDef>com.jezhumble.wso2:javasysmon:${javasysmon.version}</bundleDef>-->
-                                <bundleDef>org.wso2.orbit.org.apache.tomcat:jdbc-pool:${jdbc-pool.version}</bundleDef>
+                                <bundleDef>org.wso2.orbit.org.apache.tomcat:jdbc-pool:${jdbc-pool.orbit.version}</bundleDef>
                                 <bundleDef>org.eclipse.jdt.core.compiler:ecj:${version.eclipse.ecj}</bundleDef>
                                 <bundleDef>com.google.code.gson:gson:${version.com.google.code.gson}</bundleDef>
 
