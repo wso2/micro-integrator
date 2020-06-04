@@ -522,11 +522,6 @@
                 <version>${cxf.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.org.eclipse.jetty</groupId>
-                <artifactId>jetty-bundle</artifactId>
-                <version>${jetty.wso2.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-common</artifactId>
                 <version>${netty.version}</version>
@@ -1416,7 +1411,6 @@
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
         <junit.version>4.8.2</junit.version>
         <cxf.wso2.version>3.0.9.wso2v1</cxf.wso2.version>
-        <jetty.wso2.version>8.1.17.v20150415.wso2v1</jetty.wso2.version>
         <netty.version>4.0.39.Final</netty.version>
         <jacoco.agent.version>0.8.2</jacoco.agent.version>
         <activemq.version>5.2.0</activemq.version>
