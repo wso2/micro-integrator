@@ -64,7 +64,7 @@ public class DatabaseManager extends ExecutionListenerExtension {
 
     @Override
     public void initiate() throws AutomationFrameworkException {
-        logger.info("Initializing coordination database.");
+        logger.info("Initializing database.");
         populateParameters();
     }
 
@@ -86,7 +86,7 @@ public class DatabaseManager extends ExecutionListenerExtension {
             logger.error("Not supported db type : " + dbType);
         }
 
-        logger.info("Coordination database configured successfully.");
+        logger.info("Database configured successfully.");
     }
 
     /**
