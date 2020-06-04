@@ -1489,7 +1489,7 @@
         <json.orbit.version>3.0.0.wso2v1</json.orbit.version>
         <json.orbit.imp.pkg.version>0.0.0</json.orbit.imp.pkg.version> <!-- This comes from carbon-multitenancy, tenant.common.server feature -->
 
-        <webharvest-core.orbit.version>2.0.0.wso2v3</webharvest-core.orbit.version>
+        <webharvest-core.orbit.version>2.0.0.wso2v4</webharvest-core.orbit.version>
         <webharvest-core.orbit.imp.pkg.version>[2.0.0,3.0.0)</webharvest-core.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([2.0.0.wso2v2,2.1.0)) after osgi bundle is corrected - rajith-->
 
         <wso2.securevault.version>1.0.0-wso2v2</wso2.securevault.version>
