@@ -1027,11 +1027,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.apache.tomcat.wso2</groupId>
-                <artifactId>jdbc-pool</artifactId>
-                <version>${jdbc-pool.orbit.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>
                 <version>${json.orbit.version}</version>
@@ -1039,7 +1034,7 @@
             <dependency>
                 <groupId>org.wso2.orbit.org.apache.tomcat</groupId>
                 <artifactId>jdbc-pool</artifactId>
-                <version>${jdbc-pool.version}</version>
+                <version>${jdbc-pool.orbit.version}</version>
             </dependency>
 
             <dependency>
@@ -1364,7 +1359,6 @@
         <version.log4j.core>2.12.0</version.log4j.core>
         <version.jaxb>2.2.5.wso2v1</version.jaxb>
         <javasysmon.version>0.3.3.wso2v1</javasysmon.version>
-        <jdbc-pool.version>7.0.81.wso2v2</jdbc-pool.version>
         <version.eclipse.ecj>4.4.2</version.eclipse.ecj>
         <version.com.google.code.gson>2.8.5</version.com.google.code.gson>
         <docker.maven.plugin.version>1.0.0</docker.maven.plugin.version>
@@ -1496,8 +1490,6 @@
 
         <carbon.base.imp.pkg.version>0.0.0</carbon.base.imp.pkg.version> <!-- todo remove this and use {carbon.kernel.imp.pkg.version} after carbon base bundles are corrected to export correct versions-->
 
-        <jdbc-pool.orbit.imp.pkg.version>[1.7.0,2.0.0)</jdbc-pool.orbit.imp.pkg.version>
-
         <poi.orbit.imp.pkg.version>0.0.0</poi.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0,4.0.0)) after osgi bundle is corrected - rajith-->
         <poi-ooxml.orbit.imp.pkg.version>0.0.0</poi-ooxml.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0.wso2v3,4.0.0)) after osgi bundle is corrected - rajith-->
 
@@ -1582,7 +1574,7 @@
         <mysql.connector.version>8.0.19</mysql.connector.version>
         <derby.orbit.version>10.3.2.1wso2v1</derby.orbit.version>
 
-        <jdbc-pool.orbit.version>7.0.34.wso2v2</jdbc-pool.orbit.version>
+        <jdbc-pool.orbit.version>9.0.35.wso2v1</jdbc-pool.orbit.version>
         <jdbc-pool.orbit.imp.pkg.version>[1.7.0,2.0.0)</jdbc-pool.orbit.imp.pkg.version>
 
         <antlr4.runtime.version>4.5.1.wso2v1</antlr4.runtime.version>
