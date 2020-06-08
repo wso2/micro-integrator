@@ -174,46 +174,15 @@ public class DataSourceUtils {
 			return null;
 		}
 	}
-	
+
 	private static synchronized String loadFromSecureVault(String alias) {
 		if (secretResolver == null) {
-		    secretResolver = SecretResolverFactory.create((OMElement) null, false);
-		    secretResolver.init(DataSourceServiceComponent.
-		    		getSecretCallbackHandlerService().getSecretCallbackHandler());
+			secretResolver = SecretResolverFactory.create((OMElement) null, false);
+		} else if (!secretResolver.isInitialized()) {
+			secretResolver.init(DataSourceServiceComponent.
+					getSecretCallbackHandlerService().getSecretCallbackHandler());
 		}
 		return secretResolver.resolve(alias);
-	}
-
-    private static void secureLoadElement(Element element, boolean checkSecureVault) 
-			throws CryptoException {
-		if (checkSecureVault) {
-			Attr secureAttr = element.getAttributeNodeNS(DataSourceConstants.SECURE_VAULT_NS,
-					DataSourceConstants.SECRET_ALIAS_ATTR_NAME);
-			if (secureAttr != null) {
-				element.setTextContent(loadFromSecureVault(secureAttr.getValue()));
-                element.removeAttributeNode(secureAttr);
-			} 
-		} else {
-//		    String encryptedStr = element.getAttribute(DataSourceConstants.ENCRYPTED_ATTR_NAME);
-//		    if (encryptedStr != null) {
-//			    boolean encrypted = Boolean.parseBoolean(encryptedStr);
-//			    if (encrypted) {
-//				    element.setTextContent(new String(CryptoUtil.getDefaultCryptoUtil(
-//				    		DataSourceServiceComponent.getServerConfigurationService(),
-//				    		DataSourceServiceComponent.getRegistryService()).
-//				    		base64DecodeAndDecrypt(element.getTextContent())));
-//			    }
-//		    }
-		}
-		NodeList childNodes = element.getChildNodes();
-		int count = childNodes.getLength();
-		Node tmpNode;
-		for (int i = 0; i < count; i++) {
-			tmpNode = childNodes.item(i);
-			if (tmpNode instanceof Element) {
-				secureLoadElement((Element) tmpNode, checkSecureVault);
-			}
-		}
 	}
 	
 //	public static void secureSaveElement(Element element) throws CryptoException {
@@ -237,22 +206,8 @@ public class DataSourceUtils {
 //			}
 //		}
 //	}
-	
-	public static void secureResolveDocument(Document doc, boolean checkSecureVault)
-            throws DataSourceException {
-        Element element = doc.getDocumentElement();
-		if (element != null) {
-			try {
-				secureLoadElement(element, checkSecureVault);
-			} catch (CryptoException e) {
-				throw new DataSourceException("Error in secure load of data source meta info: " +
-			            e.getMessage(), e);
-			}
-		}
-    }
 
-	public static void secureResolveOMElement(OMElement doc)
-			throws DataSourceException {
+	public static void secureResolveOMElement(OMElement doc) {
 		if (doc != null) {
 			secretResolver = SecretResolverFactory.create(doc, true);
 			secureLoadOMElement(doc);
@@ -294,16 +249,6 @@ public class DataSourceUtils {
             return db.parse(file);
         } catch (Exception e) {
             throw new DataSourceException("Error in creating an XML document from file: " +
-                    e.getMessage(), e);
-        }
-    }
-
-    public static Document convertToDocument(InputStream in) throws DataSourceException {
-        try {
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            return db.parse(in);
-        } catch (Exception e) {
-            throw new DataSourceException("Error in creating an XML document from stream: " +
                     e.getMessage(), e);
         }
     }
