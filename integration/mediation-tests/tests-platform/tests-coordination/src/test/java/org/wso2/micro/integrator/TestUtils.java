@@ -59,6 +59,7 @@ public class TestUtils {
         startupParameters.put("-DportOffset", String.valueOf(offset));
         startupParameters.put("-DenableManagementApi", "true");
         startupParameters.put("startupScript", "micro-integrator");
+        startupParameters.put("-DgracefulShutdown", "false");
         additionalParams.forEach(startupParameters::put);
         return new CarbonTestServerManager(new AutomationContext(), System.getProperty("carbon.zip"),
                                            startupParameters);

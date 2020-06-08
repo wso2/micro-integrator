@@ -3,7 +3,8 @@ hostname = "localhost"
 hot_deployment = "true"
 
 [user_store]
-type = "read_only_ldap"
+type = "database"
+read_only = "false"
 
 [keystore.tls]
 file_name = "wso2carbon.jks"
@@ -17,13 +18,18 @@ password = "wso2carbon"
 alias = "symmetric.key.value"
 algorithm = "AES"
 
+[management_api_token_handler]
+enable = false
+
 [management_api.jwt_token_security_handler]
 enable = false
 
-## Oracle Database 12c Enterprise Edition Release 12.2.0.1.0 - 64bit Production
+[management_api.authorization_handler]
+enable = false
+
 [[datasource]]
-id = "WSO2_COORDINATION_DB"
-url = "jdbc:oracle:thin:@localhost:1521:ORCLCDB"
-username = "oracleusr"
-password = "mi1234"
-driver = "oracle.jdbc.OracleDriver"
+id = "WSO2CarbonDB"
+url = "jdbc:db2://localhost:50000/testdb"
+username = "db2inst1"
+password = "Niro"
+driver = "com.ibm.db2.jcc.DB2Driver"
