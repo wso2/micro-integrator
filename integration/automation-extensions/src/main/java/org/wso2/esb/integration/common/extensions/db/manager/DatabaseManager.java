@@ -54,6 +54,7 @@ public class DatabaseManager extends ExecutionListenerExtension {
     private String scriptBaseDir;
     private String scriptSuffix;
     private String delimiter;
+    private String dbClearScripts;
 
     private static final String ALLOW_MULTIPLE_QUERIES = "allowMultiQueries=true";
     private static final String MY_SQL = "mysql";
@@ -87,7 +88,7 @@ public class DatabaseManager extends ExecutionListenerExtension {
             case DB2:
             case ORACLE:
                 // clear db
-                executeScript(scriptBaseDir + "/unset/" + dbType + "/" + dbType + "_" + scriptSuffix, true);
+                executeScript(dbClearScripts + dbType + "/" + dbType + "_" + scriptSuffix, true);
                 // source script
                 executeScript(scriptBaseDir + "/" + dbType + "/" + dbType + "_" + scriptSuffix, false);
                 break;
@@ -226,6 +227,9 @@ public class DatabaseManager extends ExecutionListenerExtension {
                 break;
             case "script-delimiter":
                 delimiter = value;
+                break;
+            case "db-clear-scripts-base-dir":
+                dbClearScripts = value;
                 break;
             default:
                 logger.error("Unknown property : " + key);
