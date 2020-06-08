@@ -30,7 +30,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class DatabaseManager extends ExecutionListenerExtension {
     private static final String ALLOW_MULTIPLE_QUERIES = "allowMultiQueries=true";
     private static final String MY_SQL = "mysql";
     private static final String MS_SQL = "sqlserver";
-    private static final String POSTGRE_SQL = "postgresql";
+    private static final String POSTGRES = "postgresql";
     private static final String DB2 = "db2";
     private static final String ORACLE = "oracle";
 
@@ -73,145 +73,131 @@ public class DatabaseManager extends ExecutionListenerExtension {
 
         logger.info("Database type : " + dbType);
         logger.info("Database name : " + dbName);
-
-        if (MY_SQL.equals(dbType)) {
-            setUpMysql();
-        } else if (MS_SQL.equals(dbType)) {
-            setUpMssql();
-        } else if (POSTGRE_SQL.equals(dbType)) {
-            setUpPostgres();
-        } else if (DB2.equals(dbType) || ORACLE.equals(dbType)) {
-            executeScript(scriptBaseDir + "/" + dbType + "/" + dbType + "_" + scriptSuffix);
-        } else {
-            logger.error("Not supported db type : " + dbType);
-        }
-
-        logger.info("Database configured successfully.");
-    }
-
-    /**
-     * Removes all tables from the database and creates them again.
-     *
-     * @throws AutomationFrameworkException Exception
-     */
-    private void setUpPostgres() throws AutomationFrameworkException {
-
-        String dbUrl = connectionUrl.concat("?" + ALLOW_MULTIPLE_QUERIES);
-        scriptPath = scriptBaseDir + "/postgres/postgresql_" + scriptSuffix;
-        scriptPath = getSystemDependentPath(scriptPath);
-        File file = new File(scriptPath);
         try {
-            List<String> schema = new ArrayList<>();
-            schema.add("DROP SCHEMA public CASCADE;");
-            schema.add("CREATE SCHEMA public;");
-            schema.add(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-            try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
-                    PreparedStatement preparedStatement = conn.prepareStatement(String.join("", schema))) {
-                preparedStatement.executeUpdate();
+            switch (dbType) {
+            case MY_SQL:
+                setUpMysql();
+                break;
+            case MS_SQL:
+                setUpMssql();
+                break;
+            case POSTGRES:
+                setUpPostgres();
+                break;
+            case DB2:
+            case ORACLE:
+                // clear db
+                executeScript(scriptBaseDir + "/unset/" + dbType + "/" + dbType + "_" + scriptSuffix, true);
+                // source script
+                executeScript(scriptBaseDir + "/" + dbType + "/" + dbType + "_" + scriptSuffix, false);
+                break;
+            default:
+                logger.error("Not supported db type : " + dbType);
             }
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }
+        logger.info("Database configured successfully.");
     }
 
     /**
-     * Create the database with given name first and then source the db script in it. The db will be removed upon
-     * execution end.
+     * Drop db if exists and create again to source the script.
      *
-     * @throws AutomationFrameworkException Exception
+     * @throws Exception Exception
      */
-    private void setUpMssql() throws AutomationFrameworkException {
+    private void setUpPostgres() throws Exception {
 
         // create db
-        String dbUrl = connectionUrl.concat(";" + ALLOW_MULTIPLE_QUERIES).replace(";databaseName=" + dbName, "");
-        try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
-                PreparedStatement preparedStatement = conn.prepareStatement("CREATE DATABASE " + dbName + ";")) {
-            preparedStatement.executeUpdate();
-        } catch (Exception ex) {
-            throw new AutomationFrameworkException(ex);
-        }
+        String dbUrl = connectionUrl.replace("/" + dbName, "/");
+        executeUpdate(dbUrl, "drop database if exists " + dbName + ";");
+        executeUpdate(dbUrl, "create database " + dbName + ";");
+
+        // create tables
+        scriptPath = scriptBaseDir + "/postgres/postgresql_" + scriptSuffix;
+        scriptPath = getSystemDependentPath(scriptPath);
+        File file = new File(scriptPath);
+        dbUrl = connectionUrl.concat("?" + ALLOW_MULTIPLE_QUERIES);
+        executeUpdate(dbUrl, FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Drop db if exists and create again to source the script.
+     *
+     * @throws Exception Exception
+     */
+    private void setUpMssql() throws Exception {
+
+        // create db
+        String dbUrl = connectionUrl.replace(";databaseName=" + dbName, "").concat(";" + ALLOW_MULTIPLE_QUERIES);
+        List<String> schema = new ArrayList<>();
+        schema.add("USE master;");
+        schema.add("IF EXISTS(select * from sys.databases where name='" + dbName + "') DROP DATABASE " + dbName + ";");
+        schema.add("CREATE DATABASE " + dbName + ";");
+        executeUpdate(dbUrl, String.join("", schema));
+
         // create tables
         dbUrl = connectionUrl.concat(";" + ALLOW_MULTIPLE_QUERIES);
         scriptPath = scriptBaseDir + "/mssql/mssql_" + scriptSuffix;
         scriptPath = getSystemDependentPath(scriptPath);
         File file = new File(scriptPath);
-        try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
-                PreparedStatement preparedStatement = conn.prepareStatement(
-                        FileUtils.readFileToString(file, StandardCharsets.UTF_8))) {
-            preparedStatement.executeUpdate();
-        } catch (Exception ex) {
-            throw new AutomationFrameworkException(ex);
-        }
+        executeUpdate(dbUrl, FileUtils.readFileToString(file, StandardCharsets.UTF_8));
     }
 
     /**
-     * Drop the data base if it exits and creates a new one and source db the script.
+     * Drop db if exists and create again to source the script.
      *
-     * @throws AutomationFrameworkException Exception
+     * @throws Exception Exception
      */
-    private void setUpMysql() throws AutomationFrameworkException {
+    private void setUpMysql() throws Exception {
 
         scriptPath = scriptBaseDir + "/mysql/mysql_" + scriptSuffix;
         String dbUrl = connectionUrl.replace("/" + dbName, "").concat("&" + ALLOW_MULTIPLE_QUERIES);
         scriptPath = getSystemDependentPath(scriptPath);
         File file = new File(scriptPath);
-        try {
-            List<String> schema = new ArrayList<>();
-            schema.add("drop database if exists " + dbName + ";");
-            schema.add("create database " + dbName + " character set latin1;");
-            schema.add("use " + dbName + ";");
-            schema.add(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-            try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
-                    PreparedStatement preparedStatement = conn.prepareStatement(String.join("", schema))) {
-                preparedStatement.executeUpdate();
-            }
-        } catch (Exception ex) {
-            throw new AutomationFrameworkException(ex);
-        }
+        List<String> schema = new ArrayList<>();
+        schema.add("drop database if exists " + dbName + ";");
+        schema.add("create database " + dbName + " character set latin1;");
+        schema.add("use " + dbName + ";");
+        schema.add(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+        executeUpdate(dbUrl, String.join("", schema));
     }
 
     @Override
-    public void onExecutionFinish() throws AutomationFrameworkException {
-
-        // remove ms sql db upon suite execution end.
-        if (MS_SQL.equals(dbType)) {
-            // drop db
-            String dbUrl = connectionUrl.concat(";" + ALLOW_MULTIPLE_QUERIES).replace(";databaseName=" + dbName, "");
-            try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
-                    PreparedStatement preparedStatement = conn.prepareStatement("DROP DATABASE " + dbName + ";")) {
-                preparedStatement.executeUpdate();
-            } catch (Exception ex) {
-                throw new AutomationFrameworkException(ex);
-            }
-        } else if (DB2.equals(dbType) || ORACLE.equals(dbType)) {
-            // remove all tables from db2 and oracle upon end. The scripts need to be in /unset dir.
-            executeScript(scriptBaseDir + "/unset/" + dbType + "/" + dbType + "_" + scriptSuffix);
-        }
+    public void onExecutionFinish() {
+        // do nothing
     }
 
     /**
      * Delimits the script with "script-delimiter" and executes all query in db.
      *
-     * @param scriptFilePath path of script
-     * @throws AutomationFrameworkException Exception
+     * @param scriptFilePath   Delimits the script with "script-delimiter" and executes all query in db
+     * @param ignoreExceptions whether to ignore if any exception occurred while executing the script
+     * @throws Exception Exception
      */
-    private void executeScript(String scriptFilePath) throws AutomationFrameworkException {
+    private void executeScript(String scriptFilePath, boolean ignoreExceptions) throws Exception {
 
         File file = new File(getSystemDependentPath(scriptFilePath));
-        try {
-            String[] queries = FileUtils.readFileToString(file, StandardCharsets.UTF_8).split(delimiter);
-            for (String query : queries) {
-                query = query.trim();
-                if (!query.isEmpty()) {
-                    logger.info("Executing query : " + query);
-                    try (Connection conn = DriverManager.getConnection(connectionUrl, userName, pwd);
-                            PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-                        preparedStatement.executeUpdate();
+        String[] queries = FileUtils.readFileToString(file, StandardCharsets.UTF_8).split(delimiter);
+        for (String query : queries) {
+            query = query.trim();
+            if (!query.isEmpty()) {
+                try {
+                    executeUpdate(connectionUrl, query);
+                } catch (Exception ex) {
+                    if (!ignoreExceptions) {
+                        throw new AutomationFrameworkException(ex);
                     }
                 }
             }
-        } catch (Exception ex) {
-            throw new AutomationFrameworkException(ex);
+        }
+    }
+
+    private void executeUpdate(String dbUrl, String sql) throws Exception {
+
+        logger.info("Executing sql : " + sql);
+        try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
+                Statement statement = conn.createStatement()) {
+            statement.executeUpdate(sql);
         }
     }
 
@@ -270,7 +256,7 @@ public class DatabaseManager extends ExecutionListenerExtension {
             String path = uri.getPath();
 
             if (path != null) {
-                if (Stream.of(MY_SQL, DB2, POSTGRE_SQL).anyMatch(s -> s.equals(dbType))) {
+                if (Stream.of(MY_SQL, DB2, POSTGRES).anyMatch(s -> s.equals(dbType))) {
                     dbName = path.replace("/", "");
                 } else if (MS_SQL.equals(dbType)) {
                     String[] splits = connectionUrl.split("databaseName=");
