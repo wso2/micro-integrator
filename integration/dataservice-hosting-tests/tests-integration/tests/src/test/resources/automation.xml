@@ -210,7 +210,6 @@
                     <parameter name="-DportOffset" value="200" />
 
                     <parameter name="startupScript" value="micro-integrator" />
-                    <parameter name="-DenableManagementApi" value="true"/>
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
             </extentionClasses>
