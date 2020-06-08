@@ -21,7 +21,6 @@ package org.wso2.micro.integrator.mediation.security.vault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
-import org.wso2.securevault.DecryptionProvider;
 import org.wso2.securevault.secret.SecretRepository;
 
 import java.io.BufferedReader;
@@ -59,14 +58,7 @@ public class FileSecretRepository implements SecretRepository {
     public String getSecret(String alias) {
         // Read from file
         String secretRawValue = getPlainTextSecret(alias);
-        DecryptionProvider decyptProvider = CipherInitializer.getInstance().getDecryptionProvider();
-
-        if (decyptProvider == null) {
-            // This cannot happen unless someone mess with OSGI references
-            LOG.error("Can not proceed decryption due to the secret repository initialization error");
-            throw new SynapseException("Secret repository is null for alias "+ alias);
-        }
-        return new String(decyptProvider.decrypt(secretRawValue.trim().getBytes()));
+        return SecureVaultUtils.decryptSecret(secretRawValue);
     }
 
     /**

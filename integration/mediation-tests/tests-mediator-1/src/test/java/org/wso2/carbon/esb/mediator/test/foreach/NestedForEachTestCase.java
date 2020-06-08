@@ -57,12 +57,10 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
     public void testNestedForEach() throws Exception {
         carbonLogReader.clearLogs();
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
-                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
-                        + "            <m0:request><m0:symbol>IBM</m0:symbol></m0:request>\n"
-                        + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n"
-                        + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
-                        + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">"
+                        + "<soap:Header/><soap:Body><m0:getQuote><m0:request><m0:symbol>IBM</m0:symbol></m0:request>"
+                        + "<m0:request><m0:symbol>WSO2</m0:symbol></m0:request><m0:request><m0:symbol>MSFT</m0:symbol></m0:request>"
+                        + "</m0:getQuote></soap:Body></soap:Envelope>";
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachNestedTestProxy"),
                 headers, request, "application/xml;charset=UTF-8");
@@ -95,7 +93,6 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend")
     public void testNestedForEachMediatorWithIterate() throws Exception {
-        carbonLogReader.clearLogs();
         String response = client.send(getProxyServiceURLHttp("nested_foreach_iterate"), createMultipleSymbolPayLoad(10), "urn:getQuote");
         Assert.assertNotNull(response);
 
@@ -113,9 +110,11 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
             }
         }
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = outer", DEFAULT_TIMEOUT, 10),
-                "Count of messages entered outer ForEach scope is incorrect");
+                "Count of messages entered outer ForEach scope is incorrect. " +
+                        "Found " + carbonLogReader.getNumberOfOccurencesForLog("foreach = outer") + " occurrences");
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = inner", DEFAULT_TIMEOUT, 10),
-                "Count of messages entered inner ForEach scope is incorrect");
+                "Count of messages entered inner ForEach scope is incorrect. " +
+                        "Found " + carbonLogReader.getNumberOfOccurencesForLog("foreach = inner") + " occurrences");
     }
 
     @AfterClass(alwaysRun = true)

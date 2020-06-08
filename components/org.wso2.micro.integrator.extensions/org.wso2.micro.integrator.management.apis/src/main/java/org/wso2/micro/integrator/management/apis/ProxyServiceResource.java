@@ -169,7 +169,6 @@ public class ProxyServiceResource extends APIResource {
         }
 
         JSONObject proxyObject = new JSONObject();
-
         proxyObject.put(Constants.NAME, proxyService.getName());
 
         try {
@@ -193,6 +192,7 @@ public class ProxyServiceResource extends APIResource {
         OMElement proxyConfiguration = ProxyServiceSerializer.serializeProxy(null, proxyService);
         proxyObject.put(SYNAPSE_CONFIGURATION, proxyConfiguration.toString());
         proxyObject.put("eprs", proxyService.getAxisService().getEPRs());
+        proxyObject.put("isRunning", proxyService.isRunning());
         return proxyObject;
     }
 
@@ -211,7 +211,8 @@ public class ProxyServiceResource extends APIResource {
         String status = payload.get(STATUS).getAsString();
         ProxyService proxyService = synapseConfiguration.getProxyService(name);
         if (proxyService == null) {
-            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Proxy service could not be found."));
+            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonError("Proxy service could not be found",
+                    axis2MessageContext, Constants.NOT_FOUND));
             return;
         }
         List pinnedServers = proxyService.getPinnedServers();
@@ -231,7 +232,8 @@ public class ProxyServiceResource extends APIResource {
                 Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
             }
         } else {
-            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Defined state is invalid."));
+            Utils.setJsonPayLoad(axis2MessageContext,
+                    Utils.createJsonError("Provided state is not valid", axis2MessageContext, Constants.BAD_REQUEST));
         }
     }
 

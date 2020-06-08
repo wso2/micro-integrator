@@ -62,7 +62,9 @@ public class SecretSrcData {
         if (VaultType.DOCKER.toString().equals(vaultType)) {
             this.vaultType = VaultType.DOCKER;
             this.secretRoot = dockerSecretRoot;
-        } else {
+        } else if (VaultType.ENV.toString().equals(vaultType)) {
+            this.vaultType = VaultType.ENV;
+        } else if (VaultType.FILE.toString().equals(vaultType)) {
             this.vaultType = VaultType.FILE;
             this.secretRoot = fileSecretRoot;
         }

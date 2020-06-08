@@ -20,6 +20,8 @@ package org.wso2.carbon.inbound.endpoint.internal.http.api;
 
 import org.apache.synapse.MessageContext;
 
+import java.util.List;
+
 /**
  * {@code InternalAPIHandler} is the interface that need to be implemented in order to set handlers to an internal API.
  */
@@ -45,4 +47,15 @@ public interface InternalAPIHandler {
      * @return state
      */
     Boolean invoke(MessageContext synCtx);
+
+    /**
+     * Sets the resources for the handler to be applied to.
+     */
+    void setResources(List<String> resources);
+
+    /**
+     * Get the resources handled by this handler.
+     */
+    List<String> getResources();
+
 }

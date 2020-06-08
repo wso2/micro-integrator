@@ -30,14 +30,17 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
+import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.ServerStartupObserver;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
 import org.wso2.micro.integrator.coordination.ClusterEventListener;
+import org.wso2.micro.integrator.coordination.exception.ClusterCoordinationException;
 import org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 import org.wso2.micro.integrator.ndatasource.core.CarbonDataSource;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
+import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.TaskEventListener;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.ActivePassiveResolver;
@@ -50,6 +53,9 @@ import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.micro.integrator.ntask.core.service.impl.TaskServiceImpl;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -64,6 +70,11 @@ import javax.sql.DataSource;
 public class TasksDSComponent {
 
     private static final String QUARTZ_PROPERTIES_FILE_NAME = "quartz.properties";
+    private static final String TASK_CONFIG = "task_handling";
+    private static final String RESOLVER_CLASS = "resolver_class";
+    private static final String RESOLVING_PERIOD = "resolving_period";
+    private static final String RESOLVING_FREQUENCY = "resolving_frequency";
+    private static final String TASK_RESOLVER = "task_resolver";
 
     private final Log log = LogFactory.getLog(TasksDSComponent.class);
 
@@ -80,7 +91,6 @@ public class TasksDSComponent {
     private TaskStore taskStore;
     private TaskLocationResolver resolver;
     private ClusterCoordinator clusterCoordinator;
-    private CoordinatedTaskScheduleManager coordinatedTaskScheduleManager;
 
     @Activate
     protected void activate(ComponentContext ctx) {
@@ -106,8 +116,14 @@ public class TasksDSComponent {
                 log.info("Initializing task coordination.");
                 DataSource coordinationDataSource = (DataSource) coordinationDatasourceObject;
                 clusterCoordinator = new ClusterCoordinator(coordinationDataSource);
+                if (clusterCoordinator.checkDuplicateNodeExistence()) {
+                    throw new ClusterCoordinationException(
+                            "Node with id " + clusterCoordinator.getThisNodeId() + " already "
+                                    + "exists in cluster or the previous shutdown of this node "
+                                    + "hasn't elapsed the heart beat expiry time of " + clusterCoordinator
+                                    .getHeartbeatMaxRetryInterval() + " milli seconds.");
+                }
                 dataHolder.setClusterCoordinator(clusterCoordinator);
-                dataHolder.setCoordinationEnabledGlobally(true);
                 // initialize task data base.
                 taskStore = new TaskStore(coordinationDataSource);
                 // removing all tasks assigned to this node since this node hasn't even  joined the cluster yet and
@@ -133,16 +149,46 @@ public class TasksDSComponent {
             if (isCoordinationEnabled) {
                 clusterCoordinator.registerListener(new ClusterEventListener(clusterCoordinator.getThisNodeId()));
                 ScheduledTaskManager scheduledTaskManager = dataHolder.getTaskManager();
+                if (scheduledTaskManager == null) {
+                    throw new AssertionError("Task Manager is not initialized properly.");
+                }
                 clusterCoordinator.registerListener(new TaskEventListener(scheduledTaskManager, taskStore, resolver));
                 // the task scheduler should be started after registering task service.
-                coordinatedTaskScheduleManager = new CoordinatedTaskScheduleManager(scheduledTaskManager, taskStore,
-                                                                                    clusterCoordinator, resolver);
+                CoordinatedTaskScheduleManager coordinatedTaskScheduleManager = new CoordinatedTaskScheduleManager(
+                        scheduledTaskManager, taskStore, clusterCoordinator, resolver);
                 // join cluster
                 clusterCoordinator.startCoordinator();
+                setSchedulerProperties();
                 coordinatedTaskScheduleManager.startTaskScheduler("");
             }
         } catch (Throwable e) {
             log.error("Error in initializing Tasks component: " + e.getMessage(), e);
+        }
+    }
+
+    private void setSchedulerProperties() {
+
+        Map<String, Object> configs = ConfigParser.getParsedConfigs();
+        Object exePeriod = configs.get(TASK_CONFIG + "." + RESOLVING_PERIOD);
+        if (exePeriod != null) {
+            int executionPeriod = Integer.parseInt(exePeriod.toString());
+            if (executionPeriod < 1) {
+                log.warn(
+                        RESOLVING_PERIOD + " should be greater than or equal to 1 seconds. The value " + executionPeriod
+                                + " will be ignored and default 2 will be used.");
+            } else {
+                CoordinatedTaskScheduleManager.setExecutionPeriod(executionPeriod);
+            }
+        }
+        Object resolvingFreq = configs.get(TASK_CONFIG + "." + RESOLVING_FREQUENCY);
+        if (resolvingFreq != null) {
+            int resolvingFrequency = Integer.parseInt(resolvingFreq.toString());
+            if (resolvingFrequency < 1) {
+                log.warn(RESOLVING_FREQUENCY + " should be greater than or equal to 1. The value " + resolvingFrequency
+                                 + " will be" + " ignored and default 5 will be used.");
+            } else {
+                CoordinatedTaskScheduleManager.setResolveFrequency(resolvingFrequency);
+            }
         }
     }
 
@@ -151,9 +197,31 @@ public class TasksDSComponent {
      *
      * @return - TaskLocationResolver
      */
-    private TaskLocationResolver getResolver() {
-        // todo load resolvers from toml and if not specified return default
-        return getDefaultResolver();
+    @SuppressWarnings(value = "unchecked")
+    private TaskLocationResolver getResolver()
+            throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException,
+                   InvocationTargetException, TaskException {
+
+        Map<String, Object> configs = ConfigParser.getParsedConfigs();
+        Object resolverClass = configs.get(TASK_CONFIG + "." + RESOLVER_CLASS);
+        if (resolverClass == null) {
+            return getDefaultResolver();
+        }
+        String resolverClassName = resolverClass.toString();
+        if (log.isDebugEnabled()) {
+            log.debug("Task resolver class : " + resolverClassName);
+        }
+        TaskLocationResolver taskLocationResolver = (TaskLocationResolver) Class.forName(resolverClassName)
+                .getDeclaredConstructor().newInstance();
+        List<Object> resolverProperties = (List<Object>) configs.get(TASK_RESOLVER);
+        if (resolverProperties != null && !resolverProperties.isEmpty()) {
+            Map<String, String> properties = (Map<String, String>) resolverProperties.get(0);
+            if (log.isDebugEnabled()) {
+                properties.forEach((key, value) -> log.debug("Task resolver property :: " + key + ":" + value));
+            }
+            taskLocationResolver.init(properties);
+        }
+        return taskLocationResolver;
     }
 
     /**
@@ -162,7 +230,9 @@ public class TasksDSComponent {
      * @return - Default Resolver.
      */
     private TaskLocationResolver getDefaultResolver() {
-        log.info("Task location resolver defaults to active passive.");
+        if (log.isDebugEnabled()) {
+            log.debug("Task resolver class : " + ActivePassiveResolver.class.getName());
+        }
         return new ActivePassiveResolver();
     }
 

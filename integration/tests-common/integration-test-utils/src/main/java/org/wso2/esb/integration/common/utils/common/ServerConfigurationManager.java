@@ -44,7 +44,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +58,6 @@ public class ServerConfigurationManager {
     private static final Log log = LogFactory.getLog(ServerConfigurationManager.class);
     private static final long TIME_OUT = 600000;
     private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
-    private static final String MI_HOME_SYSTEM_PROPERTY = "miCarbonHome";
     private File originalConfig;
     private File backUpConfig;
     private int port;
@@ -301,7 +299,7 @@ public class ServerConfigurationManager {
     /**
      * apply configuration file and restart micro integrator server to take effect the configuration
      *
-     * @param newConfig       configuration file
+     * @param newConfig configuration file
      * @throws AutomationUtilException - throws if apply configuration fails
      * @throws IOException             - throws if apply configuration fails
      */
@@ -387,7 +385,7 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if server restart fails
      */
     public void restartMicroIntegrator() throws AutomationUtilException {
-                org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
+        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
     }
 
     /**
@@ -413,26 +411,6 @@ public class ServerConfigurationManager {
         while (predicate.getAsBoolean() && System.currentTimeMillis() < time) {
             TimeUnit.MILLISECONDS.sleep(1);
         }
-    }
-
-    private String[] getStartScriptCommand(String... commands) {
-        String operatingSystem = System.getProperty("os.name").toLowerCase();
-        String scriptName = "micro-integrator";
-
-        String miHome = System.getProperty(MI_HOME_SYSTEM_PROPERTY);
-
-        ArrayList<String> commandArray;
-        if (operatingSystem.contains("windows")) {
-            commandArray = new ArrayList<>(Arrays.asList("cmd.exe", "/c",
-                                                         miHome + File.separator + "bin" + File.separator + scriptName
-                                                                 + ".bat"));
-        } else {
-            commandArray = new ArrayList<>(
-                    Arrays.asList("sh", miHome + File.separator + "bin" + File.separator + scriptName + ".sh"));
-        }
-
-        commandArray.addAll(Arrays.asList(commands));
-        return commandArray.toArray(new String[0]);
     }
 
     /**

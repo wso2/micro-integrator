@@ -37,8 +37,8 @@ public class JWTTokenInfoDTO {
     private RSAKey rsaKey;
     private long lastAccess;
 
-    public JWTTokenInfoDTO() {
-        this.username = AuthConstants.DEFAULT_ISSUER_NAME;
+    public JWTTokenInfoDTO(String userName) {
+        this.username = userName;
         this.scope = AuthConstants.JWT_TOKEN_DEFAULT_SCOPE;
         this.expiry = AuthConstants.DEFAULT_EXPIRY_DURATION;
     }

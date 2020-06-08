@@ -1,5 +1,6 @@
 [server]
 hostname = "localhost"
+hot_deployment = true
 
 [user_store]
 type = "read_only_ldap"
@@ -16,5 +17,9 @@ password = "wso2carbon"
 alias = "symmetric.key.value"
 algorithm = "AES"
 
-[management_api_token_handler]
+[management_api.jwt_token_security_handler]
 enable = false
+
+[[synapse_handlers]]
+name="TestHandler"
+class="org.wso2.carbon.test.gateway.TestHandler"

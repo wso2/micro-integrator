@@ -31,7 +31,6 @@ import java.util.concurrent.ScheduledExecutorService;
 public class DataHolder {
 
     private static final DataHolder instance = new DataHolder();
-    private boolean coordinationEnabledGlobally = false;
     private ClusterCoordinator clusterCoordinator;
     private ScheduledTaskManager taskManager;
     private ScheduledExecutorService taskScheduler;
@@ -45,19 +44,19 @@ public class DataHolder {
     }
 
     public boolean isCoordinationEnabledGlobally() {
-        return coordinationEnabledGlobally;
-    }
-
-    public void setCoordinationEnabledGlobally(boolean coordinationEnabledGlobally) {
-        this.coordinationEnabledGlobally = coordinationEnabledGlobally;
+        return clusterCoordinator != null;
     }
 
     public ClusterCoordinator getClusterCoordinator() {
         return clusterCoordinator;
     }
 
-    public void setClusterCoordinator(ClusterCoordinator clusterCoordinator) {
+    void setClusterCoordinator(ClusterCoordinator clusterCoordinator) {
         this.clusterCoordinator = clusterCoordinator;
+    }
+
+    public String getLocalNodeId() {
+        return clusterCoordinator != null ? clusterCoordinator.getThisNodeId() : null;
     }
 
     public ScheduledTaskManager getTaskManager() {

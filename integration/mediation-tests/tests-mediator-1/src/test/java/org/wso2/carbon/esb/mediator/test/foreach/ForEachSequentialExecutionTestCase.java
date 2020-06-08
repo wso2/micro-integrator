@@ -55,13 +55,13 @@ public class ForEachSequentialExecutionTestCase extends ESBIntegrationTest {
         // Verify logs to check that the order of symbols is same as in the payload. The symbols should be as SYM[1-10]
         // as in payload. Since loop iterates from the last log onwards, verifying whether the symbols are in SYM[10-1] order
         for (int i = 0; i < 10; i++) {
-            if (carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT)) {
+            if (carbonLogReader.checkForLog("foreachSequentialExecutionTestProxy = in", DEFAULT_TIMEOUT)) {
                 if (!carbonLogReader.getLogs().contains("SYM" + i)) {
                     Assert.fail("Incorrect message entered ForEach scope. Could not find symbol SYM" + i);
                 }
             }
         }
-        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 10), "Count of messages entered ForEach scope is incorrect");
+        Assert.assertTrue(carbonLogReader.checkForLog("foreachSequentialExecutionTestProxy = in", DEFAULT_TIMEOUT, 10), "Count of messages entered ForEach scope is incorrect");
         carbonLogReader.stop();
     }
 

@@ -20,57 +20,103 @@
 -->
 <internalApis>
     <apis>
-        {% for api in internal_api %}
-        <api name="{{api.api_name}}" protocol="{{api.protocols}}" class="{{api.class}}"/>
-        {% endfor %}
-        <api name="{{management_api.name}}" protocol="{{management_api.protocols}}" class="{{management_api.class}}">
+        <api name="PrometheusApi" protocol="{{prometheus_api.protocols}}" class="org.wso2.micro.integrator.prometheus.publisher.service.MetricAPI">
+            {% if prometheus_api.basic_security_handler.enable == true
+                or prometheus_api.authorization_handler.enable == true or prometheus_api.custom_handlers is defined %}
             <handlers>
-                {% if management_api_token_handler.enable == true %}
-                <handler name="{{management_api.handler.name}}" class="{{management_api.handler.class}}">
-                    <TokenStoreConfig>
-                        <MaxSize>{{management_api.handler.token_store_config.max_size}}</MaxSize>
-                        <TokenCleanupTaskInterval>{{management_api.handler.token_store_config.clean_up_interval}}</TokenCleanupTaskInterval><!--Seconds /-->
-                        <RemoveOldestTokenOnOverflow>{{management_api.handler.token_store_config.remove_oldest_token_on_overflow}}</RemoveOldestTokenOnOverflow>
-                    </TokenStoreConfig>
-                    <TokenConfig>
-                        <expiry>{{management_api.handler.token_config.expiry}}</expiry><!--Seconds /-->
-                        <size>{{management_api.handler.token_config.size}}</size>
-                    </TokenConfig>
-                    <UserStore>
-                        <users>
-                            {% for user in management_api.handler.user_store.users %}
-                            <user>
-                                <username>{{user.user.name}}</username>
-                                <password>{{user.user.password}}</password>
-                            </user>
-                            {% endfor %}
-                        </users>
-                    </UserStore>
+                {% if prometheus_api.basic_security_handler.enable == true %}
+                <handler name="BasicSecurityHandler" class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"/>
+                {% endif %}
+                {% if prometheus_api.authorization_handler.enable == true %}
+                <handler name="AuthorizationHandler" class="org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler">
+                    {% if prometheus_api.authorization_handler.resources is defined %}
+                    <resources>
+                        {% for resource in prometheus_api.authorization_handler.resources %}
+                        <resource>{{resource.path}}</resource>
+                        {% endfor %}
+                    </resources>
+                    {% endif %}
                 </handler>
                 {% endif %}
-                {% if management_api_basic_security_handler.enable == true %}
-                <handler name="{{management_api.security_handler.name}}"
-                         class="{{management_api.security_handler.class}}">
-                    <UserStore>
-                        <users>
-                            {% for user in management_api.handler.user_store.users %}
-                            <user>
-                                <username>{{user.user.name}}</username>
-                                <password>{{user.user.password}}</password>
-                            </user>
-                            {% endfor %}
-                        </users>
-                    </UserStore>
+                {% if prometheus_api.custom_handlers is defined %}
+                {% for handler in prometheus_api.custom_handlers %}
+                <handler name="{{handler.name}}" class="{{handler.class}}">
+                    {% if handler.resources is defined %}
+                    <resources>
+                        {% for resource in handler.resources %}
+                        <resource>{{resource.path}}</resource>
+                        {% endfor %}
+                    </resources>
+                    {% endif %}
                 </handler>
+                {% endfor %}
+                {% endif %}
+            </handlers>
+            {% endif %}
+        </api>
+        <api name="ReadinessProbe" protocol="http" class="org.wso2.micro.integrator.probes.ReadinessProbe"/>
+        <api name="ManagementApi" protocol="{{management_api.protocols}}" class="org.wso2.micro.integrator.management.apis.ManagementInternalApi">
+            <handlers>
+                {% if management_api.basic_security_handler.enable == true %}
+                <handler name="BasicSecurityHandler" class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"/>
+                {% endif %}
+                {% if management_api.jwt_token_security_handler.enable == true %}
+                <handler name="JWTTokenSecurityHandler" class="org.wso2.micro.integrator.management.apis.security.handler.JWTTokenSecurityHandler">
+                    <TokenStoreConfig>
+                        <MaxSize>{{management_api.jwt_token_security_handler.token_store_config.max_size}}</MaxSize>
+                        <TokenCleanupTaskInterval>{{management_api.jwt_token_security_handler.token_store_config.clean_up_interval}}</TokenCleanupTaskInterval><!--Seconds /-->
+                        <RemoveOldestTokenOnOverflow>{{management_api.jwt_token_security_handler.token_store_config.remove_oldest_token_on_overflow}}</RemoveOldestTokenOnOverflow>
+                    </TokenStoreConfig>
+                    <TokenConfig>
+                        <expiry>{{management_api.jwt_token_security_handler.token_config.expiry}}</expiry><!--Seconds /-->
+                        <size>{{management_api.jwt_token_security_handler.token_config.size}}</size>
+                    </TokenConfig>
+                </handler>
+                {% endif %}
+                {% if management_api.authorization_handler.enable == true %}
+                <handler name="AuthorizationHandler" class="org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler">
+                    {% if management_api.authorization_handler.resources is defined %}
+                    <resources>
+                        {% for resource in management_api.authorization_handler.resources %}
+                        <resource>{{resource.path}}</resource>
+                        {% endfor %}
+                    </resources>
+                    {% endif %}
+                </handler>
+                {% endif %}
+                {% if management_api.custom_handlers is defined %}
+                {% for handler in management_api.custom_handlers %}
+                <handler name="{{handler.name}}" class="{{handler.class}}">
+                    {% if handler.resources is defined %}
+                    <resources>
+                        {% for resource in handler.resources %}
+                        <resource>{{resource.path}}</resource>
+                        {% endfor %}
+                    </resources>
+                    {% endif %}
+                </handler>
+                {% endfor %}
                 {% endif %}
             </handlers>
             <cors>
-                <enabled>{{management_api.cors.enabled}}</enabled>
+                <enabled>{{management_api.cors.enable}}</enabled>
                 <allowedOrigins>{{management_api.cors.allowed_origins}}</allowedOrigins>
                 <allowedHeaders>{{management_api.cors.allowed_headers}}</allowedHeaders>
             </cors>
         </api>
     </apis>
+    {% if internal_apis.file_user_store.enable == true %}
+    <userStore>
+        <users>
+            {% for user in internal_apis.users %}
+            <user>
+                <username>{{user.user.name}}</username>
+                <password>{{user.user.password}}</password>
+            </user>
+            {% endfor %}
+        </users>
+    </userStore>
+    {% endif %}
     <sslConfig>
         {% for parameter_key,parameter_value in internal_api_ssl_config.parameter.items() %}
         <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>

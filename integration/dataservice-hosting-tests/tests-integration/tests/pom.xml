@@ -61,18 +61,17 @@
                             <name>usedefaultlisteners</name>
                             <value>false</value>
                         </property>
-
                         <carbon.zip>
                             ${basedir}/../../../../distribution/target/wso2mi-${project.version}.zip
                         </carbon.zip>
-
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
-                        <!--<emma.home>${basedir}/target/emma</emma.home>-->
                         <instr.file>${basedir}/src/test/resources/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/src/test/resources/filters.txt</filters.file>
-                        <!--<emma.output>${basedir}/target/emma</emma.output>-->
+                        <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
                     </systemProperties>
-
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
             </plugin>
@@ -121,6 +120,26 @@
                             <includeTypes>jar</includeTypes>
                             <includeArtifactIds>mysql-connector-java</includeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-mar-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.ei</groupId>
+                                    <artifactId>wso2mi</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
+                                    <includes>**/*.jks</includes>
+                                </artifactItem>
+                            </artifactItems>
                         </configuration>
                     </execution>
                 </executions>
@@ -177,6 +196,48 @@
                                     </directory>
                                     <includes>
                                         <include>**</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/keystores/products
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/resources/security/
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.jks</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-stratos-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/keystores/stratos
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/resources/security/
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.jks</include>
                                     </includes>
                                 </resource>
                             </resources>

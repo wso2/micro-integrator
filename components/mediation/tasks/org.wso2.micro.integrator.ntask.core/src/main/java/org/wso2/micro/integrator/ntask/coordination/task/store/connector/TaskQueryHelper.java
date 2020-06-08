@@ -23,40 +23,49 @@ import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
 /**
  * The class which contains all the data base queries for the task database.
  */
-class TaskQueryHelper {
+public class TaskQueryHelper {
 
     //task table Name
-    private static final String TABLE_NAME = "COORDINATED_TASK_TABLE";
+    public static final String TABLE_NAME = "COORDINATED_TASK_TABLE";
 
     // Task table columns
-    static final String TASK_NAME = "TASK_NAME";
-    static final String DESTINED_NODE_ID = "DESTINED_NODE_ID";
-    static final String TASK_STATE = "TASK_STATE";
+    public static final String TASK_NAME = "TASK_NAME";
+    public static final String DESTINED_NODE_ID = "DESTINED_NODE_ID";
+    public static final String TASK_STATE = "TASK_STATE";
 
     private static final String TASK_STATE_CONST =
-            "( CASE " + TASK_STATE + " WHEN \"" + CoordinatedTask.States.RUNNING + "\" THEN \""
-                    + CoordinatedTask.States.NONE + "\" WHEN \"" + CoordinatedTask.States.DEACTIVATED + "\"THEN \""
-                    + CoordinatedTask.States.PAUSED + "\" ELSE " + TASK_STATE + " END )";
+            "( CASE " + TASK_STATE + " WHEN '" + CoordinatedTask.States.RUNNING + "' THEN '"
+                    + CoordinatedTask.States.NONE + "' WHEN '" + CoordinatedTask.States.DEACTIVATED + "'THEN '"
+                    + CoordinatedTask.States.PAUSED + "' ELSE " + TASK_STATE + " END )";
 
     static final String ADD_TASK =
             "INSERT INTO " + TABLE_NAME + " ( " + TASK_NAME + ", " + DESTINED_NODE_ID + ", " + TASK_STATE + ") "
-                    + "VALUES (?,NULL,\"" + CoordinatedTask.States.NONE + "\")";
+                    + "VALUES (?,NULL,'" + CoordinatedTask.States.NONE + "')";
 
     static final String UPDATE_ASSIGNMENT_AND_STATE =
             "UPDATE  " + TABLE_NAME + " SET  " + DESTINED_NODE_ID + " = ? , " + TASK_STATE + " = " + TASK_STATE_CONST
                     + " WHERE " + TASK_NAME + " = ?";
 
+    static final String UPDATE_TASK_STATUS_TO_DEACTIVATED =
+            "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = '" + CoordinatedTask.States.DEACTIVATED + "' "
+                    + "WHERE " + TASK_NAME + " =? AND " + TASK_STATE + " !='" + CoordinatedTask.States.PAUSED + "'";
+
+    static final String ACTIVATE_TASK =
+            "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = '" + CoordinatedTask.States.ACTIVATED + "' WHERE "
+                    + TASK_NAME + " =? AND " + TASK_STATE + " !='" + CoordinatedTask.States.RUNNING + "'";
+
     static final String UPDATE_TASK_STATE =
             "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = ? WHERE " + TASK_NAME + " =? ";
 
-    static final String RETRIEVE_ALL_TASKS = "SELECT  " + TASK_NAME + " FROM " + TABLE_NAME;
+    static final String UPDATE_TASK_STATE_FOR_DESTINED_NODE =
+            "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = ? WHERE " + TASK_NAME + " =? AND " + DESTINED_NODE_ID
+                    + " =?";
 
-    static final String RETRIEVE_TASK_STATE =
-            "SELECT " + TASK_STATE + " FROM " + TABLE_NAME + " WHERE " + TASK_NAME + " =?";
+    static final String RETRIEVE_ALL_TASKS = "SELECT  " + TASK_NAME + " FROM " + TABLE_NAME;
 
     static final String RETRIEVE_UNASSIGNED_NOT_COMPLETED_TASKS =
             "SELECT " + TASK_NAME + " FROM " + TABLE_NAME + " WHERE  " + DESTINED_NODE_ID + " IS NULL AND " + TASK_STATE
-                    + " !=\"" + CoordinatedTask.States.COMPLETED + "\"";
+                    + " !='" + CoordinatedTask.States.COMPLETED + "'";
 
     static final String RETRIEVE_TASKS_OF_NODE =
             "SELECT " + TASK_NAME + " FROM " + TABLE_NAME + "  WHERE " + DESTINED_NODE_ID + " =? AND " + TASK_STATE
@@ -72,11 +81,12 @@ class TaskQueryHelper {
 
     static final String CLEAN_TASKS_OF_NODE =
             "UPDATE " + TABLE_NAME + " SET " + DESTINED_NODE_ID + " = NULL , " + TASK_STATE + " = " + TASK_STATE_CONST
-                    + " WHERE " + DESTINED_NODE_ID + " = ?";
+                    + " WHERE " + DESTINED_NODE_ID + " = ? AND " + TASK_STATE + " !='"
+                    + CoordinatedTask.States.COMPLETED + "'";
 
     static final String GET_ALL_ASSIGNED_INCOMPLETE_TASKS =
-            "SELECT * FROM " + TABLE_NAME + " WHERE " + DESTINED_NODE_ID + " IS NOT NULL AND " + TASK_STATE + " != \""
-                    + CoordinatedTask.States.COMPLETED + "\"";
+            "SELECT * FROM " + TABLE_NAME + " WHERE " + DESTINED_NODE_ID + " IS NOT NULL AND " + TASK_STATE + " != '"
+                    + CoordinatedTask.States.COMPLETED + "'";
 
     private TaskQueryHelper() throws IllegalAccessException {
         throw new IllegalAccessException("This class not to be initialized.");

@@ -22,7 +22,6 @@ import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
 import org.wso2.micro.integrator.ntask.coordination.task.store.connector.RDMBSConnector;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -102,7 +101,7 @@ public class TaskStore {
      */
     public void activateTask(String taskName) throws TaskCoordinationException {
 
-        updateTaskState(Collections.singletonList(taskName), CoordinatedTask.States.ACTIVATED);
+        rdmbsConnector.activateTask(taskName);
     }
 
     /**
@@ -112,11 +111,7 @@ public class TaskStore {
      */
     public void deactivateTask(String taskName) throws TaskCoordinationException {
 
-        updateTaskState(Collections.singletonList(taskName), CoordinatedTask.States.DEACTIVATED);
-    }
-
-    public CoordinatedTask.States getTaskState(String taskName) throws TaskCoordinationException {
-        return rdmbsConnector.getTaskState(taskName);
+        rdmbsConnector.deactivateTask(taskName);
     }
 
     /**
@@ -168,6 +163,21 @@ public class TaskStore {
     public void updateTaskState(List<String> tasks, CoordinatedTask.States state) throws TaskCoordinationException {
 
         rdmbsConnector.updateTaskState(tasks, state);
+    }
+
+    /**
+     * Update the state of task.
+     *
+     * @param taskName     Name of the task.
+     * @param updatedState Updated state.
+     * @param destinedId   Destined Node Id.
+     * @return True if update is successful.
+     * @throws TaskCoordinationException when something goes wrong while updating.
+     */
+    public boolean updateTaskState(String taskName, CoordinatedTask.States updatedState, String destinedId)
+            throws TaskCoordinationException {
+
+        return rdmbsConnector.updateTaskState(taskName, updatedState, destinedId);
     }
 
     /**

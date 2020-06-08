@@ -36,7 +36,7 @@ import javax.sql.DataSource;
 
 public class DatabaseCreator {
 
-    private static Log log = LogFactory.getLog(org.wso2.carbon.utils.dbcreator.DatabaseCreator.class);
+    private static Log log = LogFactory.getLog(DatabaseCreator.class);
     private DataSource dataSource;
     private String delimiter = ";";
     private Connection conn = null;
@@ -283,7 +283,7 @@ public class DatabaseCreator {
      * @throws Exception
      */
     private void executeSQLScript() throws Exception {
-        String databaseType = org.wso2.carbon.utils.dbcreator.DatabaseCreator.getDatabaseType(this.conn);
+        String databaseType = getDatabaseType(this.conn);
         boolean keepFormat = false;
         if ("oracle".equals(databaseType)) {
             delimiter = "/";

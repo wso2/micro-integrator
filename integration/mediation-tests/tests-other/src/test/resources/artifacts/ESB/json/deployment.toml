@@ -1,5 +1,6 @@
 [server]
 hostname = "localhost"
+hot_deployment = true
 
 [keystore.tls]
 file_name = "wso2carbon.jks"
@@ -16,5 +17,9 @@ algorithm = "AES"
 [mediation]
 synapse.enable_xml_nil = true
 
-[management_api_token_handler]
+[management_api.jwt_token_security_handler]
 enable = false
+
+[[synapse_handlers]]
+name="TestHandler"
+class="org.wso2.carbon.test.gateway.TestHandler"

@@ -921,3 +921,93 @@ order_before="before"
 order_after="after"
 order_phase_first="phasefirst"
 order_phase_last="phaselast"
+
+########################## Synapse handlers ###################################
+[[synapse_handlers]]
+name="IntegratorSynapseHandler"
+class="org.wso2.micro.integrator.dataservices.odata.endpoint.ODataPassThroughHandler"
+
+########################## Internal Apis ###################################
+
+[prometheus_api]
+protocols = "http"
+
+[prometheus_api.basic_security_handler]
+enable = true
+
+[prometheus_api.authorization_handler]
+enable = true
+
+[[prometheus_api.authorization_handler.resources]]
+path = "/metric"
+
+[[prometheus_api.custom_handlers]]
+name = "CustomHandler"
+class = "CustomImpl"
+
+[[prometheus_api.custom_handlers.resources]]
+path = "/resource1"
+
+[management_api]
+protocols = "http"
+
+[management_api.cors]
+enabled = true
+allowed_origins = "host1.com"
+allowed_headers = "SomeHeader"
+
+[management_api.basic_security_handler]
+enable = true
+
+[management_api.jwt_token_security_handler]
+enable = false
+
+[management_api.jwt_token_security_handler]
+token_store_config.max_size= "200"
+token_store_config.clean_up_interval= "600"
+token_store_config.remove_oldest_token_on_overflow= "true"
+token_config.expiry= "3600"
+token_config.size= "2048"
+
+[management_api.authorization_handler]
+enable = false
+
+[[management_api.authorization_handler.resources]]
+path = "/user"
+
+[[management_api.authorization_handler.resources]]
+path = "/apis"
+
+[[management_api.custom_handlers]]
+name = "CustomHandler"
+class = "CustomerImpl"
+
+[[management_api.custom_handlers.resources]]
+path = "/"
+
+[[management_api.custom_handlers]]
+name = "CustomHandler2"
+class = "CustomerImpl2"
+
+[[management_api.custom_handlers.resources]]
+path = "/endpoints"
+
+[[management_api.custom_handlers.resources]]
+path = "/apis"
+
+[[internal_apis.users]]
+user.name = "user-1"
+user.password = "pwd-1"
+
+[[internal_apis.users]]
+user.name = "user-2"
+user.password = "pwd-2"
+
+[internal_apis.file_user_store]
+enable = false
+
+####################Transaction Counter Handler ############################
+[transaction_counter]
+enable = true
+data_source = "WSO2_COORDINATION_DB"
+update_interval = 2

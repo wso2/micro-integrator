@@ -29,13 +29,9 @@ class SecretCipherHander {
 	private static Log log = LogFactory.getLog(SecretCipherHander.class);
 
 	/* Root Secret Repository */
-	private RegistrySecretRepository parentRepository = new RegistrySecretRepository();
+	private CiphertextRepository parentRepository = CiphertextRepository.getInstance();
 	private FileSecretRepository fileSecretRepository = new FileSecretRepository();
-
-	SecretCipherHander(org.apache.synapse.MessageContext synCtx) {
-		super();
-		parentRepository.setSynCtx(synCtx);
-	}
+	private EnvironmentSecretRepository environmentSecretRepository =  new EnvironmentSecretRepository();
 
 	/**
 	 * Returns the secret corresponding to the given alias name
@@ -56,6 +52,11 @@ class SecretCipherHander {
 				return fileSecretRepository.getSecret(resolvedAlias);
 			}
 			return fileSecretRepository.getPlainTextSecret(resolvedAlias);
+		} else if (VaultType.ENV.equals(secretSrcData.getVaultType())) {
+			if (secretSrcData.isEncrypted()) {
+				return environmentSecretRepository.getSecret(alias);
+			}
+			return environmentSecretRepository.getPlainTextSecret(alias);
 		} else if (VaultType.REG.equals(secretSrcData.getVaultType())) {
 			// For registry type we only support plain text
 			return parentRepository.getSecret(alias);

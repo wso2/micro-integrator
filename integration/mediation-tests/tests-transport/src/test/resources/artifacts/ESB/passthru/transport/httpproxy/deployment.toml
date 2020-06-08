@@ -27,5 +27,5 @@ sender.proxy_host = "111.wso2.com"
 sender.proxy_port = 7777
 sender.non_proxy_hosts = [".*.222.wso2.com",".*.333.wso2.com"]
 
-[management_api_token_handler]
+[management_api.jwt_token_security_handler]
 enable = false

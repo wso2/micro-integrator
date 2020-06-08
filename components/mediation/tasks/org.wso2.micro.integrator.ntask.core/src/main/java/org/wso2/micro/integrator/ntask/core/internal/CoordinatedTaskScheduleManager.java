@@ -18,6 +18,7 @@
 
 package org.wso2.micro.integrator.ntask.core.internal;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
@@ -30,6 +31,7 @@ import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,6 +47,10 @@ public class CoordinatedTaskScheduleManager {
     private ClusterCoordinator clusterCoordinator;
     private TaskLocationResolver resolver;
     private ScheduledTaskManager taskManager;
+    // Time period in seconds in which the scheduler runs
+    private static int executionPeriod = 2;
+    // The frequency at which task resolving need to be done per cleaning.
+    private static int resolveFrequency = 5;
 
     public CoordinatedTaskScheduleManager(ScheduledTaskManager taskManager, TaskStore taskStore,
                                           ClusterCoordinator clusterCoordinator, TaskLocationResolver resolver) {
@@ -54,25 +60,31 @@ public class CoordinatedTaskScheduleManager {
         this.resolver = resolver;
     }
 
+    static void setExecutionPeriod(int executionPeriod) {
+        CoordinatedTaskScheduleManager.executionPeriod = executionPeriod;
+    }
+
+    static void setResolveFrequency(int resolveFrequency) {
+        CoordinatedTaskScheduleManager.resolveFrequency = resolveFrequency;
+    }
+
     /**
      * Spawns new scheduled executor service which is responsible for handling coordinated tasks.
      */
     public void startTaskScheduler(String msg) {
 
-        ScheduledExecutorService taskSchedulerExecutor = Executors.newSingleThreadScheduledExecutor();
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("CoordinatedTaskScheduler-%d")
+                .build();
+        ScheduledExecutorService taskSchedulerExecutor = Executors.newSingleThreadScheduledExecutor(namedThreadFactory);
         TaskStoreCleaner taskStoreCleaner = new TaskStoreCleaner(taskManager, taskStore);
-        // the frequency at which task resolving need to be done per cleaning.
-        int resolvingFrequency = 5;
         ClusterCommunicator connector = new ClusterCommunicator(clusterCoordinator);
         CoordinatedTaskScheduler taskScheduler = new CoordinatedTaskScheduler(taskManager, taskStore, resolver,
                                                                               connector, taskStoreCleaner,
-                                                                              resolvingFrequency);
+                                                                              resolveFrequency);
         int initialDelay = 0; // can start immediately as the task service is already registered.
-        //todo read from toml
-        int period = 2;
         LOG.info("Triggering coordinated task scheduler with an initial delay of " + initialDelay + " second(s) and a "
-                         + "period of " + period + " second(s)" + msg + ".");
-        taskSchedulerExecutor.scheduleWithFixedDelay(taskScheduler, initialDelay, period, TimeUnit.SECONDS);
+                         + "period of " + executionPeriod + " second(s)" + msg + ".");
+        taskSchedulerExecutor.scheduleWithFixedDelay(taskScheduler, initialDelay, executionPeriod, TimeUnit.SECONDS);
         DataHolder.getInstance().setTaskScheduler(taskSchedulerExecutor);
     }
 

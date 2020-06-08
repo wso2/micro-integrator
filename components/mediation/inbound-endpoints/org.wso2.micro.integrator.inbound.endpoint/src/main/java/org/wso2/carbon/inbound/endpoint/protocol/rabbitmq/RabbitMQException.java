@@ -21,16 +21,22 @@ package org.wso2.carbon.inbound.endpoint.protocol.rabbitmq;
 /**
  * This class represents RabbitMQ specific exceptions
  */
-public class RabbitMQException extends RuntimeException {
+public class RabbitMQException extends Exception {
+
+    /**
+     * Create an exception with given exception message
+     *
+     * @param msg an exception message
+     */
     public RabbitMQException(String msg) {
         super(msg);
     }
 
     /**
-     * Create an exception
+     * Create an exception with given message and wrapping the given exception object
      *
      * @param msg exception message
-     * @param e   throwable
+     * @param e   exception
      */
     public RabbitMQException(String msg, Exception e) {
         super(msg, e);

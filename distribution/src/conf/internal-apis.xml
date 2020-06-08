@@ -35,35 +35,29 @@
                         <expiry>3600</expiry><!--Seconds /-->
                         <size>2048</size>
                     </TokenConfig>
-                    <UserStore>
-                        <users>
-                            <user>
-                                <username>admin</username>
-                                <password>admin</password>
-                            </user>
-                        </users>
-                    </UserStore>
+                </handler>
+                <handler class="org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler" name="AuthorizationHandler">
                 </handler>
                 <!--handler class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"
                          name="BasicSecurityHandler">
-                    <UserStore>
-                        <users>
-                            <user>
-                                <username>admin</username>
-                                <password>admin</password>
-                            </user>
-                        </users>
-                    </UserStore>
                 </handler-->
             </handlers>
             <cors>
                 <enabled>true</enabled>
                 <allowedOrigins>*</allowedOrigins>
                 <!-- comma separated values-->
-                <allowedHeaders>Authorization</allowedHeaders>
+                <allowedHeaders>Authorization, Content-Type</allowedHeaders>
             </cors>
         </api>
     </apis>
+    <userStore>
+        <users>
+            <user>
+                <username>admin</username>
+                <password>admin</password>
+            </user>
+        </users>
+    </userStore>
     <sslConfig>
         <parameter name="keystore">
             <KeyStore>

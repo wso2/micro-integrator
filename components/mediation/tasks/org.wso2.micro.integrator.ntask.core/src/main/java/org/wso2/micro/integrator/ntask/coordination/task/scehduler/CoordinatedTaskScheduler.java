@@ -144,11 +144,9 @@ public class CoordinatedTaskScheduler implements Runnable {
             LOG.debug("Following list of tasks were found in the failed list.");
             failedTasks.forEach(LOG::debug);
         }
-        Iterator<String> iter = failedTasks.iterator();
-        while (iter.hasNext()) {
-            String task = iter.next();
+        for (String task : failedTasks) {
             taskStore.addTaskIfNotExist(task);
-            iter.remove();
+            taskManager.removeTaskFromAdditionFailedTaskList(task);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Successfully added the failed task [" + task + "]");
             }
@@ -172,21 +170,26 @@ public class CoordinatedTaskScheduler implements Runnable {
             return;
         }
         List<String> deployedCoordinatedTasks = taskManager.getAllCoordinatedTasksDeployed();
-        tasksOfThisNode.forEach(taskName -> {
+        List<String> erroredTasks = new ArrayList<>();
+        for (String taskName : tasksOfThisNode) {
             if (deployedCoordinatedTasks.contains(taskName)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Submitting retrieved task [" + taskName + "] to the task manager.");
                 }
                 try {
                     taskManager.scheduleCoordinatedTask(taskName);
-                } catch (TaskException e) {
-                    LOG.error("Exception occurred while scheduling coordinated task : " + taskName, e);
+                } catch (TaskException ex) {
+                    if (!TaskException.Code.DATABASE_ERROR.equals(ex.getCode())) {
+                        erroredTasks.add(taskName);
+                    }
+                    LOG.error("Exception occurred while scheduling coordinated task : " + taskName, ex);
                 }
             } else {
                 LOG.info("The task [" + taskName + "] retrieved to be scheduled is not a deployed task "
                                  + "in this node or an invalid entry, hence ignoring it.");
             }
-        });
+        }
+        taskStore.updateTaskState(erroredTasks, CoordinatedTask.States.NONE);
     }
 
     /**

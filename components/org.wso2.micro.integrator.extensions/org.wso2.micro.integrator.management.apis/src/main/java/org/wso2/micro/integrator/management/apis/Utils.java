@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.service.mgt.ServiceAdmin;
 
@@ -38,18 +39,67 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+
+import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
 public class Utils {
 
     private static final Log LOG = LogFactory.getLog(Utils.class);
 
-    public static String getQueryParameter(MessageContext messageContext, String key){
-        if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_QUERY_PARAM_PREFIX + key))){
+    public static String getQueryParameter(MessageContext messageContext, String key) {
+
+        if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_QUERY_PARAM_PREFIX + key))) {
             return messageContext.getProperty(RESTConstants.REST_QUERY_PARAM_PREFIX + key).toString();
         }
         return null;
+    }
+
+    /**
+     * Extracts the value set for the patch parameter with the given key.
+     *
+     * @param messageContext message context to extract the parameter from
+     * @param key            the key defined in the uri template
+     * @return the resolved value from the url. Returns null if not present.
+     */
+    public static String getPathParameter(MessageContext messageContext, String key){
+        String pathParameter = messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key).toString();
+        if (Objects.nonNull(pathParameter)) {
+            return pathParameter;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the string representation of a property set in the message context
+     *
+     * @param messageContext the message context to extract the property from
+     * @param key            the key of the property
+     * @return the string if a non empty value has been set. Returns null, if the property is not present or if the
+     * value is empty.
+     */
+    public static String getStringPropertyFromMessageContext(MessageContext messageContext, String key) {
+        Object propertyObject = messageContext.getProperty(key);
+        if (Objects.nonNull(propertyObject)) {
+            String propertyString = propertyObject.toString();
+            if (!StringUtils.isEmpty(propertyString)) {
+                return propertyString;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Validates if the request is authenticated.
+     *
+     * @param messageContext the message context to extract the property from
+     * @return true if the user is authenticated.
+     */
+    public static boolean isUserAuthenticated(MessageContext messageContext) {
+        return !Objects.isNull(getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY));
     }
 
     public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload) {
@@ -62,9 +112,11 @@ public class Utils {
         }
         axis2MessageContext.setProperty("messageType", Constants.HEADER_VALUE_APPLICATION_JSON);
         axis2MessageContext.setProperty("ContentType", Constants.HEADER_VALUE_APPLICATION_JSON);
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
     }
 
     public static JSONObject createJSONList(int count) {
+
         JSONObject jsonBody = new JSONObject();
         JSONArray list = new JSONArray();
         jsonBody.put(Constants.COUNT, count);
@@ -72,17 +124,55 @@ public class Utils {
         return jsonBody;
     }
 
+    /**
+     * Creates a json response according to the message provided and sets the provided HTTP code.
+     *
+     * @param message             the error response to be sent to the client
+     * @param exception           the exception to be logged on the server side. The error response will be extracted
+     *                            from the
+     *                            exception.
+     * @param axis2MessageContext message context to set the json payload to
+     * @param statusCode          the HTTP status code to be returned
+     * @return error response
+     */
+    static JSONObject createJsonError(String message, Throwable exception,
+                                      org.apache.axis2.context.MessageContext axis2MessageContext, String statusCode) {
+        LOG.error(message, exception);
+        return createResponse(message + exception.getMessage(), axis2MessageContext, statusCode);
+    }
+
+    /**
+     * Creates a json response according to the message provided and sets the provided HTTP code.
+     *
+     * @param message             the error response to be sent to the client
+     * @param axis2MessageContext message context to set the json payload to
+     * @param statusCode          the HTTP status code to be returned
+     * @return error response
+     */
+    static JSONObject createJsonError(String message, org.apache.axis2.context.MessageContext axis2MessageContext,
+                                      String statusCode) {
+        LOG.error(message);
+        return createResponse(message, axis2MessageContext, statusCode);
+    }
+
+
+    private static JSONObject createResponse(String message, org.apache.axis2.context.MessageContext axis2MessageContext,
+                                             String statusCode) {
+        JSONObject jsonBody = Utils.createJsonErrorObject(message);
+        axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, statusCode);
+        return jsonBody;
+    }
+
     public static JSONObject createJsonErrorObject(String error) {
-        JSONObject errorObject =  new JSONObject();
+
+        JSONObject errorObject = new JSONObject();
         errorObject.put("Error", error);
         return errorObject;
     }
 
     public static boolean isDoingPOST(org.apache.axis2.context.MessageContext axis2MessageContext) {
-        if (Constants.HTTP_POST.equals(axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY))) {
-            return true;
-        }
-        return false;
+
+        return Constants.HTTP_POST.equals(axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY));
     }
 
     /**
@@ -133,7 +223,7 @@ public class Utils {
      */
     public static String getProperty(File srcFile, String key) throws IOException {
 
-        String value = null;
+        String value;
         try (FileInputStream fis = new FileInputStream(srcFile)) {
             Properties properties = new Properties();
             properties.load(fis);
@@ -143,4 +233,89 @@ public class Utils {
         }
         return value;
     }
+
+    /**
+     * This method will return the path to logs directory.
+     *
+     * @return path as string.
+     */
+    public static String getCarbonLogsPath() {
+
+        String carbonLogsPath = System.getProperty("carbon.logs.path");
+        if (carbonLogsPath == null) {
+            carbonLogsPath = System.getenv("CARBON_LOGS");
+            if (carbonLogsPath == null) {
+                return getCarbonHome() + File.separator + "repository" + File.separator + "logs";
+            }
+        }
+        return carbonLogsPath;
+    }
+
+    /**
+     * This method will return the path to CARBON_HOME.
+     *
+     * @return path as String.
+     */
+    public static String getCarbonHome() {
+
+        String carbonHome = System.getProperty("carbon.home");
+        if (carbonHome == null) {
+            carbonHome = System.getenv("CARBON_HOME");
+            System.setProperty("carbon.home", carbonHome);
+        }
+        return carbonHome;
+    }
+
+    /**
+     * This method will provide information on all the files in the logs directory.
+     *
+     * @return list of file info objects.
+     */
+    public static List<LogFileInfo> getLogFileInfoList() {
+
+        String folderPath = Utils.getCarbonLogsPath();
+        List<LogFileInfo> logFilesList = new ArrayList<>();
+        LogFileInfo logFileInfo;
+
+        File folder = new File(folderPath);
+        File[] listOfFiles = folder.listFiles();
+
+        if (listOfFiles == null || listOfFiles.length == 0) {
+            // folder.listFiles can return a null, in that case return a default log info
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Could not find any log file in " + folderPath);
+            }
+            return getDefaultLogInfoList();
+        }
+        for (File file : listOfFiles) {
+            String filename = file.getName();
+            if (!filename.endsWith(".lck")) {
+                String filePath = Utils.getCarbonLogsPath() + File.separator + filename;
+                File logfile = new File(filePath);
+                logFileInfo = new LogFileInfo(filename, getFileSize(logfile));
+                logFilesList.add(logFileInfo);
+            }
+        }
+        return logFilesList;
+    }
+
+    private static String getFileSize(File file) {
+
+        long bytes = file.length();
+        int unit = 1024;
+        if (bytes < unit) {
+            return bytes + " B";
+        }
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        char pre = "KMGTPE".charAt(exp - 1);
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    private static List<LogFileInfo> getDefaultLogInfoList() {
+
+        List<LogFileInfo> defaultLogFileInfoList = new ArrayList<>();
+        defaultLogFileInfoList.add(new LogFileInfo("NO_LOG_FILES", "---"));
+        return defaultLogFileInfoList;
+    }
+
 }

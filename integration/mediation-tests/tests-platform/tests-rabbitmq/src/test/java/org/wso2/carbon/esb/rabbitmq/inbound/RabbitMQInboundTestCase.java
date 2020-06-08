@@ -37,7 +37,6 @@ import java.io.File;
  */
 public class RabbitMQInboundTestCase extends ESBIntegrationTest {
 
-    private RabbitMQProducerClient sender;
     private CarbonLogReader logReader;
 
     @BeforeClass(alwaysRun = true)
@@ -54,6 +53,8 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
      */
     @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ inbound endpoint ")
     public void testRabbitMQInboundEndpoint() throws Exception {
+        RabbitMQProducerClient sender;
+
         sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange", "simple_inbound_endpoint_test");
 
         logReader.start();
@@ -70,6 +71,8 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
         logReader.stop();
         int messagesConsumed = logReader.getNumberOfOccurencesForLog("received by inbound endpoint = true");
         Assert.assertEquals(messagesConsumed, messageCount, "All messages are not received from queue");
+
+        sender.disconnect();
     }
 
     /**
@@ -86,7 +89,7 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
         CarbonServerExtension.restartServer();
         Thread.sleep(20000);
         RabbitMQTestUtils.waitForLogToGetUpdated();
-        Assert.assertTrue(logReader.checkForLog("Attempting to create connection to RabbitMQ Broker in 500 ms",
+        Assert.assertTrue(logReader.checkForLog("Attempting to create connection to RabbitMQ Broker in 500ms",
                                                 5), "The connection retry delay is incorrect");
         Assert.assertEquals(
                 logReader.getNumberOfOccurencesForLog("Attempting to create connection to RabbitMQ Broker"),
@@ -97,7 +100,5 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void end() throws Exception {
         super.cleanup();
-        sender.disconnect();
-        sender = null;
     }
 }

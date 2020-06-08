@@ -512,6 +512,16 @@
             <Item>xsd</Item>
             <Class>org.wso2.micro.core.transports.util.XsdProcessor</Class>
         </Processor>
+        <Processor>
+            <Item>swagger.json</Item>
+            <Class>org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerJsonProcessor
+            </Class>
+        </Processor>
+        <Processor>
+            <Item>swagger.yaml</Item>
+            <Class>org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerYamlProcessor
+            </Class>
+        </Processor>
         {% for processor_item in server.get_request_processor %}
         <Processor>
             <Item>{{processor_item.item}}</Item>
