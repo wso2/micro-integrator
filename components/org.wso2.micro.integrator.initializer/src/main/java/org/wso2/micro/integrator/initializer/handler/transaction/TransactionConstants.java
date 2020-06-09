@@ -28,5 +28,5 @@ public class TransactionConstants {
             + "repository" + File.separator + "resources" + File.separator + "security" + File.separator
             + "publickey.pem";
 
-    public static final String ENCRYPTION_ALGORITHM = "RSA";
+    public static final String ENCRYPTION_ALGORITHM = "RSA/ECB/OAEPwithSHA1andMGF1Padding";
 }
