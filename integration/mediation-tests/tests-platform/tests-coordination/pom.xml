@@ -293,6 +293,12 @@
                 <skipClusterTests>false</skipClusterTests>
             </properties>
         </profile>
+        <profile>
+            <id>db-tests</id>
+            <properties>
+                <skipClusterTests>false</skipClusterTests>
+            </properties>
+        </profile>
     </profiles>
 
 </project>

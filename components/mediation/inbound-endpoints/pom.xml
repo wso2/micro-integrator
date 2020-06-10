@@ -84,11 +84,6 @@
             <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
             <version>1.2.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.orbit.com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>3.6.6.wso2v1</version>
-        </dependency>
     </dependencies>
 
 </project>

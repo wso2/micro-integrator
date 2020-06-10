@@ -42,8 +42,9 @@ public class ReadinessResource extends APIResource {
     private static Log log = LogFactory.getLog(ReadinessResource.class);
     private static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     private static final String HTTP_SC = "HTTP_SC";
-    private static String CACHED_RESPONSE = "";
-    private static int CACHED_RESPONSE_CODE;
+    private String cachedResponse = "";
+    private int cachedResponseCode;
+    private boolean isHotDeploymentEnabled;
 
     /**
      * Constructor for creating an API Resource.
@@ -52,6 +53,7 @@ public class ReadinessResource extends APIResource {
      */
     public ReadinessResource(String urlTemplate) {
         super(urlTemplate);
+        isHotDeploymentEnabled = MicroIntegratorBaseUtils.getCarbonAxisConfigurator().isHotDeploymentEnabled();
     }
 
     @Override
@@ -76,36 +78,33 @@ public class ReadinessResource extends APIResource {
 
         String response = "";
 
-        if (CACHED_RESPONSE.isEmpty()) {
+        if (cachedResponse.isEmpty()) {
             // appending MI server version number to the response
             CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
             String miVersion = serverConfig.getServerVersion();
             response = "{\"version\":\"" + miVersion + "\",";
 
-            ArrayList<String> faultyCapps = new ArrayList<>(CappDeployer.getFaultyCapps());
-            if (faultyCapps.size() > 0) {
-                String faultyList = String.join("\",\"", faultyCapps);
-                response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList +
-                        "\"]}";
-                CACHED_RESPONSE_CODE = 500;
+            if (!isHotDeploymentEnabled) {
+                ArrayList<String> faultyCapps = new ArrayList<>(CappDeployer.getFaultyCapps());
+                if (!faultyCapps.isEmpty()) {
+                    String faultyList = String.join("\",\"", faultyCapps);
+                    response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList
+                            + "\"]}";
+                    cachedResponseCode = 500;
+                } else {
+                    response += "\"status\" : \"ready\"}";
+                    cachedResponseCode = 200;
+                }
             } else {
                 response += "\"status\" : \"ready\"}";
-                CACHED_RESPONSE_CODE = 200;
+                cachedResponseCode = 200;
             }
             // update cached response
-            CACHED_RESPONSE = response;
+            cachedResponse = response;
         }
-
-        axisCtx.setProperty(HTTP_SC, CACHED_RESPONSE_CODE);
-
-        if (MicroIntegratorBaseUtils.getCarbonAxisConfigurator().isHotDeploymentEnabled()) {
-            log.warn("Hot Deployment and Readiness Probe configurations are both enabled in your server! Note that "
-                             + "the readiness probe will not identify faulty artifacts that are hot deployed. Be sure "
-                             + "to disable hot deployment if the readiness probe is enabled.");
-        }
-
         try {
-            JsonUtil.getNewJsonPayload(axisCtx, CACHED_RESPONSE, true, true);
+            JsonUtil.getNewJsonPayload(axisCtx, cachedResponse, true, true);
+            axisCtx.setProperty(HTTP_SC, cachedResponseCode);
         } catch (AxisFault axisFault) {
             log.error("Error occurred while generating health-check response", axisFault);
             // sending 500 without a response payload

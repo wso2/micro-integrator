@@ -21,7 +21,7 @@ package org.wso2.micro.integrator;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.esb.integration.common.extensions.carbonserver.CarbonTestServerManager;
-import org.wso2.esb.integration.common.extensions.coordination.CoordinationDatabase;
+import org.wso2.esb.integration.common.extensions.db.manager.DatabaseManager;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper;
 
@@ -57,8 +57,8 @@ public class TestUtils {
 
         HashMap<String, String> startupParameters = new HashMap<>();
         startupParameters.put("-DportOffset", String.valueOf(offset));
-        startupParameters.put("-DenableManagementApi", "true");
         startupParameters.put("startupScript", "micro-integrator");
+        startupParameters.put("-DgracefulShutdown", "false");
         additionalParams.forEach(startupParameters::put);
         return new CarbonTestServerManager(new AutomationContext(), System.getProperty("carbon.zip"),
                                            startupParameters);
@@ -93,9 +93,8 @@ public class TestUtils {
 
         String query = "SELECT * FROM " + TaskQueryHelper.TABLE_NAME + " WHERE " + TaskQueryHelper.TASK_NAME + " = '"
                 + taskName + "'";
-        try (Connection conn = DriverManager.getConnection(CoordinationDatabase.getConnectionUrl(),
-                                                           CoordinationDatabase.getUserName(),
-                                                           CoordinationDatabase.getPwd());
+        try (Connection conn = DriverManager.getConnection(DatabaseManager.getConnectionUrl(),
+                                                           DatabaseManager.getUserName(), DatabaseManager.getPwd());
                 PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();

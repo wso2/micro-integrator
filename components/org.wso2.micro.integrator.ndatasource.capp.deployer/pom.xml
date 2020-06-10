@@ -68,6 +68,7 @@
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.datasource.capp.deployer,
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             org.apache.axis2.deployment;version="${axis2.orbit.imp.pkg.version}",
                             org.apache.axis2.engine;version="${axis2.orbit.imp.pkg.version}",
                             org.apache.commons.logging;version="${commons-logging.imp.pkg.version}",

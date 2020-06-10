@@ -22,7 +22,6 @@ import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.engine.AxisConfigurator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.micro.integrator.event.sink.EventSinkDeployer;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -140,27 +139,6 @@ public class AppDeployerServiceComponent {
         // Register CappDeployer in DeploymentEngine (required for CApp hot deployment)
         addCAppDeployer(deploymentEngine);
 
-        // Register EventSinkDeployer in DeploymentEngine
-        addEventSinkDeployer(deploymentEngine);
-    }
-
-    /**
-     * Initialize and add the EventSinkDeployer to the Deployment Engine.
-     */
-    private void addEventSinkDeployer(DeploymentEngine deploymentEngine) {
-        String artifactRepoPath = configCtx.getAxisConfiguration().getRepository().getPath();
-
-        // Initialize EventSource Deployer here
-        EventSinkDeployer eventSinkDeployer = new EventSinkDeployer();
-        eventSinkDeployer.setDirectory(artifactRepoPath + DeploymentConstants.EVENT_SINK_DIR_NAME);
-
-        //Add the deployer to the deployment engine
-        deploymentEngine.addDeployer(eventSinkDeployer, DeploymentConstants.EVENT_SINK_DIR_NAME,
-                                     ServiceBusConstants.ARTIFACT_EXTENSION);
-
-        if (log.isDebugEnabled()) {
-            log.debug("Successfully registered eventSink deployer");
-        }
     }
 
     /**

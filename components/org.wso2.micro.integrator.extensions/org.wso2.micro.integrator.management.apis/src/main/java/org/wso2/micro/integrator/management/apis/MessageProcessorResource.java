@@ -224,12 +224,12 @@ public class MessageProcessorResource extends APIResource {
                 messageProcessor.activate();
                 jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, processorName + " : is activated");
             } else {
-                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Provided state is not valid");
+                jsonResponse = Utils.createJsonError("Provided state is not valid", axis2MessageContext, Constants.BAD_REQUEST);
             }
             Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
         } else {
-            LOG.warn("Specified message processor does not exist");
-            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Message processor does not exist"));
+            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonError("Message processor does not exist",
+                    axis2MessageContext, Constants.NOT_FOUND));
         }
 
     }

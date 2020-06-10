@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.bind.JAXBContext;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -175,11 +176,11 @@ public class DataSourceManager {
 
 	private void initSystemDataSource(File sysDSFile) throws DataSourceException {
 		try {
-		    JAXBContext ctx = JAXBContext.newInstance(SystemDataSourcesConfiguration.class);
-            Document doc = DataSourceUtils.convertToDocument(sysDSFile);
-            DataSourceUtils.secureResolveDocument(doc, true);
-		    SystemDataSourcesConfiguration sysDS = (SystemDataSourcesConfiguration) ctx.createUnmarshaller().
-		    		unmarshal(doc);
+			JAXBContext ctx = JAXBContext.newInstance(SystemDataSourcesConfiguration.class);
+			OMElement doc = DataSourceUtils.convertToOMElement(sysDSFile);
+			DataSourceUtils.secureResolveOMElement(doc);
+			SystemDataSourcesConfiguration sysDS = (SystemDataSourcesConfiguration) ctx.createUnmarshaller().
+					unmarshal(doc.getXMLStreamReader());
 		    this.addDataSourceProviders(sysDS.getProviders());
 		    DataSourceRepository dsRepo = this.getDataSourceRepository(
 				    Constants.SUPER_TENANT_ID);

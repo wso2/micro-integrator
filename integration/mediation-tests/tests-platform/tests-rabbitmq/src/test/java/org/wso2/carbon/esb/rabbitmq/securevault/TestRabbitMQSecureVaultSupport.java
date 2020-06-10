@@ -43,11 +43,8 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    private static final String CIPHER_TOOL_PROP_FILE = "cipher-tool.properties";
-    private static final String CIPHER_TEXT_PROP_FILE = "cipher-text.properties";
-    private static final String SECRET_CONF_PROP_FILE = "secret-conf.properties";
+    private static final String TOML_FILE = "deployment.toml";
     private static final String PASSWD_FILE = "password-tmp";
-    private static final String AXIS2_XML_FILE = "axis2.xml";
     private static final String SYNAPSE_CONFIG_FILE = "RabbitMQSecureVaultProxy.xml";
 
     private static final String RABBITMQ_EXCHANGE = "exchangeSecureVault";
@@ -63,43 +60,16 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
         String secureVaultConfDir =
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
                         + "securevault" + File.separator;
-        String carbonSecurityDir =
-                CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator + "security"
-                        + File.separator;
+        String confDir =
+                CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator;
 
-        //copy cipher-tool.properties
-        String srcCipherTool = secureVaultConfDir + CIPHER_TOOL_PROP_FILE;
-        String targetCipherTool = carbonSecurityDir + CIPHER_TOOL_PROP_FILE;
+        //copy deployment.toml
+        String srcToml = secureVaultConfDir + TOML_FILE;
+        String targetToml = confDir + TOML_FILE;
 
-        File srcCipherToolFile = new File(srcCipherTool);
-        File targetCipherToolFile = new File(targetCipherTool);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcCipherToolFile, targetCipherToolFile, true);
-
-        //copy cipher-text.properties
-        String srcCipherText = secureVaultConfDir + CIPHER_TEXT_PROP_FILE;
-        String targetCipherText = carbonSecurityDir + CIPHER_TEXT_PROP_FILE;
-
-        File srcCipherTextFile = new File(srcCipherText);
-        File targetCipherTextFile = new File(targetCipherText);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcCipherTextFile, targetCipherTextFile, true);
-
-        //copy secret-conf.properties
-        String srcSecretConf = secureVaultConfDir + SECRET_CONF_PROP_FILE;
-        String targetSecretConf = carbonSecurityDir + SECRET_CONF_PROP_FILE;
-
-        File srcSecretConfFile = new File(srcSecretConf);
-        File targetSecretConfFile = new File(targetSecretConf);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcSecretConfFile, targetSecretConfFile, true);
-
-        //copy axis2.xml
-        String srcAxis2Xml = secureVaultConfDir + AXIS2_XML_FILE;
-        String targetAxis2Xml =
-                CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator + "axis2" + File.separator
-                        + AXIS2_XML_FILE;
-
-        File srcAxis2XmlFile = new File(srcAxis2Xml);
-        File targetAxis2XmlFile = new File(targetAxis2Xml);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcAxis2XmlFile, targetAxis2XmlFile, true);
+        File srcTomlFile = new File(srcToml);
+        File targetTomlFile = new File(targetToml);
+        serverConfigurationManager.applyConfigurationWithoutRestart(srcTomlFile, targetTomlFile, true);
 
         //copy password-tmp
         String srcPasswordTemp = secureVaultConfDir + PASSWD_FILE;
