@@ -1186,7 +1186,6 @@
                 <version>${powermock.version}</version>
                 <scope>test</scope>
             </dependency>
-<<<<<<< HEAD
             <!-- Observability with Prometheus Feature dependencies-->
             <dependency>
                 <groupId>io.prometheus</groupId>
