@@ -22,10 +22,8 @@ package org.wso2.carbon.inbound.endpoint.protocol.rabbitmq;
  * Holds constants for RabbitMQ Inbound Endpoint Implementation
  */
 public class RabbitMQConstants {
-    public static final String CONTENT_TYPE_PROPERTY_PARAM = "rabbitmq.transport.ContentTypeProperty";
+    public static final String AMQ_PREFIX = "amq.";
     public static final String RABBITMQ_REPLY_TO = "RABBITMQ_REPLY_TO";
-    public static final String SOAP_ACTION = "SOAP_ACTION";
-    public static final String RABBITMQ_PREFIX = "rabbitmq";
     public static final String SET_ROLLBACK_ONLY = "SET_ROLLBACK_ONLY";
     public static final String RABBITMQ_CON_FAC = "rabbitmq.connection.factory";
 
@@ -34,23 +32,17 @@ public class RabbitMQConstants {
     public static final String SERVER_USER_NAME = "rabbitmq.server.user.name";
     public static final String SERVER_PASSWORD = "rabbitmq.server.password";
     public static final String SERVER_VIRTUAL_HOST = "rabbitmq.server.virtual.host";
-    public static final String SERVER_RETRY_INTERVAL = "rabbitmq.server.retry.interval";
 
     public static final String HEARTBEAT = "rabbitmq.factory.heartbeat";
     public static final String CONNECTION_TIMEOUT = "rabbitmq.factory.connection.timeout";
+    public static final String NETWORK_RECOVERY_INTERVAL = "rabbitmq.connection.factory.network.recovery.interval";
     public static final String RETRY_INTERVAL = "rabbitmq.connection.retry.interval";
     public static final String RETRY_COUNT = "rabbitmq.connection.retry.count";
-    public static final String RECEIVE_TIMEOUT = "rabbitmq.connection.receive.timeout";
 
     public static final String CORRELATION_ID = "rabbitmq.message.correlation.id";
     public static final String MESSAGE_ID = "rabbitmq.message.id";
     public static final String CONTENT_TYPE = "rabbitmq.message.content.type";
     public static final String CONTENT_ENCODING = "rabbitmq.message.content.encoding";
-    public static final String EXPIRATION = "rabbitmq.message.expiration";
-
-    public static final String REPLY_TO_NAME = "rabbitmq.replyto.name";
-    public static final String REPLY_TO_TIMEOUT = "rabbitmq.replyto.timeout";
-    public static final String REPLY_TO_CONTENT_TYPE = "rabbitmq.replyto.content.type";
 
     //SSL related properties
     public static final String SSL_ENABLED = "rabbitmq.connection.ssl.enabled";
@@ -65,10 +57,8 @@ public class RabbitMQConstants {
     public static final String EXCHANGE_NAME = "rabbitmq.exchange.name";
     public static final String EXCHANGE_TYPE = "rabbitmq.exchange.type";
     public static final String EXCHANGE_DURABLE = "rabbitmq.exchange.durable";
-    public static final String EXCHANGE_AUTODELETE = "rabbitmq.exchange.auto.delete";
-    public static final String EXCHANGE_TYPE_DEFAULT = "direct";
-    public static final String EXCHANGE_DURABLE_DEFAULT = "true";
-    public static final String EXCHANGE_AUTODELETE_DEFAULT = "false";
+    public static final String EXCHANGE_AUTO_DELETE = "rabbitmq.exchange.auto.delete";
+    public static final String EXCHANGE_OPTIONAL_ARG_PREFIX = "rabbitmq.exchange.optional.";
 
     public static final String QUEUE_NAME = "rabbitmq.queue.name";
     public static final String QUEUE_DURABLE = "rabbitmq.queue.durable";
@@ -76,17 +66,19 @@ public class RabbitMQConstants {
     public static final String QUEUE_AUTO_DELETE = "rabbitmq.queue.auto.delete";
     public static final String QUEUE_AUTO_ACK = "rabbitmq.queue.auto.ack";
     public static final String QUEUE_ROUTING_KEY = "rabbitmq.queue.routing.key";
-    public static final String QUEUE_DELIVERY_MODE = "rabbitmq.queue.delivery.mode"; // 1=NonPersistent , 2=Persistent
+    public static final String QUEUE_OPTIONAL_ARG_PREFIX = "rabbitmq.queue.optional.";
 
     public static final String CONSUMER_QOS = "rabbitmq.channel.consumer.qos";
     public static final String CONSUMER_TAG = "rabbitmq.consumer.tag";
 
+    public static final String MESSAGE_MAX_DEAD_LETTERED_COUNT = "rabbitmq.message.max.dead.lettered.count";
+    public static final String MESSAGE_ERROR_EXCHANGE_NAME = "rabbitmq.message.error.exchange.name";
+    public static final String MESSAGE_ERROR_QUEUE_ROUTING_KEY = "rabbitmq.message.error.queue.routing.key";
+
     public static final String DEFAULT_CONTENT_TYPE = "text/plain";
     public static final int DEFAULT_RETRY_INTERVAL = 30000;
     public static final int DEFAULT_RETRY_COUNT = 3;
-    public static final int DEFAULT_THREAD_COUNT = 20;
-    public static final int DEFAULT_DELIVERY_MODE = 2; //Default is persistent
-    public static final int DEFAULT_REPLY_TO_TIMEOUT = 30000;
+    public static final int DEFAULT_CONSUMER_QOS = 0;
 }
 
 

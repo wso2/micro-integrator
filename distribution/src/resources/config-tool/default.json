@@ -1,5 +1,5 @@
 {
-  "server.hot_deployment": false,
+  "server.hot_deployment": true,
   "server.enableMTOM": false,
   "server.enableSwA": false,
   "server.userAgent": "WSO2 Micro Integrator 1.0.0",

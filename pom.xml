@@ -504,13 +504,6 @@
                 <version>${google.guava.version}</version>
             </dependency>
 
-            <!--For PublishEvent Mediator-->
-            <dependency>
-                <groupId>commons-pool.wso2</groupId>
-                <artifactId>commons-pool</artifactId>
-                <version>${orbit.version.commons.pool}</version>
-            </dependency>
-
             <!--Inbound Endpoint Depedencies-->
             <dependency>
                 <groupId>ca.uhn.hapi.wso2</groupId>
@@ -522,16 +515,6 @@
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.apache.cxf</groupId>
-                <artifactId>cxf-bundle</artifactId>
-                <version>${cxf.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.eclipse.jetty</groupId>
-                <artifactId>jetty-bundle</artifactId>
-                <version>${jetty.wso2.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
@@ -604,11 +587,6 @@
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.event.sink</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.micro.integrator.mediator.publishevent</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -728,9 +706,9 @@
                 <version>${saxon.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>xerces.wso2</groupId>
+                <groupId>org.wso2.orbit.xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
-                <version>${version.xercesImpl}</version>
+                <version>${xercesImpl.orbit.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
@@ -991,6 +969,11 @@
                 <version>${org.wso2.orbit.javax.xml.bind.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${version.jaxb.api}</version>
+            </dependency>
+            <dependency>
                 <groupId>au.com.bytecode.opencsv.wso2</groupId>
                 <artifactId>opencsv</artifactId>
                 <version>${opencsv.orbit.version}</version>
@@ -1044,16 +1027,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.apache.tomcat.wso2</groupId>
-                <artifactId>jdbc-pool</artifactId>
-                <version>${jdbc-pool.orbit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>xerces</groupId>
-                <artifactId>xercesImpl</artifactId>
-                <version>${xerces.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>
                 <version>${json.orbit.version}</version>
@@ -1061,7 +1034,7 @@
             <dependency>
                 <groupId>org.wso2.orbit.org.apache.tomcat</groupId>
                 <artifactId>jdbc-pool</artifactId>
-                <version>${jdbc-pool.version}</version>
+                <version>${jdbc-pool.orbit.version}</version>
             </dependency>
 
             <dependency>
@@ -1213,6 +1186,7 @@
                 <version>${powermock.version}</version>
                 <scope>test</scope>
             </dependency>
+<<<<<<< HEAD
             <!-- Observability with Prometheus Feature dependencies-->
             <dependency>
                 <groupId>io.prometheus</groupId>
@@ -1244,6 +1218,11 @@
                 <artifactId>org.wso2.micro.integrator.core</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.rabbitmq</groupId>
+                <artifactId>amqp-client</artifactId>
+                <version>${rabbitmq.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -1314,6 +1293,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <rabbitmq.version>5.8.0</rabbitmq.version>
+
         <!--Product Version-->
         <carbon.identity.framework.version>5.15.17</carbon.identity.framework.version>
         <carbon.identity.imp.pkg.version>[5.14.0, 6.0.0)</carbon.identity.imp.pkg.version>
@@ -1331,8 +1312,9 @@
         <!-- Carbon kernel version-->
         <carbon.kernel.version>4.5.3</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.5.0,5.0.0)</carbon.kernel.imp.pkg.version>
+        <version.jaxb.api>2.4.0-b180830.0359</version.jaxb.api>
 
-        <synapse.version>2.1.7-wso2v164</synapse.version>
+        <synapse.version>2.1.7-wso2v166</synapse.version>
         <carbon.mediation.version>4.7.45</carbon.mediation.version>
         <carbon.crypto.version>1.1.3</carbon.crypto.version>
         <carbon.crypto.api.imp.pkg.version.range>[1.1.0,1.2.0)</carbon.crypto.api.imp.pkg.version.range>
@@ -1345,7 +1327,7 @@
         <sap-adapter.feature.version>4.7.33</sap-adapter.feature.version>
 
         <cipher.tool.version>1.1.12</cipher.tool.version>
-        <axis2.transport.version>2.0.0-wso2v48</axis2.transport.version>
+        <axis2.transport.version>2.0.0-wso2v49</axis2.transport.version>
 
         <esotericsoftware.kryo.version>3.0.3</esotericsoftware.kryo.version>
         <esotericsoftware.minlog.version>1.3.0</esotericsoftware.minlog.version>
@@ -1410,7 +1392,6 @@
         <version.log4j.core>2.12.0</version.log4j.core>
         <version.jaxb>2.2.5.wso2v1</version.jaxb>
         <javasysmon.version>0.3.3.wso2v1</javasysmon.version>
-        <jdbc-pool.version>7.0.81.wso2v2</jdbc-pool.version>
         <version.eclipse.ecj>4.4.2</version.eclipse.ecj>
         <version.com.google.code.gson>2.8.5</version.com.google.code.gson>
         <docker.maven.plugin.version>1.0.0</docker.maven.plugin.version>
@@ -1426,6 +1407,7 @@
         <joda-time.version>2.9.4.wso2v1</joda-time.version>
         <libthrift.version>0.8.0.wso2v1</libthrift.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
+        <axis2.mar.maven.plugin>1.5.2</axis2.mar.maven.plugin>
 
         <!--PAX Logging related dependency versions-->
         <pax.logging.api.version>1.11.0</pax.logging.api.version>
@@ -1445,8 +1427,6 @@
         <google.guava.version>27.0-jre</google.guava.version>
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
         <junit.version>4.8.2</junit.version>
-        <cxf.wso2.version>3.0.9.wso2v1</cxf.wso2.version>
-        <jetty.wso2.version>8.1.17.v20150415.wso2v1</jetty.wso2.version>
         <netty.version>4.0.39.Final</netty.version>
         <jacoco.agent.version>0.8.2</jacoco.agent.version>
         <activemq.version>5.2.0</activemq.version>
@@ -1502,7 +1482,7 @@
         <poi-ooxml.orbit.version>3.17.0.wso2v1</poi-ooxml.orbit.version>
         <poi-ooxml.orbit.imp.pkg.version>0.0.0</poi-ooxml.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0.wso2v3,4.0.0)) after osgi bundle is corrected - rajith-->
 
-        <commons-collections4.orbit.version>4.1.wso2v1</commons-collections4.orbit.version>
+        <commons-collections4.orbit.version>4.4.wso2v1</commons-collections4.orbit.version>
         <commons-collections4.orbit.imp.pkg.version>0.0.0</commons-collections4.orbit.imp.pkg.version>
 
         <carbon.registry.imp.pkg.version>0.0.0</carbon.registry.imp.pkg.version> <!-- todo remove this and use {carbon.kernel.imp.pkg.version} after registry bundles are corrected to export correct versions-->
@@ -1519,7 +1499,7 @@
         <json.orbit.version>3.0.0.wso2v1</json.orbit.version>
         <json.orbit.imp.pkg.version>0.0.0</json.orbit.imp.pkg.version> <!-- This comes from carbon-multitenancy, tenant.common.server feature -->
 
-        <webharvest-core.orbit.version>2.0.0.wso2v3</webharvest-core.orbit.version>
+        <webharvest-core.orbit.version>2.0.0.wso2v4</webharvest-core.orbit.version>
         <webharvest-core.orbit.imp.pkg.version>[2.0.0,3.0.0)</webharvest-core.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([2.0.0.wso2v2,2.1.0)) after osgi bundle is corrected - rajith-->
 
         <wso2.securevault.version>1.0.0-wso2v2</wso2.securevault.version>
@@ -1542,8 +1522,6 @@
         <neethi.orbit.imp.pkg.version>[2.0.4.wso2v4,2.1.0)</neethi.orbit.imp.pkg.version>
 
         <carbon.base.imp.pkg.version>0.0.0</carbon.base.imp.pkg.version> <!-- todo remove this and use {carbon.kernel.imp.pkg.version} after carbon base bundles are corrected to export correct versions-->
-
-        <jdbc-pool.orbit.imp.pkg.version>[1.7.0,2.0.0)</jdbc-pool.orbit.imp.pkg.version>
 
         <poi.orbit.imp.pkg.version>0.0.0</poi.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0,4.0.0)) after osgi bundle is corrected - rajith-->
         <poi-ooxml.orbit.imp.pkg.version>0.0.0</poi-ooxml.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0.wso2v3,4.0.0)) after osgi bundle is corrected - rajith-->
@@ -1629,18 +1607,15 @@
         <mysql.connector.version>8.0.19</mysql.connector.version>
         <derby.orbit.version>10.3.2.1wso2v1</derby.orbit.version>
 
-        <jdbc-pool.orbit.version>7.0.34.wso2v2</jdbc-pool.orbit.version>
+        <jdbc-pool.orbit.version>9.0.35.wso2v1</jdbc-pool.orbit.version>
         <jdbc-pool.orbit.imp.pkg.version>[1.7.0,2.0.0)</jdbc-pool.orbit.imp.pkg.version>
 
-        <xerces.version>2.11.0</xerces.version>
         <antlr4.runtime.version>4.5.1.wso2v1</antlr4.runtime.version>
 
         <atomikos.version>3.8.0.wso2v1</atomikos.version>
         <saxon.wso2.version>9.5.1-8</saxon.wso2.version>
-        <version.xercesImpl>2.8.1.wso2v2</version.xercesImpl>
+        <xercesImpl.orbit.version>2.12.0.wso2v1</xercesImpl.orbit.version>
         <commons-logging.version>1.2</commons-logging.version>
-        <!-- publishEvent mediator versions -->
-        <javax.xml.namespace.version>0.0.0</javax.xml.namespace.version>
         <mockito.version>2.23.4</mockito.version>
         <wrapper.version>3.2.3</wrapper.version>
         <nimbus-jose.orbit.version>5.8.0.wso2v1</nimbus-jose.orbit.version>
@@ -1856,6 +1831,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>${maven.dependency.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-mar-maven-plugin</artifactId>
+                    <version>${axis2.mar.maven.plugin}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -195,13 +195,12 @@ public class EndpointResource implements MiApiResource {
                 ep.getContext().switchOn();
                 jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, endpointName + " is switched On");
             } else {
-                LOG.warn("Specified Status: " + status + " is not valid");
-                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Provided state is not valid");
+                jsonResponse = Utils.createJsonError("Provided state is not valid", axis2MessageContext, Constants.BAD_REQUEST);
             }
             Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
         } else {
-            LOG.warn("Specified Endpoint: " + endpointName + " does not exist");
-            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Endpoint does not exist"));
+            Utils.setJsonPayLoad(axis2MessageContext,  Utils.createJsonError("Endpoint does not exist",
+                    axis2MessageContext, Constants.NOT_FOUND));
         }
     }
 

@@ -1,5 +1,6 @@
 [server]
 hostname = "localhost"
+hot_deployment = true
 
 [keystore.tls]
 file_name = "wso2carbon.jks"

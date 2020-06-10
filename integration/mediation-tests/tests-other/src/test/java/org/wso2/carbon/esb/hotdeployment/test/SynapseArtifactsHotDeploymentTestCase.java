@@ -17,27 +17,21 @@
  */
 package org.wso2.carbon.esb.hotdeployment.test;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.io.FileUtils;
 import org.awaitility.Awaitility;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.carbon.integration.common.utils.FileManager;
-import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -59,7 +53,6 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
             TestConfigurationProvider.getResourceLocation(ESBTestConstant.ESB_PRODUCT_GROUP) + File.separator
                     + "hotdeployment" + File.separator;
     private static int SERVICE_DEPLOYMENT_DELAY = TestConfigurationProvider.getServiceDeploymentDelay();
-    private ServerConfigurationManager serverConfigurationManager;
 
     private final String proxyFileName = "HotDeploymentTestProxy.xml";
     private final String sequenceFileName = "HotDeploymentTestSequence.xml";
@@ -77,16 +70,8 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
     private final String messageStoreName = "HotDeploymentTestMessageStore";
     private final String cAppName = "HotDeploymentCompositeApplication";
 
-    private CarbonLogReader carbonLogReader = new CarbonLogReader();
-
     @BeforeClass(alwaysRun = true)
     public void deployService() throws Exception {
-        //Changing synapse configuration to enable statistics and tracing
-        serverConfigurationManager = new ServerConfigurationManager(
-                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
-                getESBResourceLocation() + File.separator + "hotdeployment" + File.separator
-                        + "deployment.toml"));
         super.init();
         copyArtifactsToDeploymentDirectory();
     }
@@ -193,30 +178,9 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
         assertFalse(checkCarbonAppExistence(cAppName), "Carbon Application Undeployment failed");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Readiness Probe with Hot Deployment enabled")
-    public void testReadinessProbeWithHotDeployment() throws Exception {
-        SimpleHttpClient client = new SimpleHttpClient();
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Accept", "application/json");
-
-        carbonLogReader.start();
-
-        client.doGet("http://localhost:9391/healthz", headers);
-
-        assertTrue(carbonLogReader.checkForLog(
-                "Hot Deployment and Readiness Probe configurations are both enabled in your server! Note that "
-                        + "the readiness probe will not identify faulty artifacts that are hot deployed. Be sure to "
-                        + "disable hot deployment if the readiness probe is enabled.",
-                DEFAULT_TIMEOUT),
-                   "Readiness probe invocation does not give a warning message when hot deployment is enabled ");
-    }
-
     @AfterClass(alwaysRun = true)
     public void unDeployService() throws Exception {
         super.cleanup();
-        carbonLogReader.stop();
-        serverConfigurationManager.restoreToLastConfiguration();
     }
 
     private void copyArtifactsToDeploymentDirectory() throws IOException {

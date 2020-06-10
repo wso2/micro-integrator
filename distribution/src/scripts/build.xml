@@ -96,7 +96,6 @@
                 <include name="org.wso2.securevault*.jar"/> <!-- used by the G-reg jcr sample-->
                 <include name="org.wso2.pwprovider*.jar"/>
                 <include name="org.wso2.carbon.rule.core*.jar"/>
-                <include name="cxf-bundle*.jar"/><!-- used by the JAX-RS and JAX-WS sample cliets in appserver -->
                 <include name="spring.framework*.jar"/><!-- used by the JAX-RS and JAX-WS sample clients in appserver -->
                 <include name="javax.ws.rs.jsr311-api*.jar"/><!-- used by the JAX-RS sample client in appserver -->
             </fileset>

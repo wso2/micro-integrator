@@ -187,9 +187,6 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.identity.xacml.mediator.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.mediator.publishevent.server.feature:${project.version}
-                                </featureArtifactDef>
 
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.security.server.feature:${project.version}
@@ -252,10 +249,6 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
-                                <feature>
-                                    <id>org.wso2.micro.integrator.mediator.publishevent.server.feature.group</id>
-                                    <version>${project.version}</version>
-                                </feature>
                                 <feature>
                                     <id>org.apache.synapse.wso2.feature.group</id>
                                     <version>${synapse.version}</version>

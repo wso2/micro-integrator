@@ -101,12 +101,16 @@
         <platformExecutionManager>
             <extentionClasses>
                 <class>
-                    <name>org.wso2.esb.integration.common.extensions.coordination.CoordinationDatabase</name>
+                    <name>org.wso2.esb.integration.common.extensions.db.manager.DatabaseManager</name>
                     <parameter name="toml-path"
                                value="./../src/test/resources/artifacts/ESB/server/conf/deployment.toml"/>
-                    <parameter name="script-path"
-                               value="./../../../../../distribution/src/dbscripts/mysql_cluster.sql"/>
+                    <parameter name="script-basedir"
+                               value="./../../../../../distribution/src/dbscripts"/>
+                    <parameter name="script-suffix" value="cluster.sql"/>
+                    <parameter name="script-delimiter" value=";"/>
                     <parameter name="data-source" value="WSO2_COORDINATION_DB"/>
+                    <parameter name="db-clear-scripts-base-dir"
+                               value="./../src/test/resources/artifacts/ESB/db-clear-scripts/"/>
                 </class>
             </extentionClasses>
         </platformExecutionManager>
