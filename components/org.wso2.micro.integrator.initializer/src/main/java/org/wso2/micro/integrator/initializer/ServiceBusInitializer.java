@@ -25,11 +25,13 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.AbstractExtendedSynapseHandler;
 import org.apache.synapse.ServerConfigurationInformation;
 import org.apache.synapse.ServerConfigurationInformationFactory;
 import org.apache.synapse.ServerContextInformation;
 import org.apache.synapse.ServerManager;
 import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.SynapseHandler;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;
@@ -72,6 +74,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -200,6 +204,20 @@ public class ServiceBusInitializer {
             /*configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
                     configurationManager);*/
 
+
+            List handlers = synapseEnvironment.getSynapseHandlers();
+            Iterator<SynapseHandler> iterator = handlers.iterator();
+            while (iterator.hasNext()) {
+                SynapseHandler handler = iterator.next();
+                if ((handler instanceof AbstractExtendedSynapseHandler)) {
+                    if (!((AbstractExtendedSynapseHandler) handler).handleInit()) {
+                        return;
+                    }
+                }
+            }
+
+            MetricReporterLoader metricReporterLoader = new MetricReporterLoader();
+            metricReporterLoader.classLoader();
             // Start Inbound Endpoint Listeners
             EndpointListenerLoader.loadListeners();
         } catch (Exception e) {
