@@ -93,7 +93,8 @@ public class DatabaseManager extends ExecutionListenerExtension {
                 executeScript(scriptBaseDir + "/" + dbType + "/" + dbType + "_" + scriptSuffix, false);
                 break;
             default:
-                logger.error("Not supported db type : " + dbType);
+                logger.info("Db type '" + dbType + "' is not supported by the framework, if you have configured the "
+                                    + "database with respective scripts, the test cases will run smoothly.");
             }
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
