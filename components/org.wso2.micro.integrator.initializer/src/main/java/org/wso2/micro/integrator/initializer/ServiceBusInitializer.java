@@ -35,7 +35,6 @@ import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -92,9 +91,6 @@ public class ServiceBusInitializer {
 
     private Axis2ConfigurationContextService configCtxSvc;
 
-    // private SynapseRegistryService synRegSvc;
-    // private DataSourceInformationRepositoryService dataSourceInformationRepositoryService;
-
     private SecretCallbackHandlerService secretCallbackHandlerService;
 
     private ServerManager serverManager;
@@ -132,17 +128,7 @@ public class ServiceBusInitializer {
             Lock lock = new ReentrantLock();
             configCtxSvc.getServerConfigContext().getAxisConfiguration().addParameter(ServiceBusConstants
                     .SYNAPSE_CONFIG_LOCK, lock);
-            // first check which configuration should be active
-            // UserRegistry registry = registryService.getConfigSystemRegistry();
-            // init the multiple configuration tracker
-            //ConfigurationManager configurationManager = new ConfigurationManager(configCtxSvc.getServerConfigContext());
-            //configurationManager.init();
-            // set the event broker as a property
-            /*
-            if (eventBroker != null) {
-                configCtxSvc.getServerConfigContext().setProperty("mediation.event.broker", eventBroker);
-            }
-*/
+
             // Initialize Synapse
             ServerContextInformation contextInfo = initESB("default");
             ServiceRegistration synCfgRegistration = null;
@@ -484,39 +470,6 @@ public class ServiceBusInitializer {
         }
     }
 
-    /**
-     * Register for inbound hot depoyment
-     */
-    /*private void registerInboundDeployer(AxisConfiguration axisConfig, SynapseEnvironment synEnv) {
-
-        DeploymentEngine deploymentEngine = (DeploymentEngine) axisConfig.getConfigurator();
-        SynapseArtifactDeploymentStore deploymentStore = synEnv.getSynapseConfiguration().getArtifactDeploymentStore();
-        String synapseConfigPath = ServiceBusUtils.getSynapseConfigAbsPath(synEnv.getServerContextInformation());
-        String inboundDirPath = synapseConfigPath + File.separator + MultiXMLConfigurationBuilder.INBOUND_ENDPOINT_DIR;
-        for (InboundEndpoint inboundEndpoint : synEnv.getSynapseConfiguration().getInboundEndpoints()) {
-            if (inboundEndpoint.getFileName() != null) {
-                deploymentStore.addRestoredArtifact(inboundDirPath + File.separator + inboundEndpoint.getFileName());
-            }
-        }
-        deploymentEngine.addDeployer(new InboundEndpointDeployer(), inboundDirPath, ServiceBusConstants
-                .ARTIFACT_EXTENSION);
-    }*/
-
-//    @Reference(
-//            name = "inbound.endpoint.persistence.service",
-//            service = org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService.class,
-//            cardinality = ReferenceCardinality.OPTIONAL,
-//            policy = ReferencePolicy.DYNAMIC,
-//            unbind = "unsetInboundPersistenceService")
-    /*protected void setInboundPersistenceService(InboundEndpointPersistenceService inboundEndpoint) {
-        // This service is just here to make sure that ServiceBus is not getting initialized
-        // before the Inbound Endpoint Persistence component is up and running
-    }
-
-    protected void unsetInboundPersistenceService(InboundEndpointPersistenceService inboundEndpoint) {
-
-    }*/
-
     @Reference(
             name = "org.wso2.micro.integrator.ntask.core.service.TaskService",
             service = org.wso2.micro.integrator.ntask.core.service.TaskService.class,
@@ -532,20 +485,6 @@ public class ServiceBusInitializer {
     protected void unsetTaskService(TaskService taskService) {
 
         this.taskService = null;
-    }
-
-    @Reference(name = "osgi.configadmin.service",
-            service = ConfigurationAdmin.class,
-            unbind = "unsetConfigAdminService",
-            cardinality = ReferenceCardinality.MANDATORY,
-            policy = ReferencePolicy.DYNAMIC)
-    public void setConfigAdminService(ConfigurationAdmin configAdminService) {
-        log.debug("Setting ConfigurationAdmin Service");
-        ConfigurationHolder.getInstance().setConfigAdminService(configAdminService);
-    }
-
-    public void unsetConfigAdminService(ConfigurationAdmin configAdminService) {
-        log.debug("Unsetting ConfigurationAdmin Service");
     }
 
     @Reference(name = "org.wso2.carbon.ndatasource",

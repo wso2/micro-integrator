@@ -29,6 +29,8 @@ import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONObject;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.micro.integrator.initializer.logging.updater.LogConfigUpdater;
+import org.wso2.micro.integrator.initializer.logging.updater.utils.LoggingUpdaterUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -193,7 +195,7 @@ public class LoggingResource extends ApiResource {
     private void setLoggerLevel(String loggerLevelKey , String logLevel) throws IOException, ConfigurationException {
         config.setProperty(loggerLevelKey , logLevel);
         layout.save(new FileWriter(filePath, false));
-        Utils.updateLoggingConfiguration();
+        LogConfigUpdater.updateLoggingConfiguration();
         jsonBody.put(Constants.MESSAGE, "Successfully updated " + loggerLevelKey
                 + " to " + logLevel);
     }

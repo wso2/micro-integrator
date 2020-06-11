@@ -1191,6 +1191,11 @@
                 <artifactId>amqp-client</artifactId>
                 <version>${rabbitmq.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.eclipse.platform</groupId>
+                <artifactId>org.eclipse.equinox.event</artifactId>
+                <version>${version.eclipse.equinox.event}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1270,6 +1275,7 @@
         <version.equinox.osgi.services>3.3.100.v20130513-1956</version.equinox.osgi.services>
         <version.equinox.http.helper>1.1.0.wso2v1</version.equinox.http.helper>
         <version.equinox.p2.metadata>2.2.0.v20130523-1557</version.equinox.p2.metadata>
+        <version.eclipse.equinox.event>1.5.100</version.eclipse.equinox.event>
 
         <!-- Maven Plugin Version -->
         <maven.build.helper.plugin.version>3.0.0</maven.build.helper.plugin.version>

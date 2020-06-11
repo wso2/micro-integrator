@@ -110,11 +110,4 @@ public class ConfigurationHolder {
         this.synapseRegistrationsService = synapseRegistrationsService;
     }
 
-    public void setConfigAdminService(ConfigurationAdmin configAdminService) {
-        this.configAdminService = configAdminService;
-    }
-
-    public ConfigurationAdmin getConfigAdminService() {
-        return configAdminService;
-    }
 }

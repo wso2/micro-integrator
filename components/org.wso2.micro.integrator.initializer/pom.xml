@@ -104,6 +104,11 @@
             <groupId>commons-io.wso2</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>${commons.configuration.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -122,6 +127,7 @@
                         </CAPP_MANAGER-RequiredServices>
                         <Export-Package>
                             !org.wso2.micro.integrator.initializer.deployment.internal,
+                            !org.wso2.micro.integrator.initializer.logging.updater.internal,
                             org.wso2.micro.integrator.initializer.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>

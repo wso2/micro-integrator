@@ -94,9 +94,6 @@ public class Constants {
     public static final String ACTIVE_STATUS = "active";
     public static final String INACTIVE_STATUS = "inactive";
 
-    // Constant on pax logging
-    public static final String PAX_LOGGING_CONFIGURATION_PID = "org.ops4j.pax.logging";
-
     // Constants used for the users resource
     public static final String USER_ID = "userId";
     public static final String ROLES = "roles";
