@@ -106,6 +106,7 @@ public class EntitlementMediator extends AbstractMediator
 
     private final String ORIGINAL_ENTITLEMENT_PAYLOAD = "ORIGINAL_ENTITLEMENT_PAYLOAD";
     private final String ENTITLEMENT_DECISION = "ENTITLEMENT_DECISION";
+    private final String ENTITLEMENT_ADVICE = "ENTITLEMENT_ADVICE";
 
     /**
      * {@inheritDoc}
@@ -239,6 +240,7 @@ public class EntitlementMediator extends AbstractMediator
 
             synCtx.setProperty(ORIGINAL_ENTITLEMENT_PAYLOAD, synCtx.getEnvelope());
             synCtx.setProperty(ENTITLEMENT_DECISION, simpleDecision);
+            synCtx.setProperty(ENTITLEMENT_ADVICE, advice);
 
             // assume entitlement mediator always acts as base PEP
             // then behavior for not-applicable and indeterminate results are undefined
