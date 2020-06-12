@@ -79,20 +79,21 @@ public class InboundHttpSourceHandler extends SourceHandler {
 
             Pattern dispatchPattern = null;
 
-            WorkerPoolConfiguration workerPoolConfiguration = HTTPEndpointManager.getInstance()
-                    .getWorkerPoolConfiguration(SUPER_TENANT_DOMAIN_NAME, port);
-            if (workerPoolConfiguration != null) {
-                workerPool = sourceConfiguration.getWorkerPool(workerPoolConfiguration.getWorkerPoolCoreSize(),
-                                                               workerPoolConfiguration.getWorkerPoolSizeMax(),
-                                                               workerPoolConfiguration
-                                                                       .getWorkerPoolThreadKeepAliveSec(),
-                                                               workerPoolConfiguration.getWorkerPoolQueuLength(),
-                                                               workerPoolConfiguration.getThreadGroupID(),
-                                                               workerPoolConfiguration.getThreadID());
-            }
-
+            // Need to initialize workerPool only once
             if (workerPool == null) {
-                workerPool = sourceConfiguration.getWorkerPool();
+                WorkerPoolConfiguration workerPoolConfiguration = HTTPEndpointManager.getInstance()
+                        .getWorkerPoolConfiguration(SUPER_TENANT_DOMAIN_NAME, port);
+                if (workerPoolConfiguration != null) {
+                    workerPool = sourceConfiguration.getWorkerPool(workerPoolConfiguration.getWorkerPoolCoreSize(),
+                            workerPoolConfiguration.getWorkerPoolSizeMax(),
+                            workerPoolConfiguration
+                                    .getWorkerPoolThreadKeepAliveSec(),
+                            workerPoolConfiguration.getWorkerPoolQueuLength(),
+                            workerPoolConfiguration.getThreadGroupID(),
+                            workerPoolConfiguration.getThreadID());
+                } else {
+                    workerPool = sourceConfiguration.getWorkerPool();
+                }
             }
 
             Object correlationId = conn.getContext().getAttribute(PassThroughConstants.CORRELATION_ID);
@@ -106,6 +107,8 @@ public class InboundHttpSourceHandler extends SourceHandler {
                 workerPool.execute(
                         new InboundHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request, sourceConfiguration, os));
             }
+            //increasing the input request metric
+            sourceConfiguration.getMetrics().requestReceived();
 
         } catch (HttpException e) {
             log.error("HttpException occurred when creating Source Request", e);
@@ -119,5 +122,4 @@ public class InboundHttpSourceHandler extends SourceHandler {
             sourceConfiguration.getSourceConnections().shutDownConnection(conn, true);
         }
     }
-
 }

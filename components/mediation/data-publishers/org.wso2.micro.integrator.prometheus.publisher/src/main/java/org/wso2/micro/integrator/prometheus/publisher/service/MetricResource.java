@@ -107,6 +107,7 @@ public class MetricResource extends APIResource {
      * client/exporter/HTTPServer .java#L110).
      *
      * @param parameter the list of Endpoint URL to be queried
+     * @return the set of names used in filtering the required list of metrics
      */
     private Set<String> parseQuery(String parameter) throws IOException {
 

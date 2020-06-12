@@ -33,6 +33,7 @@ public class MetricFormatter {
      * Return the type of metric
      *
      * @param type Metric Prometheus type
+     * @return Metric Type
      */
     private String typeString(Type type) {
 
@@ -54,6 +55,7 @@ public class MetricFormatter {
      * Return a formatted metric
      *
      * @param metricsList the Prometheus Metric from Prometheus Default Registry
+     * @return the metric converted into String format
      */
     public StringBuilder formatMetrics(Enumeration<MetricFamilySamples> metricsList) {
 

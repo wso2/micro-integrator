@@ -27,6 +27,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
@@ -177,25 +178,20 @@ public class DataSourceCappDeployer implements AppDeploymentHandler {
             log.debug("Reading data source file from car file - " + file.getName());
         }
         try {
-            InputStream in = new FileInputStream(file);
-
-            Document doc = DataSourceUtils.convertToDocument(in);
-            DataSourceUtils.secureResolveDocument(doc, true);
-
+            OMElement doc = DataSourceUtils.convertToOMElement(file);
+            DataSourceUtils.secureResolveOMElement(doc);
             // create JAXB context and initializing Marshaller
             JAXBContext jaxbContext = JAXBContext.newInstance(DataSourceMetaInfo.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 
             // this will create Java object - data source from xml file
-            DataSourceMetaInfo dataSourceMetaInfo = (DataSourceMetaInfo) jaxbUnmarshaller.unmarshal(doc);
+            DataSourceMetaInfo dataSourceMetaInfo =
+                    (DataSourceMetaInfo) jaxbUnmarshaller.unmarshal(doc.getXMLStreamReader());
             return dataSourceMetaInfo;
         } catch (JAXBException e) {
             throw new DeploymentException("DataSourceCappDeployer::readDataSourceFile --> " +
                                           "Error in reading data source file: " + e.getMessage(), e);
-        } catch (FileNotFoundException e) {
-            throw new DeploymentException("DataSourceCappDeployer::readDataSourceFile --> " +
-                                          "Error data source file not found: " + e.getMessage(), e);
         } catch (DataSourceException e) {
             throw new DeploymentException("DataSourceCappDeployer::readDataSourceFile --> " +
                                           "Error in decrypting data source file: " + e.getMessage(), e);

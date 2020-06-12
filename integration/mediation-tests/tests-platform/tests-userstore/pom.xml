@@ -57,7 +57,7 @@
                     <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m</argLine>
                     <disableXmlReport>false</disableXmlReport>
                     <parallel>false</parallel>
-                    <skipTests>${skipClusterTests}</skipTests>
+                    <skipTests>${skipTests}</skipTests>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
@@ -86,6 +86,9 @@
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
                     </systemProperties>
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
             </plugin>
@@ -284,13 +287,13 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <skipClusterTests>true</skipClusterTests>
+                <skipTests>true</skipTests>
             </properties>
         </profile>
         <profile>
-            <id>platform-tests</id>
+            <id>db-tests</id>
             <properties>
-                <skipClusterTests>false</skipClusterTests>
+                <skipTests>false</skipTests>
             </properties>
         </profile>
     </profiles>

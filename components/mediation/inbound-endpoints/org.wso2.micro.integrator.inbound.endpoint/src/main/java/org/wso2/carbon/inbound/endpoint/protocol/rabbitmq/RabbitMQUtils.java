@@ -18,65 +18,85 @@
 
 package org.wso2.carbon.inbound.endpoint.protocol.rabbitmq;
 
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Address;
+import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
+import org.apache.axis2.builder.Builder;
+import org.apache.axis2.builder.BuilderUtil;
+import org.apache.axis2.builder.SOAPBuilder;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.transport.TransportUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.mail.internet.ContentType;
+import javax.mail.internet.ParseException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * Helper class to support AMQP inbound endpoint related functions
+ */
 public class RabbitMQUtils {
 
     private static final Log log = LogFactory.getLog(RabbitMQUtils.class);
 
+    /**
+     * Create a connection from given connection factory and address array
+     *
+     * @param factory   a {@link ConnectionFactory} object
+     * @param addresses a {@link Address} object
+     * @return a {@link Connection} object
+     * @throws IOException
+     */
     public static Connection createConnection(ConnectionFactory factory, Address[] addresses) throws IOException {
         Connection connection = null;
         try {
             connection = factory.newConnection(addresses);
         } catch (TimeoutException e) {
-            log.error("Error while creating new connection", e);
+            log.error("Error occurred while creating a connection", e);
         }
         return connection;
     }
 
-    public static String getProperty(MessageContext mc, String key) {
-        return (String) mc.getProperty(key);
-    }
-
-    public static Map getTransportHeaders(RabbitMQMessage message) {
-        Map<String, String> map = new HashMap<String, String>();
+    /**
+     * Get transport headers from the rabbitmq message
+     *
+     * @param properties the AMQP basic properties
+     * @return a map of headers
+     */
+    public static Map<String, String> getTransportHeaders(AMQP.BasicProperties properties) {
+        Map<String, String> map = new HashMap<>();
 
         // correlation ID
-        if (message.getCorrelationId() != null) {
-            map.put(RabbitMQConstants.CORRELATION_ID, message.getCorrelationId());
+        if (properties.getCorrelationId() != null) {
+            map.put(RabbitMQConstants.CORRELATION_ID, properties.getCorrelationId());
         }
 
         // if a AMQP message ID is found
-        if (message.getMessageId() != null) {
-            map.put(RabbitMQConstants.MESSAGE_ID, message.getMessageId());
+        if (properties.getMessageId() != null) {
+            map.put(RabbitMQConstants.MESSAGE_ID, properties.getMessageId());
         }
 
         // replyto destination name
-        if (message.getReplyTo() != null) {
-            String dest = message.getReplyTo();
-            map.put(RabbitMQConstants.RABBITMQ_REPLY_TO, dest);
-        }
-
-        // expiration time
-        if (message.getExpiration() != null) {
-            String expiration = message.getExpiration();
-            map.put(RabbitMQConstants.EXPIRATION, expiration);
+        if (properties.getReplyTo() != null) {
+            map.put(RabbitMQConstants.RABBITMQ_REPLY_TO, properties.getReplyTo());
         }
 
         // any other transport properties / headers
-        Map<String, Object> headers = message.getHeaders();
+        Map<String, Object> headers = properties.getHeaders();
         if (headers != null && !headers.isEmpty()) {
             for (String headerName : headers.keySet()) {
                 String value = headers.get(headerName).toString();
@@ -87,140 +107,195 @@ public class RabbitMQUtils {
         return map;
     }
 
-    public static boolean isDurableQueue(Hashtable<String, String> properties) {
-        String durable = properties.get(RabbitMQConstants.QUEUE_DURABLE);
-        return durable != null && Boolean.parseBoolean(durable);
+    public static boolean isDurableQueue(Map<String, String> properties) {
+        return BooleanUtils
+                .toBoolean(BooleanUtils.toBooleanObject(properties.get(RabbitMQConstants.QUEUE_DURABLE)));
     }
 
-    public static boolean isExclusiveQueue(Hashtable<String, String> properties) {
-        String exclusive = properties.get(RabbitMQConstants.QUEUE_EXCLUSIVE);
-        return exclusive != null && Boolean.parseBoolean(exclusive);
+    public static boolean isExclusiveQueue(Map<String, String> properties) {
+        return BooleanUtils
+                .toBoolean(BooleanUtils.toBooleanObject(properties.get(RabbitMQConstants.QUEUE_EXCLUSIVE)));
     }
 
-    public static boolean isAutoDeleteQueue(Hashtable<String, String> properties) {
-        String autoDelete = properties.get(RabbitMQConstants.QUEUE_AUTO_DELETE);
-        return autoDelete != null && Boolean.parseBoolean(autoDelete);
+    public static boolean isAutoDeleteQueue(Map<String, String> properties) {
+        return BooleanUtils
+                .toBoolean(BooleanUtils.toBooleanObject(properties.get(RabbitMQConstants.QUEUE_AUTO_DELETE)));
     }
 
-    public static boolean isQueueAvailable(Connection connection, String queueName) throws IOException {
-        Channel channel = connection.createChannel();
-        try {
-            // check availability of the named queue
-            // if an error is encountered, including if the queue does not exist and if the
-            // queue is exclusively owned by another connection
-            channel.queueDeclarePassive(queueName);
-            return true;
-        } catch (IOException e) {
-            return false;
+    public static boolean isDurableExchange(Map<String, String> properties) {
+        return BooleanUtils
+                .toBoolean(BooleanUtils.toBooleanObject(properties.get(RabbitMQConstants.EXCHANGE_DURABLE)));
+    }
+
+    public static boolean isAutoDeleteExchange(Map<String, String> properties) {
+        return BooleanUtils
+                .toBoolean(BooleanUtils.toBooleanObject(properties.get(RabbitMQConstants.EXCHANGE_AUTO_DELETE)));
+    }
+
+    /**
+     * Sets optional arguments that can be defined at the queue declaration
+     *
+     * @param properties amqp properties
+     * @return map of optional arguments
+     */
+    private static Map<String, Object> setQueueOptionalArguments(Map<String, String> properties) {
+        Map<String, Object> optionalArgs = new HashMap<>();
+        for (Map.Entry<String, String> entry : properties.entrySet()) {
+            String propertyKey = entry.getKey();
+            if (propertyKey.startsWith(RabbitMQConstants.QUEUE_OPTIONAL_ARG_PREFIX)) {
+                String optionalArgName = propertyKey.substring(RabbitMQConstants.QUEUE_OPTIONAL_ARG_PREFIX.length());
+                String optionalArgValue = entry.getValue();
+                //check whether a boolean argument
+                if ("true".equals(optionalArgValue) || "false".equals(optionalArgValue)) {
+                    optionalArgs.put(optionalArgName, Boolean.parseBoolean(optionalArgValue));
+                } else {
+                    try {
+                        //check whether a integer argument
+                        optionalArgs.put(optionalArgName, Integer.parseInt(optionalArgValue));
+                    } catch (NumberFormatException e) {
+                        optionalArgs.put(optionalArgName, optionalArgValue);
+                    }
+                }
+            }
+        }
+        return optionalArgs.size() == 0 ? null : optionalArgs;
+    }
+
+    /**
+     * Sets optional arguments that can be defined at the exchange declaration
+     *
+     * @param properties amqp properties
+     * @return map of optional arguments
+     */
+    private static Map<String, Object> setExchangeOptionalArguments(Map<String, String> properties) {
+        Map<String, Object> optionalArgs = new HashMap<>();
+        for (Map.Entry<String, String> entry : properties.entrySet()) {
+            String propertyKey = entry.getKey();
+            if (propertyKey.startsWith(RabbitMQConstants.EXCHANGE_OPTIONAL_ARG_PREFIX)) {
+                String optionalArgName = propertyKey.substring(RabbitMQConstants.EXCHANGE_OPTIONAL_ARG_PREFIX.length());
+                String optionalArgValue = entry.getValue();
+                //check whether a boolean argument
+                if ("true".equals(optionalArgValue) || "false".equals(optionalArgValue)) {
+                    optionalArgs.put(optionalArgName, Boolean.parseBoolean(optionalArgValue));
+                } else {
+                    try {
+                        //check whether a integer argument
+                        optionalArgs.put(optionalArgName, Integer.parseInt(optionalArgValue));
+                    } catch (NumberFormatException e) {
+                        optionalArgs.put(optionalArgName, optionalArgValue);
+                    }
+                }
+            }
+        }
+        return optionalArgs.size() == 0 ? null : optionalArgs;
+    }
+
+    /**
+     * Helper method to declare queue when direct channel is given
+     *
+     * @param channel    a rabbitmq channel
+     * @param queueName  a name of the queue to declare
+     * @param properties queue declaration properties
+     * @throws IOException
+     */
+    public static void declareQueue(Channel channel, String queueName,
+                                    Map<String, String> properties) throws IOException {
+        if (StringUtils.isNotEmpty(queueName)) {
+            channel.queueDeclare(queueName, isDurableQueue(properties), isExclusiveQueue(properties),
+                                 isAutoDeleteQueue(properties), setQueueOptionalArguments(properties));
         }
     }
 
     /**
-     * @param connection
-     * @param queueName
-     * @param isDurable
-     * @param isExclusive
-     * @param isAutoDelete
-     * @throws IOException
+     * Helper method to declare exchange when direct channel is given
+     *
+     * @param channel      {@link Channel} object
+     * @param exchangeName the exchange exchangeName
+     * @param properties   RabbitMQ properties
      */
-    public static void declareQueue(Connection connection, String queueName, boolean isDurable, boolean isExclusive,
-                                    boolean isAutoDelete) throws IOException {
+    public static void declareExchange(Channel channel, String exchangeName, Map<String, String> properties)
+            throws IOException {
+        String type = properties.get(RabbitMQConstants.EXCHANGE_TYPE);
+        String queueName = properties.get(RabbitMQConstants.QUEUE_NAME);
+        String routingKey = properties.get(RabbitMQConstants.QUEUE_ROUTING_KEY);
+        if (StringUtils.isNotEmpty(exchangeName)) {
+            // declare the exchange
+            if (!exchangeName.startsWith(RabbitMQConstants.AMQ_PREFIX)) {
+                if (StringUtils.isNotEmpty(type)) {
+                    channel.exchangeDeclare(exchangeName, type, isDurableExchange(properties),
+                                            isAutoDeleteExchange(properties), setExchangeOptionalArguments(properties));
+                } else {
+                    channel.exchangeDeclare(exchangeName, BuiltinExchangeType.DIRECT, isDurableExchange(properties),
+                                            isAutoDeleteExchange(properties), setExchangeOptionalArguments(properties));
+                }
+            }
+            // bind the queue and exchange with routing key
+            if (StringUtils.isNotEmpty(queueName) && StringUtils.isNotEmpty(routingKey)) {
+                channel.queueBind(queueName, exchangeName, routingKey);
+            } else if (StringUtils.isNotEmpty(queueName) && StringUtils.isEmpty(routingKey)) {
+                if (log.isDebugEnabled()) {
+                    log.debug("No routing key specified. The queue name is using as the routing key.");
+                }
+                routingKey = queueName;
+                channel.queueBind(queueName, exchangeName, routingKey);
+            }
+        }
+    }
 
-        boolean queueAvailable = isQueueAvailable(connection, queueName);
-        Channel channel = connection.createChannel();
+    /**
+     * Build SOAP envelop from AMQP properties and byte body
+     *
+     * @param properties the AMQP basic properties
+     * @param body       the message body
+     * @param msgContext the message context
+     * @return content-type used to build the soap message
+     * @throws AxisFault
+     */
+    public static String buildMessage(AMQP.BasicProperties properties, byte[] body, MessageContext msgContext)
+            throws AxisFault {
+        // set correlation id to the message context
+        String amqpCorrelationID = properties.getCorrelationId();
+        if (amqpCorrelationID != null && amqpCorrelationID.length() > 0) {
+            msgContext.setProperty(RabbitMQConstants.CORRELATION_ID, amqpCorrelationID);
+        } else {
+            msgContext.setProperty(RabbitMQConstants.CORRELATION_ID, properties.getMessageId());
+        }
+        // set content-type to the message context
+        String contentType = properties.getContentType();
+        if (contentType == null) {
+            contentType = RabbitMQConstants.DEFAULT_CONTENT_TYPE;
+        }
+        msgContext.setProperty(RabbitMQConstants.CONTENT_TYPE, contentType);
+        // set content encoding to the message context
+        if (properties.getContentEncoding() != null) {
+            msgContext.setProperty(RabbitMQConstants.CONTENT_ENCODING, properties.getContentEncoding());
+        }
 
-        if (!queueAvailable) {
+        int index = contentType.indexOf(';');
+        String type = index > 0 ? contentType.substring(0, index) : contentType;
+        Builder builder = BuilderUtil.getBuilderFromSelector(type, msgContext);
+        if (builder == null) {
             if (log.isDebugEnabled()) {
-                log.debug("Queue :" + queueName + " not found or already declared exclusive. Declaring the queue.");
+                log.debug("No message builder found for type '" + type + "'. Falling back to SOAP.");
             }
-            // Declare the named queue if it does not exists.
-            if (!channel.isOpen()) {
-                channel = connection.createChannel();
-                log.debug("Channel is not open. Creating a new channel.");
-            }
-            try {
-                channel.queueDeclare(queueName, isDurable, isExclusive, isAutoDelete, null);
-            } catch (IOException e) {
-                handleException("Error while creating queue: " + queueName, e);
-            }
-        }
-    }
-
-    public static void declareQueue(Connection connection, String queueName, Hashtable<String, String> properties)
-            throws IOException {
-        Boolean queueAvailable = isQueueAvailable(connection, queueName);
-        Channel channel = connection.createChannel();
-
-        if (!queueAvailable) {
-            // Declare the named queue if it does not exists.
-            if (!channel.isOpen()) {
-                channel = connection.createChannel();
-                log.debug("Channel is not open. Creating a new channel.");
-            }
-            try {
-                channel.queueDeclare(queueName, isDurableQueue(properties), isExclusiveQueue(properties),
-                                     isAutoDeleteQueue(properties), null);
-
-            } catch (IOException e) {
-                handleException("Error while creating queue: " + queueName, e);
-            }
-        }
-    }
-
-    public static void declareExchange(Connection connection, String exchangeName, Hashtable<String, String> properties)
-            throws IOException {
-        Boolean exchangeAvailable = false;
-        Channel channel = connection.createChannel();
-        String exchangeType = properties
-                .getOrDefault(RabbitMQConstants.EXCHANGE_TYPE, RabbitMQConstants.EXCHANGE_TYPE_DEFAULT);
-        String durable = properties
-                .getOrDefault(RabbitMQConstants.EXCHANGE_DURABLE, RabbitMQConstants.EXCHANGE_DURABLE_DEFAULT);
-        String autoDelete = properties
-                .getOrDefault(RabbitMQConstants.EXCHANGE_AUTODELETE, RabbitMQConstants.EXCHANGE_AUTODELETE_DEFAULT);
-
-        if (exchangeType.isEmpty()) {
-            exchangeType = RabbitMQConstants.EXCHANGE_TYPE_DEFAULT;
-        }
-        if (durable.isEmpty()) {
-            durable = RabbitMQConstants.EXCHANGE_DURABLE_DEFAULT;
-        }
-        if (autoDelete.isEmpty()) {
-            autoDelete = RabbitMQConstants.EXCHANGE_AUTODELETE_DEFAULT;
+            builder = new SOAPBuilder();
         }
 
+        OMElement documentElement;
+        String charSetEnc = null;
         try {
-            // check availability of the named exchange.
-            // The server will raise an IOException
-            // if the named exchange already exists.
-            channel.exchangeDeclarePassive(exchangeName);
-            exchangeAvailable = true;
-        } catch (IOException e) {
-            log.info("Exchange :" + exchangeName + " not found.Declaring exchange.");
+            charSetEnc = new ContentType(contentType).getParameter("charset");
+        } catch (ParseException ex) {
+            log.error("Parse error", ex);
         }
+        msgContext.setProperty(Constants.Configuration.CHARACTER_SET_ENCODING, charSetEnc);
 
-        if (!exchangeAvailable) {
-            // Declare the named exchange if it does not exists.
-            if (!channel.isOpen()) {
-                channel = connection.createChannel();
-                log.debug("Channel is not open. Creating a new channel.");
-            }
-            try {
-                channel.exchangeDeclare(exchangeName, exchangeType, Boolean.parseBoolean(durable),
-                                        Boolean.parseBoolean(autoDelete),
-                                        null); // null since passing no extra arguments
-            } catch (IOException e) {
-                handleException("Error occurred while declaring exchange.", e);
-            }
-        }
-        try {
-            channel.close();
-        } catch (TimeoutException e) {
-            log.error("Error occurred while closing connection.", e);
-        }
-    }
+        documentElement = builder.processDocument(
+                new ByteArrayInputStream(body), contentType,
+                msgContext);
 
-    public static void handleException(String message, Exception e) {
-        log.error(message, e);
-        throw new RabbitMQException(message, e);
+        msgContext.setEnvelope(TransportUtils.createSOAPEnvelope(documentElement));
+
+        return contentType;
     }
 }

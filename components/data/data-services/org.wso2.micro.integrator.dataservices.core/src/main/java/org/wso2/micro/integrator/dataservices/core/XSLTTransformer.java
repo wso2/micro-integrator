@@ -22,6 +22,8 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.impl.jaxp.OMSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xerces.impl.Constants;
+import org.apache.xerces.util.SecurityManager;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -122,9 +124,14 @@ public class XSLTTransformer {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setIgnoringComments(setIgnoreComments);
         documentBuilderFactory.setNamespaceAware(true);
+        documentBuilderFactory.setXIncludeAware(false);
         documentBuilderFactory.setExpandEntityReferences(false);
         documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        SecurityManager securityManager = new SecurityManager();
+        securityManager.setEntityExpansionLimit(0);
+        documentBuilderFactory.setAttribute(Constants.XERCES_PROPERTY_PREFIX +
+                Constants.SECURITY_MANAGER_PROPERTY, securityManager);
         documentBuilder.setEntityResolver(new EntityResolver() {
             @Override
             public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {

@@ -29,7 +29,7 @@
 
     <test name="Platform-tests" verbose="2" parallel="none">
         <classes>
-            <class name="org.wso2.micro.integrator.startup.StartupTests"/>
+            <class name="org.wso2.micro.integrator.usermgt.UserManagementTests"/>
         </classes>
     </test>
 

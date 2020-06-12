@@ -23,15 +23,19 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ReadienssProbeTestCase extends ESBIntegrationTest {
 
+    private ServerConfigurationManager serverConfigurationManager;
     private static final String FAULTY_CAPP_NAME = "invalidCompositeApplication_1.0.0.car";
     private static final String READINESS_URL = "http://localhost:9391/healthz";
 
@@ -44,34 +48,42 @@ public class ReadienssProbeTestCase extends ESBIntegrationTest {
         client = new SimpleHttpClient();
         headers = new HashMap<>();
         headers.put("Accept", "application/json");
+        serverConfigurationManager = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test Readiness probe with a faulty CAPP")
-    public void testReadinessWithFaultyCapps() throws Exception {
+    @Test(groups = { "wso2.esb" },
+            description = "Test Readiness probe with a faulty CAPP and hot deployment enabled.")
+    public void testReadinessWithHotDeployment() throws Exception {
 
         HttpResponse response = client.doGet(READINESS_URL, headers);
         String responsePayload = client.getResponsePayload(response);
 
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 500, "Readiness should fail due to faulty CAPPs");
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
+                            "Readiness should give 200 with faulty capp since hot deployment is enabled by default.");
         Assert.assertFalse(responsePayload.isEmpty(), "Readiness response should not be empty");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test Readiness probe without faulty CAPPs",
-            dependsOnMethods = {"testReadinessWithFaultyCapps"})
-    public void testReadinessWithoutFaultyCapps() throws Exception {
+    @Test(groups = { "wso2.esb" },
+            description = "Test Readiness probe with faulty CAPPs with hot deployment disabled",
+            dependsOnMethods = { "testReadinessWithHotDeployment" })
+    public void testReadinessWitFaultyCappsAndHotDeploymentDisabled() throws Exception {
 
-        // undeploy the faulty CAPP and restart the server
-        Utils.undeployCarbonApplication(FAULTY_CAPP_NAME, true);
+        // disable hot deployment
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
+                getESBResourceLocation() + File.separator + "hotdeployment" + File.separator + "deployment.toml"));
 
         HttpResponse response = client.doGet(READINESS_URL, headers);
         String responsePayload = client.getResponsePayload(response);
 
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Readiness should be successful");
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 500,
+                            "Readiness should fail with faulty capp since hot deployment is disabled.");
         Assert.assertFalse(responsePayload.isEmpty(), "Readiness response should not be empty");
     }
 
     @AfterClass(alwaysRun = true)
     public void cleanup() throws Exception {
         super.cleanup();
+        serverConfigurationManager.restoreToLastConfiguration();
     }
 }
