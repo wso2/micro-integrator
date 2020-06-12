@@ -171,12 +171,23 @@ public class ServiceBusInitializer {
                 handleFatal("Couldn't register the SynapseConfigurationService, " + "SynapseConfiguration not found");
             }
             SynapseEnvironment synapseEnvironment = contextInfo.getSynapseEnvironment();
+            List handlers = synapseEnvironment.getSynapseHandlers();
+            Iterator<SynapseHandler> iterator = handlers.iterator();
+            while (iterator.hasNext()) {
+                SynapseHandler handler = iterator.next();
+                if ((handler instanceof AbstractExtendedSynapseHandler)) {
+                    if (!((AbstractExtendedSynapseHandler) handler).handleInit()) {
+                        return;
+                    }
+                }
+            }
             if (synapseEnvironment != null) {
                 // Properties props = new Properties();
                 SynapseEnvironmentService synEnvSvc = new SynapseEnvironmentServiceImpl(synapseEnvironment, Constants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
                 // Update ConfigurationHolder before registering the service
                 ConfigurationHolder.getInstance().setSynapseEnvironmentService(synEnvSvc);
                 synEnvRegistration = bndCtx.registerService(SynapseEnvironmentService.class.getName(), synEnvSvc, null);
+
 
                 synapseEnvironment.registerSynapseHandler(new SynapseExternalPropertyConfigurator());
                 synapseEnvironment.registerSynapseHandler(new ProxyLogHandler());
@@ -205,16 +216,6 @@ public class ServiceBusInitializer {
                     configurationManager);*/
 
 
-            List handlers = synapseEnvironment.getSynapseHandlers();
-            Iterator<SynapseHandler> iterator = handlers.iterator();
-            while (iterator.hasNext()) {
-                SynapseHandler handler = iterator.next();
-                if ((handler instanceof AbstractExtendedSynapseHandler)) {
-                    if (!((AbstractExtendedSynapseHandler) handler).handleInit()) {
-                        return;
-                    }
-                }
-            }
 
             MetricReporterLoader metricReporterLoader = new MetricReporterLoader();
             metricReporterLoader.classLoader();
@@ -237,6 +238,16 @@ public class ServiceBusInitializer {
         }
         if (Objects.nonNull(transactionCountExecutor)) {
             transactionCountExecutor.shutdownNow();
+        }
+        List handlers = serverManager.getServerContextInformation().getSynapseEnvironment().getSynapseHandlers();
+        Iterator<SynapseHandler> iterator = handlers.iterator();
+        while (iterator.hasNext()) {
+            SynapseHandler handler = iterator.next();
+            if ((handler instanceof AbstractExtendedSynapseHandler)) {
+                if (!((AbstractExtendedSynapseHandler) handler).handleStopServer()) {
+                    return;
+                }
+            }
         }
         serverManager.stop();
         serverManager.shutdown();

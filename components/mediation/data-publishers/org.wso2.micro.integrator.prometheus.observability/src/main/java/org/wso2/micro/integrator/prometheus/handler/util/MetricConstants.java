@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.micro.integrator.prometheus.handler.util;
 
 public class MetricConstants {
@@ -32,13 +49,17 @@ public class MetricConstants {
 
     public static final String API_REQUEST_COUNT_TOTAL = "wso2_integration_api_request_count_total";
     public static final String API_REQUEST_COUNT_ERROR_TOTAL = "wso2_integration_api_request_count_error_total";
-    public static final String API_LATENCY_SECONDS = "wso2_integration_papi_latency_seconds";
+    public static final String API_LATENCY_SECONDS = "wso2_integration_api_latency_seconds";
 
-    public static final String INBOUND_ENDPOINT_REQUEST_COUNT_TOTAL = "wso2_integration_inbound_endpoint_request_count_total";
-    public static final String INBOUND_ENDPOINT_REQUEST_COUNT_ERROR_TOTAL = "wso2_integration_inbound_endpoint_request_count_error_total";
-    public static final String INBOUND_ENDPOINT_LATENCY_SECONDS = "wso2_integration_inbound_endpoint_latency_seconds";
+    public static final String INBOUND_ENDPOINT_REQUEST_COUNT_TOTAL =
+            "wso2_integration_inbound_endpoint_request_count_total";
+    public static final String INBOUND_ENDPOINT_REQUEST_COUNT_ERROR_TOTAL =
+            "wso2_integration_inbound_endpoint_request_count_error_total";
+    public static final String INBOUND_ENDPOINT_LATENCY_SECONDS =
+            "wso2_integration_inbound_endpoint_latency_seconds";
 
     public static final String SERVER_UP = "wso2_integration_server_up";
+    public static final String SERVICE_UP = "wso2_integration_service_up";
 
     public static final String PROMETHEUS_HANDLER = "prometheus_handler";
     public static final String PROXY_LATENCY_BUCKETS = "proxy_latency_buckets";
@@ -49,5 +70,8 @@ public class MetricConstants {
     public static final String COUNTER = "Counter";
     public static final String HISTOGRAM = "Histogram";
     public static final String GAUGE = "Gauge";
+
+    public static final String SERVER = "Server";
+    public static final String SERVICE = "Service";
 
 }

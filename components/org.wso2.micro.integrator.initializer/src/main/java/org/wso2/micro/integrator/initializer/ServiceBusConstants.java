@@ -127,5 +127,8 @@ public final class ServiceBusConstants {
     public static final String SYNAPSE_CONNECTOR_PACKAGE = "org.wso2.carbon.connector";
     public static final String DISABLE_CONNECTOR_INIT_SYSTEM_PROPERTY = "esb.connector.startup.init.disable";
 
+    //Constant for Prometheus Observability Handler
+    public static final String PROMETHEUS_HANDLER = "prometheus_handler";
+
 }
 
