@@ -71,7 +71,7 @@ public class CarbonLogReader {
      * Start tailer thread.
      */
     public void start() {
-
+        clearLogs();
         tailer = new Tailer(carbonLogFile, carbonLogTailer, 1000, startReadingFromEndOfFile);
         Thread thread = new Thread(tailer);
         thread.setDaemon(true);
