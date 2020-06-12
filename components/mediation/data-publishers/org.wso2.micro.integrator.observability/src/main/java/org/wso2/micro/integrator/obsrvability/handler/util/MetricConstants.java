@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.prometheus.handler.util;
+package org.wso2.micro.integrator.obsrvability.handler.util;
 
 public class MetricConstants {
 

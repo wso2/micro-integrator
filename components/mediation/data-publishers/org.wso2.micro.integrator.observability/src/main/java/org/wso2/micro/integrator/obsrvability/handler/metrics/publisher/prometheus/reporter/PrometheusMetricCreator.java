@@ -15,10 +15,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.prometheus.handler.handler;
+package org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus.reporter;
 
 import org.apache.synapse.SynapseConstants;
-import org.wso2.micro.integrator.prometheus.handler.util.MetricConstants;
+import org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus.reporter.PrometheusReporter;
+import org.wso2.micro.integrator.obsrvability.handler.util.MetricConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,11 +35,11 @@ public class PrometheusMetricCreator {
     private static final String JAVA_HOME = "java_home";
     private PrometheusReporter prometheusReporter;
 
-    PrometheusMetricCreator () {
+    public PrometheusMetricCreator () {
         prometheusReporter = new PrometheusReporter();
     }
 
-    void createProxyServiceMetric() {
+    public void createProxyServiceMetric() {
         Map<String, String[]> map = new HashMap<>();
         String[] labels = {SERVICE_NAME, SERVICE_TYPE};
         map.put(MetricConstants.PROXY_REQUEST_COUNT_TOTAL, labels);
@@ -52,7 +53,7 @@ public class PrometheusMetricCreator {
                 "Latency of requests to a proxy service", map);
     }
 
-    void createAPIServiceMetric() {
+    public void createAPIServiceMetric() {
         HashMap<String, String[]> map = new HashMap();
         String[] labels = {SERVICE_NAME, SERVICE_TYPE, INVOCATION_URL};
         map.put(MetricConstants.API_REQUEST_COUNT_TOTAL, labels);
@@ -66,7 +67,7 @@ public class PrometheusMetricCreator {
                 "Latency of requests to an api", map);
     }
 
-    void createInboundEndpointMetric() {
+    public void createInboundEndpointMetric() {
         HashMap<String, String[]> map = new HashMap<>();
         String[] labels = {SERVICE_NAME, SERVICE_TYPE};
         map.put(MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_TOTAL, labels);
@@ -81,7 +82,7 @@ public class PrometheusMetricCreator {
                 "Latency of requests to an inbound endpoint.", map);
     }
 
-    void createProxyServiceErrorMetric() {
+    public void createProxyServiceErrorMetric() {
         HashMap<String, String[]> map = new HashMap();
         map.put(MetricConstants.PROXY_REQUEST_COUNT_ERROR_TOTAL, new String[]{SERVICE_NAME, SERVICE_TYPE});
         prometheusReporter.initErrorMetrics("PROXY", MetricConstants.COUNTER,
@@ -99,7 +100,7 @@ public class PrometheusMetricCreator {
                 "Total number of error requests to an api", map);
     }
 
-    void createInboundEndpointErrorMetric() {
+    public void createInboundEndpointErrorMetric() {
         HashMap<String, String[]> map = new HashMap();
 
         map.put(MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_ERROR_TOTAL, new String[]{SERVICE_NAME, SERVICE_TYPE});

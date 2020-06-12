@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.prometheus.handler;
+package org.wso2.micro.integrator.obsrvability.handler.metrics.publisher;
 
 import java.util.Map;
 

@@ -15,10 +15,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.prometheus.handler.handler;
+package org.wso2.micro.integrator.obsrvability.handler.metrics.publisher;
 
 import io.prometheus.client.Histogram;
-import io.prometheus.client.hotspot.DefaultExports;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.AbstractExtendedSynapseHandler;
@@ -29,15 +28,17 @@ import org.apache.synapse.rest.API;
 import org.apache.synapse.rest.RESTUtils;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
-import org.wso2.micro.integrator.prometheus.handler.util.MetricConstants;
+import org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus.reporter.PrometheusMetricCreator;
+import org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus.reporter.PrometheusReporter;
+import org.wso2.micro.integrator.obsrvability.handler.util.MetricConstants;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PrometheusHandler extends AbstractExtendedSynapseHandler {
+public class MetricHandler extends AbstractExtendedSynapseHandler {
 
     PrometheusReporter prometheusReporter = new PrometheusReporter();
-    private static Log log = LogFactory.getLog(PrometheusHandler.class);
+    private static Log log = LogFactory.getLog(MetricHandler.class);
     private static final String DELIMITER = "/";
     private static final String EMPTY = "";
     private RESTUtils restUtils = new RESTUtils();
@@ -246,7 +247,6 @@ public class PrometheusHandler extends AbstractExtendedSynapseHandler {
         String javaVersion = System.getProperty(MetricConstants.JAVA_VERSION);
         String javaHome = System.getProperty(MetricConstants.JAVA_HOME);
 
-        DefaultExports.initialize();
         prometheusMetricCreator.createServerUpMetrics();
         prometheusReporter.serverUp(host, port, javaVersion, javaHome);
         prometheusMetricCreator.createServiceUpMetrics();

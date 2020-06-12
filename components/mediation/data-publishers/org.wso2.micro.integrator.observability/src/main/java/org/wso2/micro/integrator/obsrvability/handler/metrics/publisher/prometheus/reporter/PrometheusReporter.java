@@ -15,15 +15,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.prometheus.handler.handler;
+package org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus.reporter;
 
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
+import io.prometheus.client.hotspot.DefaultExports;
 import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.config.mapper.ConfigParser;
-import org.wso2.micro.integrator.prometheus.handler.MetricReporter;
-import org.wso2.micro.integrator.prometheus.handler.util.MetricConstants;
+import org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.MetricReporter;
+import org.wso2.micro.integrator.obsrvability.handler.util.MetricConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,6 +62,7 @@ public class PrometheusReporter implements MetricReporter {
 
         Map<String, Object> configs = ConfigParser.getParsedConfigs();
         readConfigs(configs);
+        DefaultExports.initialize();
 
         //Read the label names from the map
         String[] labels = properties.get(metricName);

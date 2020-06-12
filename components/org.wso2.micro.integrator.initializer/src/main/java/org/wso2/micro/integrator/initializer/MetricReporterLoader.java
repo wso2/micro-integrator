@@ -29,7 +29,6 @@ public class MetricReporterLoader extends ClassLoader {
     public static final String METRIC_REPORTER = "metric_reporter";
 
 
-
     public void classLoader() throws ClassNotFoundException {
         Map<String, Object> configs = ConfigParser.getParsedConfigs();
         Object metricReporterClass = configs.get(ServiceBusConstants.PROMETHEUS_HANDLER + "." + METRIC_REPORTER);
@@ -38,7 +37,7 @@ public class MetricReporterLoader extends ClassLoader {
         if (metricReporterClass != null) {
             invokeClassMethod(metricReporterClass.toString());
         } else {
-            invokeClassMethod("org.wso2.micro.integrator.prometheus.handler.handler.PrometheusReporter");
+            invokeClassMethod("org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus.reporter.PrometheusReporter");
         }
     }
 
