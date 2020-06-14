@@ -36,6 +36,7 @@ public class PrometheusMetricCreator {
     private PrometheusReporter prometheusReporter;
 
     public PrometheusMetricCreator () {
+
         prometheusReporter = new PrometheusReporter();
     }
 

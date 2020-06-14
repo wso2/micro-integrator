@@ -64,10 +64,6 @@
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.micro.integrator.initializer</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -81,10 +77,10 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Axis2Module>${project.artifactId}-${project.version}</Axis2Module>
                         <Export-Package>
-                            org.wso2.micro.integrator.prometheus.observability.* ; version="${project.version}"
+                            org.wso2.micro.integrator.prometheus.observability.* ;version="${project.version}"
                         </Export-Package>
                         <Import-Package>
-                            org.wso2.carbon.inbound.endpoint.internal.http.api ; version="${project.version}",
+                            org.wso2.carbon.inbound.endpoint.internal.http.api ;version="${project.version}",
                             *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

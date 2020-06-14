@@ -188,7 +188,6 @@ public class ServiceBusInitializer {
                 ConfigurationHolder.getInstance().setSynapseEnvironmentService(synEnvSvc);
                 synEnvRegistration = bndCtx.registerService(SynapseEnvironmentService.class.getName(), synEnvSvc, null);
 
-
                 synapseEnvironment.registerSynapseHandler(new SynapseExternalPropertyConfigurator());
                 synapseEnvironment.registerSynapseHandler(new ProxyLogHandler());
 
@@ -214,11 +213,6 @@ public class ServiceBusInitializer {
             bndCtx.registerService(SynapseRegistrationsService.class.getName(), synRegistrationsSvc, null);
             /*configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
                     configurationManager);*/
-
-
-
-            MetricReporterLoader metricReporterLoader = new MetricReporterLoader();
-            metricReporterLoader.classLoader();
             // Start Inbound Endpoint Listeners
             EndpointListenerLoader.loadListeners();
         } catch (Exception e) {

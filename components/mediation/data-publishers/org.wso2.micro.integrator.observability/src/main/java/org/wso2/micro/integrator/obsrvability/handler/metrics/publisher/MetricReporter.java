@@ -112,4 +112,6 @@ public interface MetricReporter {
      * @param serviceType Service Type
      */
     public void serviceDown(String serviceName, String serviceType);
+
+    public void initMetrics();
 }

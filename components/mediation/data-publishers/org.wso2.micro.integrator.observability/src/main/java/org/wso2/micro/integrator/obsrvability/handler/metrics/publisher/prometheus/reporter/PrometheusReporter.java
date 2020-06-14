@@ -21,7 +21,6 @@ import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.hotspot.DefaultExports;
-import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.MetricReporter;
 import org.wso2.micro.integrator.obsrvability.handler.util.MetricConstants;
@@ -33,35 +32,32 @@ import java.util.List;
 import java.util.Map;
 
 public class PrometheusReporter implements MetricReporter {
-    static Counter TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
-    static Counter TOTAL_REQUESTS_RECEIVED_API;
-    static Counter TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
-    static Counter ERROR_REQUESTS_RECEIVED_PROXY_SERVICE;
-    static Counter ERROR_REQUESTS_RECEIVED_API;
-    static Counter ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
+    public static Counter TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
+    public static Counter TOTAL_REQUESTS_RECEIVED_API;
+    public static Counter TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
+    public static Counter ERROR_REQUESTS_RECEIVED_PROXY_SERVICE;
+    public static Counter ERROR_REQUESTS_RECEIVED_API;
+    public static Counter ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
 
-    static Histogram PROXY_LATENCY_HISTOGRAM;
-    static Histogram API_LATENCY_HISTOGRAM;
-    static Histogram INBOUND_ENDPOINT_LATENCY_HISTOGRAM;
+    public static Histogram PROXY_LATENCY_HISTOGRAM;
+    public static Histogram API_LATENCY_HISTOGRAM;
+    public static Histogram INBOUND_ENDPOINT_LATENCY_HISTOGRAM;
 
-    static Gauge SERVER_UP;
-    static Gauge SERVICE_UP;
+    public static Gauge SERVER_UP;
+    public static Gauge SERVICE_UP;
 
-    double[] proxyLatencyBuckets;
-    double[] apiLatencyBuckets;
-    double[] inboundEndpointLatencyBuckets;
+    public double[] proxyLatencyBuckets;
+    public double[] apiLatencyBuckets;
+    public double[] inboundEndpointLatencyBuckets;
 
     static Map<String, Object> metricMap = new HashMap();
 
     @Override
     public void initMetric(String serviceType, String type, String metricName, String metricHelp, Map<String,
             String[]> properties) {
-        proxyLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
-        apiLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
-        inboundEndpointLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
 
         Map<String, Object> configs = ConfigParser.getParsedConfigs();
-        readConfigs(configs);
+        createBuckets(configs);
         DefaultExports.initialize();
 
         //Read the label names from the map
@@ -200,18 +196,36 @@ public class PrometheusReporter implements MetricReporter {
         gauge.labels(serviceName, serviceType).set(0);
     }
 
+    @Override
+    public void initMetrics() {
+        PrometheusMetricCreator prometheusMetricCreator = new PrometheusMetricCreator();
+        prometheusMetricCreator.createProxyServiceMetric();
+        prometheusMetricCreator.createAPIServiceMetric();
+        prometheusMetricCreator.createInboundEndpointMetric();
+        prometheusMetricCreator.createProxyServiceErrorMetric();
+        prometheusMetricCreator.createApiErrorMetric();
+        prometheusMetricCreator.createInboundEndpointErrorMetric();
+
+        prometheusMetricCreator.createServerUpMetrics();
+        prometheusMetricCreator.createServiceUpMetrics();
+    }
+
     enum service {
         PROXY,
         API,
         INBOUND_ENDPOINT
     }
 
-    private void readConfigs(Map<String, Object> configs) {
-        Object proxyConfigBuckets = configs.get(ServiceBusConstants.PROMETHEUS_HANDLER + "." +
+    private void createBuckets(Map<String, Object> configs) {
+        proxyLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
+        apiLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
+        inboundEndpointLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
+
+        Object proxyConfigBuckets = configs.get(MetricConstants.PROMETHEUS_HANDLER + "." +
                 MetricConstants.PROXY_LATENCY_BUCKETS);
-        Object apiConfigBuckets = configs.get(ServiceBusConstants.PROMETHEUS_HANDLER + "." +
+        Object apiConfigBuckets = configs.get(MetricConstants.PROMETHEUS_HANDLER + "." +
                 MetricConstants.API_LATENCY_BUCKETS);
-        Object inboundEndpointConfigBuckets = configs.get(ServiceBusConstants.PROMETHEUS_HANDLER + "." +
+        Object inboundEndpointConfigBuckets = configs.get(MetricConstants.PROMETHEUS_HANDLER + "." +
                 MetricConstants.INBOUND_ENDPOINT_LATENCY_BUCKETS);
 
         if (null != proxyConfigBuckets) {
@@ -239,4 +253,5 @@ public class PrometheusReporter implements MetricReporter {
             }
         }
     }
+
 }
