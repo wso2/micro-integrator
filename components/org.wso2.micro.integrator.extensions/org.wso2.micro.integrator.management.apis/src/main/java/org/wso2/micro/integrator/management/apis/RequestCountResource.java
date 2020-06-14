@@ -61,21 +61,33 @@ public class RequestCountResource implements MiApiResource {
     public boolean invoke(MessageContext synCtx,
                           org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
+        String errorMessage;
 
         String yearParameter = Utils.getQueryParameter(synCtx, "year");
         String monthParameter = Utils.getQueryParameter(synCtx, "month");
 
-        if (tryParseInt(yearParameter) != null && tryParseInt(monthParameter) != null) {
-            if (!StringUtils.isEmpty(yearParameter) && !StringUtils.isEmpty(monthParameter)) {
-                return takeRequestCountOfTheMonth(axis2MessageContext, Integer.parseInt(yearParameter),
-                                                  Integer.parseInt(monthParameter));
-            }
-        } else if (StringUtils.isEmpty(yearParameter) && StringUtils.isEmpty(monthParameter)) {
+        if (StringUtils.isEmpty(yearParameter) && StringUtils.isEmpty(monthParameter)) {
             Date date = new Date();
             LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             return takeRequestCountOfTheMonth(axis2MessageContext, localDate.getYear(), localDate.getMonthValue());
+        } else if (StringUtils.isEmpty(yearParameter) || StringUtils.isEmpty(monthParameter)) {
+            errorMessage = "Either both \"year\" and \"month\" arguments or none should be specified.";
+        } else {
+            Integer year = tryParseInt(yearParameter);
+            Integer month = tryParseInt(monthParameter);
+
+            if (null != year && null != month) {
+                return takeRequestCountOfTheMonth(axis2MessageContext, year, month);
+            } else if (null == year && null == month){
+                errorMessage = "Invalid inputs for arguments \"year\" and \"month\".";
+            } else if (null == year){
+                errorMessage = "Invalid input for argument \"year\".";
+            } else {
+                errorMessage = "Invalid input for argument \"month\".";
+            }
         }
-        JSONObject response = Utils.createJsonError("Input parameters are not valid", axis2MessageContext, BAD_REQUEST);
+
+        JSONObject response = Utils.createJsonError(errorMessage, axis2MessageContext, BAD_REQUEST);
         Utils.setJsonPayLoad(axis2MessageContext, response);
         return true;
     }
