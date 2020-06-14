@@ -43,7 +43,8 @@ public class Constants {
     public static final String PREFIX_LOGOUT = "/logout";
     public static final String PREFIX_SERVER_DATA = "/server";
     public static final String PREFIX_LOG_FILES = "/logs";
-    public static final String PREFIX_REQ_COUNT = "/transactions";
+    public static final String PREFIX_TRANSACTION = "/transactions";
+    public static final String PATH_PARAM_TRANSACTION = "/" + "{param}";
 
     public static final String COUNT = "count";
     public static final String LIST = "list";

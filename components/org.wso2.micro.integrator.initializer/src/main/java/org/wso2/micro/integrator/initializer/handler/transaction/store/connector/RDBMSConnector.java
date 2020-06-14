@@ -29,10 +29,13 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.crypto.Cipher;
 import javax.sql.DataSource;
 
@@ -85,12 +88,17 @@ public class RDBMSConnector {
     /**
      * Add transaction count to the database.
      */
-    public synchronized void addTransaction() throws SQLException {
+    public synchronized void addTransaction() throws TransactionCounterException {
         // if raw exists - update else and a new raw.
-        if (checkDataExists()) {
-            updateStats();
-        } else {
-            addNewRow();
+        try {
+            if (checkDataExists()) {
+                updateStats();
+            } else {
+                addNewRow();
+            }
+        } catch (SQLException e) {
+            throw new TransactionCounterException(
+                    "Error occurred while adding transaction count to the database", e);
         }
     }
 
@@ -100,9 +108,9 @@ public class RDBMSConnector {
      * @param year        Year.
      * @param monthNumber Month.
      * @return Aggregated transaction count if exists. Else (-1)
-     * @throws SQLException Error occurred while fetching data from the database.
+     * @throws TransactionCounterException Error occurred while fetching data from the database.
      */
-    public long getTransactionCountOfMonth(int year, int monthNumber) throws SQLException {
+    public long getTransactionCountOfMonth(int year, int monthNumber) throws TransactionCounterException {
 
         String dateString = year + "-" + monthNumber + "-01";
         try (Connection dbConnection = getConnection();
@@ -118,8 +126,46 @@ public class RDBMSConnector {
                     }
                 }
             }
+        } catch (SQLException e) {
+            throw new TransactionCounterException(
+                    "Error occurred while getting the transaction count from the database", e);
         }
         return -1L;
+    }
+
+    /**
+     * Get transaction count data for a given period of time.
+     *
+     * @param startDate startDate
+     * @param endDate   endDate
+     * @return a list of string arrays with information of the column names and row data
+     * @throws TransactionCounterException when an error occurs while fetching data from the database.
+     */
+    public List<String[]> getTransactionCountDataWithColumnNames(String startDate, String endDate)
+            throws TransactionCounterException {
+
+        List<String[]> data = new ArrayList<>();
+        try (Connection dbConnection = getConnection();
+             PreparedStatement prepStmt = dbConnection.prepareStatement(
+                     TransactionQueryHelper.GET_TRAN_COUNT_DATA_FOR_A_TIME_PERIOD)) {
+            prepStmt.setString(1, startDate);
+            prepStmt.setString(2, endDate);
+            try (ResultSet rs = prepStmt.executeQuery()) {
+                ResultSetMetaData rsmd = rs.getMetaData();
+                data.add(new String[]{rsmd.getColumnName(1), rsmd.getColumnName(2), rsmd.getColumnName(3),
+                        rsmd.getColumnName(4)});
+                while (rs.next()) {
+                    data.add(new String[]{rs.getString(1), rs.getString(2),
+                            String.valueOf(rs.getLong(3)), rs.getString(4)});
+                }
+            }
+        } catch (SQLException e) {
+            throw new TransactionCounterException(
+                    "Error occurred while getting the transaction count data from the database for the given time "
+                            + "period",
+                    e);
+        }
+        return data;
     }
 
     // Add new entry to the transaction stat table
