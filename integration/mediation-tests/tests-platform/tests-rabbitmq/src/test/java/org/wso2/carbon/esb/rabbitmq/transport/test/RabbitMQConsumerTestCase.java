@@ -32,6 +32,8 @@ import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
 
 import java.io.IOException;
 
+import static org.wso2.carbon.esb.rabbitmq.TestConstants.SIMPLE_CONSUMER_QUEUE;
+
 /**
  * RabbitMQConsumerTestCase tests EI as a rabbitmq consumer for small messages as well as large messages.
  */
@@ -43,7 +45,7 @@ public class RabbitMQConsumerTestCase extends ESBIntegrationTest {
 
     @BeforeSuite()
     public void declareQueue() throws IOException {
-        sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange2", "simple_consumer_test");
+        sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange2", SIMPLE_CONSUMER_QUEUE);
     }
 
     @BeforeClass(alwaysRun = true)
