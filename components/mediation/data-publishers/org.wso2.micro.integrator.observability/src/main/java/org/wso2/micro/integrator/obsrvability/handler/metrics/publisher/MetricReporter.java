@@ -23,20 +23,31 @@ import java.util.Map;
  * The Metric Reporter is allows one to access the relevant Metric Reporter implementation.
  */
 public interface MetricReporter {
-
     /**
-     * Create the metrics used in instrumentation.
+     * Creates a metric of the provided type with the given metric name,
+     * the metric description and the set of properties that can be used
+     * to identify a metric uniquely and for metric aggregation, metric filtering.
      *
-     * @param serviceType Service Type
-     * @param type        Metric type
+     * @param serviceType The service type (Proxy Service, API, Inbound endpoint )
+     *                    for which the metric is going to be instrumented.
+     * @param type        The type of metric (e.g.Counter) that is used in intrumentation.
      * @param metricHelp  Metric Description
-     * @param properties  Metric labels
+     * @param properties  Metric labels used to uniquely identify a metric.
      */
-    public void initMetric(String serviceType, String type, String metricName, String metricHelp,
+    public void createMetric(String serviceType, String type, String metricName, String metricHelp,
                            Map<String, String[]> properties);
 
     /**
-     * Create the metrics used in instrumentation of error requests.
+     * This is called in the handleInit() method of the AbstractExtendedSynapseHandler.
+     * There by the metrics created in the createMetric() method are invoked.
+     */
+    public void initMetrics();
+
+    /**
+     * Creates a metric of the provided type when a request invocation fails
+     * with the given metric name, the metric description and the set of
+     * properties that can be used to identify a metric uniquely and for
+     * metric aggregation, metric filtering.
      *
      * @param serviceType Service Type
      * @param type        Metric type
@@ -50,7 +61,8 @@ public interface MetricReporter {
      * Increment the metric value when a request is received/server/service is deployed.
      *
      * @param metricName Metric Name
-     * @param properties Metric and the labels as key-value pairs of the properties Map
+     * @param properties Metric labels where the Metric and the labels are defined as key-value pairs of the properties
+     *                   Map
      */
     public void incrementCount(String metricName, Map<String, String[]> properties);
 
@@ -63,7 +75,11 @@ public interface MetricReporter {
     public void decrementCount(String metricName, Map<String, String> properties);
 
     /**
-     * Return a timer object to observe the request latency.
+     * Return a timer object used to observe the round trip time from the moment a
+     * request enters the Synapse Engine until the response goes out of the Synapse
+     * Engine.
+     * A Timer Object which contains the metric name, it's respective set of labels
+     * and time the request reached the Synapse Engine is returned.
      *
      * @param metricName Metric Name
      * @param properties Metric and the labels as key-value pairs
@@ -71,14 +87,19 @@ public interface MetricReporter {
     public Object getTimer(String metricName, Map<String, String[]> properties);
 
     /**
-     * Observes the latency of a request.
+     * Stops the timer once the response leaves the Synapse Engine, so that the
+     * latency of a request entering the Synapse Engine is calculated by the difference
+     * between the time the timer was started in the getTimer() method and the
+     * observeTime() method.
      *
-     * @param timer Timer Object observing the latency of a request.
+     * @param timer Timer Object returned from the getTimer() method
      */
     public void observeTime(Object timer);
 
     /**
-     * Instrument metrics on server deployment.
+     * Instrument metrics related to server deployment where a metric can be uniquely
+     * identify by the IP Address of the host and port the MI server is running and the
+     * java home and java version used for running the MI server.
      *
      * @param host        The IP Address of the host the MI server is running
      * @param port        The port the MI server is running
@@ -98,7 +119,8 @@ public interface MetricReporter {
     public void serverDown(String host, String port, String javaVersion, String javaHome);
 
     /**
-     * Instrument metrics on service deployment.
+     * Instrument metrics on service deployment where a metric can be uniquely
+     * identify by service name and the service type.
      *
      * @param serviceName Service Name
      * @param serviceType Service Type
@@ -112,6 +134,4 @@ public interface MetricReporter {
      * @param serviceType Service Type
      */
     public void serviceDown(String serviceName, String serviceType);
-
-    public void initMetrics();
 }

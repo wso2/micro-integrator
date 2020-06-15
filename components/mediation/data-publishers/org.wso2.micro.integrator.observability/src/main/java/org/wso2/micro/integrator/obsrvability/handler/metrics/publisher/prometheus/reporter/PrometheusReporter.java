@@ -31,6 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for instrumenting Prometheus Metrics.
+ */
 public class PrometheusReporter implements MetricReporter {
     public static Counter TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
     public static Counter TOTAL_REQUESTS_RECEIVED_API;
@@ -53,7 +56,7 @@ public class PrometheusReporter implements MetricReporter {
     static Map<String, Object> metricMap = new HashMap();
 
     @Override
-    public void initMetric(String serviceType, String type, String metricName, String metricHelp, Map<String,
+    public void createMetric(String serviceType, String type, String metricName, String metricHelp, Map<String,
             String[]> properties) {
 
         Map<String, Object> configs = ConfigParser.getParsedConfigs();
@@ -216,6 +219,11 @@ public class PrometheusReporter implements MetricReporter {
         INBOUND_ENDPOINT
     }
 
+    /**
+     * Instrument metrics on server deployment.
+     *
+     * @param configs The map of configs defined in the deployment.toml file
+     */
     private void createBuckets(Map<String, Object> configs) {
         proxyLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
         apiLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
@@ -253,5 +261,4 @@ public class PrometheusReporter implements MetricReporter {
             }
         }
     }
-
 }

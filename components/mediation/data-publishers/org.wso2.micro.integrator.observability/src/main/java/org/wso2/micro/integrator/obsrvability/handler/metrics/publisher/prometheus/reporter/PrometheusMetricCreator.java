@@ -24,6 +24,9 @@ import org.wso2.micro.integrator.obsrvability.handler.util.MetricConstants;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class for creating Prometheus Metrics from the data scraped in the Metric Handler.
+ */
 public class PrometheusMetricCreator {
 
     private static final String SERVICE_NAME = "service_name";
@@ -40,49 +43,61 @@ public class PrometheusMetricCreator {
         prometheusReporter = new PrometheusReporter();
     }
 
+    /**
+     * Create the proxy services related metrics.
+     */
     public void createProxyServiceMetric() {
         Map<String, String[]> map = new HashMap<>();
         String[] labels = {SERVICE_NAME, SERVICE_TYPE};
         map.put(MetricConstants.PROXY_REQUEST_COUNT_TOTAL, labels);
         map.put(MetricConstants.PROXY_LATENCY_SECONDS, labels);
 
-        prometheusReporter.initMetric(SynapseConstants.PROXY_SERVICE_TYPE, MetricConstants.COUNTER,
+        prometheusReporter.createMetric(SynapseConstants.PROXY_SERVICE_TYPE, MetricConstants.COUNTER,
                 MetricConstants.PROXY_REQUEST_COUNT_TOTAL,
                 "Total number of requests to a proxy service", map);
-        prometheusReporter.initMetric(SynapseConstants.PROXY_SERVICE_TYPE, MetricConstants.HISTOGRAM,
+        prometheusReporter.createMetric(SynapseConstants.PROXY_SERVICE_TYPE, MetricConstants.HISTOGRAM,
                 MetricConstants.PROXY_LATENCY_SECONDS,
                 "Latency of requests to a proxy service", map);
     }
 
+    /**
+     * Create the api related metrics.
+     */
     public void createAPIServiceMetric() {
         HashMap<String, String[]> map = new HashMap();
         String[] labels = {SERVICE_NAME, SERVICE_TYPE, INVOCATION_URL};
         map.put(MetricConstants.API_REQUEST_COUNT_TOTAL, labels);
         map.put(MetricConstants.API_LATENCY_SECONDS, labels);
 
-        prometheusReporter.initMetric(SynapseConstants.FAIL_SAFE_MODE_API, MetricConstants.COUNTER,
+        prometheusReporter.createMetric(SynapseConstants.FAIL_SAFE_MODE_API, MetricConstants.COUNTER,
                 MetricConstants.API_REQUEST_COUNT_TOTAL,
                 "Total number of requests to an api", map);
-        prometheusReporter.initMetric(SynapseConstants.FAIL_SAFE_MODE_API, MetricConstants.HISTOGRAM,
+        prometheusReporter.createMetric(SynapseConstants.FAIL_SAFE_MODE_API, MetricConstants.HISTOGRAM,
                 MetricConstants.API_LATENCY_SECONDS,
                 "Latency of requests to an api", map);
     }
 
+    /**
+     * Create the inbound endpoint related metrics.
+     */
     public void createInboundEndpointMetric() {
         HashMap<String, String[]> map = new HashMap<>();
         String[] labels = {SERVICE_NAME, SERVICE_TYPE};
         map.put(MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_TOTAL, labels);
         map.put(MetricConstants.INBOUND_ENDPOINT_LATENCY_SECONDS, labels);
 
-        prometheusReporter.initMetric("INBOUND_ENDPOINT", MetricConstants.COUNTER,
+        prometheusReporter.createMetric("INBOUND_ENDPOINT", MetricConstants.COUNTER,
                 MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_TOTAL,
                 "Total number of requests to an inbound endpoint.", map);
 
-        prometheusReporter.initMetric("INBOUND_ENDPOINT", MetricConstants.HISTOGRAM,
+        prometheusReporter.createMetric("INBOUND_ENDPOINT", MetricConstants.HISTOGRAM,
                 MetricConstants.INBOUND_ENDPOINT_LATENCY_SECONDS,
                 "Latency of requests to an inbound endpoint.", map);
     }
 
+    /**
+     * Create the metrics related to failed proxy services.
+     */
     public void createProxyServiceErrorMetric() {
         HashMap<String, String[]> map = new HashMap();
         map.put(MetricConstants.PROXY_REQUEST_COUNT_ERROR_TOTAL, new String[]{SERVICE_NAME, SERVICE_TYPE});
@@ -91,6 +106,9 @@ public class PrometheusMetricCreator {
                 "Total number of error requests to a proxy service", map);
     }
 
+    /**
+     * Create the metrics related to failed apis.
+     */
     public void createApiErrorMetric() {
         HashMap<String, String[]> map = new HashMap();
 
@@ -101,6 +119,9 @@ public class PrometheusMetricCreator {
                 "Total number of error requests to an api", map);
     }
 
+    /**
+     * Create the metrics related to failed inbound endpoints.
+     */
     public void createInboundEndpointErrorMetric() {
         HashMap<String, String[]> map = new HashMap();
 
@@ -110,19 +131,26 @@ public class PrometheusMetricCreator {
                 "Total number of error requests to an inbound endpoint.", map);
     }
 
+
+    /**
+     * Create the metrics related to server startup.
+     */
     public void createServerUpMetrics() {
         HashMap map = new HashMap();
         map.put(MetricConstants.SERVER_UP, new String[]{HOST, PORT, JAVA_HOME, JAVA_VERSION});
 
-        prometheusReporter.initMetric(MetricConstants.SERVER, MetricConstants.GAUGE, MetricConstants.SERVER_UP,
+        prometheusReporter.createMetric(MetricConstants.SERVER, MetricConstants.GAUGE, MetricConstants.SERVER_UP,
                 "Server Status", map);
     }
 
+      /**
+     * Create the metrics related to service deployment.
+     */
     public void createServiceUpMetrics() {
         HashMap map = new HashMap();
         map.put(MetricConstants.SERVICE_UP, new String[]{SERVICE_NAME, SERVICE_TYPE});
 
-        prometheusReporter.initMetric(MetricConstants.SERVICE, MetricConstants.GAUGE, MetricConstants.SERVICE_UP,
+        prometheusReporter.createMetric(MetricConstants.SERVICE, MetricConstants.GAUGE, MetricConstants.SERVICE_UP,
                 "Service Status", map);
     }
 }
