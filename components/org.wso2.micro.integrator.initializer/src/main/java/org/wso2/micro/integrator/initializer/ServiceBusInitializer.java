@@ -176,7 +176,7 @@ public class ServiceBusInitializer {
             while (iterator.hasNext()) {
                 SynapseHandler handler = iterator.next();
                 if ((handler instanceof AbstractExtendedSynapseHandler)) {
-                    if (!((AbstractExtendedSynapseHandler) handler).handleInit()) {
+                    if (!((AbstractExtendedSynapseHandler) handler).handleServerInit()) {
                         return;
                     }
                 }
@@ -237,10 +237,9 @@ public class ServiceBusInitializer {
         Iterator<SynapseHandler> iterator = handlers.iterator();
         while (iterator.hasNext()) {
             SynapseHandler handler = iterator.next();
-            if ((handler instanceof AbstractExtendedSynapseHandler)) {
-                if (!((AbstractExtendedSynapseHandler) handler).handleStopServer()) {
+            if (((handler instanceof AbstractExtendedSynapseHandler)) &&
+                    (!((AbstractExtendedSynapseHandler) handler).handleServerShutDown())) {
                     return;
-                }
             }
         }
         serverManager.stop();

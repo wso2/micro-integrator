@@ -23,17 +23,15 @@ package org.wso2.micro.integrator.obsrvability.handler.util;
 public class MetricConstants {
 
     // Constants for Synapse artifacts
-    public static final String PROXY_NAME = "proxy.name";
     public static final String SYNAPSE_REST_API = "SYNAPSE_REST_API";
     public static final String INBOUND_ENDPOINT = "inbound-endpoint";
-    public static final String INBOUND_ENDPOINT_NAME = "inbound.endpoint.name";
 
     public static final String HTTP_PORT = "http.nio.port";
     public static final String JAVA_VERSION = "java.vm.specification.version";
     public static final String JAVA_HOME = "java.home";
 
     //Constants for Synapse properties
-    public static final String IS_ALREADY_PROCESSED_REST_API = "IS_ALREADY_PROCESSED_REST_API";
+    public static final String IS_PROMETHEUS_ENGAGED = "IS_PROMETHEUS_ENGAGED";
     public static final String PROCESSED_API = "PROCESSED_API";
     public static final String TRANSPORT_IN_URL = "TransportInURL";
     public static final String SERVICE_PREFIX = "SERVICE_PREFIX";
@@ -59,7 +57,7 @@ public class MetricConstants {
     public static final String SERVER_UP = "wso2_integration_server_up";
     public static final String SERVICE_UP = "wso2_integration_service_up";
 
-    public static final String PROMETHEUS_HANDLER = "prometheus_handler";
+    public static final String METRIC_HANDLER = "metric_handler";
     public static final String PROXY_LATENCY_BUCKETS = "proxy_latency_buckets";
     public static final String API_LATENCY_BUCKETS = "api_latency_buckets";
     public static final String INBOUND_ENDPOINT_LATENCY_BUCKETS = "inbound_endpoint_latency_buckets";
@@ -75,4 +73,11 @@ public class MetricConstants {
     public static final String COUNTER = "Counter";
     public static final String HISTOGRAM = "Histogram";
     public static final String GAUGE = "Gauge";
+
+    public static final String SERVICE_NAME = "service_name";
+    public static final String SERVICE_TYPE = "service_type";
+    public static final String INVOCATION_URL = "invocation_url";
+    public static final String HOST = "host";
+    public static final String PORT = "port";
+
 }

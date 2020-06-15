@@ -25,11 +25,13 @@ import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.MetricReporter;
 import org.wso2.micro.integrator.obsrvability.handler.util.MetricConstants;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class for instrumenting Prometheus Metrics.
@@ -53,7 +55,7 @@ public class PrometheusReporter implements MetricReporter {
     public double[] apiLatencyBuckets;
     public double[] inboundEndpointLatencyBuckets;
 
-    static Map<String, Object> metricMap = new HashMap();
+    private static Map<String, Object> metricMap = new HashMap();
 
     @Override
     public void createMetric(String serviceType, String type, String metricName, String metricHelp, Map<String,
@@ -66,7 +68,7 @@ public class PrometheusReporter implements MetricReporter {
         //Read the label names from the map
         String[] labels = properties.get(metricName);
 
-        if (serviceType.equalsIgnoreCase(service.PROXY.name())) {
+        if (serviceType.equalsIgnoreCase(SERVICE.PROXY.name())) {
             if (type.equals(MetricConstants.COUNTER)) {
                 TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE = Counter.build(MetricConstants.PROXY_REQUEST_COUNT_TOTAL,
                         metricHelp).
@@ -82,7 +84,7 @@ public class PrometheusReporter implements MetricReporter {
                         .register();
                 metricMap.put(metricName, PROXY_LATENCY_HISTOGRAM);
             }
-        } else if (serviceType.equalsIgnoreCase(service.API.name())) {
+        } else if (serviceType.equalsIgnoreCase(SERVICE.API.name())) {
             if (type.equals(MetricConstants.COUNTER)) {
                 TOTAL_REQUESTS_RECEIVED_API = Counter.build(MetricConstants.API_REQUEST_COUNT_TOTAL, metricHelp).
                         labelNames(labels).register();
@@ -96,7 +98,7 @@ public class PrometheusReporter implements MetricReporter {
                         .register();
                 metricMap.put(metricName, API_LATENCY_HISTOGRAM);
             }
-        } else if (serviceType.equalsIgnoreCase(service.INBOUND_ENDPOINT.name())) {
+        } else if (serviceType.equalsIgnoreCase(SERVICE.INBOUND_ENDPOINT.name())) {
             if (type.equals(MetricConstants.COUNTER)) {
                 TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT = Counter.build
                         (MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_TOTAL, metricHelp).
@@ -130,16 +132,16 @@ public class PrometheusReporter implements MetricReporter {
 
         String[] labels = properties.get(metricName);
 
-        if (serviceType.equals(service.PROXY.name())) {
+        if (serviceType.equals(SERVICE.PROXY.name())) {
             ERROR_REQUESTS_RECEIVED_PROXY_SERVICE = Counter.build(MetricConstants.PROXY_REQUEST_COUNT_ERROR_TOTAL,
                     metricHelp).
                     labelNames(labels).register();
             metricMap.put(metricName, ERROR_REQUESTS_RECEIVED_PROXY_SERVICE);
-        } else if (serviceType.equals(service.API.name())) {
+        } else if (serviceType.equals(SERVICE.API.name())) {
             ERROR_REQUESTS_RECEIVED_API = Counter.build(MetricConstants.API_REQUEST_COUNT_ERROR_TOTAL, metricHelp).
                     labelNames(labels).register();
             metricMap.put(metricName, ERROR_REQUESTS_RECEIVED_API);
-        } else if (serviceType.equals(service.INBOUND_ENDPOINT.name())) {
+        } else if (serviceType.equals(SERVICE.INBOUND_ENDPOINT.name())) {
             ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT = Counter.
                     build(MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_ERROR_TOTAL, metricHelp).labelNames(labels).
                     register();
@@ -158,7 +160,8 @@ public class PrometheusReporter implements MetricReporter {
 
     @Override
     public void decrementCount(String metricName, Map<String, String> properties) {
-
+        // decrementCount() is not necessary to be implemented for the Prometheus Reporter
+        // as Gauge is used in Prometheus for the metrics that can both increment and decrement value.
     }
 
     @Override
@@ -177,7 +180,7 @@ public class PrometheusReporter implements MetricReporter {
 
     @Override
     public void serverUp(String host, String port, String javaVersion, String javaHome) {
-        Gauge gauge = (Gauge) metricMap.get("wso2_integration_server_up");
+        Gauge gauge = (Gauge) metricMap.get(MetricConstants.SERVER_UP);
         gauge.labels(host, port, javaHome, javaVersion).setToCurrentTime();
     }
 
@@ -213,27 +216,29 @@ public class PrometheusReporter implements MetricReporter {
         prometheusMetricCreator.createServiceUpMetrics();
     }
 
-    enum service {
+    enum SERVICE {
         PROXY,
         API,
         INBOUND_ENDPOINT
     }
 
     /**
-     * Instrument metrics on server deployment.
+     * Load the user defined Histogram bucket upper limits configurations from the
+     * deployment.toml file else assign the default bucket configuration values.  .
      *
-     * @param configs The map of configs defined in the deployment.toml file
+     * @param configs The map of configs defined for Histogram bucket upper limits
+     *                in the deployment.toml file
      */
     private void createBuckets(Map<String, Object> configs) {
         proxyLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
         apiLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
         inboundEndpointLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
 
-        Object proxyConfigBuckets = configs.get(MetricConstants.PROMETHEUS_HANDLER + "." +
+        Object proxyConfigBuckets = configs.get(MetricConstants.METRIC_HANDLER+ "." +
                 MetricConstants.PROXY_LATENCY_BUCKETS);
-        Object apiConfigBuckets = configs.get(MetricConstants.PROMETHEUS_HANDLER + "." +
+        Object apiConfigBuckets = configs.get(MetricConstants.METRIC_HANDLER + "." +
                 MetricConstants.API_LATENCY_BUCKETS);
-        Object inboundEndpointConfigBuckets = configs.get(MetricConstants.PROMETHEUS_HANDLER + "." +
+        Object inboundEndpointConfigBuckets = configs.get(MetricConstants.METRIC_HANDLER + "." +
                 MetricConstants.INBOUND_ENDPOINT_LATENCY_BUCKETS);
 
         if (null != proxyConfigBuckets) {

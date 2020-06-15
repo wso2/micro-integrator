@@ -23,6 +23,7 @@ import java.util.Map;
  * The Metric Reporter is allows one to access the relevant Metric Reporter implementation.
  */
 public interface MetricReporter {
+
     /**
      * Creates a metric of the provided type with the given metric name,
      * the metric description and the set of properties that can be used
@@ -30,18 +31,19 @@ public interface MetricReporter {
      *
      * @param serviceType The service type (Proxy Service, API, Inbound endpoint )
      *                    for which the metric is going to be instrumented.
-     * @param type        The type of metric (e.g.Counter) that is used in intrumentation.
+     * @param type        The type of metric (e.g.Counter) that is used in instrumentation.
+     * @param metricName  Metric Name
      * @param metricHelp  Metric Description
      * @param properties  Metric labels used to uniquely identify a metric.
      */
-    public void createMetric(String serviceType, String type, String metricName, String metricHelp,
-                           Map<String, String[]> properties);
+    void createMetric(String serviceType, String type, String metricName, String metricHelp,
+                             Map<String, String[]> properties);
 
     /**
      * This is called in the handleInit() method of the AbstractExtendedSynapseHandler.
      * There by the metrics created in the createMetric() method are invoked.
      */
-    public void initMetrics();
+     void initMetrics();
 
     /**
      * Creates a metric of the provided type when a request invocation fails
@@ -54,7 +56,7 @@ public interface MetricReporter {
      * @param metricHelp  Metric Description
      * @param properties  Metric labels
      */
-    public void initErrorMetrics(String serviceType, String type, String metricName, String metricHelp,
+    void initErrorMetrics(String serviceType, String type, String metricName, String metricHelp,
                                  Map<String, String[]> properties);
 
     /**
@@ -64,7 +66,7 @@ public interface MetricReporter {
      * @param properties Metric labels where the Metric and the labels are defined as key-value pairs of the properties
      *                   Map
      */
-    public void incrementCount(String metricName, Map<String, String[]> properties);
+    void incrementCount(String metricName, Map<String, String[]> properties);
 
     /**
      * Decrement the metric value when a request is received/server/service is un-deployed.
@@ -72,7 +74,7 @@ public interface MetricReporter {
      * @param metricName Metric Name
      * @param properties Metric and the labels as key-value pairs of the properties Map
      */
-    public void decrementCount(String metricName, Map<String, String> properties);
+    void decrementCount(String metricName, Map<String, String> properties);
 
     /**
      * Return a timer object used to observe the round trip time from the moment a
@@ -84,7 +86,7 @@ public interface MetricReporter {
      * @param metricName Metric Name
      * @param properties Metric and the labels as key-value pairs
      */
-    public Object getTimer(String metricName, Map<String, String[]> properties);
+     Object getTimer(String metricName, Map<String, String[]> properties);
 
     /**
      * Stops the timer once the response leaves the Synapse Engine, so that the
@@ -106,7 +108,7 @@ public interface MetricReporter {
      * @param javaHome    Java Home
      * @param javaVersion Java Version
      */
-    public void serverUp(String host, String port, String javaHome, String javaVersion);
+     void serverUp(String host, String port, String javaHome, String javaVersion);
 
     /**
      * Instrument metrics on server undeployment.
@@ -116,7 +118,7 @@ public interface MetricReporter {
      * @param javaHome    Java Home
      * @param javaVersion Java Version
      */
-    public void serverDown(String host, String port, String javaVersion, String javaHome);
+     void serverDown(String host, String port, String javaVersion, String javaHome);
 
     /**
      * Instrument metrics on service deployment where a metric can be uniquely
@@ -125,7 +127,7 @@ public interface MetricReporter {
      * @param serviceName Service Name
      * @param serviceType Service Type
      */
-    public void serviceUp(String serviceName, String serviceType);
+     void serviceUp(String serviceName, String serviceType);
 
     /**
      * Instrument metrics on service undeployment.
@@ -133,5 +135,5 @@ public interface MetricReporter {
      * @param serviceName Service Name
      * @param serviceType Service Type
      */
-    public void serviceDown(String serviceName, String serviceType);
+     void serviceDown(String serviceName, String serviceType);
 }
