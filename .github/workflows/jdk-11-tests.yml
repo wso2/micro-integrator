@@ -1,4 +1,4 @@
-name: All Tests in Java 11
+name: Integration tests (Ubuntu, OpenJDK11)
 
 on: [push, pull_request]
 

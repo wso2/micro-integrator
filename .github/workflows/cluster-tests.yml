@@ -1,4 +1,4 @@
-name: Cluster tests ( openjdk11 & mysql )
+name: Cluster tests (OpenJDK11 & MySQL)
 
 on: [push, pull_request]
 
