@@ -99,7 +99,7 @@ public class JMSUtils {
         } else {
             // Then from axis2 context - This is for make it consistent with JMS Transport config parameters
             booleanProperty =
-                    (((Axis2MessageContext) msgContext).getAxis2MessageContext()).getProperty(JMSConstants.SET_ROLLBACK_ONLY);
+                    (((Axis2MessageContext) msgContext).getAxis2MessageContext()).getProperty(propertyName);
             if ((booleanProperty instanceof Boolean && ((Boolean) booleanProperty))
                     || (booleanProperty instanceof String && Boolean.valueOf((String) booleanProperty))) {
                 isPropertySet = true;
