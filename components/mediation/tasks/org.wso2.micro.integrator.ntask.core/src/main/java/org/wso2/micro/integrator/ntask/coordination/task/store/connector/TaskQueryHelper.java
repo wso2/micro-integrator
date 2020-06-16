@@ -71,6 +71,9 @@ public class TaskQueryHelper {
             "SELECT " + TASK_NAME + " FROM " + TABLE_NAME + "  WHERE " + DESTINED_NODE_ID + " =? AND " + TASK_STATE
                     + " =?";
 
+    static final String RETRIEVE_TASK_STATE =
+            "SELECT " + TASK_STATE + " FROM " + TABLE_NAME + "  WHERE " + TASK_NAME + " =?";
+
     static final String REMOVE_ASSIGNMENT_AND_UPDATE_STATE =
             "UPDATE " + TABLE_NAME + " SET " + DESTINED_NODE_ID + " = NULL , " + TASK_STATE + " = " + TASK_STATE_CONST
                     + " WHERE " + TASK_NAME + " =?";

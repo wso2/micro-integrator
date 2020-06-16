@@ -21,7 +21,6 @@ package org.wso2.micro.integrator.ntask.coordination.task.store.connector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
-import org.wso2.micro.integrator.ntask.coordination.task.CoordinateTaskRunTimeException;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
 
 import java.sql.Connection;
@@ -44,6 +43,7 @@ import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.REMOVE_TASKS_OF_NODE;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_ALL_TASKS;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_TASKS_OF_NODE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_TASK_STATE;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_UNASSIGNED_NOT_COMPLETED_TASKS;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.TASK_NAME;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.TASK_STATE;
@@ -210,6 +210,29 @@ public class RDMBSConnector {
         } catch (SQLException ex) {
             throw new TaskCoordinationException(ERROR_MSG, ex);
         }
+    }
+
+    /**
+     * Retrieve the state of the task.
+     *
+     * @param name name of the task
+     * @return state of the task
+     * @throws TaskCoordinationException if something goes wrong while doing db read
+     */
+    public CoordinatedTask.States getTaskState(String name) throws TaskCoordinationException {
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
+                RETRIEVE_TASK_STATE)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.executeQuery();
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return CoordinatedTask.States.valueOf(resultSet.getString(TASK_STATE));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new TaskCoordinationException(ERROR_MSG, ex);
+        }
+        return null;
     }
 
     /**
