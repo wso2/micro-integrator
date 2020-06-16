@@ -68,8 +68,6 @@ public class MetricResource extends APIResource {
         buildMessage(synCtx);
         synCtx.setProperty("Success", true);
         String query = ((Axis2MessageContext) synCtx).getAxis2MessageContext().getOptions().getTo().getAddress();
-
-
         OMElement textRootElem = OMAbstractFactory.getOMFactory().createOMElement(BaseConstants.DEFAULT_TEXT_WRAPPER);
 
         log.debug("Retrieving metric data to be published to Prometheus");
@@ -78,7 +76,7 @@ public class MetricResource extends APIResource {
 
         if (metrics != null && !metrics.isEmpty()) {
             log.debug("Retrieving metric data successful");
-             try {
+            try {
                 StringBuilder sbr = metricFormatter.formatMetrics(registry.
                                                                      filteredMetricFamilySamples(parseQuery(query)));
                 textRootElem.setText(sbr.toString());
@@ -103,9 +101,12 @@ public class MetricResource extends APIResource {
     /**
      * Allows you to add "?name[]=metric_name_to_filter_by" to the end of the /metrics URL,
      * in case you don't want the client library to return all metric names.
-     * (This is the implementation of the parseQuery() method of the Prometheus HTTP Server).
+     * (This is the implementation of the parseQuery() method of the Prometheus HTTP Server
+     * https://github.com/prometheus/client_java/blob/master/simpleclient_httpserver/src/main/java/io/prometheus/
+     * client/exporter/HTTPServer .java#L110).
      *
      * @param parameter the list of Endpoint URL to be queried
+     * @return the set of names used in filtering the required list of metrics
      */
     private Set<String> parseQuery(String parameter) throws IOException {
 
@@ -121,5 +122,4 @@ public class MetricResource extends APIResource {
         }
         return names;
     }
-
 }

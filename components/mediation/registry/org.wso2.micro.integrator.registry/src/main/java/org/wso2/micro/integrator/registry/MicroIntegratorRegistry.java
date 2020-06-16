@@ -515,7 +515,8 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             String parent = getParentPath(targetPath, isDirectory);
             try {
                 if (isDirectory) {
-                    if (!new File(parent).exists() && !new File(parent).mkdirs()) {
+                    File parentFile = new File(parent);
+                    if (!parentFile.exists() && !parentFile.mkdirs()) {
                         handleException("Unable to create directory: " + parent);
                     }
                     if (StringUtils.isNotEmpty(propertyName)) {
@@ -861,13 +862,24 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             if (resourcePath.startsWith(URL_SEPARATOR)) {
                 resourcePath = resourcePath.substring(1);
             }
-
             resolvedPath = registryRoot + resourcePath;
-        }
 
+            //Test whether registry key has any illegel access
+            File resolvedPathFile = null;
+            File registryRootFile = null;
+            try {
+                resolvedPathFile = new File(new URI(resolvedPath));
+                registryRootFile = new File(new URI(registryRoot));
+                if (!resolvedPathFile.getCanonicalPath().startsWith(registryRootFile.getCanonicalPath())) {
+                    handleException("The registry key  '" + key +
+                            "' is illegal which points to a location outside the registry");
+                }
+            } catch (URISyntaxException | IOException e) {
+                handleException("Error while resolving the canonical path of the registry key : " + key, e);
+            }
+        }
         return resolvedPath;
     }
-
 
     /**
      * Function to retrieve resource content as text

@@ -62,8 +62,6 @@ public class ManagementInternalApi implements InternalAPI {
 
     public ManagementInternalApi() {
 
-        LOG.warn("Micro Integrator Management REST API is enabled");
-
         ArrayList<APIResource> resourcesList = new ArrayList<>();
         resourcesList.add(new ApiResource(PREFIX_APIS));
         resourcesList.add(new ApiResourceAdapter(PREFIX_ENDPOINTS, new EndpointResource()));

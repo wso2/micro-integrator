@@ -57,7 +57,6 @@ public class TestUtils {
 
         HashMap<String, String> startupParameters = new HashMap<>();
         startupParameters.put("-DportOffset", String.valueOf(offset));
-        startupParameters.put("-DenableManagementApi", "true");
         startupParameters.put("startupScript", "micro-integrator");
         startupParameters.put("-DgracefulShutdown", "false");
         additionalParams.forEach(startupParameters::put);

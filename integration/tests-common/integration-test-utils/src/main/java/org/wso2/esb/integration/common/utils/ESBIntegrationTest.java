@@ -67,6 +67,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,6 +113,12 @@ public abstract class ESBIntegrationTest {
     protected int portOffset;
     protected final int DEFAULT_TIMEOUT = 60;
     protected boolean isManagementApiAvailable = false;
+
+    private final String SERVER_DEPLOYMENT_DIR =
+            System.getProperty(ESBTestConstant.CARBON_HOME) + File.separator + "repository" + File.separator
+            + "deployment" + File.separator + "server" + File.separator + "synapse-configs" + File.separator
+            + "default" + File.separator;
+    protected final String PROXY_DIRECTORY = SERVER_DEPLOYMENT_DIR + File.separator + "proxy-services";
 
     /**
      * Initialize the context given a tenant domain and a user.
@@ -1125,5 +1133,24 @@ public abstract class ESBIntegrationTest {
         } catch (IOException e) {
             throw new SynapseException("Error updating the log-level of synapse-transport-http-wire logger", e);
         }
+    }
+
+    private void copyArtifactToDeploymentDirectory(String sourceArtifactPath, String artifactName,
+                                                   String deploymentDirectory) throws IOException {
+        Files.copy(new File(sourceArtifactPath + File.separator + artifactName + ".xml").toPath(),
+                   new File(deploymentDirectory + File.separator + artifactName + ".xml").toPath(),
+                   StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void deleteArtifactFromDeploymentDirectory(String artifactName, String deploymentDirectory) throws IOException {
+        Files.delete(new File(deploymentDirectory + File.separator + artifactName).toPath());
+    }
+
+    protected void undeployProxyService(String name) throws IOException {
+        deleteArtifactFromDeploymentDirectory(name + ".xml", PROXY_DIRECTORY);
+    }
+
+    protected void deployProxyService(String name, String resourcePath) throws IOException {
+        copyArtifactToDeploymentDirectory(resourcePath, name, PROXY_DIRECTORY);
     }
 }

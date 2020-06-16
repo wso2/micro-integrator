@@ -9,6 +9,13 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
+    <!--Leave message processor tests at the beginning to avoid processor being deactivated due to subsequent tests -->
+    <test name="RabbitMQ-Store-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.rabbitmq.store"/>
+        </packages>
+    </test>
+
     <test name="RabbitMQ-Transport-Test" preserve-order="true" verbose="2">
         <packages>
             <!--Add basic tests that do not require to restart/stop or initialize rabbitmq server here.
@@ -17,14 +24,14 @@
         </packages>
     </test>
 
-    <!--<test name="RabbitMQ-Transport-Connection-Recovery-Test" preserve-order="true" verbose="2">-->
-        <!--<packages>-->
-            <!--&lt;!&ndash;Add independent tests to a different package. Recovery tests are added to a different package-->
-            <!--since it involves server stopping and restarting and cannot be handled with-->
-            <!--RabbitMQBrokerStartup testcase alone&ndash;&gt;-->
-            <!--<package name="org.wso2.carbon.esb.rabbitmq.transport.recovery.test"/>-->
-        <!--</packages>-->
-    <!--</test>-->
+    <test name="RabbitMQ-Transport-Connection-Recovery-Test" preserve-order="true" verbose="2">
+        <packages>
+            <!--Add independent tests to a different package. Recovery tests are added to a different package
+            since it involves server stopping and restarting and cannot be handled with
+            RabbitMQBrokerStartup testcase alone-->
+            <package name="org.wso2.carbon.esb.rabbitmq.transport.recovery.test"/>
+        </packages>
+    </test>
 
     <!--<test name="RabbitMQ-message-store-test" preserve-order="true" verbose="2">-->
         <!--<packages>-->
@@ -55,12 +62,6 @@
         <classes>
             <class name="org.wso2.carbon.esb.rabbitmq.inbound.RabbitMQInboundTestCase"/>
         </classes>
-    </test>
-
-    <test name="RabbitMQ-Store-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.rabbitmq.store"/>
-        </packages>
     </test>
 
 </suite>

@@ -28,6 +28,7 @@ import org.apache.axis2.transport.TransportUtils;
 import org.apache.commons.io.input.AutoCloseInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.mediators.base.SequenceMediator;
 
@@ -80,6 +81,7 @@ public abstract class GenericPollingConsumer {
             }
             MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
                     .getAxis2MessageContext();
+            msgCtx.setProperty(SynapseConstants.INBOUND_ENDPOINT_NAME, name);
             // Determine the message builder to use
             Builder builder;
             if (contentType == null) {

@@ -420,14 +420,16 @@ public class JMSPollingConsumer {
     }
 
     public void destroy() {
-        if (messageConsumer != null) {
-            jmsConnectionFactory.closeConsumer(messageConsumer, true);
-        }
-        if (session != null) {
-            jmsConnectionFactory.closeSession(session, true);
-        }
-        if (connection != null) {
-            jmsConnectionFactory.closeConnection(connection, true);
+        synchronized (jmsConnectionFactory) {
+            if (messageConsumer != null) {
+                jmsConnectionFactory.closeConsumer(messageConsumer, true);
+            }
+            if (session != null) {
+                jmsConnectionFactory.closeSession(session, true);
+            }
+            if (connection != null) {
+                jmsConnectionFactory.closeConnection(connection, true);
+            }
         }
     }
 

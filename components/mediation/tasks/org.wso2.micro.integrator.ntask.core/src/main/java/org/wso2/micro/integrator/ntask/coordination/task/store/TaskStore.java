@@ -166,6 +166,17 @@ public class TaskStore {
     }
 
     /**
+     * Retrieve the state of the task.
+     *
+     * @param taskName name of the task
+     * @return state of the task
+     * @throws TaskCoordinationException if something goes wrong while doing db read
+     */
+    public CoordinatedTask.States getTaskState(String taskName) throws TaskCoordinationException {
+        return rdmbsConnector.getTaskState(taskName);
+    }
+
+    /**
      * Update the state of task.
      *
      * @param taskName     Name of the task.

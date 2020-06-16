@@ -66,8 +66,11 @@ public class TaskTests extends ESBIntegrationTest {
         logManager = new LogReaderManager();
         HashMap<String, String> startupParameters = new HashMap<>();
         startupParameters.put("-DSynapseServerName", "pinnedServerCluster");
+        startupParameters.put("-DnodeId", "node-1");
         node1 = getNode(30, startupParameters);
-        node2 = getNode(40);
+        startupParameters.clear();
+        startupParameters.put("-DnodeId", "node-2");
+        node2 = getNode(40, startupParameters);
         serverManager.startServersWithDepSync(true, node1, node2);
         reader1 = new CarbonLogReader(node1.getCarbonHome());
         reader2 = new CarbonLogReader(node2.getCarbonHome());
@@ -190,6 +193,26 @@ public class TaskTests extends ESBIntegrationTest {
             }
             if (!reader1.checkForLog(deploymentLog(TASK_2), CLUSTER_TASK_RESCHEDULE_TIMEOUT)) {
                 Assert.fail("Task 2 reschedule failed in node 1");
+            }
+        }
+    }
+
+    @Test(dependsOnMethods = { "testTaskReScheduling" },
+            description = "https://github.com/wso2/micro-integrator/issues/1658")
+    void testDeletionOfCompletedTask() throws Exception {
+
+        serverManager.stopAllServers();
+        if (taskScheduledInNode1) {
+            reader1.clearLogs();
+            node1.startServer();
+            if (reader1.checkForLog(deploymentLog(TASK_COMPLETE), CLUSTER_TASK_RESCHEDULE_TIMEOUT)) {
+                Assert.fail("Completed task got scheduled when server is restarted.");
+            }
+        } else {
+            reader2.clearLogs();
+            node2.startServer();
+            if (reader2.checkForLog(deploymentLog(TASK_COMPLETE), CLUSTER_TASK_RESCHEDULE_TIMEOUT)) {
+                Assert.fail("Completed task got scheduled when server is restarted.");
             }
         }
     }

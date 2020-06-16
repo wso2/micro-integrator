@@ -80,6 +80,7 @@ public class FileInjectHandler {
         try {
             org.apache.synapse.MessageContext msgCtx = createMessageContext();
             msgCtx.setProperty(SynapseConstants.INBOUND_ENDPOINT_NAME, name);
+            msgCtx.setProperty(SynapseConstants.ARTIFACT_NAME, SynapseConstants.FAIL_SAFE_MODE_INBOUND_ENDPOINT + name);
             msgCtx.setProperty(SynapseConstants.IS_INBOUND, true);
             InboundEndpoint inboundEndpoint = msgCtx.getConfiguration().getInboundEndpoint(name);
             CustomLogSetter.getInstance().setLogAppender(inboundEndpoint.getArtifactContainerName());
