@@ -268,13 +268,26 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
     public boolean isDeactivated(String taskName) throws TaskException {
 
         if (deployedCoordinatedTasks.contains(taskName)) {
-            boolean isDeactivated = !locallyRunningCoordinatedTasks.contains(taskName);
+            boolean isDeactivated = !CoordinatedTask.States.RUNNING.equals(getCoordinatedTaskState(taskName));
             if (log.isDebugEnabled()) {
                 log.debug("Task [" + taskName + "] is " + (isDeactivated ? "" : "not") + " in deactivated state.");
             }
             return isDeactivated;
         }
         return getTaskState(taskName).equals(TaskState.PAUSED);
+    }
+
+    private CoordinatedTask.States getCoordinatedTaskState(String taskName) {
+
+        if (locallyRunningCoordinatedTasks.contains(taskName)) {
+            return CoordinatedTask.States.RUNNING;
+        }
+        try {
+            return taskStore.getTaskState(taskName);
+        } catch (TaskCoordinationException e) {
+            log.error("Error while retrieving state for task : " + taskName, e);
+            return null;
+        }
     }
 
     @Override
