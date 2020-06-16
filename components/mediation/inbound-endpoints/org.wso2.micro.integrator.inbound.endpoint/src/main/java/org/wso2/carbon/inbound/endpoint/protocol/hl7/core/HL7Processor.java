@@ -92,6 +92,8 @@ public class HL7Processor implements InboundResponseSender {
 
         mllpContext.setMessageId(synCtx.getMessageID());
         synCtx.setProperty(SynapseConstants.INBOUND_ENDPOINT_NAME, params.getName());
+        synCtx.setProperty(SynapseConstants.ARTIFACT_NAME,
+                           SynapseConstants.FAIL_SAFE_MODE_INBOUND_ENDPOINT + params.getName());
         synCtx.setProperty(SynapseConstants.IS_INBOUND, true);
         InboundEndpoint inboundEndpoint = synCtx.getConfiguration().getInboundEndpoint(params.getName());
         CustomLogSetter.getInstance().setLogAppender(inboundEndpoint.getArtifactContainerName());
@@ -150,6 +152,8 @@ public class HL7Processor implements InboundResponseSender {
 
         mllpContext.setMessageId(synCtx.getMessageID());
         synCtx.setProperty(SynapseConstants.INBOUND_ENDPOINT_NAME, params.getName());
+        synCtx.setProperty(SynapseConstants.ARTIFACT_NAME,
+                           SynapseConstants.FAIL_SAFE_MODE_INBOUND_ENDPOINT + params.getName());
         synCtx.setProperty(SynapseConstants.IS_INBOUND, true);
         InboundEndpoint inboundEndpoint = synCtx.getConfiguration().getInboundEndpoint(params.getName());
         CustomLogSetter.getInstance().setLogAppender(inboundEndpoint.getArtifactContainerName());

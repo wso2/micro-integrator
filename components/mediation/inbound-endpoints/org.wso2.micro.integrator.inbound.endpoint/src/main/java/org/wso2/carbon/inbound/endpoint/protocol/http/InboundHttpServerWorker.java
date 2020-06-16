@@ -260,6 +260,8 @@ public class InboundHttpServerWorker extends ServerWorker {
             log.debug("injecting message to sequence : " + endpoint.getInjectingSeq());
         }
         synCtx.setProperty(SynapseConstants.INBOUND_ENDPOINT_NAME, endpoint.getName());
+        synCtx.setProperty(SynapseConstants.ARTIFACT_NAME,
+                           SynapseConstants.FAIL_SAFE_MODE_INBOUND_ENDPOINT + endpoint.getName());
         synCtx.getEnvironment().injectMessage(synCtx, injectingSequence);
     }
 
