@@ -162,7 +162,7 @@ public class RabbitMQTestUtils {
         }
 
         int exitCode = process.waitFor();
-        log.info("Command execution exited with error code : " + exitCode);
+        log.info("Command execution exited with code: " + exitCode);
     }
 
 }
