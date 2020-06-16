@@ -215,19 +215,25 @@ public class RabbitMQUtils {
      */
     public static void declareExchange(Channel channel, String exchangeName, Map<String, String> properties)
             throws IOException {
-        String type = properties.get(RabbitMQConstants.EXCHANGE_TYPE);
         String queueName = properties.get(RabbitMQConstants.QUEUE_NAME);
         String routingKey = properties.get(RabbitMQConstants.QUEUE_ROUTING_KEY);
         if (StringUtils.isNotEmpty(exchangeName)) {
             // declare the exchange
             if (!exchangeName.startsWith(RabbitMQConstants.AMQ_PREFIX)) {
-                if (StringUtils.isNotEmpty(type)) {
-                    channel.exchangeDeclare(exchangeName, type, isDurableExchange(properties),
-                                            isAutoDeleteExchange(properties), setExchangeOptionalArguments(properties));
-                } else {
-                    channel.exchangeDeclare(exchangeName, BuiltinExchangeType.DIRECT, isDurableExchange(properties),
-                                            isAutoDeleteExchange(properties), setExchangeOptionalArguments(properties));
-                }
+                String exchangeType = properties
+                        .getOrDefault(RabbitMQConstants.EXCHANGE_TYPE, RabbitMQConstants.EXCHANGE_TYPE_DEFAULT);
+
+                String durableString = properties
+                        .getOrDefault(RabbitMQConstants.EXCHANGE_DURABLE, RabbitMQConstants.EXCHANGE_DURABLE_DEFAULT);
+                boolean durable = BooleanUtils.toBoolean(BooleanUtils.toBooleanObject(durableString));
+
+                String autoDeleteString = properties
+                        .getOrDefault(RabbitMQConstants.EXCHANGE_AUTO_DELETE,
+                                      RabbitMQConstants.EXCHANGE_AUTO_DELETE_DEFAULT);
+                boolean autoDelete = BooleanUtils.toBoolean(BooleanUtils.toBooleanObject(autoDeleteString));
+
+                channel.exchangeDeclare(exchangeName, exchangeType, durable,
+                                        autoDelete, setExchangeOptionalArguments(properties));
             }
             // bind the queue and exchange with routing key
             if (StringUtils.isNotEmpty(queueName) && StringUtils.isNotEmpty(routingKey)) {
