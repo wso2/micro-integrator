@@ -305,6 +305,9 @@ public class JMSPollingConsumer {
                                 logger.error("Error acknowledging message : " + msg.getJMSMessageID(), e);
                             }
                         } else {
+                            // Need to recover the session to tell broker to send back messages on same session
+                            jmsConnectionFactory.recoverSession(session, false);
+
                             // Need to create a new consumer and session since
                             // we need to rollback the message
                             if (messageConsumer != null) {
