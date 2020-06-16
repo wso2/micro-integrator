@@ -88,7 +88,7 @@ public class JMSUtils {
      * @param msgContext   Synapse messageContext instance
      * @return True if property is set to true
      */
-    static boolean checkIfBooleanPropertyIsSet(String propertyName, org.apache.synapse.MessageContext msgContext) {
+    public static boolean checkIfBooleanPropertyIsSet(String propertyName, org.apache.synapse.MessageContext msgContext) {
         boolean isPropertySet = false;
         Object booleanProperty = msgContext.getProperty(propertyName);
         if (booleanProperty != null) {

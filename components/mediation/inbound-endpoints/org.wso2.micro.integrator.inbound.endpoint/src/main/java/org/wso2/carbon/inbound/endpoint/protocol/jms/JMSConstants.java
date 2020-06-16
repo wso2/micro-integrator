@@ -68,7 +68,7 @@ public class JMSConstants {
     public static final String SET_ROLLBACK_ONLY = "SET_ROLLBACK_ONLY";
 
     //Constant to represent jmsSession.recover()
-    static final String SET_RECOVER = "SET_RECOVER";
+    public static final String SET_RECOVER = "SET_RECOVER";
 
     public static final QName JMS_MAP_QNAME = new QName(JMS_MAP_NS, JMS_MAP_ELEMENT_NAME, "");
     /**
