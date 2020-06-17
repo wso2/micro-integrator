@@ -44,6 +44,9 @@ public class Utils {
 
     private static Log log = LogFactory.getLog(Utils.class);
 
+    private static String defaultDeploymentDirectory = String.join(File.separator, System.getProperty("carbon.home"),
+                                                                   "repository", "deployment");
+
     public enum ArtifactType {
         API("api"),
         ENDPOINT("endpoints"),
@@ -197,6 +200,10 @@ public class Utils {
             elapsedTime += 500;
         }
         return messageCountFound;
+    }
+
+    public static void deploySynapseConfiguration(File src, ArtifactType type) throws Exception {
+        deploySynapseConfiguration(src, defaultDeploymentDirectory, type);
     }
 
     public static void deploySynapseConfiguration(File src, String depDirectory, ArtifactType type) throws Exception {
