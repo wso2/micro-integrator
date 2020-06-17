@@ -618,14 +618,19 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
      */
     private void removeResource(String key) {
         try {
-            File resource = new File(new URI(resolveRegistryURI(key)));
+            String resourcePath = resolveRegistryURI(key);
+            File resource = new File(new URI(resourcePath));
             if (resource.exists()) {
                 if (resource.isFile()) {
                     deleteFile(resource);
+                    // the properties also need to be removed when removing the resource
+                    File resourceProperties = new File(new URI(resourcePath + PROPERTY_EXTENTION));
+                    if (resourceProperties.exists()) {
+                        deleteFile(resourceProperties);
+                    }
                 } else if (resource.isDirectory()) {
                     deleteDirectory(resource);
                 }
-
             } else {
                 handleException("Parent folder: " + key + " does not exists.");
             }
