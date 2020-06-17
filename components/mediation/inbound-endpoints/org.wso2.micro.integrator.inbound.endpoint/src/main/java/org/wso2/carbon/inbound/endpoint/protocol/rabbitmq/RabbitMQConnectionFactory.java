@@ -21,6 +21,7 @@ package org.wso2.carbon.inbound.endpoint.protocol.rabbitmq;
 import com.rabbitmq.client.Address;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.apache.axis2.transport.rabbitmq.RabbitMQUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
