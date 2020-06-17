@@ -665,12 +665,12 @@
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.com.fasterxml.jackson.core</groupId>
+                <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.com.fasterxml.jackson.core</groupId>
+                <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${fasterxml.jackson.version}</version>
             </dependency>
@@ -838,7 +838,7 @@
                 <version>${jongo.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.com.fasterxml.jackson.core</groupId>
+                <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${fasterxml.jackson.version}</version>
             </dependency>
@@ -1317,7 +1317,7 @@
 
         <carbon.analytics.common.version>5.2.10</carbon.analytics.common.version>
         <carbon.analytics.common.imp.pkg.version>[5.2.0, 6.0.0)</carbon.analytics.common.imp.pkg.version>
-        <fasterxml.jackson.version>2.9.8.wso2v1</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.10.3</fasterxml.jackson.version>
         <carbon.commons.version>4.7.12</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
