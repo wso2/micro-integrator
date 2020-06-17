@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.obsrvability.handler.metrics.publisher;
+package org.wso2.micro.integrator.observability.handler.metricHandler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,14 +29,15 @@ import org.apache.synapse.rest.RESTUtils;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
-import org.wso2.micro.integrator.obsrvability.handler.util.MetricConstants;
+import org.wso2.micro.integrator.observability.handler.metricHandler.prometheus.reporter.PrometheusReporter;
+import org.wso2.micro.integrator.observability.handler.util.MetricConstants;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Class for instrumenting Prometheus Metrics to wrap the implementation allowing the implementation to plug into the
- * handler in runtime.
+ * Class for instrumenting Metrics by wrapping the implementation and
+ * there by allows the implementation to plug into the handler in runtime.
  */
 public class MetricHandler extends AbstractExtendedSynapseHandler {
     private static final String METRIC_REPORTER = "metric_reporter";
@@ -47,17 +48,18 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
     private Class loadedMetricClass;
     private static Log log = LogFactory.getLog(MetricHandler.class);
 
+    private static final String serverPortOffset = System.getProperty(MetricConstants.PORT_OFFSET);
+    private static final String host = System.getProperty(MicroIntegratorBaseConstants.LOCAL_IP_ADDRESS);
+    private static final String port = System.getProperty(MetricConstants.HTTP_PORT);
+    private static final String javaVersion = System.getProperty(MetricConstants.JAVA_VERSION);
+    private static final String javaHome = System.getProperty(MetricConstants.JAVA_HOME);
+
     @Override
-    public boolean handleServerInit() {
+    public boolean handleInitServer() {
         getMetricReporter();
         metricReporterInstance.initMetrics();
 
-        String host = System.getProperty(MicroIntegratorBaseConstants.LOCAL_IP_ADDRESS);
-        String port = System.getProperty(MetricConstants.HTTP_PORT);
-        String javaVersion = System.getProperty(MetricConstants.JAVA_VERSION);
-        String javaHome = System.getProperty(MetricConstants.JAVA_HOME);
-
-        metricReporterInstance.serverUp(host, port, javaVersion, javaHome);
+        metricReporterInstance.serverUp(host, port, javaHome, javaVersion);
         return true;
     }
 
@@ -74,29 +76,28 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
             try {
                 loadedMetricClass = Class.forName(metricReporterClass.toString());
                 metricReporterInstance = (MetricReporter) loadedMetricClass.newInstance();
-                log.info("The class " + metricReporterClass + "loaded successfully");
-            } catch (Exception e) {
+                log.debug("The class " + metricReporterClass + "loaded successfully");
+            } catch (IllegalAccessException | ClassNotFoundException | InstantiationException e) {
                 log.error("Error in loading the class" + metricReporterClass.toString() +
                         "Hence loading the default PrometheusReporter class ");
-                loadPrometheusReporter();
+                loadDefaultPrometheusReporter();
             }
         } else {
-            loadPrometheusReporter();
+            loadDefaultPrometheusReporter();
         }
     }
 
     /**
      * Load the PrometheusReporter class by default.
      */
-    private void loadPrometheusReporter() {
+    private void loadDefaultPrometheusReporter() {
         try {
-            loadedMetricClass = Class.forName("org.wso2.micro.integrator.obsrvability.handler.metrics.publisher" +
-                    ".prometheus.reporter.PrometheusReporter");
+            loadedMetricClass = PrometheusReporter.class;
             metricReporterInstance = (MetricReporter) loadedMetricClass.newInstance();
-            log.info("The class org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus." +
+            log.debug("The class org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus." +
                     "reporter.PrometheusReporter loaded successfully");
-        } catch (Exception e) {
-            handleException(e, "Error in loading the PrometheusReporter Class");
+        } catch (IllegalAccessException | InstantiationException e) {
+            handleException("Error in loading the PrometheusReporter Class", e);
         }
     }
 
@@ -126,19 +127,18 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
                 serviceInvokePort = getServiceInvokePort(synCtx);
                 internalHttpApiPort = getInternalHTTPInboundEndpointPort(synCtx);
 
-                if ((serviceInvokePort != internalHttpApiPort)) {
+                if (serviceInvokePort != internalHttpApiPort) {
                     String context = axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).
                             toString();
                     String apiInvocationUrl = axis2MessageContext.getProperty(MetricConstants.SERVICE_PREFIX).
                             toString() + context.replaceFirst(DELIMITER, EMPTY);
                     String apiName = getApiName(context, synCtx);
-
                     if (apiName != null) {
                         incrementAPICount(apiName, apiInvocationUrl);
                         startTimers(synCtx, apiName, SynapseConstants.FAIL_SAFE_MODE_API, apiInvocationUrl);
                     }
                 }
-            } catch (Exception ex) {
+            } catch (NullPointerException ex) {
                 log.error("Error in retrieving Service Invoke Port");
             }
         }
@@ -166,7 +166,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
 
         if ((null != synCtx.getProperty(SynapseConstants.PROXY_SERVICE))) {
             stopTimers(synCtx.getProperty(MetricConstants.PROXY_LATENCY_TIMER), synCtx);
-        } else if (null == axis2MessageContext.getProperty("TransportInURL")) {
+        } else if (null == axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL)) {
             try {
                 serviceInvokePort = getServiceInvokePort(synCtx);
                 internalHttpApiPort = getInternalHTTPInboundEndpointPort(synCtx);
@@ -176,11 +176,11 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
                     stopTimers(synCtx.
                             getProperty(MetricConstants.INBOUND_ENDPOINT_LATENCY_TIMER), synCtx);
                 }
-                if ((serviceInvokePort != internalHttpApiPort)) {
+                if (serviceInvokePort != internalHttpApiPort) {
                     stopTimers(synCtx.getProperty(MetricConstants.API_LATENCY_TIMER), synCtx);
                 }
 
-            } catch (Exception e) {
+            } catch (NullPointerException e) {
                 log.error("Error in retrieving Service Invoke Port");
             }
         }
@@ -213,7 +213,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
                     serviceInvokePort = getServiceInvokePort(synCtx);
                     internalHttpApiPort = getInternalHTTPInboundEndpointPort(synCtx);
 
-                    if (null != synCtx.getProperty(MetricConstants.SYNAPSE_REST_API) &&
+                    if (null != synCtx.getProperty(RESTConstants.SYNAPSE_REST_API) &&
                             (serviceInvokePort != internalHttpApiPort)) {
                         String context = axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).
                                 toString();
@@ -233,12 +233,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
 
     @Override
     public boolean handleServerShutDown() {
-        String host = System.getProperty(MicroIntegratorBaseConstants.LOCAL_IP_ADDRESS);
-        String port = System.getProperty(MetricConstants.HTTP_PORT);
-        String javaVersion = System.getProperty(MetricConstants.JAVA_VERSION);
-        String javaHome = System.getProperty(MetricConstants.JAVA_HOME);
-
-        metricReporterInstance.serverUp(host, port, javaVersion, javaHome);
+        metricReporterInstance.serverDown(host, port, javaHome, javaVersion);
         return true;
     }
 
@@ -263,36 +258,33 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
      * @param apiInvocationUrl The api invocation url
      */
     private void startTimers(MessageContext synCtx, String serviceName, String serviceType, String apiInvocationUrl) {
+        switch (serviceType) {
+            case SynapseConstants.PROXY_SERVICE_TYPE:
+                Map<String, String[]> proxyMap = new HashMap();
+                proxyMap.put(MetricConstants.PROXY_LATENCY_SECONDS, new String[]{serviceName, serviceType});
 
-        if (null == synCtx.getProperty("HAS_EXECUTED_FLOW")) {
-            switch (serviceType) {
-                case SynapseConstants.PROXY_SERVICE_TYPE:
-                    Map<String, String[]> proxyMap = new HashMap();
-                    proxyMap.put(MetricConstants.PROXY_LATENCY_SECONDS, new String[]{serviceName, serviceType});
+                synCtx.setProperty(MetricConstants.PROXY_LATENCY_TIMER,
+                        metricReporterInstance.getTimer(MetricConstants.PROXY_LATENCY_SECONDS, proxyMap));
+                break;
+            case MetricConstants.INBOUND_ENDPOINT:
+                Map<String, String[]> inboundEndpointMap = new HashMap();
+                inboundEndpointMap.put(MetricConstants.INBOUND_ENDPOINT_LATENCY_SECONDS, new String[]{serviceName,
+                        serviceType});
+                synCtx.setProperty(MetricConstants.INBOUND_ENDPOINT_LATENCY_TIMER,
+                        metricReporterInstance.getTimer(MetricConstants.INBOUND_ENDPOINT_LATENCY_SECONDS,
+                                inboundEndpointMap));
+                break;
+            case SynapseConstants.FAIL_SAFE_MODE_API:
+                Map<String, String[]> apiMap = new HashMap();
+                apiMap.put(MetricConstants.API_LATENCY_SECONDS, new String[]{serviceName, serviceType,
+                        apiInvocationUrl});
 
-                    synCtx.setProperty(MetricConstants.PROXY_LATENCY_TIMER,
-                            metricReporterInstance.getTimer(MetricConstants.PROXY_LATENCY_SECONDS, proxyMap));
-                    break;
-                case MetricConstants.INBOUND_ENDPOINT:
-                    Map<String, String[]> inboundEndpointMap = new HashMap();
-                    inboundEndpointMap.put(MetricConstants.INBOUND_ENDPOINT_LATENCY_SECONDS, new String[]{serviceName,
-                            serviceType});
-                    synCtx.setProperty(MetricConstants.INBOUND_ENDPOINT_LATENCY_TIMER,
-                            metricReporterInstance.getTimer(MetricConstants.INBOUND_ENDPOINT_LATENCY_SECONDS,
-                                    inboundEndpointMap));
-                    break;
-                case SynapseConstants.FAIL_SAFE_MODE_API:
-                    Map<String, String[]> apiMap = new HashMap();
-                    apiMap.put(MetricConstants.API_LATENCY_SECONDS, new String[]{serviceName, serviceType,
-                            apiInvocationUrl});
-
-                    synCtx.setProperty(MetricConstants.API_LATENCY_TIMER,
-                            metricReporterInstance.getTimer(MetricConstants.API_LATENCY_SECONDS, apiMap));
-                    break;
-                default:
-                    log.error("No proper service type found");
-                    break;
-            }
+                synCtx.setProperty(MetricConstants.API_LATENCY_TIMER,
+                        metricReporterInstance.getTimer(MetricConstants.API_LATENCY_SECONDS, apiMap));
+                break;
+            default:
+                log.error("No proper service type found");
+                break;
         }
     }
 
@@ -399,53 +391,35 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
                         getVersion())) {
                     apiName = apiName + ":v" + api.getVersionStrategy().getVersion();
                 }
-                synCtx.setProperty("IS_PROMETHEUS_ENGAGED", true);
-                synCtx.setProperty(MetricConstants.PROCESSED_API, api);
+                synCtx.setProperty(RESTConstants.IS_PROMETHEUS_ENGAGED, true);
+                synCtx.setProperty(RESTConstants.PROCESSED_API, api);
             }
         }
         return apiName;
     }
 
     /**
-     * Handle the thrown exceptions.
+     * No Synapse Exception is thrown because the mediation flow should not be affected by
+     * an exception thrown in the Observability Handler.
      *
      * @param e          The thrown exception
      * @param msg Method from which the exception is thrown
      */
-    private static void handleException(Exception e, String msg) {
-        if (e instanceof NoSuchMethodException) {
-            try {
-                throw new NoSuchMethodException();
-            } catch (NoSuchMethodException ex) {
-                 log.error("Specified method " + msg + " not found.");
-            }
-        } else if (e instanceof IllegalAccessException) {
-            try {
-                throw new IllegalAccessException();
-            } catch (IllegalAccessException ex) {
-                log.error ("Specified method" + msg + " does not have access to the specified instance.");
-            }
-        } else {
-            try {
-                throw new ClassNotFoundException();
-            } catch (ClassNotFoundException e1) {
-                 log.error("Specified class " + msg + " not found.");
-            }
-        }
+    private void handleException(String msg, Exception e) {
+        log.error(msg, e);
     }
 
     private int getInternalHTTPInboundEndpointPort(MessageContext synCtx) {
-
         int portOffset;
         int internalHttpApiPort = 0;
 
-        if ((null != System.getProperty(MetricConstants.PORT_OFFSET))) {
-            portOffset = Integer.parseInt(System.getProperty((MetricConstants.PORT_OFFSET)));
+        if (null != serverPortOffset) {
+            portOffset = Integer.parseInt(serverPortOffset);
             internalHttpApiPort = Integer.parseInt(synCtx.getEnvironment().getSynapseConfiguration().
                     getProperty((MetricConstants.INTERNAL_HTTP_API_PORT)));
             internalHttpApiPort = internalHttpApiPort + portOffset;
         } else {
-            log.warn("Port Offset or Internal HTTP API port is not set.");
+            log.warn("Port Offset or Internal HTTP API port is null.");
         }
         return internalHttpApiPort;
 
@@ -462,7 +436,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
                     servicePort.lastIndexOf(DELIMITER));
             serviceInvokePort = Integer.parseInt(servicePort);
         } else {
-            log.warn("Service Prefix is not set.");
+            log.warn("Service Prefix is null.");
         }
         return serviceInvokePort;
     }

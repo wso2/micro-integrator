@@ -176,8 +176,11 @@ public class ServiceBusInitializer {
             while (iterator.hasNext()) {
                 SynapseHandler handler = iterator.next();
                 if ((handler instanceof AbstractExtendedSynapseHandler)) {
-                    if (!((AbstractExtendedSynapseHandler) handler).handleServerInit()) {
-                        return;
+                    AbstractExtendedSynapseHandler abstractExtendedSynapseHandler =
+                            (AbstractExtendedSynapseHandler) handler;
+                    if (!abstractExtendedSynapseHandler.handleInitServer()) {
+                        log.warn("Server initialization not executed in the server init path of the " +
+                                "AbstractExtendedSynapseHandler");
                     }
                 }
             }
@@ -237,9 +240,13 @@ public class ServiceBusInitializer {
         Iterator<SynapseHandler> iterator = handlers.iterator();
         while (iterator.hasNext()) {
             SynapseHandler handler = iterator.next();
-            if (((handler instanceof AbstractExtendedSynapseHandler)) &&
-                    (!((AbstractExtendedSynapseHandler) handler).handleServerShutDown())) {
-                    return;
+            if ((handler instanceof AbstractExtendedSynapseHandler)) {
+                AbstractExtendedSynapseHandler abstractExtendedSynapseHandler =
+                        (AbstractExtendedSynapseHandler) handler;
+                if (!abstractExtendedSynapseHandler.handleServerShutDown()) {
+                    log.warn("Server shut down not executed in the server shut down path of the " +
+                            "AbstractExtendedSynapseHandler");
+                }
             }
         }
         serverManager.stop();

@@ -33,8 +33,7 @@ public class MetricFormatter {
      *
      * @param type Metric Prometheus type
      */
-    private String typeString(Type type) {
-
+    private static String typeString(Type type) {
         switch (type) {
             case GAUGE:
                 return "gauge";
@@ -55,7 +54,7 @@ public class MetricFormatter {
      * @param metricsList the Prometheus Metric from Prometheus Default Registry
      * @return the metric converted into String format
      */
-    public StringBuilder formatMetrics(Enumeration<MetricFamilySamples> metricsList) {
+    public static StringBuilder formatMetrics(Enumeration<MetricFamilySamples> metricsList) {
 
         StringBuilder metric = new StringBuilder();
         StringBuilder metricsValue = new StringBuilder();

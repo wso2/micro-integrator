@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.obsrvability.handler.metrics.publisher;
+package org.wso2.micro.integrator.observability.handler.metricHandler;
 
 import java.util.Map;
 

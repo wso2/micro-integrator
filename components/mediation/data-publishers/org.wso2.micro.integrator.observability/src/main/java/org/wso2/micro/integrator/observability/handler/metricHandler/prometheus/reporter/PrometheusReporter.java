@@ -15,45 +15,43 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus.reporter;
+package org.wso2.micro.integrator.observability.handler.metricHandler.prometheus.reporter;
 
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.hotspot.DefaultExports;
 import org.wso2.config.mapper.ConfigParser;
-import org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.MetricReporter;
-import org.wso2.micro.integrator.obsrvability.handler.util.MetricConstants;
+import org.wso2.micro.integrator.observability.handler.metricHandler.MetricReporter;
+import org.wso2.micro.integrator.observability.handler.util.MetricConstants;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Class for instrumenting Prometheus Metrics.
  */
 public class PrometheusReporter implements MetricReporter {
-    public static Counter TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
-    public static Counter TOTAL_REQUESTS_RECEIVED_API;
-    public static Counter TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
-    public static Counter ERROR_REQUESTS_RECEIVED_PROXY_SERVICE;
-    public static Counter ERROR_REQUESTS_RECEIVED_API;
-    public static Counter ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
+    private static Counter TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
+    private static Counter TOTAL_REQUESTS_RECEIVED_API;
+    private static Counter TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
+    private static Counter ERROR_REQUESTS_RECEIVED_PROXY_SERVICE;
+    private static Counter ERROR_REQUESTS_RECEIVED_API;
+    private static Counter ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
 
-    public static Histogram PROXY_LATENCY_HISTOGRAM;
-    public static Histogram API_LATENCY_HISTOGRAM;
-    public static Histogram INBOUND_ENDPOINT_LATENCY_HISTOGRAM;
+    private static Histogram PROXY_LATENCY_HISTOGRAM;
+    private static Histogram API_LATENCY_HISTOGRAM;
+    private static Histogram INBOUND_ENDPOINT_LATENCY_HISTOGRAM;
 
-    public static Gauge SERVER_UP;
-    public static Gauge SERVICE_UP;
+    private static Gauge SERVER_UP;
+    private static Gauge SERVICE_UP;
 
-    public double[] proxyLatencyBuckets;
-    public double[] apiLatencyBuckets;
-    public double[] inboundEndpointLatencyBuckets;
+    private double[] proxyLatencyBuckets;
+    private double[] apiLatencyBuckets;
+    private double[] inboundEndpointLatencyBuckets;
 
     private static Map<String, Object> metricMap = new HashMap();
 
@@ -179,13 +177,13 @@ public class PrometheusReporter implements MetricReporter {
     }
 
     @Override
-    public void serverUp(String host, String port, String javaVersion, String javaHome) {
+    public void serverUp(String host, String port, String javaHome, String javaVersion) {
         Gauge gauge = (Gauge) metricMap.get(MetricConstants.SERVER_UP);
         gauge.labels(host, port, javaHome, javaVersion).setToCurrentTime();
     }
 
     @Override
-    public void serverDown(String host, String port, String javaVersion, String javaHome) {
+    public void serverDown(String host, String port, String javaHome, String javaVersion) {
         Gauge gauge = (Gauge) metricMap.get(MetricConstants.SERVER_UP);
         gauge.labels(host, port, javaHome, javaVersion).set(0);
     }
@@ -204,16 +202,16 @@ public class PrometheusReporter implements MetricReporter {
 
     @Override
     public void initMetrics() {
-        PrometheusMetricCreator prometheusMetricCreator = new PrometheusMetricCreator();
-        prometheusMetricCreator.createProxyServiceMetric();
-        prometheusMetricCreator.createAPIServiceMetric();
-        prometheusMetricCreator.createInboundEndpointMetric();
-        prometheusMetricCreator.createProxyServiceErrorMetric();
-        prometheusMetricCreator.createApiErrorMetric();
-        prometheusMetricCreator.createInboundEndpointErrorMetric();
+        PrometheusMetricCreatorUtils.createProxyServiceMetric();
+        PrometheusMetricCreatorUtils.createAPIServiceMetric();
+        PrometheusMetricCreatorUtils.createInboundEndpointMetric();
+        PrometheusMetricCreatorUtils.createProxyServiceErrorMetric();
+        PrometheusMetricCreatorUtils.createApiErrorMetric();
+        PrometheusMetricCreatorUtils.createInboundEndpointErrorMetric();
 
-        prometheusMetricCreator.createServerUpMetrics();
-        prometheusMetricCreator.createServiceUpMetrics();
+        PrometheusMetricCreatorUtils.createServerUpMetrics();
+        PrometheusMetricCreatorUtils.createServiceUpMetrics();
+
     }
 
     enum SERVICE {
@@ -243,26 +241,26 @@ public class PrometheusReporter implements MetricReporter {
 
         if (null != proxyConfigBuckets) {
             List<Object> list = Arrays.asList(proxyConfigBuckets);
-
             int size = ((ArrayList) proxyConfigBuckets).size();
+            ArrayList bucketList =  (ArrayList) list.get(0);
             for (int i = 0; i < size; i++) {
-                proxyLatencyBuckets[i] = (double) ((ArrayList) list.get(0)).get(i);
+                proxyLatencyBuckets[i] = (double) bucketList.get(i);
             }
         }
         if (null != apiConfigBuckets) {
             List<Object> list = Arrays.asList(apiConfigBuckets);
-
             int size = ((ArrayList) apiConfigBuckets).size();
+            ArrayList bucketList =  (ArrayList) list.get(0);
             for (int i = 0; i < size; i++) {
-                apiLatencyBuckets[i] = (double) ((ArrayList) list.get(0)).get(i);
+                apiLatencyBuckets[i] = (double) bucketList.get(i);
             }
         }
         if (null != inboundEndpointConfigBuckets) {
             List<Object> list = Arrays.asList(inboundEndpointConfigBuckets);
-
             int size = ((ArrayList) inboundEndpointConfigBuckets).size();
+            ArrayList bucketList =  (ArrayList) list.get(0);
             for (int i = 0; i < size; i++) {
-                inboundEndpointLatencyBuckets[i] = (double) ((ArrayList) list.get(0)).get(i);
+                inboundEndpointLatencyBuckets[i] = (double) bucketList.get(i);
             }
         }
     }

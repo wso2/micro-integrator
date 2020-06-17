@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.obsrvability.handler.util;
+package org.wso2.micro.integrator.observability.handler.util;
 
 /**
  * Constants required in instrumenting Prometheus metrics.
@@ -23,7 +23,6 @@ package org.wso2.micro.integrator.obsrvability.handler.util;
 public class MetricConstants {
 
     // Constants for Synapse artifacts
-    public static final String SYNAPSE_REST_API = "SYNAPSE_REST_API";
     public static final String INBOUND_ENDPOINT = "inbound-endpoint";
 
     public static final String HTTP_PORT = "http.nio.port";
@@ -31,8 +30,6 @@ public class MetricConstants {
     public static final String JAVA_HOME = "java.home";
 
     //Constants for Synapse properties
-    public static final String IS_PROMETHEUS_ENGAGED = "IS_PROMETHEUS_ENGAGED";
-    public static final String PROCESSED_API = "PROCESSED_API";
     public static final String TRANSPORT_IN_URL = "TransportInURL";
     public static final String SERVICE_PREFIX = "SERVICE_PREFIX";
     public static final String PORT_OFFSET = "portOffset";
@@ -77,6 +74,8 @@ public class MetricConstants {
     public static final String SERVICE_NAME = "service_name";
     public static final String SERVICE_TYPE = "service_type";
     public static final String INVOCATION_URL = "invocation_url";
+    public static final String JAVA_VERSION_LABEL = "java_version";
+    public static final String JAVA_HOME_LABEL = "java_home";
     public static final String HOST = "host";
     public static final String PORT = "port";
 
