@@ -167,9 +167,12 @@
     <!--</test>-->
 
     <test name="inbound-MQTT-Transport-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.mqtt.inbound.transport.test"/>
-        </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.mqtt.inbound.transport.test.MQTTInboundMessagePollingTestCase"/>
+            <!--
+             <class name="org.wso2.carbon.esb.mqtt.inbound.transport.test.MQTTInboundTempFileCreationTestCase"/>
+             -->
+        </classes>
     </test>
 
     <!-- Kafka is not availble with framework-->
