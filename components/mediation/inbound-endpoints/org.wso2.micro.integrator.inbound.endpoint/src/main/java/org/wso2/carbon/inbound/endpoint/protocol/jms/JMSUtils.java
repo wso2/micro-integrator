@@ -22,6 +22,7 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.base.BaseConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -78,6 +79,33 @@ public class JMSUtils {
             OMElement elem = (OMElement) itr.next();
             message.setString(elem.getLocalName(), elem.getText());
         }
+    }
+
+    /**
+     * Check if a boolean property is set to the Synapse message context or Axis2 message context
+     *
+     * @param propertyName Name of the property
+     * @param msgContext   Synapse messageContext instance
+     * @return True if property is set to true
+     */
+    public static boolean checkIfBooleanPropertyIsSet(String propertyName, org.apache.synapse.MessageContext msgContext) {
+        boolean isPropertySet = false;
+        Object booleanProperty = msgContext.getProperty(propertyName);
+        if (booleanProperty != null) {
+            if ((booleanProperty instanceof Boolean && ((Boolean) booleanProperty)) ||
+                    (booleanProperty instanceof String && Boolean.valueOf((String) booleanProperty))) {
+                isPropertySet = true;
+            }
+        } else {
+            // Then from axis2 context - This is for make it consistent with JMS Transport config parameters
+            booleanProperty =
+                    (((Axis2MessageContext) msgContext).getAxis2MessageContext()).getProperty(propertyName);
+            if ((booleanProperty instanceof Boolean && ((Boolean) booleanProperty))
+                    || (booleanProperty instanceof String && Boolean.valueOf((String) booleanProperty))) {
+                isPropertySet = true;
+            }
+        }
+        return isPropertySet;
     }
 
     /**

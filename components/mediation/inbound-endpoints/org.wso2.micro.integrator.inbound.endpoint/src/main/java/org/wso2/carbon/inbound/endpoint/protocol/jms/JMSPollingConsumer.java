@@ -305,6 +305,11 @@ public class JMSPollingConsumer {
                                 logger.error("Error acknowledging message : " + msg.getJMSMessageID(), e);
                             }
                         } else {
+                            // recoverSession method is used only in non transacted session
+                            if (!jmsConnectionFactory.isTransactedSession()) {
+                                jmsConnectionFactory.recoverSession(session, false);
+                            }
+
                             // Need to create a new consumer and session since
                             // we need to rollback the message
                             if (messageConsumer != null) {
