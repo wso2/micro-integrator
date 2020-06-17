@@ -164,6 +164,8 @@
                           class="{{message_formatters.octet_stream}}"/>
         <messageFormatter contentType="application/binary"
                           class="{{message_formatters.application_binary}}"/>
+        <messageFormatter contentType="text/html"
+                          class="{{message_formatters.text_html}}"/>
         {% for message_formatter in custom_message_formatters %}
         <messageFormatter contentType="{{message_formatter.content_type}}"
                           class="{{message_formatter.class}}"/>
@@ -196,6 +198,8 @@
                         class="{{message_builders.octet_stream}}"/>
         <messageBuilder contentType="application/binary"
                         class="{{message_builders.application_binary}}"/>
+        <messageBuilder contentType="text/html"
+                        class="{{message_builders.text_html}}"/>
         {% for message_builder in custom_message_builders %}
         <messageBuilder contentType="{{message_builder.content_type}}"
                         class="{{message_builder.class}}"/>
