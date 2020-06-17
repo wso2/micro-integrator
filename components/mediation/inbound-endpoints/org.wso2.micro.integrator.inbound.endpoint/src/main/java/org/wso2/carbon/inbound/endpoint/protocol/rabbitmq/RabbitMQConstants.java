@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.inbound.endpoint.protocol.rabbitmq;
 
+import com.rabbitmq.client.BuiltinExchangeType;
+
 /**
  * Holds constants for RabbitMQ Inbound Endpoint Implementation
  */
@@ -79,6 +81,9 @@ public class RabbitMQConstants {
     public static final int DEFAULT_RETRY_INTERVAL = 30000;
     public static final int DEFAULT_RETRY_COUNT = 3;
     public static final int DEFAULT_CONSUMER_QOS = 0;
+    public static final String EXCHANGE_TYPE_DEFAULT = BuiltinExchangeType.DIRECT.getType();
+    public static final String EXCHANGE_DURABLE_DEFAULT = "true";
+    public static final String EXCHANGE_AUTO_DELETE_DEFAULT = "false";
 }
 
 
