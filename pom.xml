@@ -1064,6 +1064,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.mediator.dataservice</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.dataservices.common</artifactId>
                 <version>${project.version}</version>
             </dependency>
