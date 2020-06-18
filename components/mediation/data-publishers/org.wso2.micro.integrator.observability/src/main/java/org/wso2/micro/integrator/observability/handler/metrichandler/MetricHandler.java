@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.observability.handler.metricHandler;
+package org.wso2.micro.integrator.observability.handler.metrichandler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,7 +29,7 @@ import org.apache.synapse.rest.RESTUtils;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
-import org.wso2.micro.integrator.observability.handler.metricHandler.prometheus.reporter.PrometheusReporter;
+import org.wso2.micro.integrator.observability.handler.metrichandler.prometheus.reporter.PrometheusReporter;
 import org.wso2.micro.integrator.observability.handler.util.MetricConstants;
 
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
     private static final String javaHome = System.getProperty(MetricConstants.JAVA_HOME);
 
     @Override
-    public boolean handleInitServer() {
+    public boolean handleServerInit() {
         getMetricReporter();
         metricReporterInstance.initMetrics();
 
@@ -139,7 +139,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
                     }
                 }
             } catch (NullPointerException ex) {
-                log.error("Error in retrieving Service Invoke Port");
+                log.error("Error in retrieving Service Prefix");
             }
         }
 
@@ -167,21 +167,15 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         if ((null != synCtx.getProperty(SynapseConstants.PROXY_SERVICE))) {
             stopTimers(synCtx.getProperty(MetricConstants.PROXY_LATENCY_TIMER), synCtx);
         } else if (null == axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL)) {
-            try {
-                serviceInvokePort = getServiceInvokePort(synCtx);
-                internalHttpApiPort = getInternalHTTPInboundEndpointPort(synCtx);
-
-                if (null != synCtx.getProperty(SynapseConstants.IS_INBOUND) &&
-                        (serviceInvokePort != internalHttpApiPort)) {
-                    stopTimers(synCtx.
-                            getProperty(MetricConstants.INBOUND_ENDPOINT_LATENCY_TIMER), synCtx);
-                }
-                if (serviceInvokePort != internalHttpApiPort) {
-                    stopTimers(synCtx.getProperty(MetricConstants.API_LATENCY_TIMER), synCtx);
-                }
-
-            } catch (NullPointerException e) {
-                log.error("Error in retrieving Service Invoke Port");
+            serviceInvokePort = getServiceInvokePort(synCtx);
+            internalHttpApiPort = getInternalHTTPInboundEndpointPort(synCtx);
+            if (null != synCtx.getProperty(SynapseConstants.IS_INBOUND) &&
+                    (serviceInvokePort != internalHttpApiPort)) {
+                stopTimers(synCtx.
+                        getProperty(MetricConstants.INBOUND_ENDPOINT_LATENCY_TIMER), synCtx);
+            }
+            if (serviceInvokePort != internalHttpApiPort) {
+                stopTimers(synCtx.getProperty(MetricConstants.API_LATENCY_TIMER), synCtx);
             }
         }
         return true;
@@ -385,7 +379,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
     private String getApiName(String contextPath, MessageContext synCtx) {
         String apiName = null;
         for (API api : synCtx.getEnvironment().getSynapseConfiguration().getAPIs()) {
-            if (RESTUtils.isRESTApiPath(contextPath, api.getContext())) {
+            if (RESTUtils.matchApiPath(contextPath, api.getContext())) {
                 apiName = api.getName();
                 if (api.getVersionStrategy().getVersion() != null && !"".equals(api.getVersionStrategy().
                         getVersion())) {
@@ -414,15 +408,18 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         int internalHttpApiPort = 0;
 
         if (null != serverPortOffset) {
-            portOffset = Integer.parseInt(serverPortOffset);
-            internalHttpApiPort = Integer.parseInt(synCtx.getEnvironment().getSynapseConfiguration().
-                    getProperty((MetricConstants.INTERNAL_HTTP_API_PORT)));
-            internalHttpApiPort = internalHttpApiPort + portOffset;
+            try {
+                portOffset = Integer.parseInt(serverPortOffset);
+                internalHttpApiPort = Integer.parseInt(synCtx.getEnvironment().getSynapseConfiguration().
+                        getProperty((MetricConstants.INTERNAL_HTTP_API_PORT)));
+                internalHttpApiPort = internalHttpApiPort + portOffset;
+            } catch (NumberFormatException e) {
+                log.error("Error in parsing the internal HTTP Port");
+            }
         } else {
             log.warn("Port Offset or Internal HTTP API port is null.");
         }
         return internalHttpApiPort;
-
     }
 
     private int getServiceInvokePort(MessageContext synCtx) {

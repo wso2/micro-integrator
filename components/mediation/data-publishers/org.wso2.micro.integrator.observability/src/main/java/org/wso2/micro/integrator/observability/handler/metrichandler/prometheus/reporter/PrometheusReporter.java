@@ -15,14 +15,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.observability.handler.metricHandler.prometheus.reporter;
+package org.wso2.micro.integrator.observability.handler.metrichandler.prometheus.reporter;
 
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.hotspot.DefaultExports;
 import org.wso2.config.mapper.ConfigParser;
-import org.wso2.micro.integrator.observability.handler.metricHandler.MetricReporter;
+import org.wso2.micro.integrator.observability.handler.metrichandler.MetricReporter;
 import org.wso2.micro.integrator.observability.handler.util.MetricConstants;
 
 import java.util.ArrayList;
@@ -172,8 +172,8 @@ public class PrometheusReporter implements MetricReporter {
 
     @Override
     public void observeTime(Object timer) {
-        Histogram.Timer timer2 = (Histogram.Timer) timer;
-        timer2.observeDuration();
+        Histogram.Timer histogramTimer = (Histogram.Timer) timer;
+        histogramTimer.observeDuration();
     }
 
     @Override
@@ -211,7 +211,6 @@ public class PrometheusReporter implements MetricReporter {
 
         PrometheusMetricCreatorUtils.createServerUpMetrics();
         PrometheusMetricCreatorUtils.createServiceUpMetrics();
-
     }
 
     enum SERVICE {
