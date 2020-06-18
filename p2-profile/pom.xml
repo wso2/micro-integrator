@@ -92,6 +92,9 @@
                                 <featureArtifactDef>
                                     org.apache.synapse:org.apache.synapse.transport.vfs.feature:${synapse.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.apache.synapse:org.apache.synapse.transport.vfs.smb2.feature:${synapse.version}
+                                </featureArtifactDef>
 <!--                                &lt;!&ndash;1. Carbon-Mediation&ndash;&gt;-->
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediators.server.feature:${project.version}
@@ -260,6 +263,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.apache.synapse.transport.vfs.feature.group</id>
+                                    <version>${synapse.version}</version>
+                                </feature>
+                                <!-- SMB2 -->
+                                <feature>
+                                    <id>org.apache.synapse.transport.vfs.smb2.feature.group</id>
                                     <version>${synapse.version}</version>
                                 </feature>
                                 <!--1 Carbon Mediation -->
