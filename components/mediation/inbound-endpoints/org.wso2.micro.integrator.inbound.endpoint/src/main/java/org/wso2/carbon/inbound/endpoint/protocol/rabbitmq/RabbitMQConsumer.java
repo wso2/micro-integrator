@@ -91,13 +91,10 @@ public class RabbitMQConsumer implements Consumer {
                 RabbitMQConstants.DEFAULT_CONSUMER_QOS);
         channel.basicQos(qos);
 
-        // declaring queue
+        // declaring queue, exchange and binding
         queueName = rabbitMQProperties.get(RabbitMQConstants.QUEUE_NAME);
-        RabbitMQUtils.declareQueue(channel, queueName, rabbitMQProperties);
-
-        // declaring user defined exchange if given
         String exchangeName = rabbitMQProperties.get(RabbitMQConstants.EXCHANGE_NAME);
-        RabbitMQUtils.declareExchange(channel, exchangeName, rabbitMQProperties);
+        RabbitMQUtils.declareQueuesExchangesAndBindings(channel, queueName, exchangeName, rabbitMQProperties);
 
         // get max dead-lettered count
         maxDeadLetteredCount =
