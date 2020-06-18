@@ -19,12 +19,14 @@
 package org.wso2.micro.integrator.message.processor;
 
 import com.google.gson.JsonObject;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
+import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.esb.integration.common.extensions.carbonserver.CarbonTestServerManager;
 import org.wso2.esb.integration.common.extensions.carbonserver.MultipleServersManager;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -206,11 +208,17 @@ public class MessageProcessorTests extends ESBIntegrationTest {
             if (!reader1.checkForLog(msgProcessorPauseLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
                 Assert.fail("Deactivation of message Processor via management api failed for " + MP_1);
             }
+            String mpStatus = getMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_2_OFFSET);
+            Assert.assertEquals("Message processor state is not rendered properly when queried via passive node.",
+                                "inactive", mpStatus);
         } else {
             changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_1_OFFSET, false);
             if (!reader2.checkForLog(msgProcessorPauseLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
                 Assert.fail("Deactivation of message Processor via management api failed for " + MP_1);
             }
+            String mpStatus = getMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_1_OFFSET);
+            Assert.assertEquals("Message processor state is not rendered properly when queried via passive node.",
+                                "inactive", mpStatus);
         }
     }
 
@@ -223,11 +231,17 @@ public class MessageProcessorTests extends ESBIntegrationTest {
             if (!reader1.checkForLog(msgProcessorResumeLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
                 Assert.fail("Activation of message Processor via management api failed for " + MP_1);
             }
+            String mpStatus = getMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_2_OFFSET);
+            Assert.assertEquals("Message processor state is not rendered properly when queried via passive node.",
+                                "active", mpStatus);
         } else {
             changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_1_OFFSET, true);
             if (!reader2.checkForLog(msgProcessorResumeLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
                 Assert.fail("Activation of message Processor via management api failed for " + MP_1);
             }
+            String mpStatus = getMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_1_OFFSET);
+            Assert.assertEquals("Message processor state is not rendered properly when queried via passive node.",
+                                "active", mpStatus);
         }
     }
 
@@ -272,6 +286,16 @@ public class MessageProcessorTests extends ESBIntegrationTest {
         payload.addProperty("status", isActivate ? "active" : "inactive");
         String url = "https://localhost:" + managementApiPort + "/management/message-processors";
         HttpRequestUtil.doPost(new URL(url), payload.toString(), headers);
+    }
+
+    private String getMpStatus(String mpName, int managementApiPort) throws Exception {
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        String url = "https://localhost:" + managementApiPort + "/management/message-processors?name=" + mpName;
+        HttpResponse response = HttpRequestUtil.doGet(url, headers);
+        JSONObject jsonObject = new JSONObject(response.getData());
+        return jsonObject.getString("status");
     }
 
     private void sendRequest(int offset) throws Exception {

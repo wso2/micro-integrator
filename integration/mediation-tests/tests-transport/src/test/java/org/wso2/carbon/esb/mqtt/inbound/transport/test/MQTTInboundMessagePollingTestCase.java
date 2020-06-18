@@ -18,9 +18,6 @@
 
 package org.wso2.carbon.esb.mqtt.inbound.transport.test;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -53,12 +50,11 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         activeMQServer = new JMSBroker("MQTTBroker",
                 JMSBrokerConfigurationProvider.getInstance().getTransportConnectors());
         activeMQServer.start();
-        OMElement inboundOMElement = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(getESBResourceLocation()
-                + File.separator + "mqtt" + File.separator + "inbound" + File.separator + "transport" + File.separator
-                + "MQTT_Test_Inbound_EP.xml")));
         carbonLogReader.start();
-        Utils.deploySynapseConfiguration(inboundOMElement, "MQTT_Test_Inbound_EP", "inbound-endpoints", true);
-        super.init();
+        File mqttInbound = new File(
+                getESBResourceLocation() + File.separator + "mqtt" + File.separator + "inbound" + File.separator
+                        + "transport" + File.separator + "MQTT_Test_Inbound_EP.xml");
+        Utils.deploySynapseConfiguration(mqttInbound, Utils.ArtifactType.INBOUND_ENDPOINT);
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check if Inbound MQTT Transport receives messages without issue")
@@ -73,7 +69,7 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         byte[] payload = messageToSend.getBytes();
         MQTTTestClient mqttPublisherClient = null;
         Assert.assertTrue(carbonLogReader.checkForLog("MQTT_Test_Inbound_EP connected to the broker",
-                                                      20), "MQTT_Test_Inbound_EP could not connect to the broker");
+                                                      60), "MQTT_Test_Inbound_EP could not connect to the broker");
         try {
             mqttPublisherClient = new MQTTTestClient(brokerURL, userName, password, publisherClientId);
             mqttPublisherClient.publishMessage(topic, payload, QualityOfService.LEAST_ONCE.getValue(), false);
@@ -92,7 +88,7 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
     public void destroy() throws Exception {
         activeMQServer.stop();
         ActiveMQServerExtension.startMQServer();
-        Utils.undeploySynapseConfiguration("MQTT_Test_Inbound_EP", "inbound-endpoints");
+        Utils.undeploySynapseConfiguration("MQTT_Test_Inbound_EP", "inbound-endpoints", false);
         carbonLogReader.stop();
     }
 

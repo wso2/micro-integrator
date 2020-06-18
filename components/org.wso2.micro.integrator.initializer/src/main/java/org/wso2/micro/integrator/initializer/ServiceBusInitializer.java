@@ -178,7 +178,7 @@ public class ServiceBusInitializer {
                 if ((handler instanceof AbstractExtendedSynapseHandler)) {
                     AbstractExtendedSynapseHandler abstractExtendedSynapseHandler =
                             (AbstractExtendedSynapseHandler) handler;
-                    if (!abstractExtendedSynapseHandler.handleInitServer()) {
+                    if (!abstractExtendedSynapseHandler.handleServerInit()) {
                         log.warn("Server initialization not executed in the server init path of the " +
                                 "AbstractExtendedSynapseHandler");
                     }
