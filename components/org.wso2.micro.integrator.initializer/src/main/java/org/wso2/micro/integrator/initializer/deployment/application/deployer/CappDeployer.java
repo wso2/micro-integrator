@@ -17,16 +17,6 @@
  */
 package org.wso2.micro.integrator.initializer.deployment.application.deployer;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.context.ConfigurationContext;
@@ -44,6 +34,16 @@ import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.core.util.FileManipulator;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.xml.stream.XMLStreamException;
 
 public class CappDeployer extends AbstractDeployer {
 
@@ -487,12 +487,11 @@ public class CappDeployer extends AbstractDeployer {
             // Remove the app from registry
             // removing the extracted CApp form tmp/carbonapps/
             FileManipulator.deleteDir(carbonApp.getExtractedPath());
-            log.info("Successfully Undeployed Carbon Application : " + carbonApp.getAppNameWithVersion()
+            log.info("Successfully undeployed Carbon Application : " + carbonApp.getAppNameWithVersion()
                              + AppDeployerUtils.getTenantIdLogString(AppDeployerUtils.getTenantId()));
         } catch (Exception e) {
-            log.error("Error occurred while trying to unDeploy  : " + carbonApp.getAppNameWithVersion());
+            log.error("Error occurred while trying to unDeploy  : " + carbonApp.getAppNameWithVersion(), e);
         }
-
     }
 
     /**
