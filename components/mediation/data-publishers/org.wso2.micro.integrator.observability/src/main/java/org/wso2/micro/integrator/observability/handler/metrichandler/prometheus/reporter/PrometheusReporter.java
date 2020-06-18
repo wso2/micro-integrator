@@ -172,8 +172,8 @@ public class PrometheusReporter implements MetricReporter {
 
     @Override
     public void observeTime(Object timer) {
-        Histogram.Timer histogramTimer = (Histogram.Timer) timer;
-        histogramTimer.observeDuration();
+        Histogram.Timer histogramTimers = (Histogram.Timer) timer;
+        histogramTimers.observeDuration();
     }
 
     @Override
