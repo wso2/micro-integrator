@@ -47,6 +47,7 @@ import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.description.InOutAxisOperation;
 import org.apache.axis2.transport.TransportUtils;
 import org.apache.commons.io.input.AutoCloseInputStream;
+import org.apache.log4j.Logger;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
@@ -57,8 +58,6 @@ import org.apache.synapse.inbound.InboundEndpointConstants;
 import org.apache.synapse.mediators.MediatorFaultHandler;
 import org.apache.synapse.mediators.base.SequenceMediator;
 import org.apache.synapse.transport.customlogsetter.CustomLogSetter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wso2.carbon.inbound.endpoint.osgi.service.ServiceReferenceHolder;
 import org.wso2.carbon.inbound.endpoint.protocol.websocket.management.WebsocketEndpointManager;
 import org.wso2.carbon.inbound.endpoint.protocol.websocket.management.WebsocketSubscriberPathManager;
@@ -78,7 +77,7 @@ import static org.wso2.carbon.inbound.endpoint.common.Constants.TENANT_DOMAIN;
 
 public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter {
 
-    private static Logger log = LoggerFactory.getLogger(InboundWebsocketSourceHandler.class);
+    private static Logger log = Logger.getLogger(InboundWebsocketSourceHandler.class);
 
     private InboundWebsocketChannelContext wrappedContext;
     private WebSocketServerHandshaker handshaker;
@@ -157,21 +156,25 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
     }
 
     private void handleHandshake(ChannelHandlerContext ctx, FullHttpRequest req) throws URISyntaxException, AxisFault {
-
-        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(getWebSocketLocation(req),
-                                                                                          SubprotocolBuilderUtil
-                                                                                                  .buildSubprotocolString(
-                                                                                                          contentTypes,
-                                                                                                          otherSubprotocols),
-                                                                                          true);
+        if (log.isDebugEnabled()) {
+            WebsocketLogUtil.printHeaders(log, req, ctx);
+        }
+        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
+                getWebSocketLocation(req), SubprotocolBuilderUtil.buildSubprotocolString(contentTypes, otherSubprotocols), true);
         handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
             WebSocketServerHandshakerFactory.sendUnsupportedWebSocketVersionResponse(ctx.channel());
+            if (log.isDebugEnabled()) {
+                WebsocketLogUtil.printSpecificLog(log, ctx, "Unsupported websocket version.");
+            }
         } else {
             ChannelFuture future = handshaker.handshake(ctx.channel(), req);
             future.addListener(new ChannelFutureListener() {
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (future.isSuccess()) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Websocket Handshake is completed successfully");
+                        }
                         handshakeFuture.setSuccess();
                     }
                 }
@@ -243,6 +246,9 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
     private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
 
         try {
+            if (log.isDebugEnabled()) {
+                WebsocketLogUtil.printWebSocketFrame(log, frame, ctx, true);
+            }
 
             if (handshakeFuture.isSuccess()) {
 
@@ -263,6 +269,10 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
 
                 if (frame instanceof CloseWebSocketFrame) {
                     handleClientWebsocketChannelTermination(frame);
+                    if (log.isDebugEnabled()) {
+                        WebsocketLogUtil.printSpecificLog(log, ctx,
+                                "Websocket channel is terminated successfully.");
+                    }
                     return;
                 } else if ((frame instanceof BinaryWebSocketFrame) && ((handshaker.selectedSubprotocol() == null) || (
                         handshaker.selectedSubprotocol() != null && !handshaker.selectedSubprotocol()
@@ -356,6 +366,11 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
                     injectToSequence(synCtx, endpoint);
                 } else if (frame instanceof PingWebSocketFrame) {
                     ctx.channel().writeAndFlush(new PongWebSocketFrame(frame.content().retain()));
+                    PongWebSocketFrame pongWebSocketFrame = new PongWebSocketFrame(frame.content().retain());
+                    ctx.channel().writeAndFlush(pongWebSocketFrame);
+                    if (log.isDebugEnabled()) {
+                        WebsocketLogUtil.printWebSocketFrame(log, pongWebSocketFrame, ctx, false);
+                    }
                     return;
                 }
 
