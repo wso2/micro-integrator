@@ -1613,7 +1613,7 @@
         <io.swagger.models.version>1.5.23</io.swagger.models.version>
         <io.swagger.core.version>1.5.23</io.swagger.core.version>
         <io.swagger.annotation.version>1.5.23</io.swagger.annotation.version>
-        <jackson.dataformat.yaml.version>2.9.9</jackson.dataformat.yaml.version>
+        <jackson.dataformat.yaml.version>2.10.3</jackson.dataformat.yaml.version>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <snakeyaml.version>1.25</snakeyaml.version>
         <!-- Prometheus Library versions-->
