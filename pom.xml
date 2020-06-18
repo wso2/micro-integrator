@@ -73,6 +73,11 @@
                 <version>${axis2.wso2.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.axis2.transport</groupId>
+                <artifactId>axis2-transport-rabbitmq-amqp</artifactId>
+                <version>${axis2.transport.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.ws.commons.schema</groupId>
                 <artifactId>XmlSchema</artifactId>
                 <version>${commons-xmlschema.version}</version>

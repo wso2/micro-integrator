@@ -150,6 +150,10 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.transport</groupId>
+            <artifactId>axis2-transport-rabbitmq-amqp</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
