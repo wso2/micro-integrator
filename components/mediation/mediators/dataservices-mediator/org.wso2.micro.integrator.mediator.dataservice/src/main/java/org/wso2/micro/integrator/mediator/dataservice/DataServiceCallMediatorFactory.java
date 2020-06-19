@@ -100,7 +100,7 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
                 if (type.equals(DataServiceCallMediatorConstants.PROPERTY)) {
                     OMAttribute propertyAtr = targetElement.getAttribute(NAME_Q);
                     if (propertyAtr != null) {
-                        if (!"".equals(propertyAtr.getAttributeValue())) {
+                        if (!propertyAtr.getAttributeValue().isEmpty()) {
                             String propertyName = propertyAtr.getAttributeValue();
                             mediator.setPropertyName(propertyName);
                         } else {

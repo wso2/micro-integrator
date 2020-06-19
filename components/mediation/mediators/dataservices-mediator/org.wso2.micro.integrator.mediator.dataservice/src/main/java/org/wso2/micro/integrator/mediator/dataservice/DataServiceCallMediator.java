@@ -32,6 +32,7 @@ import org.apache.synapse.SynapseLog;
 import org.apache.synapse.config.xml.SynapsePath;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
+import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.util.MessageHelper;
 import org.w3c.dom.Document;
 import org.wso2.micro.integrator.dataservices.core.DataServiceFault;
@@ -96,10 +97,8 @@ public class DataServiceCallMediator extends AbstractMediator {
             } else {
                 handleException("The data service,  named '" + serviceName + "' does not exist. ", messageContext);
             }
-
         } catch (AxisFault axisFault) {
-            if (synLog.isTraceOrDebugEnabled())
-            {
+            if (synLog.isTraceOrDebugEnabled()) {
                 synLog.traceOrDebug(axisFault.getMessage());
             }
             synLog.error(axisFault.getMessage());
@@ -139,19 +138,15 @@ public class DataServiceCallMediator extends AbstractMediator {
     private void dispatchToService(org.apache.axis2.context.MessageContext axis2MessageContext,
                                    MessageContext messageContext) {
 
-        String targetTypeName = getTargetType();
-        String propertyName = getPropertyName();
         try {
-
             OMElement omElement = DataServiceProcessor.dispatch(axis2MessageContext);
-
             if (omElement != null) {
                 if (synLog.isTraceOrDebugEnabled()) {
                     synLog.traceOrDebug("The result OMElement from the dataservice : " + omElement);
                 }
 
                 //set the result payload as property according to the target type
-                if (DataServiceCallMediatorConstants.TARGET_TYPE.equals(targetTypeName)) {
+                if (DataServiceCallMediatorConstants.TARGET_PROPERTY_TYPE.equals(targetType)) {
                     messageContext.setProperty(propertyName, omElement);
                     if (synLog.isTraceOrDebugEnabled()) {
                         synLog.traceOrDebug("The result property : " + messageContext.
@@ -159,6 +154,7 @@ public class DataServiceCallMediator extends AbstractMediator {
                     }
                 } else {
                     //	set the result payload as envelope in to message context according to the target type
+                    axis2MessageContext.removeProperty(PassThroughConstants.NO_ENTITY_BODY);
                     messageContext.getEnvelope().getBody().addChild(omElement);
                 }
             }
@@ -250,7 +246,6 @@ public class DataServiceCallMediator extends AbstractMediator {
         } else {
             return org.apache.commons.text.StringEscapeUtils.escapeXml10(value);
         }
-
     }
 
     /**

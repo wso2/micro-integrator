@@ -47,7 +47,6 @@
                             !javax.xml.namespace,
                             javax.xml.namespace;version="0.0.0"
                         </Import-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
                         <Fragment-Host>synapse-core</Fragment-Host>
                     </instructions>
                 </configuration>
