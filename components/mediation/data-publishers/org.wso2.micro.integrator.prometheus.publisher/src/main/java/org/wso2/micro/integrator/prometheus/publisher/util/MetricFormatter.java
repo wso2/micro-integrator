@@ -57,7 +57,7 @@ public class MetricFormatter {
     public static String formatMetrics(Enumeration<MetricFamilySamples> metricsList) {
 
         StringBuilder metric = new StringBuilder();
-        String  metricsValue = "";
+        StringBuilder metricsValue = new StringBuilder();
 
         while (metricsList.hasMoreElements()) {
             MetricFamilySamples metricFamilySamples = metricsList.nextElement();
@@ -91,6 +91,7 @@ public class MetricFormatter {
             }
             metric.append(metricData);
         }
-        return metricsValue + metric;
+         metricsValue.append(metric);
+        return metricsValue.toString();
     }
 }
