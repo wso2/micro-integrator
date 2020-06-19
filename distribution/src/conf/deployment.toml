@@ -1,49 +1,10 @@
 [server]
 hostname = "localhost"
-# offset  = 0
-# hide_admin_service_wsdl = true
-# proxy_context_path = ""
+# offset  = 10
 # hot_deployment = true
-# enableMTOM = false
-# enableSwA = false
-# userAgent = "WSO2 Micro Integrator 1.0.0"
-# serverDetails = "WSO2 Micro Integrator 1.0.0"
-# synapse_config_file_path = "repository/deployment/server/synapse-configs"
-# http_content_negotiation = true
 
 [user_store]
 type = "read_only_ldap"
-# class = "org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreManager"
-# connection_url = "ldap://localhost:10389"
-# connection_name = "uid=admin,ou=system"
-# connection_password = "admin"
-# anonymous_bind = false
-# user_search_base = "ou=system"
-# user_name_attribute = "uid"
-# user_name_search_filter = "(&amp;(objectClass=person)(uid=?))"
-# user_name_list_filter = "(objectClass=person)"
-# display_name_attribute = ''
-# read_groups = true
-# group_search_base = "ou=system"
-# group_name_attribute = "cn"
-# group_name_search_filter = "(&amp;(objectClass=groupOfNames)(cn=?))"
-# group_name_list_filter = "(objectClass=groupOfNames)"
-# membership_attribute = "member"
-# back_links_enabled = false
-# username_java_regex = "[a-zA-Z0-9._\\-|//]{3,30}$"
-# rolename_java_regex = "[a-zA-Z0-9._\\-|//]{3,30}$"
-# password_java_regex = "^[\\S]{5,30}$"
-# scim_enabled = false
-# password_hash_method = "PLAIN_TEXT"
-# multi_attribute_separator = ","
-# max_user_name_list_length = 100
-# max_role_name_list_length = 100
-# user_roles_cache_enabled = true
-# connection_pooling_enabled = true
-# ldap_connection_timeout = 5000   # timeout in milliseconds
-# read_timeout = ''
-# retry_attempts = ''
-# replace_escape_characters_at_user_login = true
 
 [keystore.tls]
 file_name = "wso2carbon.jks"
@@ -57,30 +18,6 @@ password = "wso2carbon"
 alias = "symmetric.key.value"
 algorithm = "AES"
 
-# Uncomment below for swagger request processor
-# [[server.get_request_processor]]
-# item = "swagger.json"
-# class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerJsonProcessor"
-
-# [[server.get_request_processor]]
-# item = "swagger.yaml"
-# class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerYamlProcessor"
-
-# [encryption]
-# internal_crypto_provider = "org.wso2.micro.integrator.crypto.provider.KeyStoreBasedInternalCryptoProvider"
-# key = "SECRET_KEY"
-
-# [realm_manager]
-# data_source = "WSO2CarbonDB"
-# properties.isCascadeDeleteEnabled = true
-
-# [authorization_manager]
-# class = "org.wso2.micro.integrator.security.user.core.authorization.JDBCAuthorizationManager"
-# admin_role_management_permissions = "/permission"
-# enable_authorization_cache = true
-# get_all_roles_user_enable = false
-
-# Uncomment follwoing to change default message formatters
 # [message_formatters]
 # form_urlencoded =  "org.apache.synapse.commons.formatters.XFormURLEncodedFormatter"
 # multipart_form_data =  "org.apache.axis2.transport.http.MultipartFormDataFormatter"
@@ -94,7 +31,6 @@ algorithm = "AES"
 # octet_stream = "org.wso2.carbon.relay.ExpandingMessageFormatter"
 # application_binary =  "org.apache.axis2.format.BinaryFormatter"
 
-# Uncomment following to change default message builders
 # [message_builders]
 # application_xml = "org.apache.axis2.builder.ApplicationXMLBuilder"
 # form_urlencoded = "org.apache.synapse.commons.builders.XFormURLEncodedBuilder"
@@ -106,259 +42,33 @@ algorithm = "AES"
 # octet_stream =  "org.wso2.carbon.relay.BinaryRelayBuilder"
 # application_binary = "org.apache.axis2.format.BinaryBuilder"
 
-# Uncomment follows to add new custom message formatter
 # [[custom_message_formatters]]
-# content_type = "application/json/badgerfish"
-# class = "org.apache.axis2.json.JSONBadgerfishMessageFormatter"
+# content_type = text/html"
+# class = "org.wso2.carbon.relay.ExpandingMessageFormatter"
 
-# Uncomment follows to add new custom message builder
 # [[custom_message_builders]]
-# content_type = "application/json/badgerfish"
-# class = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
+# content_type = "text/html"
+# class = "org.wso2.carbon.relay.BinaryRelayBuilder"
 
 # [blocking.message_formatters]
-# form_urlencoded =  "org.apache.synapse.commons.formatters.XFormURLEncodedFormatter"
-# multipart_form_data =  "org.apache.axis2.transport.http.MultipartFormDataFormatter"
-# application_xml = "org.apache.axis2.transport.http.ApplicationXMLFormatter"
-# text_xml = "org.apache.axis2.transport.http.SOAPMessageFormatter"
-# soap_xml = "org.apache.axis2.transport.http.SOAPMessageFormatter"
-# text_plain = "org.apache.axis2.format.PlainTextFormatter"
-# application_json =  "org.wso2.micro.integrator.core.json.JsonStreamFormatter"
-# json_badgerfish = "org.apache.axis2.json.JSONBadgerfishMessageFormatter"
-# text_javascript = "org.apache.axis2.json.JSONMessageFormatter"
 # octet_stream = "org.wso2.carbon.relay.ExpandingMessageFormatter"
-# application_binary =  "org.apache.axis2.format.BinaryFormatter"
 
 # [blocking.message_builders]
-# application_xml = "org.apache.axis2.builder.ApplicationXMLBuilder"
-# form_urlencoded = "org.apache.synapse.commons.builders.XFormURLEncodedBuilder"
-# multipart_form_data = "org.apache.axis2.builder.MultipartFormDataBuilder"
-# text_plain = "org.apache.axis2.format.PlainTextBuilder"
-# application_json = "org.wso2.micro.integrator.core.json.JsonStreamBuilder"
-# json_badgerfish = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
-# text_javascript = "org.apache.axis2.json.JSONBuilder"
 # octet_stream =  "org.wso2.carbon.relay.BinaryRelayBuilder"
-# application_binary = "org.apache.axis2.format.BinaryBuilder"
 
 # [[blocking.custom_message_formatters]]
-# content_type = "application/json/badgerfish"
-# class = "org.apache.axis2.json.JSONBadgerfishMessageFormatter"
+# content_type = "text/html"
+# class = "org.wso2.carbon.relay.ExpandingMessageFormatter"
 
 # [[blocking.custom_message_builders]]
-# content_type = "application/json/badgerfish"
-# class = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
+# content_type = "text/html"
+# class = "org.wso2.carbon.relay.BinaryRelayBuilder"
 
 # [transport]
 # default_content_type = "empty/content"
 
 # [transport.http]
-# socket_timeout = 180000              # timeout in milliseconds
-# core_worker_pool_size = 400
-# max_worker_pool_size = 400
-# worker_pool_queue_length = -1
-# io_buffer_size = 16384
-# max_http_connection_per_host_port = 32767
-# preserve_http_user_agent = false
-# preserve_http_server_name = true
-# preserve_http_headers = ["Content-Type"]
-# disable_connection_keepalive = false
-# enable_message_size_validation = false
-# max_message_size_bytes = 81920
-# max_open_connections = -1
-# force_xml_validation = false
-# force_json_validation = false
-# reverse_proxy_mode = false
-
-# listener.enable = true
-# listener.port = 8280
-# listener.wsdl_epr_prefix ="$ref{server.hostname}:8280/test"
-# listener.bind_address = "$ref{server.hostname}"
-# listener.secured_enable = true
-# listener.secured_port = 8243
-# listener.secured_wsdl_epr_prefix = "$ref{server.hostname}"
-# listener.secured_bind_address = "$ref{server.hostname}"
-# listener.secured_protocols = "TLSv1,TLSv1.1,TLSv1.2"
-# listener.verify_client = "require"
-# listener.preferred_ciphers = "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
-# listener.ssl_profile.file_path = "conf/sslprofiles/listenerprofiles.xml"
-# listener.ssl_profile.read_interval = 3600000
-# listener.certificate_revocation_verifier_enable = false
-# listener.certificate_revocation_cache_size = 1024
-# listener.certificate_revocation_cache_delay = 1000
-# listener.keystore.file_name ="repository/resources/security/$ref{keystore.tls.file_name}"
-# listener.keystore.type = "$ref{keystore.tls.type}"
-# listener.keystore.password = "$ref{keystore.tls.password}"
-# listener.keystore.key_password = "$ref{keystore.tls.key_password}"
-# listener.truststore.file_name = "repository/resources/security/$ref{truststore.file_name}"
-# listener.truststore.type = "$ref{truststore.type}"
-# listener.truststore.password = "$ref{truststore.password}"
-# sender.enable = true
-# sender.warn_on_http_500 = "*"
-# sender.proxy_host = "$ref{server.hostname}"
-# sender.proxy_port = 3128
-# sender.secured_proxy_host = "$ref{server.hostname}"
-# sender.secured_proxy_port = 3128
-# sender.non_proxy_hosts = ["$ref{server.hostname}"]
-# sender.hostname_verifier = "AllowAll"
-# sender.secured_protocols = "TLSv1,TLSv1.1,TLSv1.2"
-# sender.certificate_revocation_verifier_enable = false
-# sender.certificate_revocation_cache_size = 1024
-# sender.certificate_revocation_cache_delay = 1000     # delay in milliseconds
-# sender.secured_enable = true
-# sender.keystore.file_name ="repository/resources/security/$ref{keystore.tls.file_name}"
-# sender.keystore.type = "$ref{keystore.tls.type}"
-# sender.keystore.password = "$ref{keystore.tls.password}"
-# sender.keystore.key_password = "$ref{keystore.tls.key_password}"
-# sender.truststore.file_name = "repository/resources/security/$ref{truststore.file_name}"
-# sender.truststore.type = "$ref{truststore.type}"
-# sender.truststore.password = "$ref{truststore.password}"
-# sender.ssl_profile.file_path = "conf/sslprofiles/senderprofiles.xml"
-# sender.ssl_profile.read_interval = 600000   # interval in milliseconds
-
-# [[transport.http.proxy_profile]]
-# target_hosts = ["example.com", ".*.sample.com"]
-# proxy_host = "localhost"
-# proxy_port = "3128"
-# proxy_username = "squidUser"
-# proxy_password = "password"
-# bypass_hosts = ["xxx.sample.com"]
-
-# [[transport.http.secured_proxy_profile]]
-# target_hosts = ["example.com", ".*.sample.com"]
-# proxy_host = "localhost"
-# proxy_port = "3128"
-# proxy_username = "squidUser"
-# proxy_password = "password"
-# bypass_hosts = ["xxx.sample.com"]
-
-# [transport.blocking.http]
-# listener.enable = true
-# listener.port = 8200
-# listener.hostname = ""
-# listener.origin_server = ""
-# listener.request_timeout = ""
-# listener.request_tcp_no_delay = ""
-# listener.request_core_thread_pool_size = ""
-# listener.request_max_thread_pool_size = ""
-# listener.thread_keepalive_time = ""
-# listener.thread_keepalive_time_unit = ""
-# sender.enable = true
-# sender.enable_client_caching = true
-# sender.transfer_encoding = "chunked"
-# sender.default_connections_per_host = 200
-# sender.omit_soap12_action = true
-# sender.so_timeout = 60000                       # timeout in milliseconds
-# sender.proxy_host = "$ref{server.hostname}"
-# sender.proxy_port = 3128
-# sender.secured_enable = true
-# sender.secured_enable_client_caching = true
-# sender.secured_transfer_encoding = "chunked"
-# sender.secured_default_connections_per_host = 200
-# sender.secured_omit_soap12_action = true
-# sender.secured_so_timeout = 60000
-# sender.secured_proxy_host = "$ref{server.hostname}"
-# sender.secured_proxy_port = 3128
-
-# [transport.vfs]
-
-# listener.enable = true
-# listener.keystore.file_name = "$ref{keystore.tls.file_name}"
-# listener.keystore.type = "$ref{keystore.tls.type}"
-# listener.keystore.password = "$ref{keystore.tls.password}"
-# listener.keystore.key_password = "$ref{keystore.tls.key_password}"
-# listener.keystore.alias = "$ref{keystore.tls.alias}"
-
-# listener.parameter.customParameter = ""
-
-# sender.enable = true
-# sender.parameter.customParameter = ""
-
-# [transport.fix]
-# listener.enable = false
-# listener.parameter.customParameter = ""
-# sender.enable = false
-# sender.parameter.customParameter = ""
-
-# [[custom_transport.listener]]
-# class="<qualified class name>"
-# protocol = "ISO8583"
-# parameter.port = 8081
-# parameter.hostname = "$ref{server.hostname}"
-# parameter.non_blocking = true
-# parameter.bind_address = "$ref{server.hostname}"
-# parameter.wsdl_epr_prefix = "$ref{server.hostname}"
-
-# keystore.file_name = "$ref{keystore.tls.file_name}"
-# keystore.type = "$ref{keystore.tls.type}"
-# keystore.password = "$ref{keystore.tls.password}"
-# keystore.key_password = "$ref{keystore.tls.key_password}"
-# truststore.file_name = "$ref{truststore.file_name}"
-# truststore.type = "$ref{truststore.type}"
-# truststore.password = "$ref{truststore.password}"
-
-# ssl_profile.file_path= "conf/sslprofiles/listenerprofiles.xml"
-# ssl_profile.read_interval = 30000
-
-# [[custom_transport.sender]]
-# class="<qualified class name>"
-# protocol = "ISO8583"
-# parameter.proxy_host = ""
-# parameter.proxy_port = 9000
-# parameter.non_proxy_host = ""
-# parameter.non_blocking = true
-
-# keystore.file_name = "$ref{keystore.tls.file_name}"
-# keystore.type = "$ref{keystore.tls.type}"
-# keystore.password = "$ref{keystore.tls.password}"
-# keystore.key_password = "$ref{keystore.tls.key_password}"
-# truststore.file_name = "$ref{truststore.file_name}"
-# truststore.type = "$ref{truststore.type}"
-# truststore.password = "$ref{truststore.password}"
-
-# ssl_profile.file_path = "conf/sslprofiles/senderprofiles.xml"
-# ssl_profile.read_interval = 30000
-
-
-# [[custom_transport.blocking.listener]]
-# class="<qualified class name>"
-# protocol = "ISO8583"
-# parameter.customParameter = ""
-
-# [[custom_transport.blocking.sender]]
-# class="<qualified class name>"
-# protocol = "ISO8583"
-# parameter.customParameter = ""
-
-
-# [transport.mail.listener]
-# enable = true
-# name = "mailto"
-# parameter.customParameter = ""
-
-# [[transport.mail.sender]]
-# name = "mailto"
-# parameter.hostname = "smtp.gmail.com"
-# parameter.port = "587"
-# parameter.enable_tls = true
-# parameter.auth = true
-# parameter.username = "demo_user"
-# parameter.password = "mailpassword"
-# parameter.from = "demo_user@wso2.com"
-
-# [transport.blocking.mail.listener]
-# enable = true
-# name = "mailto"
-# parameter.customParameter = "value"
-
-# [[transport.blocking.mail.sender]]
-# name = "mailto"
-# parameter.hostname = "smtp.gmail.com"
-# parameter.port = "587"
-# parameter.enable_tls = true
-# parameter.auth = true
-# parameter.username = "demo_user"
-# parameter.password = "mailpassword"
-# parameter.from = "demo_user@wso2.com"
+# socket_timeout = 180000   # timeout in milliseconds
 
 # [transport.jms]
 # listener_enable = true
@@ -371,180 +81,22 @@ algorithm = "AES"
 # parameter.connection_factory_type = "topic"
 # parameter.cache_level = "consumer"
 
-# parameter.naming_security_principal = ""
-# parameter.naming_security_credential = ""
-# parameter.transactionality = ""
-# parameter.transaction_jndi_name = ""
-# parameter.cache_user_transaction = true
-# parameter.session_transaction = true
-# parameter.session_acknowledgement = "AUTO_ACKNOWLEDGE"
-# parameter.jms_spec_version = "1.1"
-# parameter.username = ""
-# parameter.password = ""
-# parameter.destination = ""
-# parameter.destination_type = "queue"
-# parameter.default_reply_destination = ""
-# parameter.default_destination_type = "queue"
-# parameter.message_selector = ""
-# parameter.subscription_durable = false
-# parameter.durable_subscriber_client_id = ""
-# parameter.durable_subscriber_name = ""
-# parameter.pub_sub_local = false
-# parameter.receive_timeout = "1000"              # timeout in milliseconds
-# parameter.concurrent_consumer = 1
-# parameter.max_concurrent_consumer = 1
-# parameter.idle_task_limit = 10
-# parameter.max_message_per_task = -1
-# parameter.initial_reconnection_duration = "10000"       # duraton in milliseconds
-# parameter.reconnect_progress_factor = 2
-# parameter.max_reconnect_duration = "3600000"            # duration in milliseconds
-# parameter.reconnect_interval = "3600000"                # duration in milliseconds
-# parameter.max_jsm_connection = 10
-# parameter.max_consumer_error_retrieve_before_delay = 20
-# parameter.consume_error_delay = "100"                   # delay in milliseconds
-# parameter.consume_error_progression = "2.0"
-
 # [transport.jms]
 # sender_enable = true
 
 # [[transport.jms.sender]]
-
-# name = "myTopicSender"
-# parameter.initial_naming_factory = "org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"
+# name = "myQueueSender"
+# parameter.initial_naming_factory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
 # parameter.provider_url = "tcp://localhost:61616"
-# parameter.connection_factory_name = "TopicConnectionFactory"
-# parameter.connection_factory_type = "topic"
+# parameter.connection_factory_name = "QueueConnectionFactory"
+# parameter.connection_factory_type = "queue"
 # parameter.cache_level = "producer"
-
-# parameter.naming_security_principal = ""
-# parameter.naming_security_credential = ""
-# parameter.transactionality = ""
-# parameter.transaction_jndi_name = ""
-# parameter.cache_user_transaction = true
-# parameter.session_transaction = true
-# parameter.session_acknowledgement = "AUTO_ACKNOWLEDGE"
-# parameter.jms_spec_version = "1.1"
-# parameter.username = ""
-# parameter.password = ""
-# parameter.destination = ""
-# parameter.destination_type = "queue"
-# parameter.default_reply_destination = ""
-# parameter.default_destination_type = "queue"
-# parameter.message_selector = ""
-# parameter.subscription_durable = false
-# parameter.durable_subscriber_client_id = ""
-# parameter.durable_subscriber_name = ""
-# parameter.pub_sub_local = false
-# parameter.receive_timeout = "1000"      # timout in milliseconds
-# parameter.concurrent_consumer = 1
-# parameter.max_concurrent_consumer = 1
-# parameter.idle_task_limit = 10
-# parameter.max_message_per_task = -1
-# parameter.initial_reconnection_duration = "10000"     # duration in milliseconds
-# parameter.reconnect_progress_factor = 2
-# parameter.max_reconnect_duration = "3600000"          # duration in milliseconds
-# parameter.reconnect_interval = "3600000"                # duration in milliseconds
-# parameter.max_jsm_connection = 10
-# parameter.max_consumer_error_retrieve_before_delay = 20
-# parameter.consume_error_delay = "100"       # delay in milliseconds
-# parameter.consume_error_progression = "2.0"
-# parameter.vender_class_loader = false
-
-# [transport.blocking.jms]
-# listener_enable = true
-
-# [[transport.blocking.jms.listener]]
-# name = "myTopicListener"
-# parameter.initial_naming_factory = "org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"
-# parameter.provider_url = "tcp://localhost:61616"
-# parameter.connection_factory_name = "TopicConnectionFactory"
-# parameter.connection_factory_type = "topic"
-# parameter.cache_level = "consumer"
-
-# parameter.naming_security_principal = ""
-# parameter.naming_security_credential = ""
-# parameter.transactionality = ""
-# parameter.transaction_jndi_name = ""
-# parameter.cache_user_transaction = true
-# parameter.session_transaction = true
-# parameter.session_acknowledgement = "AUTO_ACKNOWLEDGE"
-# parameter.jms_spec_version = "1.1"
-# parameter.username = ""
-# parameter.password = ""
-# parameter.destination = ""
-# parameter.destination_type = "queue"
-# parameter.default_reply_destination = ""
-# parameter.default_destination_type = "queue"
-# parameter.message_selector = ""
-# parameter.subscription_durable = false
-# parameter.durable_subscriber_client_id = ""
-# parameter.durable_subscriber_name = ""
-# parameter.pub_sub_local = false
-# parameter.receive_timeout = "1000"              # timeout in milliseconds
-# parameter.concurrent_consumer = 1
-# parameter.max_concurrent_consumer = 1
-# parameter.idle_task_limit = 10
-# parameter.max_message_per_task = -1
-# parameter.initial_reconnection_duration = "10000"       # duraton in milliseconds
-# parameter.reconnect_progress_factor = 2
-# parameter.max_reconnect_duration = "3600000"            # duration in milliseconds
-# parameter.reconnect_interval = "3600000"                # duration in milliseconds
-# parameter.max_jsm_connection = 10
-# parameter.max_consumer_error_retrieve_before_delay = 20
-# parameter.consume_error_delay = "100"                   # delay in milliseconds
-# parameter.consume_error_progression = "2.0"
-
-# [transport.blocking.jms]
-# sender_enable = true
-
-# [[transport.blocking.jms.sender]]
-# name = "myTopicSender"
-# parameter.initial_naming_factory = "org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"
-# parameter.provider_url = "tcp://localhost:61616"
-# parameter.connection_factory_name = "TopicConnectionFactory"
-# parameter.connection_factory_type = "topic"
-# parameter.cache_level = "producer"
-
-# parameter.naming_security_principal = ""
-# parameter.naming_security_credential = ""
-# parameter.transactionality = ""
-# parameter.transaction_jndi_name = ""
-# parameter.cache_user_transaction = true
-# parameter.session_transaction = true
-# parameter.session_acknowledgement = "AUTO_ACKNOWLEDGE"
-# parameter.jms_spec_version = "1.1"
-# parameter.username = ""
-# parameter.password = ""
-# parameter.destination = ""
-# parameter.destination_type = "queue"
-# parameter.default_reply_destination = ""
-# parameter.default_destination_type = "queue"
-# parameter.message_selector = ""
-# parameter.subscription_durable = false
-# parameter.durable_subscriber_client_id = ""
-# parameter.durable_subscriber_name = ""
-# parameter.pub_sub_local = false
-# parameter.receive_timeout = "1000"      # timout in milliseconds
-# parameter.concurrent_consumer = 1
-# parameter.max_concurrent_consumer = 1
-# parameter.idle_task_limit = 10
-# parameter.max_message_per_task = -1
-# parameter.initial_reconnection_duration = "10000"     # duration in milliseconds
-# parameter.reconnect_progress_factor = 2
-# parameter.max_reconnect_duration = "3600000"          # duration in milliseconds
-# parameter.reconnect_interval = "3600000"                # duration in milliseconds
-# parameter.max_jsm_connection = 10
-# parameter.max_consumer_error_retrieve_before_delay = 20
-# parameter.consume_error_delay = "100"       # delay in milliseconds
-# parameter.consume_error_progression = "2.0"
-# parameter.vender_class_loader = false       # only for IBM MQ
 
 # [transport.jndi.connection_factories]
 # 'connectionfactory.QueueConnectionFactory' = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
 # 'connectionfactory.TopicConnectionFactory' = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
 
 # [transport.jndi.queue]
-# JMSMS = "JMSMS"
 # StockQuotesQueue = "StockQuotesQueue"
 
 # [transport.jndi.topic]
@@ -554,270 +106,45 @@ algorithm = "AES"
 # listener_enable = true
 
 # [[transport.rabbitmq.listener]]
-
 # name = "AMQPConnectionFactory"
 # parameter.hostname = "localhost"
 # parameter.port = 5672
 # parameter.username = "guest"
 # parameter.password = "guest"
-# parameter.connection_factory = ""
-# parameter.exchange_name = "amq.direct"
-# parameter.queue_name = "MyQueue"
-# parameter.queue_auto_ack = false
-# parameter.consumer_tag = ""
-# parameter.channel_consumer_qos = ""
-# parameter.durable = ""
-# parameter.queue_exclusive = ""
-# parameter.queue_auto_delete = ""
-# parameter.queue_routing_key = ""
-# parameter.queue_auto_declare = ""
-# parameter.exchange_auto_declare = ""
-# parameter.exchange_type = ""
-# parameter.exchange_durable = ""
-# parameter.exchange_auto_delete = ""
-# parameter.message_content_type = ""
-
-# parameter.retry_interval = "10000"        #interval in milliseconds
-# parameter.retry_count = 5
-# parameter.connection_pool_size = 25
-
-# parameter.ssl_enable = true
-# parameter.ssl_version = "SSL"
-# parameter.keystore_file_name =""
-# parameter.keystore_type = ""
-# parameter.keystore_password = ""
-# parameter.truststore_file_name =""
-# parameter.truststore_type = ""
-# parameter.truststore_password = ""
 
 # [transport.rabbitmq]
 # sender_enable = true
 
 # [[transport.rabbitmq.sender]]
-
 # name = "AMQPConnectionFactory"
 # parameter.hostname = "localhost"
 # parameter.port = 5672
 # parameter.username = "guest"
 # parameter.password = "guest"
-# parameter.exchange_name = "amq.direct"
-# parameter.routing_key = "MyQueue"
-# parameter.reply_to_name = ""
-# parameter.queue_delivery_mode = 1
-# parameter.exchange_type = ""
-# parameter.queue_name = "MyQueue"
-# parameter.queue_durable = false
-# parameter.queue_exclusive = false
-# parameter.queue_auto_delete = false
-# parameter.exchange_durable = ""
-# parameter.queue_auto_declare = ""
-# parameter.exchange_auto_declare = ""
-# parameter.connection_pool_size = 10
-
-# [transport.ws]
-
-# sender.enable = false
-# sender.outflow_dispatch_sequence = "outflowDispatchSeq"
-# sender.outflow_dispatch_fault_sequence = "outflowFaultSeq"
-# sender.parameter.customParameter = ""
-
-# [transport.wss]
-
-# sender.enable = false
-# sender.outflow_dispatch_sequence = "outflowDispatchSeq"
-# sender.outflow_dispatch_fault_sequence = "outflowFaultSeq"
-# sender.parameter.customParameter = ""
-# sender.truststore_location = "$ref{truststore.file_name}"
-# sender.truststore_password = "$ref{truststore.password}"
-
-# [transport.sap]
-# listener.idoc.enable = false
-# listener.idoc.class = "org.wso2.carbon.transports.sap.SAPTransportListener"
-# listener.idoc.parameter.customParameter = ""
-# listener.bapi.enable = false
-# listener.bapi.class = "org.wso2.carbon.transports.sap.SAPTransportListener"
-# listener.bapi.parameter.customParameter = ""
-# sender.idoc.enable = false
-# sender.idoc.class = "org.wso2.carbon.transports.sap.SAPTransportSender"
-# sender.idoc.parameter.customParameter = ""
-# sender.bapi.enable = false
-# sender.bapi.class = "org.wso2.carbon.transports.sap.SAPTransportSender"
-# sender.bapi.parameter.customParameter = ""
-
-# [transport.tcp]
-# listener.enable = false
-# listener.port = 8000
-# listener.hostname = "$ref{server.hostname}"
-# listener.content_type = ["application/xml"]
-# listener.response_client = true
-# listener.parameter.customParameter = ""
-# sender.enable = true
-# sender.parameter.customParameter = ""
-
-# [transport.blocking.tcp]
-# listener.enable = false
-# listener.port = 8000
-# listener.hostname = "$ref{server.hostname}"
-# listener.content_type = ["application/xml"]
-# listener.response_client = true
-# listener.parameter.customParameter = ""
-# sender.enable = false
-# sender.parameter.customParameter = ""
-
-# [transport.udp]
-# listener.enable = false
-# listener.parameter.customParameter = ""
-# sender.enable =false
-# sender.parameter.customParameter = ""
-
-# [transport.blocking.udp]
-# listener.enable = false
-# listener.parameter.customParameter = ""
-# sender.enable = false
-# sender.parameter.customParameter = ""
-
-# [transport.msmq]
-# listener.enable = false
-# listener.hostname = "$ref{server.hostname}"
-# listener.parameter.customParameter = ""
-# sender.enable = false
-# sender.parameter.customParameter = ""
-
-# [transport.mqtt]
-# listener.enable = false
-# listener.hostname = "$ref{server.hostname}"
-# listener.connection_factory = "mqttConFactory"
-# listener.server_port = 1883
-# listener.client_id = "client-id-1234"
-# listener.topic_name = "esb.test"
-
-# listener.subscription_qos = 0
-# listener.session_clean = false
-# listener.enable_ssl = false
-# listener.subscription_username = ""
-# listener.subscription_password = ""
-# listener.temporary_store_directory = ""
-# listener.blocking_sender = false
-# listener.connect_type = "text/plain"
-# listener.message_retained = false
-# listener.parameter.customParameter = ""
-# sender.enable = false
-# sender.parameter.customParameter = ""
 
 # [system.parameter]
-# 'org.wso2.CipherTransformation' = "RSA/ECB/OAEPwithSHA1andMGF1Padding"
+# 'key' = "value"
 
 # [[datasource]]
-# id = "WSO2_CARBON_DB"
-# url= "jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
-# username="username"
-# password="password"
-# driver="org.h2.Driver"
-# pool_options.maxActive=50
-# pool_options.maxWait = 60000 # wait in milliseconds
-# pool_options.testOnBorrow = true
-
-# [tasks]
-# mode = "AUTO"   # STANDALONE, CLUSTERED, REMOTE, AUTO
-# client_dispatch_address = "https://$ref{server.hostname}:9448"
-# server_address = "https://$ref{server.hostname}:9443"
-# server_count = 1
-# server_username = "admin"
-# server_password = "admin"
-# resolver_type = "RoundRobin" # inferred         RoundRobin/Random/RuleBased
-# rules = ["HIVE_TASK,HTTP_SCRIPT.*,192.168.1.*", "HIVE_TASK,.*,192.168.2.*"]
-
-# [monitoring]
-# jmx.rmi_registry_port=9999
-# jmx.rmi_server_port=11111
-# jmx.rmi_server_start=true
-# jmx.rmi_hostname="$ref{server.hostname}"
-
-# ei_analytics.server_url = "tcp://localhost:7612"
-# ei_analytics.auth_server_url = "ssl://localhost:7712"
-# ei_analytics.username = "admin"
-# ei_analytics.password = "admin"
+# id = "WSO2_COORDINATION_DB"
+# url = "jdbc:mysql://localhost:3306/clusterdb?useSSL=false&amp;allowPublicKeyRetrieval=true"
+# username = "root"
+# password = "root"
+# driver = "com.mysql.jdbc.Driver"
 
 # [[synapse_handlers]]
 # name="IntegratorSynapseHandler"
 # class="org.wso2.micro.integrator.dataservices.odata.endpoint.ODataPassThroughHandler"
 
-# [prometheus_api]
-# protocols = "http"
-
-# [prometheus_api.basic_security_handler]
-# enable = true
-
-# [prometheus_api.authorization_handler]
-# enable = true
-
-# [[prometheus_api.authorization_handler.resources]]
-# path = "/metric"
-
-# [[prometheus_api.custom_handlers]]
-# name = "CustomHandler"
-# class = "CustomImpl"
-
-# [[prometheus_api.custom_handlers.resources]]
-# path = "/resource1"
-
 # [management_api]
-# protocols = "http"
-
-# [management_api.cors]
-# enabled = true
-# allowed_origins = "host1.com"
-# allowed_headers = "SomeHeader"
-
-# [management_api.basic_security_handler]
-# enable = true
-
-# [management_api.jwt_token_security_handler]
-# enable = false
-
-# [management_api.jwt_token_security_handler]
-# token_store_config.max_size= "200"
-# token_store_config.clean_up_interval= "600"
-# token_store_config.remove_oldest_token_on_overflow= "true"
-# token_config.expiry= "3600"
-# token_config.size= "2048"
-
-# [management_api.authorization_handler]
-# enable = false
-
-# [[management_api.authorization_handler.resources]]
-# path = "/user"
-
-# [[management_api.authorization_handler.resources]]
-# path = "/apis"
-
-# [[management_api.custom_handlers]]
-# name = "CustomHandler"
-# class = "CustomerImpl"
-
-# [[management_api.custom_handlers.resources]]
-# path = "/"
-
-# [[management_api.custom_handlers]]
-# name = "CustomHandler2"
-# class = "CustomerImpl2"
-
-# [[management_api.custom_handlers.resources]]
-# path = "/endpoints"
-
-# [[management_api.custom_handlers.resources]]
-# path = "/apis"
+# protocols = "http https"
 
 # [[internal_apis.users]]
 # user.name = "user-1"
 # user.password = "pwd-1"
 
-# [[internal_apis.users]]
-# user.name = "user-2"
-# user.password = "pwd-2"
-
 # [internal_apis.file_user_store]
-# enable = false
+# enable = true
 
 # [transaction_counter]
 # enable = true
@@ -825,28 +152,9 @@ algorithm = "AES"
 # update_interval = 2
 
 # [mediation]
-# synapse.core_threads = 20
-# synapse.max_threads = 100
-# synapse.threads_queue_length = 10
 # synapse.global_timeout_interval = "120000"  # interval in milliseconds
-
-# Uncomment following to support fallback XPATH 2.0 support with DOM and Saxon
 # synapse.enable_xpath_dom_failover = true
 # synapse.temp_data_chunk_size = 3072
 
-# Uncomment following configuration for the external debugger channels if server is started in debug mode
-# synapse.command_debugger_port = 9005
-# synapse.event_debugger_port = 9006
-# synapse.script_mediator_pool_size=15
-# synapse.enable_xml_nil=false
-# synapse.disable_auto_primitive_regex = "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][+-]?[0-9]+)?$"
-# synapse.disable_custom_replace_regex = "@@@"
-# synapse.enable_namespace_declaration = false
-# synapse.build_valid_nc_name = false
-# synapse.enable_auto_primitive = false
-# synapse.json_out_auto_array = false
-# synapse.preserve_namespace_on_xml_to_json=false
-
-# Uncomment following section to use secure vault
 # [secrets]
 # secret_key = "[secret value]"
