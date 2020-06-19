@@ -59,6 +59,10 @@
              <groupId>io.netty</groupId>
              <artifactId>netty-buffer</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -89,7 +93,8 @@
                                 <bundleDef>io.netty:netty-codec-http:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-codec:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-buffer:compatible:${netty.version}</bundleDef>
-                                <bundleDef>io.netty:netty-handler:compatible:${netty.version}</bundleDef>                                
+                                <bundleDef>io.netty:netty-handler:compatible:${netty.version}</bundleDef>
+                                <bundleDef>io.netty:netty-resolver:compatible:${netty.version}</bundleDef>
                             </bundles>
                         </configuration>
                     </execution>

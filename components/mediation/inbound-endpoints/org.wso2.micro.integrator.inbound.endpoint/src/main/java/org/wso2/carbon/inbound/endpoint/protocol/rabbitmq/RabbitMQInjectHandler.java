@@ -21,6 +21,7 @@ package org.wso2.carbon.inbound.endpoint.protocol.rabbitmq;
 import com.rabbitmq.client.AMQP;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.transport.rabbitmq.RabbitMQUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseConstants;

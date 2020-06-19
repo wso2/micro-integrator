@@ -32,6 +32,7 @@ import org.apache.axis2.util.MessageProcessorSelector;
 import org.apache.commons.io.output.WriterOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.inbound.InboundResponseSender;
@@ -71,8 +72,15 @@ public class InboundWebsocketResponseSender implements InboundResponseSender {
             }
             try {
                 if (errorCode != null && errorMessage != null) {
-                    sourceHandler
-                            .handleClientWebsocketChannelTermination(new CloseWebSocketFrame(errorCode, errorMessage));
+                    CloseWebSocketFrame closeWebSocketFrame = new CloseWebSocketFrame(errorCode, errorMessage);
+                    if (log.isDebugEnabled()) {
+                        String customErrorMessage = "errorCode:" + errorCode + " error message: "
+                                + errorMessage;
+                        WebsocketLogUtil.printWebSocketFrame((Logger) log, closeWebSocketFrame,
+                                                             sourceHandler.getChannelHandlerContext().getChannelHandlerContext(),
+                                                             customErrorMessage, false);
+                    }
+                    sourceHandler.handleClientWebsocketChannelTermination(closeWebSocketFrame);
                 }
             } catch (AxisFault fault) {
                 log.error("Error occurred while sending close frames", fault);
@@ -88,6 +96,10 @@ public class InboundWebsocketResponseSender implements InboundResponseSender {
                 if (msgContext.getProperty(InboundWebsocketConstants.WEBSOCKET_TARGET_HANDLER_CONTEXT) != null) {
                     ChannelHandlerContext targetCtx = (ChannelHandlerContext) msgContext
                             .getProperty(InboundWebsocketConstants.WEBSOCKET_TARGET_HANDLER_CONTEXT);
+                    if (log.isDebugEnabled()) {
+                        WebsocketLogUtil.printWebSocketFrame((Logger) log, new CloseWebSocketFrame(), targetCtx,
+                                false);
+                    }
                     sourceHandler.getChannelHandlerContext().addCloseListener(targetCtx);
                 }
                 return;
@@ -110,6 +122,10 @@ public class InboundWebsocketResponseSender implements InboundResponseSender {
                             int clientBroadcastLevel = sourceHandler.getClientBroadcastLevel();
                             String subscriberPath = sourceHandler.getSubscriberPath();
                             WebsocketSubscriberPathManager pathManager = WebsocketSubscriberPathManager.getInstance();
+                            if (log.isDebugEnabled()) {
+                                WebsocketLogUtil.printWebSocketFrame((Logger) log, frame,
+                                        ctx.getChannelHandlerContext(), false);
+                            }
                             handleSendBack(frame, ctx, clientBroadcastLevel, subscriberPath, pathManager);
                             return;
                         }
@@ -123,6 +139,10 @@ public class InboundWebsocketResponseSender implements InboundResponseSender {
                 int clientBroadcastLevel = sourceHandler.getClientBroadcastLevel();
                 String subscriberPath = sourceHandler.getSubscriberPath();
                 WebsocketSubscriberPathManager pathManager = WebsocketSubscriberPathManager.getInstance();
+                if (log.isDebugEnabled()) {
+                    WebsocketLogUtil.printWebSocketFrame((Logger) log, frame, ctx.getChannelHandlerContext(),
+                            false);
+                }
                 handleSendBack(frame, ctx, clientBroadcastLevel, subscriberPath, pathManager);
             } else if (msgContext.getProperty(InboundWebsocketConstants.WEBSOCKET_TEXT_FRAME_PRESENT) != null
                     && msgContext.getProperty(InboundWebsocketConstants.WEBSOCKET_TEXT_FRAME_PRESENT).equals(true)) {
@@ -144,6 +164,10 @@ public class InboundWebsocketResponseSender implements InboundResponseSender {
                             int clientBroadcastLevel = sourceHandler.getClientBroadcastLevel();
                             String subscriberPath = sourceHandler.getSubscriberPath();
                             WebsocketSubscriberPathManager pathManager = WebsocketSubscriberPathManager.getInstance();
+                            if (log.isDebugEnabled()) {
+                                WebsocketLogUtil.printWebSocketFrame((Logger) log, frame,
+                                        ctx.getChannelHandlerContext(), false);
+                            }
                             handleSendBack(frame, ctx, clientBroadcastLevel, subscriberPath, pathManager);
                             return;
                         }
@@ -157,6 +181,10 @@ public class InboundWebsocketResponseSender implements InboundResponseSender {
                 int clientBroadcastLevel = sourceHandler.getClientBroadcastLevel();
                 String subscriberPath = sourceHandler.getSubscriberPath();
                 WebsocketSubscriberPathManager pathManager = WebsocketSubscriberPathManager.getInstance();
+                if (log.isDebugEnabled()) {
+                    WebsocketLogUtil.printWebSocketFrame((Logger) log, frame, ctx.getChannelHandlerContext(),
+                            false);
+                }
                 handleSendBack(frame, ctx, clientBroadcastLevel, subscriberPath, pathManager);
             } else {
                 try {
@@ -173,8 +201,13 @@ public class InboundWebsocketResponseSender implements InboundResponseSender {
                     }
 
                     if (wsCloseFrameStatusCode != null && wsCloseFrameReasonText != null) {
-                        sourceHandler.handleClientWebsocketChannelTermination(
-                                new CloseWebSocketFrame(statusCode, wsCloseFrameReasonText));
+                        CloseWebSocketFrame closeWebSocketFrame = new CloseWebSocketFrame(statusCode,
+                                wsCloseFrameReasonText);
+                        if (log.isDebugEnabled()) {
+                            WebsocketLogUtil.printWebSocketFrame((Logger) log, closeWebSocketFrame,
+                                    sourceHandler.getChannelHandlerContext().getChannelHandlerContext(), false);
+                        }
+                        sourceHandler.handleClientWebsocketChannelTermination(closeWebSocketFrame);
                         return;
                     }
                     RelayUtils.buildMessage(((Axis2MessageContext) msgContext).getAxis2MessageContext(), false);
@@ -184,6 +217,10 @@ public class InboundWebsocketResponseSender implements InboundResponseSender {
                     int clientBroadcastLevel = sourceHandler.getClientBroadcastLevel();
                     String subscriberPath = sourceHandler.getSubscriberPath();
                     WebsocketSubscriberPathManager pathManager = WebsocketSubscriberPathManager.getInstance();
+                    if (log.isDebugEnabled()) {
+                        WebsocketLogUtil.printWebSocketFrame((Logger) log, frame,
+                                sourceHandler.getChannelHandlerContext().getChannelHandlerContext(), false);
+                    }
                     handleSendBack(frame, ctx, clientBroadcastLevel, subscriberPath, pathManager);
                 } catch (IOException ex) {
                     log.error("Failed for format message to specified output format", ex);

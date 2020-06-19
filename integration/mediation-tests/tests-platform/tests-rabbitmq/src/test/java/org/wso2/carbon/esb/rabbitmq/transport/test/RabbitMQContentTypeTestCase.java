@@ -14,7 +14,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/*
 package org.wso2.carbon.esb.rabbitmq.transport.test;
 
 import org.testng.Assert;
@@ -23,60 +22,40 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQServerInstance;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQTestUtils;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
 
-import java.io.File;*/
 
 /**
  * Test RabbitMQ receiver with different content-types and with content type service parameter
  */
-/*public class RabbitMQContentTypeTestCase extends ESBIntegrationTest {
+public class RabbitMQContentTypeTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewer;
+    private CarbonLogReader logReader;
     private RabbitMQProducerClient sender;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
         sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange2", "simple_consumer_test");
-        //The consumer proxy cannot be pre-deployed since the queue declaration(which is done in 'initRabbitMQBroker')
-        // must happen before deployment.
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "rabbitmq" + File.separator
-                        + "transport" + File.separator + "rabbitmq_consumer_proxy.xml");
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        logReader = new CarbonLogReader();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test RabbitMQ consumer with no content type")
     public void testContentTypeEmpty() throws Exception {
-        int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
+        logReader.start();
         String message = "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" + "<ser:order>\n"
                 + "<ser:price>100</ser:price>\n" + "<ser:quantity>2000</ser:quantity>\n"
                 + "<ser:symbol>RMQ</ser:symbol>\n" + "</ser:order>\n" + "</ser:placeOrder>";
         sender.sendMessage(message, null);
         RabbitMQTestUtils.waitForLogToGetUpdated();
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int afterLogSize = logs.length;
-        boolean setDefaultContentType = false;
-        int count = 0;
-
-        for (int i = (afterLogSize - beforeLogSize - 1); i >= 0; i--) {
-            String logMessage = logs[i].getMessage();
-            if (logMessage.contains("Unable to determine content type for message") && logMessage
-                    .contains("setting to text/plain")) {
-                setDefaultContentType = true;
-            }
-            if (logMessage.contains("received = true")) {
-                count++;
-            }
-        }
-
-        Assert.assertTrue(setDefaultContentType, "Default content type is not set to text/plain");
-        Assert.assertEquals(count, 1, "All messages are not received from queue");
+        logReader.stop();
+        Assert.assertTrue(logReader.checkForLog("Unable to determine content type for message", 5));
+        Assert.assertTrue(logReader.checkForLog("setting to text/plain", 5));
+        Assert.assertEquals(logReader.getNumberOfOccurencesForLog("received = true"),
+                            1, "All messages are not received from queue");
     }
 
     @AfterClass(alwaysRun = true)
@@ -84,4 +63,4 @@ import java.io.File;*/
         sender.disconnect();
         super.cleanup();
     }
-}*/
+}

@@ -26,6 +26,7 @@ import org.apache.axiom.om.OMOutputFormat;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportOutDescription;
 import org.apache.axis2.transport.MessageFormatter;
 import org.apache.axis2.transport.OutTransportInfo;
@@ -38,6 +39,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.inbound.InboundEndpointConstants;
 import org.apache.synapse.inbound.InboundResponseSender;
 import org.apache.synapse.transport.passthru.util.RelayUtils;
+import org.wso2.micro.integrator.websocket.transport.utils.LogUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -111,12 +113,31 @@ public class WebsocketTransportSender extends AbstractTransportSender {
          * customHeaders map.
          */
         Iterator<String> propertyNames = msgCtx.getPropertyNames();
+        String webSocketCustomHeaderPrefix;
+        Parameter wsCustomHeaderParam =
+                msgCtx.getTransportOut().getParameter(WebsocketConstants.WEBSOCKET_CUSTOM_HEADER_CONFIG);
 
+        // avoid using org.apache.commons.lang.StringUtils due to osgi issue
+        if (wsCustomHeaderParam == null || wsCustomHeaderParam.getValue() == null || wsCustomHeaderParam.getValue()
+                .toString().isEmpty()) {
+            webSocketCustomHeaderPrefix = WebsocketConstants.WEBSOCKET_CUSTOM_HEADER_PREFIX;
+        } else {
+            webSocketCustomHeaderPrefix = wsCustomHeaderParam.getValue().toString();
+        }
         while (propertyNames.hasNext()) {
             String propertyName = propertyNames.next();
-            if (propertyName.startsWith(WebsocketConstants.WEBSOCKET_CUSTOM_HEADER_PREFIX)) {
+            if (propertyName.startsWith(webSocketCustomHeaderPrefix)) {
                 Object value = msgCtx.getProperty(propertyName);
-                customHeaders.put(propertyName.split(WebsocketConstants.WEBSOCKET_CUSTOM_HEADER_PREFIX)[1], value);
+                String headerSplits[] = propertyName.split(webSocketCustomHeaderPrefix);
+                if (headerSplits.length > 1) {
+                    customHeaders.put(headerSplits[1], value);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Adding Custom Header " + headerSplits[1] + ":" + value);
+                    }
+                } else {
+                    log.warn("A header identified with having only the websocket custom-header prefix"
+                            + " as the key (without a unique postfix). Hence dropping the header.");
+                }
             }
         }
 
@@ -146,6 +167,9 @@ public class WebsocketTransportSender extends AbstractTransportSender {
                 }
                 if (clientHandler.getChannelHandlerContext().channel().isActive()) {
                     clientHandler.getChannelHandlerContext().channel().writeAndFlush(frame.retain());
+                    if (log.isDebugEnabled()) {
+                        LogUtil.printWebSocketFrame(log, frame, clientHandler.getChannelHandlerContext(), false);
+                    }
                 }
             } else if (msgCtx.getProperty(WebsocketConstants.WEBSOCKET_TEXT_FRAME_PRESENT) != null && msgCtx
                     .getProperty(WebsocketConstants.WEBSOCKET_TEXT_FRAME_PRESENT).equals(true)) {
@@ -156,6 +180,9 @@ public class WebsocketTransportSender extends AbstractTransportSender {
                 }
                 if (clientHandler.getChannelHandlerContext().channel().isActive()) {
                     clientHandler.getChannelHandlerContext().channel().writeAndFlush(frame.retain());
+                    if (log.isDebugEnabled()) {
+                        LogUtil.printWebSocketFrame(log, frame, clientHandler.getChannelHandlerContext(), false);
+                    }
                 }
             } else {
                 if (!handshakePresent) {
@@ -174,6 +201,9 @@ public class WebsocketTransportSender extends AbstractTransportSender {
                     }
                     if (clientHandler.getChannelHandlerContext().channel().isActive()) {
                         clientHandler.getChannelHandlerContext().channel().writeAndFlush(frame.retain());
+                        if (log.isDebugEnabled()) {
+                            LogUtil.printWebSocketFrame(log, frame, clientHandler.getChannelHandlerContext(), false);
+                        }
                     }
                 } else {
                     clientHandler.acknowledgeHandshake();

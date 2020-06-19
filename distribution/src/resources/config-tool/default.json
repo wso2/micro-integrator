@@ -410,7 +410,7 @@
   "prometheus_api.basic_security_handler.enable": false,
   "prometheus_api.authorization_handler.enable": false,
 
-  "management_api.protocols": "https",
+  "management_api.protocols": "https http",
   "management_api.jwt_token_security_handler.enable": "true",
   "management_api.jwt_token_security_handler.token_store_config.max_size": "200",
   "management_api.jwt_token_security_handler.token_store_config.clean_up_interval": "600",
