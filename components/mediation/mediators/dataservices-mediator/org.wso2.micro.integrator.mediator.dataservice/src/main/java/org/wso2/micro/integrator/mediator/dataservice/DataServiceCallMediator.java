@@ -25,6 +25,10 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.OMNamespaceImpl;
+import org.apache.axiom.soap.SOAP11Constants;
+import org.apache.axiom.soap.SOAP12Constants;
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.synapse.MessageContext;
@@ -144,7 +148,6 @@ public class DataServiceCallMediator extends AbstractMediator {
                 if (synLog.isTraceOrDebugEnabled()) {
                     synLog.traceOrDebug("The result OMElement from the dataservice : " + omElement);
                 }
-
                 //set the result payload as property according to the target type
                 if (DataServiceCallMediatorConstants.TARGET_PROPERTY_TYPE.equals(targetType)) {
                     messageContext.setProperty(propertyName, omElement);
@@ -154,9 +157,12 @@ public class DataServiceCallMediator extends AbstractMediator {
                     }
                 } else {
                     //	set the result payload as envelope in to message context according to the target type
-                    axis2MessageContext.removeProperty(PassThroughConstants.NO_ENTITY_BODY);
+                    ((Axis2MessageContext)messageContext).getAxis2MessageContext().
+                            removeProperty(PassThroughConstants.NO_ENTITY_BODY);
                     messageContext.getEnvelope().getBody().addChild(omElement);
                 }
+            } else {
+                messageContext.setEnvelope(createDefaultSOAPEnvelope(messageContext));
             }
         } catch (DataServiceFault dataServiceFault) {
             if (synLog.isTraceOrDebugEnabled()) {
@@ -166,6 +172,11 @@ public class DataServiceCallMediator extends AbstractMediator {
             handleException("DataService exception occurred while accessing the dataservice to do the operation",
                     dataServiceFault, messageContext);
 
+        } catch (AxisFault axisFault) {
+            if (synLog.isTraceOrDebugEnabled()) {
+                synLog.traceOrDebug(axisFault.getMessage());
+            }
+            handleException("Error while creating response payload", axisFault, messageContext);
         }
     }
 
@@ -264,6 +275,21 @@ public class DataServiceCallMediator extends AbstractMediator {
         InputSource inputSource = new InputSource(new StringReader(msgCtx.getEnvelope().toString()));
         Document document = documentBuilder.parse(inputSource);
         return document.getXmlVersion();
+    }
+
+    /* Creating a soap response according the the soap namespace uri */
+    private SOAPEnvelope createDefaultSOAPEnvelope(MessageContext inMsgCtx) {
+
+        String soapNamespace = inMsgCtx.getEnvelope().getNamespace().getNamespaceURI();
+        SOAPFactory soapFactory = null;
+        if (soapNamespace.equals(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
+            soapFactory = OMAbstractFactory.getSOAP11Factory();
+        } else if (soapNamespace.equals(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI)) {
+            soapFactory = OMAbstractFactory.getSOAP12Factory();
+        } else {
+            log.error("Unknown SOAP Envelope");
+        }
+        return soapFactory.getDefaultEnvelope();
     }
 
     public void setDsName(String dsName) {
