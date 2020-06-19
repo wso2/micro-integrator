@@ -91,7 +91,7 @@ public class MetricFormatter {
             }
             metric.append(metricData);
         }
-         metricsValue.append(metric);
+        metricsValue.append(metric);
         return metricsValue.toString();
     }
 }

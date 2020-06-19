@@ -73,7 +73,7 @@ public interface MetricReporter {
      * @param metricName Metric name
      * @param properties Metric and the labels as key-value pairs of the properties Map
      */
-    void decrementCount(String metricName, Map<String, String> properties);
+    void decrementCount(String metricName, String[] properties);
 
     /**
      * Return a timer object used to observe the round trip time from the moment a

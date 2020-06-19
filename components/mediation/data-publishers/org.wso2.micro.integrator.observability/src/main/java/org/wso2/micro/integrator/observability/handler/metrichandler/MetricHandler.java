@@ -79,10 +79,10 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
             try {
                 loadedMetricClass = Class.forName(metricReporterClass.toString());
                 metricReporterInstance = (MetricReporter) loadedMetricClass.newInstance();
-                log.debug("The class " + metricReporterClass + "loaded successfully");
+                log.debug("The class " + metricReporterClass + " loaded successfully");
             } catch (IllegalAccessException | ClassNotFoundException | InstantiationException e) {
                 log.error("Error in loading the class " + metricReporterClass.toString() +
-                        " Hence loading the default PrometheusReporter class ");
+                        " .Hence loading the default PrometheusReporter class ", e);
                 metricReporterInstance = loadDefaultPrometheusReporter();
             }
         } else {

@@ -58,7 +58,7 @@ public class PrometheusReporter implements MetricReporter {
     private double[] apiLatencyBuckets;
     private double[] inboundEndpointLatencyBuckets;
 
-    private static Map<String, Object> metricMap = new HashMap();
+    private Map<String, Object> metricMap = new HashMap();
 
     @Override
     public void initMetrics() {
@@ -174,7 +174,7 @@ public class PrometheusReporter implements MetricReporter {
     }
 
     @Override
-    public void decrementCount(String metricName, Map<String, String> properties) {
+    public void decrementCount(String metricName, String[] properties) {
         // decrementCount() is not necessary to be implemented for the Prometheus Reporter
         // as Gauge is used in Prometheus for the metrics that can both increment and decrement in value.
     }
