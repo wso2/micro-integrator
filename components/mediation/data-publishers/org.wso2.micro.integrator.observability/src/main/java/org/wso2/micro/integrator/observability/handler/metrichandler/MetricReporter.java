@@ -32,11 +32,11 @@ public interface MetricReporter {
      * @param serviceType The service type (Proxy Service, API, Inbound endpoint )
      *                    for which the metric is going to be instrumented.
      * @param type        The type of metric (e.g.Counter) that is used in instrumentation.
-     * @param metricName  Metric Name
-     * @param metricHelp  Metric Description
+     * @param metricName  Metric name (The proxy/api/inbound endpoint name)
+     * @param metricHelp  Metric description
      * @param properties  Metric labels used to uniquely identify a metric.
      */
-    void createMetric(String serviceType, String type, String metricName, String metricHelp,
+    void createMetrics(String serviceType, String type, String metricName, String metricHelp,
                              Map<String, String[]> properties);
 
     /**
@@ -51,9 +51,9 @@ public interface MetricReporter {
      * properties that can be used to identify a metric uniquely and for
      * metric aggregation, metric filtering.
      *
-     * @param serviceType Service Type
+     * @param serviceType Service type
      * @param type        Metric type
-     * @param metricHelp  Metric Description
+     * @param metricHelp  Metric description
      * @param properties  Metric labels
      */
     void initErrorMetrics(String serviceType, String type, String metricName, String metricHelp,
@@ -62,16 +62,16 @@ public interface MetricReporter {
     /**
      * Increment the metric value when a request is received/server/service is deployed.
      *
-     * @param metricName Metric Name
+     * @param metricName Metric name
      * @param properties Metric labels where the Metric and the labels are defined as key-value pairs of the properties
      *                   Map
      */
-    void incrementCount(String metricName, Map<String, String[]> properties);
+    void incrementCount(String metricName,  String[] properties);
 
     /**
      * Decrement the metric value when a request is received/server/service is un-deployed.
      *
-     * @param metricName Metric Name
+     * @param metricName Metric name
      * @param properties Metric and the labels as key-value pairs of the properties Map
      */
     void decrementCount(String metricName, Map<String, String> properties);
@@ -80,13 +80,13 @@ public interface MetricReporter {
      * Return a timer object used to observe the round trip time from the moment a
      * request enters the Synapse Engine until the response goes out of the Synapse
      * Engine.
-     * A Timer Object which contains the metric name, it's respective set of labels
-     * and time the request reached the Synapse Engine is returned.
+     * A Timer Object contains the metric name, it's respective set of labels
+     * and time the request reached the Synapse Engine.
      *
      * @param metricName Metric Name
      * @param properties Metric and the labels as key-value pairs
      */
-     Object getTimer(String metricName, Map<String, String[]> properties);
+     Object getTimer(String metricName,  String[] properties);
 
     /**
      * Stops the timer once the response leaves the Synapse Engine, so that the

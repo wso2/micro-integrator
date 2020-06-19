@@ -62,7 +62,6 @@ public class MetricResource extends APIResource {
 
     @Override
     public boolean invoke(MessageContext synCtx) {
-
         buildMessage(synCtx);
         synCtx.setProperty("Success", true);
         String query = ((Axis2MessageContext) synCtx).getAxis2MessageContext().getOptions().getTo().getAddress();
@@ -75,9 +74,9 @@ public class MetricResource extends APIResource {
         if (metrics != null && !metrics.isEmpty()) {
             log.debug("Retrieving metric data successful");
             try {
-                StringBuilder sbr = MetricFormatter.formatMetrics(registry.
+                String formattedMetric = MetricFormatter.formatMetrics(registry.
                                                                      filteredMetricFamilySamples(parseQuery(query)));
-                textRootElem.setText(sbr.toString());
+                textRootElem.setText(formattedMetric);
             } catch (IOException e) {
                 log.error("Error in parsing metrics.", e);
             }

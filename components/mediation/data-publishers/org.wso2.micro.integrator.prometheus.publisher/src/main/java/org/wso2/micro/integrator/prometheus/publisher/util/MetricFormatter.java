@@ -54,10 +54,10 @@ public class MetricFormatter {
      * @param metricsList the Prometheus Metric from Prometheus Default Registry
      * @return the metric converted into String format
      */
-    public static StringBuilder formatMetrics(Enumeration<MetricFamilySamples> metricsList) {
+    public static String formatMetrics(Enumeration<MetricFamilySamples> metricsList) {
 
         StringBuilder metric = new StringBuilder();
-        StringBuilder metricsValue = new StringBuilder();
+        String  metricsValue = "";
 
         while (metricsList.hasMoreElements()) {
             MetricFamilySamples metricFamilySamples = metricsList.nextElement();
@@ -91,6 +91,6 @@ public class MetricFormatter {
             }
             metric.append(metricData);
         }
-        return metricsValue.append(metric);
+        return metricsValue + metric;
     }
 }

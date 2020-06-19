@@ -21,6 +21,9 @@ import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.hotspot.DefaultExports;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.SynapseConstants;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.observability.handler.metrichandler.MetricReporter;
 import org.wso2.micro.integrator.observability.handler.util.MetricConstants;
@@ -35,19 +38,21 @@ import java.util.Map;
  * Class for instrumenting Prometheus Metrics.
  */
 public class PrometheusReporter implements MetricReporter {
-    private static Counter TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
-    private static Counter TOTAL_REQUESTS_RECEIVED_API;
-    private static Counter TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
-    private static Counter ERROR_REQUESTS_RECEIVED_PROXY_SERVICE;
-    private static Counter ERROR_REQUESTS_RECEIVED_API;
-    private static Counter ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
+    private Counter TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
+    private Counter TOTAL_REQUESTS_RECEIVED_API;
+    private Counter TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
+    private Counter ERROR_REQUESTS_RECEIVED_PROXY_SERVICE;
+    private Counter ERROR_REQUESTS_RECEIVED_API;
+    private Counter ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
 
-    private static Histogram PROXY_LATENCY_HISTOGRAM;
-    private static Histogram API_LATENCY_HISTOGRAM;
-    private static Histogram INBOUND_ENDPOINT_LATENCY_HISTOGRAM;
+    private Histogram PROXY_LATENCY_HISTOGRAM;
+    private Histogram API_LATENCY_HISTOGRAM;
+    private Histogram INBOUND_ENDPOINT_LATENCY_HISTOGRAM;
 
-    private static Gauge SERVER_UP;
-    private static Gauge SERVICE_UP;
+    private Gauge SERVER_UP;
+    private Gauge SERVICE_UP;
+
+    private static Log log = LogFactory.getLog(PrometheusReporter.class);
 
     private double[] proxyLatencyBuckets;
     private double[] apiLatencyBuckets;
@@ -56,8 +61,22 @@ public class PrometheusReporter implements MetricReporter {
     private static Map<String, Object> metricMap = new HashMap();
 
     @Override
-    public void createMetric(String serviceType, String type, String metricName, String metricHelp, Map<String,
+    public void initMetrics() {
+        this.initializeServeMetrics();
+        this.intializeArtifactDeploymentMetrics();
+
+        this.initializeProxyMetrics();
+        this.initializeApiMetrics();
+        this.initializeInboundEndpointMetrics();
+    }
+
+    @Override
+    public void createMetrics(String serviceType, String type, String metricName, String metricHelp, Map<String,
             String[]> properties) {
+
+        proxyLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
+        apiLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
+        inboundEndpointLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
 
         Map<String, Object> configs = ConfigParser.getParsedConfigs();
         createBuckets(configs);
@@ -149,31 +168,30 @@ public class PrometheusReporter implements MetricReporter {
     }
 
     @Override
-    public void incrementCount(String metricName, Map<String, String[]> properties) {
+    public void incrementCount(String metricName,  String[] properties) {
         Counter counter = (Counter) metricMap.get(metricName);
-        String[] value = properties.get(metricName);
-
-        counter.labels(value).inc();
+        counter.labels(properties).inc();
     }
 
     @Override
     public void decrementCount(String metricName, Map<String, String> properties) {
         // decrementCount() is not necessary to be implemented for the Prometheus Reporter
-        // as Gauge is used in Prometheus for the metrics that can both increment and decrement value.
+        // as Gauge is used in Prometheus for the metrics that can both increment and decrement in value.
     }
 
     @Override
-    public Object getTimer(String metricName, Map<String, String[]> properties) {
-        String[] value = properties.get(metricName);
+    public Object getTimer(String metricName,  String[] properties) {
         Histogram timer = (Histogram) metricMap.get(metricName);
-
-        return timer.labels(value).startTimer();
+        return timer.labels(properties).startTimer();
     }
 
     @Override
     public void observeTime(Object timer) {
-        Histogram.Timer histogramTimers = (Histogram.Timer) timer;
-        histogramTimers.observeDuration();
+        try {
+            ((Histogram.Timer) timer).observeDuration();
+        } catch (ClassCastException e) {
+            log.error("Error in casting timer object to Prometheus Histogram timer", e);
+        }
     }
 
     @Override
@@ -200,19 +218,6 @@ public class PrometheusReporter implements MetricReporter {
         gauge.labels(serviceName, serviceType).set(0);
     }
 
-    @Override
-    public void initMetrics() {
-        PrometheusMetricCreatorUtils.createProxyServiceMetric();
-        PrometheusMetricCreatorUtils.createAPIServiceMetric();
-        PrometheusMetricCreatorUtils.createInboundEndpointMetric();
-        PrometheusMetricCreatorUtils.createProxyServiceErrorMetric();
-        PrometheusMetricCreatorUtils.createApiErrorMetric();
-        PrometheusMetricCreatorUtils.createInboundEndpointErrorMetric();
-
-        PrometheusMetricCreatorUtils.createServerUpMetrics();
-        PrometheusMetricCreatorUtils.createServiceUpMetrics();
-    }
-
     enum SERVICE {
         PROXY,
         API,
@@ -227,10 +232,6 @@ public class PrometheusReporter implements MetricReporter {
      *                in the deployment.toml file
      */
     private void createBuckets(Map<String, Object> configs) {
-        proxyLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
-        apiLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
-        inboundEndpointLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
-
         Object proxyConfigBuckets = configs.get(MetricConstants.METRIC_HANDLER+ "." +
                 MetricConstants.PROXY_LATENCY_BUCKETS);
         Object apiConfigBuckets = configs.get(MetricConstants.METRIC_HANDLER + "." +
@@ -240,27 +241,146 @@ public class PrometheusReporter implements MetricReporter {
 
         if (null != proxyConfigBuckets) {
             List<Object> list = Arrays.asList(proxyConfigBuckets);
-            int size = ((ArrayList) proxyConfigBuckets).size();
-            ArrayList bucketList =  (ArrayList) list.get(0);
+            int size = list.size();
+            List<Object> bucketList =  (ArrayList) list.get(0);
             for (int i = 0; i < size; i++) {
                 proxyLatencyBuckets[i] = (double) bucketList.get(i);
             }
         }
         if (null != apiConfigBuckets) {
             List<Object> list = Arrays.asList(apiConfigBuckets);
-            int size = ((ArrayList) apiConfigBuckets).size();
-            ArrayList bucketList =  (ArrayList) list.get(0);
+            int size = list.size();
+            List<Object> bucketList =  (ArrayList) list.get(0);
             for (int i = 0; i < size; i++) {
                 apiLatencyBuckets[i] = (double) bucketList.get(i);
             }
         }
         if (null != inboundEndpointConfigBuckets) {
             List<Object> list = Arrays.asList(inboundEndpointConfigBuckets);
-            int size = ((ArrayList) inboundEndpointConfigBuckets).size();
-            ArrayList bucketList =  (ArrayList) list.get(0);
+            int size = list.size();
+            List<Object> bucketList =  (ArrayList) list.get(0);
             for (int i = 0; i < size; i++) {
                 inboundEndpointLatencyBuckets[i] = (double) bucketList.get(i);
             }
         }
+    }
+
+    /**
+     * Create the proxy services related metrics.
+     */
+    public void initializeProxyMetrics() {
+        Map<String, String[]> map = new HashMap<>();
+        String[] labels = {MetricConstants.SERVICE_NAME, MetricConstants.SERVICE_TYPE};
+        map.put(MetricConstants.PROXY_REQUEST_COUNT_TOTAL, labels);
+        map.put(MetricConstants.PROXY_LATENCY_SECONDS, labels);
+
+        createMetrics(SynapseConstants.PROXY_SERVICE_TYPE, MetricConstants.COUNTER,
+                MetricConstants.PROXY_REQUEST_COUNT_TOTAL,
+                "Total number of requests to a proxy service", map);
+        createMetrics(SynapseConstants.PROXY_SERVICE_TYPE, MetricConstants.HISTOGRAM,
+                MetricConstants.PROXY_LATENCY_SECONDS,
+                "Latency of requests to a proxy service", map);
+
+         initializeProxyErrorMetrics();
+    }
+
+    /**
+     * Create the api related metrics.
+     */
+    public void initializeApiMetrics() {
+        HashMap<String, String[]> map = new HashMap();
+        String[] labels = {MetricConstants.SERVICE_NAME, MetricConstants.SERVICE_TYPE, MetricConstants.INVOCATION_URL};
+        map.put(MetricConstants.API_REQUEST_COUNT_TOTAL, labels);
+        map.put(MetricConstants.API_LATENCY_SECONDS, labels);
+
+        createMetrics(SynapseConstants.FAIL_SAFE_MODE_API, MetricConstants.COUNTER,
+                MetricConstants.API_REQUEST_COUNT_TOTAL,
+                "Total number of requests to an api", map);
+        createMetrics(SynapseConstants.FAIL_SAFE_MODE_API, MetricConstants.HISTOGRAM,
+                MetricConstants.API_LATENCY_SECONDS,
+                "Latency of requests to an api", map);
+
+        initializeApiErrorMetrics();
+    }
+
+    /**
+     * Create the inbound endpoint related metrics.
+     */
+    public void initializeInboundEndpointMetrics() {
+        HashMap<String, String[]> map = new HashMap<>();
+        String[] labels = {MetricConstants.SERVICE_NAME, MetricConstants.SERVICE_TYPE};
+        map.put(MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_TOTAL, labels);
+        map.put(MetricConstants.INBOUND_ENDPOINT_LATENCY_SECONDS, labels);
+
+        createMetrics("INBOUND_ENDPOINT", MetricConstants.COUNTER,
+                MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_TOTAL,
+                "Total number of requests to an inbound endpoint.", map);
+        createMetrics("INBOUND_ENDPOINT", MetricConstants.HISTOGRAM,
+                MetricConstants.INBOUND_ENDPOINT_LATENCY_SECONDS,
+                "Latency of requests to an inbound endpoint.", map);
+
+        initializeInboundEndpointErrorMetrics();
+    }
+
+    /**
+     * Create the metrics related to failed proxy services.
+     */
+    public void initializeProxyErrorMetrics() {
+        HashMap<String, String[]> map = new HashMap();
+        map.put(MetricConstants.PROXY_REQUEST_COUNT_ERROR_TOTAL, new String[]{MetricConstants.SERVICE_NAME,
+                MetricConstants.SERVICE_TYPE});
+        initErrorMetrics("PROXY", MetricConstants.COUNTER,
+                MetricConstants.PROXY_REQUEST_COUNT_ERROR_TOTAL,
+                "Total number of error requests to a proxy service", map);
+    }
+
+    /**
+     * Create the metrics related to failed apis.
+     */
+    public void initializeApiErrorMetrics() {
+        HashMap<String, String[]> map = new HashMap();
+
+        map.put(MetricConstants.API_REQUEST_COUNT_ERROR_TOTAL, new String[]{MetricConstants.SERVICE_NAME,
+                MetricConstants.SERVICE_TYPE, MetricConstants.INVOCATION_URL});
+        initErrorMetrics("API", MetricConstants.COUNTER,
+                MetricConstants.API_REQUEST_COUNT_ERROR_TOTAL,
+                "Total number of error requests to an api", map);
+    }
+
+    /**
+     * Create the metrics related to failed inbound endpoints.
+     */
+    public void initializeInboundEndpointErrorMetrics() {
+        HashMap<String, String[]> map = new HashMap();
+
+        map.put(MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_ERROR_TOTAL, new String[]{MetricConstants.SERVICE_NAME,
+                MetricConstants.SERVICE_TYPE});
+        initErrorMetrics("INBOUND_ENDPOINT", MetricConstants.COUNTER,
+                MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_ERROR_TOTAL,
+                "Total number of error requests when receiving the message by an inbound endpoint.", map);
+    }
+
+    /**
+     * Create the metrics related to server startup.
+     */
+    public void initializeServeMetrics() {
+        HashMap map = new HashMap();
+        map.put(MetricConstants.SERVER_UP, new String[]{MetricConstants.HOST, MetricConstants.PORT,
+                MetricConstants.JAVA_HOME_LABEL, MetricConstants.JAVA_VERSION_LABEL});
+
+        createMetrics(MetricConstants.SERVER, MetricConstants.GAUGE, MetricConstants.SERVER_UP,
+                "Server Status", map);
+    }
+
+    /**
+     * Create the metrics related to service deployment.
+     */
+    public void intializeArtifactDeploymentMetrics() {
+        PrometheusReporter prometheusReporter = new PrometheusReporter();
+        HashMap map = new HashMap();
+        map.put(MetricConstants.SERVICE_UP, new String[]{MetricConstants.SERVICE_NAME, MetricConstants.SERVICE_TYPE});
+
+        prometheusReporter.createMetrics(MetricConstants.SERVICE, MetricConstants.GAUGE, MetricConstants.SERVICE_UP,
+                "Service Status", map);
     }
 }
