@@ -47,7 +47,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
     private static final String EMPTY = "";
 
     private MetricReporter metricReporterInstance;
-    int serviceInvokePort;
+    private int serviceInvokePort;
 
     private static final String SERVER_PORT_OFFSET = System.getProperty(MetricConstants.PORT_OFFSET);
     private static final String HOST = System.getProperty(MicroIntegratorBaseConstants.LOCAL_IP_ADDRESS);

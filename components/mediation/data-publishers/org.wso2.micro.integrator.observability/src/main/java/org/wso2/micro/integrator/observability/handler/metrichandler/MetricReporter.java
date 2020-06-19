@@ -17,8 +17,6 @@
  */
 package org.wso2.micro.integrator.observability.handler.metrichandler;
 
-import java.util.Map;
-
 /**
  * The Metric Reporter allows one to access the relevant Metric Reporter implementation.
  */
