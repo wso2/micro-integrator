@@ -54,7 +54,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
     private static final String PORT = System.getProperty(MetricConstants.HTTP_PORT);
     private static final String JAVA_VERSION = System.getProperty(MetricConstants.JAVA_VERSION);
     private static final String JAVA_HOME = System.getProperty(MetricConstants.JAVA_HOME);
-    private static final int INTERNAL_HTTP_API_PORT = getInternalHttpApiPort();
+    private int internalHttpApiPort = getInternalHttpApiPort();
 
     @Override
     public boolean handleServerInit() {
@@ -124,7 +124,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
 
             serviceInvokePort = getServiceInvokePort(synCtx);
 
-            if ((serviceInvokePort != INTERNAL_HTTP_API_PORT) && (null !=
+            if ((serviceInvokePort != internalHttpApiPort) && (null !=
                     axis2MessageContext.getProperty(MetricConstants.SERVICE_PREFIX))) {
                 String context = axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).
                         toString();
@@ -160,11 +160,11 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         } else if (null == axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL)) {
             serviceInvokePort = getServiceInvokePort(synCtx);
             if (null != synCtx.getProperty(SynapseConstants.IS_INBOUND) &&
-                    (serviceInvokePort != INTERNAL_HTTP_API_PORT)) {
+                    (serviceInvokePort != internalHttpApiPort)) {
                 stopTimers(synCtx.
                         getProperty(MetricConstants.INBOUND_ENDPOINT_LATENCY_TIMER), synCtx);
             }
-            if (serviceInvokePort != INTERNAL_HTTP_API_PORT) {
+            if (serviceInvokePort != internalHttpApiPort) {
                 stopTimers(synCtx.getProperty(MetricConstants.API_LATENCY_TIMER), synCtx);
             }
         }
@@ -194,7 +194,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
                     serviceInvokePort = getServiceInvokePort(synCtx);
 
                     if (null != synCtx.getProperty(RESTConstants.SYNAPSE_REST_API) &&
-                            (serviceInvokePort != INTERNAL_HTTP_API_PORT)) {
+                            (serviceInvokePort != internalHttpApiPort)) {
                         String context = axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).
                                 toString();
                         String apiInvocationUrl = axis2MessageContext.getProperty(MetricConstants.SERVICE_PREFIX).
@@ -379,8 +379,8 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
      *
      * @return port internal http api port
      */
-    public static int getInternalHttpApiPort() {
-        int internalHttpApiPort = Integer.parseInt(SynapsePropertiesLoader.
+    private int getInternalHttpApiPort() {
+        internalHttpApiPort = Integer.parseInt(SynapsePropertiesLoader.
                 getPropertyValue(MetricConstants.INTERNAL_HTTP_API_PORT, String.valueOf(9191)));
 
         return internalHttpApiPort + Integer.parseInt(SERVER_PORT_OFFSET);
