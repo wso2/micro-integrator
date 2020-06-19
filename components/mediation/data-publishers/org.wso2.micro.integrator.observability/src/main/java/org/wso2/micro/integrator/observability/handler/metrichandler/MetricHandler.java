@@ -100,7 +100,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         metricReporterInstance = new PrometheusReporter();
         if (log.isDebugEnabled()) {
             log.debug("The class org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus." +
-                    "reporter.PrometheusReporter loaded successfully");
+                    "reporter.PrometheusReporter was loaded successfully");
         }
         return metricReporterInstance;
     }
