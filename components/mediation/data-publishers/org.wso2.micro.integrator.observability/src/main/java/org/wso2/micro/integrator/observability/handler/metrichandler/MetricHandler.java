@@ -58,7 +58,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
 
     @Override
     public boolean handleServerInit() {
-        getMetricReporter();
+        metricReporterInstance = this.getMetricReporter();
         metricReporterInstance.initMetrics();
 
         metricReporterInstance.serverUp(HOST, PORT, JAVA_HOME, JAVA_VERSION);
@@ -74,30 +74,31 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         Map<String, Object> configs = ConfigParser.getParsedConfigs();
         Object metricReporterClass = configs.get(MetricConstants.METRIC_HANDLER + "." + METRIC_REPORTER);
         Class loadedMetricClass;
+        MetricReporter reporterInstance;
 
         if (metricReporterClass != null) {
             try {
                 loadedMetricClass = Class.forName(metricReporterClass.toString());
-                metricReporterInstance = (MetricReporter) loadedMetricClass.newInstance();
+                reporterInstance = (MetricReporter) loadedMetricClass.newInstance();
                 if (log.isDebugEnabled()) {
                     log.debug("The class " + metricReporterClass + " loaded successfully");
                 }
             } catch (IllegalAccessException | ClassNotFoundException | InstantiationException e) {
                 log.error("Error in loading the class " + metricReporterClass.toString() +
                         " .Hence loading the default PrometheusReporter class ", e);
-                metricReporterInstance = loadDefaultPrometheusReporter();
+                reporterInstance = loadDefaultPrometheusReporter();
             }
         } else {
-            metricReporterInstance = loadDefaultPrometheusReporter();
+            reporterInstance = loadDefaultPrometheusReporter();
         }
-        return metricReporterInstance;
+        return reporterInstance;
     }
 
     /**
      * Load the PrometheusReporter class by default.
      */
     private MetricReporter loadDefaultPrometheusReporter() {
-        metricReporterInstance = new PrometheusReporter();
+        MetricReporter metricReporterInstance = new PrometheusReporter();
         if (log.isDebugEnabled()) {
             log.debug("The class org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus." +
                     "reporter.PrometheusReporter was loaded successfully");
@@ -158,7 +159,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) synCtx)
                 .getAxis2MessageContext();
 
-        if ((null != synCtx.getProperty(SynapseConstants.PROXY_SERVICE))) {
+        if (null != synCtx.getProperty(SynapseConstants.PROXY_SERVICE)) {
             stopTimers(synCtx.getProperty(MetricConstants.PROXY_LATENCY_TIMER), synCtx);
         } else if (null == axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL)) {
             serviceInvokePort = getServiceInvokePort(synCtx);
@@ -215,19 +216,19 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
 
     @Override
     public boolean handleServerShutDown() {
-        metricReporterInstance.serverDown(HOST, PORT, JAVA_HOME, JAVA_VERSION);
+        this.metricReporterInstance.serverDown(HOST, PORT, JAVA_HOME, JAVA_VERSION);
         return true;
     }
 
     @Override
     public boolean handleArtifactDeployment(String artifactName, String artifactType, String startTime) {
-        metricReporterInstance.serviceUp(artifactName, artifactType);
+        this.metricReporterInstance.serviceUp(artifactName, artifactType);
         return true;
     }
 
     @Override
     public boolean handleArtifactUnDeployment(String artifactName, String artifactType, String startTime) {
-        metricReporterInstance.serviceDown(artifactName, artifactType);
+        this.metricReporterInstance.serviceDown(artifactName, artifactType);
         return true;
     }
 
@@ -366,15 +367,16 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
      * @return port the port used to invoke the service
      */
     private int getServiceInvokePort(MessageContext synCtx) {
+        int invokePort = 0;
         if (null != ((Axis2MessageContext) synCtx).getAxis2MessageContext().
                 getProperty(NhttpConstants.SERVICE_PREFIX)) {
             String servicePort = ((Axis2MessageContext) synCtx).getAxis2MessageContext().
                     getProperty(NhttpConstants.SERVICE_PREFIX).toString();
             servicePort = servicePort.substring((servicePort.lastIndexOf(':') + 1),
                     servicePort.lastIndexOf(DELIMITER));
-            serviceInvokePort = Integer.parseInt(servicePort);
+            invokePort = Integer.parseInt(servicePort);
         }
-        return serviceInvokePort;
+        return invokePort;
     }
 
     /**

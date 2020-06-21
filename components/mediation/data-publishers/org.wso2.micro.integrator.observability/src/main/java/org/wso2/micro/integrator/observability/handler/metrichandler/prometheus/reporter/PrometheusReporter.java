@@ -121,7 +121,6 @@ public class PrometheusReporter implements MetricReporter {
                         (MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_TOTAL, metricHelp).
                         labelNames(labels).register();
                 metricMap.put(metricName, TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT);
-
             } else if (type.equals(MetricConstants.HISTOGRAM)) {
                 INBOUND_ENDPOINT_LATENCY_HISTOGRAM = Histogram.build()
                         .name(MetricConstants.INBOUND_ENDPOINT_LATENCY_SECONDS)
@@ -135,7 +134,6 @@ public class PrometheusReporter implements MetricReporter {
             SERVER_UP = Gauge.build(MetricConstants.SERVER_UP, "Server status").
                     labelNames(labels).register();
             metricMap.put(MetricConstants.SERVER_UP, SERVER_UP);
-
         } else {
             SERVICE_UP = Gauge.build(MetricConstants.SERVICE_UP, "Service status").
                     labelNames(labels).register();
