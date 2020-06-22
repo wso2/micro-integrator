@@ -33,7 +33,6 @@ import org.wso2.securevault.definition.TrustKeyStoreInformation;
 import org.wso2.securevault.keystore.IdentityKeyStoreWrapper;
 import org.wso2.securevault.keystore.KeyStoreWrapper;
 import org.wso2.securevault.keystore.TrustKeyStoreWrapper;
-import org.wso2.securevault.secret.SecretRepository;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -89,7 +88,7 @@ public class CipherInitializer {
 
 	}
 
-	static CipherInitializer getInstance() {
+	public static CipherInitializer getInstance() {
 
 	   	return cipherInitializer;
 	}
@@ -360,7 +359,7 @@ public class CipherInitializer {
 		}
 	}
 
-	DecryptionProvider getDecryptionProvider() {
+	public DecryptionProvider getDecryptionProvider() {
 		return decryptionProvider;
 	}
 
