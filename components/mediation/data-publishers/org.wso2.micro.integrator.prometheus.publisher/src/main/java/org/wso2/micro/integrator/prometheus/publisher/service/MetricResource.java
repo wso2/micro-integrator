@@ -43,7 +43,6 @@ public class MetricResource extends APIResource {
 
     private static Log log = LogFactory.getLog(MetricResource.class);
     private MetricPublisher metricPublisher;
-    private MetricFormatter metricFormatter;
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     private CollectorRegistry registry = CollectorRegistry.defaultRegistry;
 
@@ -51,7 +50,6 @@ public class MetricResource extends APIResource {
 
         super(urlTemplate);
         metricPublisher = new MetricPublisher();
-        metricFormatter = new MetricFormatter();
     }
 
     @Override
@@ -64,11 +62,9 @@ public class MetricResource extends APIResource {
 
     @Override
     public boolean invoke(MessageContext synCtx) {
-
         buildMessage(synCtx);
         synCtx.setProperty("Success", true);
         String query = ((Axis2MessageContext) synCtx).getAxis2MessageContext().getOptions().getTo().getAddress();
-
         OMElement textRootElem = OMAbstractFactory.getOMFactory().createOMElement(BaseConstants.DEFAULT_TEXT_WRAPPER);
 
         log.debug("Retrieving metric data to be published to Prometheus");
@@ -78,9 +74,9 @@ public class MetricResource extends APIResource {
         if (metrics != null && !metrics.isEmpty()) {
             log.debug("Retrieving metric data successful");
             try {
-                StringBuilder sbr = metricFormatter.formatMetrics(registry.
+                String formattedMetric = MetricFormatter.formatMetrics(registry.
                                                                      filteredMetricFamilySamples(parseQuery(query)));
-                textRootElem.setText(sbr.toString());
+                textRootElem.setText(formattedMetric);
             } catch (IOException e) {
                 log.error("Error in parsing metrics.", e);
             }
@@ -104,7 +100,7 @@ public class MetricResource extends APIResource {
      * in case you don't want the client library to return all metric names.
      * (This is the implementation of the parseQuery() method of the Prometheus HTTP Server
      * https://github.com/prometheus/client_java/blob/master/simpleclient_httpserver/src/main/java/io/prometheus/
-     * client/exporter/HTTPServer .java#L110).
+     * client/exporter/HTTPServer.java#L110).
      *
      * @param parameter the list of Endpoint URL to be queried
      * @return the set of names used in filtering the required list of metrics

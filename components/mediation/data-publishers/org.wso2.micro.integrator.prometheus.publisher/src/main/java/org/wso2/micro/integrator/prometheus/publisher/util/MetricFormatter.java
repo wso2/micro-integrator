@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.micro.integrator.prometheus.publisher.util;
 
 import io.prometheus.client.Collector;
@@ -33,10 +32,8 @@ public class MetricFormatter {
      * Return the type of metric
      *
      * @param type Metric Prometheus type
-     * @return Metric Type
      */
-    private String typeString(Type type) {
-
+    private static String typeString(Type type) {
         switch (type) {
             case GAUGE:
                 return "gauge";
@@ -57,7 +54,7 @@ public class MetricFormatter {
      * @param metricsList the Prometheus Metric from Prometheus Default Registry
      * @return the metric converted into String format
      */
-    public StringBuilder formatMetrics(Enumeration<MetricFamilySamples> metricsList) {
+    public static String formatMetrics(Enumeration<MetricFamilySamples> metricsList) {
 
         StringBuilder metric = new StringBuilder();
         StringBuilder metricsValue = new StringBuilder();
@@ -94,6 +91,7 @@ public class MetricFormatter {
             }
             metric.append(metricData);
         }
-        return metricsValue.append(metric);
+        metricsValue.append(metric);
+        return metricsValue.toString();
     }
 }
