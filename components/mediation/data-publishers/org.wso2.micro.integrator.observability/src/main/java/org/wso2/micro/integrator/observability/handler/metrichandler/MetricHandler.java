@@ -98,16 +98,17 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
      * Load the PrometheusReporter class by default.
      */
     private MetricReporter loadDefaultPrometheusReporter() {
-        MetricReporter metricReporterInstance = new PrometheusReporter();
+        MetricReporter reporterInstance = new PrometheusReporter();
         if (log.isDebugEnabled()) {
             log.debug("The class org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus." +
                     "reporter.PrometheusReporter was loaded successfully");
         }
-        return metricReporterInstance;
+        return reporterInstance;
     }
 
     @Override
     public boolean handleRequestInFlow(MessageContext synCtx) {
+        synCtx.setProperty(RESTConstants.IS_PROMETHEUS_ENGAGED, null);
         org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) synCtx)
                 .getAxis2MessageContext();
 
@@ -125,7 +126,6 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         } else if (null != axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL) &&
                 !axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).toString().
                         contains("services")) {
-
             serviceInvokePort = getServiceInvokePort(synCtx);
 
             if ((serviceInvokePort != internalHttpApiPort) && (null !=
@@ -170,6 +170,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
             }
             if (serviceInvokePort != internalHttpApiPort) {
                 stopTimers(synCtx.getProperty(MetricConstants.API_LATENCY_TIMER), synCtx);
+                synCtx.setProperty(RESTConstants.IS_PROMETHEUS_ENGAGED, true);
             }
         }
         return true;
@@ -353,8 +354,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
                         getVersion())) {
                     apiName = apiName + ":v" + api.getVersionStrategy().getVersion();
                 }
-                synCtx.setProperty(RESTConstants.IS_PROMETHEUS_ENGAGED, true);
-                synCtx.setProperty(RESTConstants.PROCESSED_API, api);
+                 synCtx.setProperty(RESTConstants.PROCESSED_API, api);
             }
         }
         return apiName;
