@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpException;
 import org.apache.http.nio.NHttpServerConnection;
+import org.apache.synapse.commons.CorrelationConstants;
 import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.transport.passthru.ProtocolState;
 import org.apache.synapse.transport.passthru.SourceContext;
@@ -96,7 +97,7 @@ public class InboundHttpSourceHandler extends SourceHandler {
                 }
             }
 
-            Object correlationId = conn.getContext().getAttribute(PassThroughConstants.CORRELATION_ID);
+            Object correlationId = conn.getContext().getAttribute(CorrelationConstants.CORRELATION_ID);
             if (correlationId != null) {
                 workerPool.execute(
                         new InboundCorrelationEnabledHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request,
