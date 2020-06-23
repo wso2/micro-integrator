@@ -102,10 +102,10 @@ public class Utils {
         return !Objects.isNull(getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY));
     }
 
-    public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload) {
+    public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, Object jsonObject) {
 
         try {
-            JsonUtil.getNewJsonPayload(axis2MessageContext, payload.toString(), true, true);
+            JsonUtil.getNewJsonPayload(axis2MessageContext, jsonObject.toString(), true, true);
         } catch (AxisFault axisFault) {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
             LOG.error("Error occurred while setting json payload", axisFault);
