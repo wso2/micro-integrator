@@ -115,6 +115,11 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
 
     @Override
     public void destroy() {
+        destroy(true);
+    }
+
+    @Override
+    public void destroy(boolean removeTask) {
         log.info("Mqtt Inbound endpoint: " + name + " Started destroying context.");
         MqttClientManager clientManager = MqttClientManager.getInstance();
         String inboundIdentifier = clientManager
@@ -143,7 +148,7 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
                 log.error("Error while disconnecting from the remote server.");
             }
         }
-        super.destroy();
+        super.destroy(removeTask);
     }
 
     @Override

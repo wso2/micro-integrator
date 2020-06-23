@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.inbound.InboundRequestProcessor;
+import org.apache.synapse.inbound.InboundTaskProcessor;
 import org.apache.synapse.startup.quartz.StartUpController;
 import org.apache.synapse.task.TaskDescription;
 import org.apache.synapse.task.TaskManager;
@@ -37,7 +38,7 @@ import static org.wso2.carbon.inbound.endpoint.common.Constants.SUPER_TENANT_DOM
  * One such requirement is loading the tenant when message is injected if at that moment tenant
  * is unloaded.
  */
-public abstract class InboundOneTimeTriggerRequestProcessor implements InboundRequestProcessor {
+public abstract class InboundOneTimeTriggerRequestProcessor implements InboundRequestProcessor, InboundTaskProcessor {
 
     protected StartUpController startUpController;
     protected SynapseEnvironment synapseEnvironment;
@@ -110,12 +111,17 @@ public abstract class InboundOneTimeTriggerRequestProcessor implements InboundRe
      * undeployed/redeployed or when server stop
      */
     public void destroy() {
+        destroy(true);
+    }
+
+    @Override
+    public void destroy(boolean removeTask) {
         log.info("Inbound endpoint " + name + " stopping.");
 
         dataStore.unregisterPollingEndpoint(SUPER_TENANT_DOMAIN_NAME, name);
 
         if (startUpController != null) {
-            startUpController.destroy();
+            startUpController.destroy(removeTask);
         } else if (runningThread != null) {
             try {
                 //this is introduced where the the thread is suspended due to external server is not
