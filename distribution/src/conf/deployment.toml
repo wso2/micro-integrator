@@ -1,7 +1,6 @@
 [server]
 hostname = "localhost"
 # offset  = 10
-# hot_deployment = true
 
 [user_store]
 type = "read_only_ldap"
@@ -17,6 +16,8 @@ file_name = "client-truststore.jks"
 password = "wso2carbon"
 alias = "symmetric.key.value"
 algorithm = "AES"
+
+## Following are set of example configs. Please refer docs for complete set of configurations.
 
 # [message_formatters]
 # form_urlencoded =  "org.apache.synapse.commons.formatters.XFormURLEncodedFormatter"
@@ -43,24 +44,10 @@ algorithm = "AES"
 # application_binary = "org.apache.axis2.format.BinaryBuilder"
 
 # [[custom_message_formatters]]
-# content_type = text/html"
+# content_type = "text/html"
 # class = "org.wso2.carbon.relay.ExpandingMessageFormatter"
 
 # [[custom_message_builders]]
-# content_type = "text/html"
-# class = "org.wso2.carbon.relay.BinaryRelayBuilder"
-
-# [blocking.message_formatters]
-# octet_stream = "org.wso2.carbon.relay.ExpandingMessageFormatter"
-
-# [blocking.message_builders]
-# octet_stream =  "org.wso2.carbon.relay.BinaryRelayBuilder"
-
-# [[blocking.custom_message_formatters]]
-# content_type = "text/html"
-# class = "org.wso2.carbon.relay.ExpandingMessageFormatter"
-
-# [[blocking.custom_message_builders]]
 # content_type = "text/html"
 # class = "org.wso2.carbon.relay.BinaryRelayBuilder"
 
@@ -69,17 +56,11 @@ algorithm = "AES"
 
 # [transport.http]
 # socket_timeout = 180000   # timeout in milliseconds
-
-# [transport.jms]
-# listener_enable = true
-
-# [[transport.jms.listener]]
-# name = "myTopicListener"
-# parameter.initial_naming_factory = "org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"
-# parameter.provider_url = "tcp://localhost:61616"
-# parameter.connection_factory_name = "TopicConnectionFactory"
-# parameter.connection_factory_type = "topic"
-# parameter.cache_level = "consumer"
+# preserve_http_server_name = true
+# preserve_http_headers = ["Content-Type"]
+# disable_connection_keepalive = false
+# force_xml_validation = false
+# force_json_validation = false
 
 # [transport.jms]
 # sender_enable = true
@@ -92,25 +73,25 @@ algorithm = "AES"
 # parameter.connection_factory_type = "queue"
 # parameter.cache_level = "producer"
 
+# [transport.jms]
+# listener_enable = true
+
+#[[transport.jms.listener]]
+# name = "myQueueConnectionFactory"
+# parameter.initial_naming_factory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+# parameter.provider_url = "tcp://localhost:61616"
+# parameter.connection_factory_name = "QueueConnectionFactory"
+# parameter.connection_factory_type = "queue"
+
 # [transport.jndi.connection_factories]
 # 'connectionfactory.QueueConnectionFactory' = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
 # 'connectionfactory.TopicConnectionFactory' = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
 
 # [transport.jndi.queue]
-# StockQuotesQueue = "StockQuotesQueue"
+# jndiNameOfQueue = "physicalNameOfQueue"
 
 # [transport.jndi.topic]
-# MyTopic = "example.MyTopic"
-
-# [transport.rabbitmq]
-# listener_enable = true
-
-# [[transport.rabbitmq.listener]]
-# name = "AMQPConnectionFactory"
-# parameter.hostname = "localhost"
-# parameter.port = 5672
-# parameter.username = "guest"
-# parameter.password = "guest"
+# jndiNameOfTopic = "physicalNameOfTopic"
 
 # [transport.rabbitmq]
 # sender_enable = true
@@ -122,12 +103,22 @@ algorithm = "AES"
 # parameter.username = "guest"
 # parameter.password = "guest"
 
+# [transport.rabbitmq]
+# listener_enable = true
+
+# [[transport.rabbitmq.listener]]
+# name = "AMQPConnectionFactory"
+# parameter.hostname = "localhost"
+# parameter.port = 5672
+# parameter.username = "guest"
+# parameter.password = "guest"
+
 # [system.parameter]
 # 'key' = "value"
 
 # [[datasource]]
-# id = "WSO2_COORDINATION_DB"
-# url = "jdbc:mysql://localhost:3306/clusterdb?useSSL=false&amp;allowPublicKeyRetrieval=true"
+# id = "WSO2CarbonDB"  # "WSO2_COORDINATION_DB"
+# url = "jdbc:mysql://localhost:3306/integratordb"
 # username = "root"
 # password = "root"
 # driver = "com.mysql.jdbc.Driver"
@@ -143,18 +134,21 @@ algorithm = "AES"
 # user.name = "user-1"
 # user.password = "pwd-1"
 
-# [internal_apis.file_user_store]
-# enable = true
-
 # [transaction_counter]
 # enable = true
-# data_source = "WSO2_COORDINATION_DB"
+# data_source = "WSO2CarbonDB"
 # update_interval = 2
 
 # [mediation]
 # synapse.global_timeout_interval = "120000"  # interval in milliseconds
 # synapse.enable_xpath_dom_failover = true
-# synapse.temp_data_chunk_size = 3072
+# synapse.core_threads = 20
+# synapse.max_threads = 100
+# synapse.enable_xml_nil=false
+# synapse.enable_namespace_declaration = false
+# synapse.enable_auto_primitive = false
+# synapse.json_out_auto_array = false
+# synapse.preserve_namespace_on_xml_to_json=false
 
 # [secrets]
 # secret_key = "[secret value]"
