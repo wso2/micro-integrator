@@ -5,6 +5,7 @@ hostname = "localhost"
 offset  = 0     # inferred
 hide_admin_service_wsdl = true #inferred
 proxy_context_path = "" # empty by default
+hot_deployment = true # true by default
 
 # axis2.xml file
 enable_mtom = false # optional  default: false
