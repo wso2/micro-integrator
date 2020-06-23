@@ -67,8 +67,13 @@ public class RabbitMQListener extends InboundOneTimeTriggerRequestProcessor {
 
     @Override
     public void destroy() {
+        destroy(true);
+    }
+
+    @Override
+    public void destroy(boolean removeTask) {
         rabbitMQConsumer.close();
-        super.destroy();
+        super.destroy(removeTask);
     }
 
     @Override
