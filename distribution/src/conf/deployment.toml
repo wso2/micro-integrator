@@ -19,48 +19,9 @@ algorithm = "AES"
 
 ## Following are set of example configs. Please refer docs for complete set of configurations.
 
-# [message_formatters]
-# form_urlencoded =  "org.apache.synapse.commons.formatters.XFormURLEncodedFormatter"
-# multipart_form_data =  "org.apache.axis2.transport.http.MultipartFormDataFormatter"
-# application_xml = "org.apache.axis2.transport.http.ApplicationXMLFormatter"
-# text_xml = "org.apache.axis2.transport.http.SOAPMessageFormatter"
-# soap_xml = "org.apache.axis2.transport.http.SOAPMessageFormatter"
-# text_plain = "org.apache.axis2.format.PlainTextFormatter"
-# application_json =  "org.wso2.micro.integrator.core.json.JsonStreamFormatter"
-# json_badgerfish = "org.apache.axis2.json.JSONBadgerfishMessageFormatter"
-# text_javascript = "org.apache.axis2.json.JSONMessageFormatter"
-# octet_stream = "org.wso2.carbon.relay.ExpandingMessageFormatter"
-# application_binary =  "org.apache.axis2.format.BinaryFormatter"
-
-# [message_builders]
-# application_xml = "org.apache.axis2.builder.ApplicationXMLBuilder"
-# form_urlencoded = "org.apache.synapse.commons.builders.XFormURLEncodedBuilder"
-# multipart_form_data = "org.apache.axis2.builder.MultipartFormDataBuilder"
-# text_plain = "org.apache.axis2.format.PlainTextBuilder"
-# application_json = "org.wso2.micro.integrator.core.json.JsonStreamBuilder"
-# json_badgerfish = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
-# text_javascript = "org.apache.axis2.json.JSONBuilder"
-# octet_stream =  "org.wso2.carbon.relay.BinaryRelayBuilder"
-# application_binary = "org.apache.axis2.format.BinaryBuilder"
-
-# [[custom_message_formatters]]
-# content_type = "text/html"
-# class = "org.wso2.carbon.relay.ExpandingMessageFormatter"
-
-# [[custom_message_builders]]
-# content_type = "text/html"
-# class = "org.wso2.carbon.relay.BinaryRelayBuilder"
-
-# [transport]
-# default_content_type = "empty/content"
-
 # [transport.http]
 # socket_timeout = 180000   # timeout in milliseconds
-# preserve_http_server_name = true
-# preserve_http_headers = ["Content-Type"]
 # disable_connection_keepalive = false
-# force_xml_validation = false
-# force_json_validation = false
 
 # [transport.jms]
 # sender_enable = true
@@ -123,12 +84,8 @@ algorithm = "AES"
 # password = "root"
 # driver = "com.mysql.jdbc.Driver"
 
-# [[synapse_handlers]]
-# name="IntegratorSynapseHandler"
-# class="org.wso2.micro.integrator.dataservices.odata.endpoint.ODataPassThroughHandler"
-
 # [management_api]
-# protocols = "http https"
+# protocols = "http"
 
 # [[internal_apis.users]]
 # user.name = "user-1"
@@ -141,14 +98,6 @@ algorithm = "AES"
 
 # [mediation]
 # synapse.global_timeout_interval = "120000"  # interval in milliseconds
-# synapse.enable_xpath_dom_failover = true
-# synapse.core_threads = 20
-# synapse.max_threads = 100
-# synapse.enable_xml_nil=false
-# synapse.enable_namespace_declaration = false
-# synapse.enable_auto_primitive = false
-# synapse.json_out_auto_array = false
-# synapse.preserve_namespace_on_xml_to_json=false
 
 # [secrets]
 # secret_key = "[secret value]"
