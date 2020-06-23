@@ -369,7 +369,6 @@
   "blocking.message_formatters.text_javascript": "org.apache.axis2.json.JSONMessageFormatter",
   "blocking.message_formatters.octet_stream": "org.wso2.carbon.relay.ExpandingMessageFormatter",
   "blocking.message_formatters.application_binary": "org.apache.axis2.format.BinaryFormatter",
-  "blocking.message_formatters.text_html": "org.wso2.carbon.relay.ExpandingMessageFormatter",
 
   "blocking.message_builders.application_xml": "org.apache.axis2.builder.ApplicationXMLBuilder",
   "blocking.message_builders.form_urlencoded": "org.apache.synapse.commons.builders.XFormURLEncodedBuilder",
@@ -380,7 +379,6 @@
   "blocking.message_builders.text_javascript": "org.apache.axis2.json.JSONBuilder",
   "blocking.message_builders.octet_stream": "org.wso2.carbon.relay.BinaryRelayBuilder",
   "blocking.message_builders.application_binary": "org.apache.axis2.format.BinaryBuilder",
-  "blocking.message_builders.text_html": "org.wso2.carbon.relay.BinaryRelayBuilder",
 
   "keystore.tls.file_name": "wso2carbon.jks",
   "keystore.tls.type": "JKS",
