@@ -165,8 +165,7 @@ public class LoggingResource extends ApiResource {
             config.setProperty(LOGGER_PREFIX + loggerName + LOGGER_NAME_SUFFIX, loggerClass);
             config.setProperty(LOGGER_PREFIX + loggerName + LOGGER_LEVEL_SUFFIX, logLevel);
             applyConfigs();
-            jsonBody.put(Constants.MESSAGE,
-                         "Successfully added logger for ('" + loggerClass + "') with level " + logLevel);
+            jsonBody.put(Constants.MESSAGE, getSuccessMsg(loggerClass, loggerName, logLevel));
         } catch (ConfigurationException | IOException exception) {
             jsonBody = createJsonError("Exception while updating logger data ", exception, axis2MessageContext);
         }
@@ -181,12 +180,12 @@ public class LoggingResource extends ApiResource {
             if (loggerName.equals(Constants.ROOT_LOGGER)) {
                 config.setProperty(loggerName + LOGGER_LEVEL_SUFFIX, logLevel);
                 applyConfigs();
-                jsonBody.put(Constants.MESSAGE, "Successfully updated root logger level to " + logLevel);
+                jsonBody.put(Constants.MESSAGE, getSuccessMsg("", loggerName, logLevel));
             } else {
                 if (isLoggerExist(loggerName)) {
                     config.setProperty(LOGGER_PREFIX + loggerName + LOGGER_LEVEL_SUFFIX, logLevel);
                     applyConfigs();
-                    jsonBody.put(Constants.MESSAGE, "Successfully updated " + loggerName + " to " + logLevel);
+                    jsonBody.put(Constants.MESSAGE, getSuccessMsg("", loggerName, logLevel));
                 } else {
                     jsonBody = createJsonError("Specified logger ('" + loggerName + "') not found", "",
                                                axis2MessageContext);
@@ -196,6 +195,13 @@ public class LoggingResource extends ApiResource {
             jsonBody = createJsonError("Exception while updating logger data ", exception, axis2MessageContext);
         }
         return jsonBody;
+    }
+
+    private String getSuccessMsg(String loggerClass, String loggerName, String logLevel) {
+
+        return "Successfully added logger for ('" + loggerName + "') with level " + logLevel + (loggerClass.isEmpty() ?
+                "" :
+                " for class " + loggerClass);
     }
 
     private void loadConfigs() throws FileNotFoundException, ConfigurationException {
