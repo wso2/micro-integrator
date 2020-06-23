@@ -33,6 +33,8 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseLog;
+import org.apache.synapse.commons.json.Constants;
+import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.xml.SynapsePath;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
@@ -144,25 +146,30 @@ public class DataServiceCallMediator extends AbstractMediator {
 
         try {
             OMElement omElement = DataServiceProcessor.dispatch(axis2MessageContext);
-            if (omElement != null) {
+            if (synLog.isTraceOrDebugEnabled()) {
+                synLog.traceOrDebug("The result OMElement from the dataservice : " + omElement);
+            }
+            //set the result payload as property according to the target type
+            if (DataServiceCallMediatorConstants.TARGET_PROPERTY_TYPE.equals(targetType)) {
+                messageContext.setProperty(propertyName, omElement);
                 if (synLog.isTraceOrDebugEnabled()) {
-                    synLog.traceOrDebug("The result OMElement from the dataservice : " + omElement);
+                    synLog.traceOrDebug("The result property : " + messageContext.
+                            getProperty(propertyName));
                 }
-                //set the result payload as property according to the target type
-                if (DataServiceCallMediatorConstants.TARGET_PROPERTY_TYPE.equals(targetType)) {
-                    messageContext.setProperty(propertyName, omElement);
-                    if (synLog.isTraceOrDebugEnabled()) {
-                        synLog.traceOrDebug("The result property : " + messageContext.
-                                getProperty(propertyName));
-                    }
-                } else {
-                    //	set the result payload as envelope in to message context according to the target type
-                    ((Axis2MessageContext)messageContext).getAxis2MessageContext().
-                            removeProperty(PassThroughConstants.NO_ENTITY_BODY);
-                    messageContext.getEnvelope().getBody().addChild(omElement);
-                }
+            } else if (omElement != null) {
+                //	set the result payload as envelope in to message context according to the target type
+                JsonUtil.removeJsonPayload(((Axis2MessageContext)messageContext).getAxis2MessageContext());
+                messageContext.getEnvelope().getBody().addChild(omElement);
+                ((Axis2MessageContext)messageContext).getAxis2MessageContext().
+                        removeProperty(PassThroughConstants.NO_ENTITY_BODY);
             } else {
-                messageContext.setEnvelope(createDefaultSOAPEnvelope(messageContext));
+                org.apache.axis2.context.MessageContext axisMsgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+                axisMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.MESSAGE_TYPE,
+                        DataServiceCallMediatorConstants.APPLICATION_XML);
+                axisMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.CONTENT_TYPE,
+                        DataServiceCallMediatorConstants.APPLICATION_XML);
+                axisMsgCtx.removeProperty(Constants.ORG_APACHE_SYNAPSE_COMMONS_JSON_JSON_INPUT_STREAM);
+                axisMsgCtx.setEnvelope(createDefaultSOAPEnvelope(messageContext));
             }
         } catch (DataServiceFault dataServiceFault) {
             if (synLog.isTraceOrDebugEnabled()) {

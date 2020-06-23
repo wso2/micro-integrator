@@ -88,6 +88,9 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
         }
         OperationsType operationsType = OperationsType.valueOf(operationType.toUpperCase());
         List operationList = extractOperations(operationsTypeElement, mediator);
+        if (OperationsType.SINGLE_REQ.equals(operationsType) && operationList.size() > 1) {
+            handleException("The 'single operation' should contain one operation in the configuration.");
+        }
         Operations operations = mediator.new Operations(operationsType, operationList);
         mediator.setOperations(operations);
 
