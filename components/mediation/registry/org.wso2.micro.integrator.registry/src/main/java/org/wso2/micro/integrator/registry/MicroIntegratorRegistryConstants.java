@@ -46,6 +46,9 @@ public class MicroIntegratorRegistryConstants {
     public static final String GOVERNANCE_REGISTRY_PREFIX = "gov:";
     public static final String LOCAL_REGISTRY_PREFIX = "local:";
 
+    public static final String CONFIG_DIRECTORY_NAME = "config";
+    public static final String GOVERNANCE_DIRECTORY_NAME = "governance";
+
     public static final char URL_SEPARATOR_CHAR = '/';
     public static final String URL_SEPARATOR = "/";
     public static final String PROPERTY_EXTENTION = ".properties";
