@@ -126,6 +126,8 @@ public class DBUtils {
 
     private static HashMap<String, String> xsdSqlTypeMap = null;
 
+    private static String currentParamsDisabled;
+
     /* initialize the conversion types */
 
     static {
@@ -257,14 +259,11 @@ public class DBUtils {
         }
     }
 
-    private static boolean currentParamsDisabled;
-
     static {
-        currentParamsDisabled = Boolean.parseBoolean(System.getProperty(DBConstants.
-                DISABLE_CURRENT_PARAMS_IN_LOG));
+        currentParamsDisabled = System.getProperty(DBConstants.DISABLE_CURRENT_PARAMS_IN_LOG);
     }
 
-    public static boolean isCurrentParamsDisabled() {
+    public static String getCurrentParamsDisabled() {
         return currentParamsDisabled;
     }
 
