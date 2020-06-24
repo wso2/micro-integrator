@@ -257,6 +257,10 @@ public class DBUtils {
         }
     }
 
+    public static boolean isCurrentParamsDisabled () {
+        return Boolean.parseBoolean(System.getProperty(DBConstants.DISABLE_CURRENT_PARAMS_IN_LOG));
+    }
+
     private static OMFactory omFactory;
 
     /** pre-fetch the OMFactory */
