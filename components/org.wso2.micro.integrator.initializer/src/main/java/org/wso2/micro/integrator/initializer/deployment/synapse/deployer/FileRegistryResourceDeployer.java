@@ -220,7 +220,7 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
             // check whether the file exists
             File file = new File(filePath);
             if (!file.exists()) {
-                log.error("Specified file to be removed as a resource is " + "not found at : " + filePath);
+                // the file is already deleted.
                 continue;
             }
             String resourcePath = AppDeployerUtils.computeResourcePath(createRegistryKey(resource),resource.getFileName());

@@ -838,7 +838,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         String metadataDirPath = parent.getPath() + File.separator + METADATA_DIR_NAME;
         File metadataDir = new File(metadataDirPath);
         if (!metadataDir.exists()) {
-            handleException("Unable to delete metadata directory: " + metadataDir.getPath());
+            return;
         }
         File metadataFile = new File(metadataDir, resourceFileName + METADATA_FILE_SUFFIX);
         deleteFile(metadataFile);
