@@ -602,7 +602,7 @@ public class DataServiceDocLitWrappedSchemaGenerator {
         XmlSchemaComplexType type = createComplexType(cparams, DBConstants.WSO2_DS_NAMESPACE,
                 DBConstants.DS_FAULT_ELEMENT, false);
         element.setType(type);
-		if ("true".equalsIgnoreCase(DBUtils.getCurrentParamsDisabled())) {
+		if ("true".equalsIgnoreCase(DBUtils.getCurrentParamsDisabledProperty())) {
 			createAndAddSimpleStringElements(cparams, element,
 					DBConstants.FaultParams.CURRENT_REQUEST_NAME, DBConstants.FaultParams.NESTED_EXCEPTION);
 		} else {

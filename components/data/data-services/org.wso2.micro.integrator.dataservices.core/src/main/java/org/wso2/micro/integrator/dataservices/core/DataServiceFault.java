@@ -197,7 +197,7 @@ public class DataServiceFault extends Exception {
 			buff.append("Current Request Name: " + this.getCurrentRequestName() + "\n");
             getPropertyMap().put(DBConstants.FaultParams.CURRENT_REQUEST_NAME, this.getCurrentRequestName());
 		}
-		if (this.getCurrentParams() != null && !("true".equalsIgnoreCase(DBUtils.getCurrentParamsDisabled()))) {
+		if (this.getCurrentParams() != null && !("true".equalsIgnoreCase(DBUtils.getCurrentParamsDisabledProperty()))) {
 			buff.append("Current Params: " + this.getCurrentParams() + "\n");
             getPropertyMap().put(DBConstants.FaultParams.CURRENT_PARAMS, this.getCurrentParams().toString());
 		}

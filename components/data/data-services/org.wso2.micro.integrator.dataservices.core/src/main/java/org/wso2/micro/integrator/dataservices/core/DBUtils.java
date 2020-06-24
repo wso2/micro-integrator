@@ -126,7 +126,7 @@ public class DBUtils {
 
     private static HashMap<String, String> xsdSqlTypeMap = null;
 
-    private static String currentParamsDisabled;
+    private static String currentParamsDisabledProperty;
 
     /* initialize the conversion types */
 
@@ -260,11 +260,11 @@ public class DBUtils {
     }
 
     static {
-        currentParamsDisabled = System.getProperty(DBConstants.DISABLE_CURRENT_PARAMS_IN_LOG);
+        currentParamsDisabledProperty = System.getProperty(DBConstants.DISABLE_CURRENT_PARAMS_IN_LOG);
     }
 
-    public static String getCurrentParamsDisabled() {
-        return currentParamsDisabled;
+    public static String getCurrentParamsDisabledProperty() {
+        return currentParamsDisabledProperty;
     }
 
     private static OMFactory omFactory;
