@@ -486,7 +486,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                     deleteDirectory(parentFile);
                 }
             } catch (URISyntaxException e) {
-                handleException("Error while deleting the registry path " + path);
+                handleException("Error while deleting the registry path " + path, e);
             }
         } else {
             // Warn the user that unable to delete remote registry resources
