@@ -27,19 +27,26 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONObject;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.core.DBUtils;
+import org.wso2.micro.integrator.dataservices.core.description.config.Config;
+import org.wso2.micro.integrator.dataservices.core.description.operation.Operation;
 import org.wso2.micro.integrator.dataservices.core.description.query.Query;
+import org.wso2.micro.integrator.dataservices.core.description.resource.Resource;
 import org.wso2.micro.integrator.dataservices.core.engine.DataService;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.micro.integrator.dataservices.core.engine.DataServiceSerializer;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServiceInfo;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServiceSummary;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServicesList;
+import org.wso2.micro.integrator.management.apis.models.dataServices.DataSourceInfo;
+import org.wso2.micro.integrator.management.apis.models.dataServices.OperationInfo;
 import org.wso2.micro.integrator.management.apis.models.dataServices.QuerySummary;
+import org.wso2.micro.integrator.management.apis.models.dataServices.ResourceInfo;
 import org.wso2.micro.service.mgt.ServiceAdmin;
 import org.wso2.micro.service.mgt.ServiceMetaData;
 
-
-
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -99,7 +106,6 @@ public class DataServiceResource extends APIResource {
         for (String dataServiceName : dataServicesNames) {
             DataService dataService = getDataServiceByName(msgCtx, dataServiceName);
             ServiceMetaData serviceMetaData = getServiceMetaData(dataService);
-
             // initiate summary model
             DataServiceSummary summary = null;
             if (serviceMetaData != null) {
@@ -134,11 +140,17 @@ public class DataServiceResource extends APIResource {
 
                 Map<String, Query> queries = dataService.getQueries();
                 for (Map.Entry<String, Query> stringQuery : queries.entrySet()) {
-                    QuerySummary querySummary = new QuerySummary(stringQuery.getKey(),
-                                                                 stringQuery.getValue().getNamespace());
+                    QuerySummary querySummary = new QuerySummary();
+                    querySummary.setId(stringQuery.getKey());
+                    querySummary.setNamespace(stringQuery.getValue().getNamespace());
+                    querySummary.setConfigId(stringQuery.getValue().getConfigId());
                     dataServiceInfo.addQuery(querySummary);
                 }
             }
+            dataServiceInfo.setDataSources(getDataSources(dataService));
+            dataServiceInfo.setResources(getResources(dataService));
+            dataServiceInfo.setOperations(getOperations(dataService));
+            dataServiceInfo.setConfiguration(DataServiceSerializer.serializeDataService(dataService).toString());
             String stringPayload = new Gson().toJson(dataServiceInfo);
             Utils.setJsonPayLoad(axis2MessageContext, new JSONObject(stringPayload));
         }
@@ -162,5 +174,50 @@ public class DataServiceResource extends APIResource {
         } else {
             return null;
         }
+    }
+
+    private List<ResourceInfo> getResources(DataService dataService) {
+
+        Set<Resource.ResourceID> resourceIDS = dataService.getResourceIds();
+        List<ResourceInfo> resourceList = new ArrayList<>();
+        for (Resource.ResourceID id : resourceIDS) {
+            ResourceInfo resourceInfo = new ResourceInfo();
+            Resource resource = dataService.getResource(id);
+            resourceInfo.setResourcePath(id.getPath());
+            resourceInfo.setResourceMethod(id.getMethod());
+            resourceInfo.setResourceQuery(resource.getCallQuery().getQueryId());
+            resourceInfo.setQueryParams(resource.getCallQuery().getQuery().getQueryParams());
+            resourceList.add(resourceInfo);
+        }
+        return resourceList;
+    }
+
+    private List<OperationInfo> getOperations(DataService dataService) {
+
+        List<OperationInfo> opertionList = new ArrayList<>();
+        Set<String> operationNames = dataService.getOperationNames();
+        for (String operationName : operationNames) {
+            OperationInfo operationInfo = new OperationInfo();
+            Operation operation = dataService.getOperation(operationName);
+            operationInfo.setOperationName(operationName);
+            operationInfo.setQueryName(operation.getCallQuery().getQueryId());
+            operationInfo.setQueryParams(operation.getCallQuery().getQuery().getQueryParams());
+            opertionList.add(operationInfo);
+        }
+        return opertionList;
+    }
+
+    private List<DataSourceInfo> getDataSources(DataService dataService) {
+
+        Map<String, Config> configs = dataService.getConfigs();
+        List<DataSourceInfo> dataSources = new ArrayList<>();
+        configs.forEach((name, config) -> {
+            DataSourceInfo dataSource = new DataSourceInfo();
+            dataSource.setDataSourceId(config.getConfigId());
+            dataSource.setDataSourceType(config.getType());
+            dataSource.setDataSourceProperties(config.getProperties());
+            dataSources.add(dataSource);
+        });
+        return dataSources;
     }
 }
