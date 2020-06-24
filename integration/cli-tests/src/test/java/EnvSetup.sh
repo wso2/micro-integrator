@@ -31,7 +31,7 @@ echo "BitType : $bitType"
 cd $BASEDIR
 
 #Get the CLI distribution from the latest jenkins build
-DISTRIBUTION_NAME=$(eval "curl -s https://wso2.org/jenkins/job/products/job/product-mi-tooling/lastSuccessfulBuild/api/json | python3 -c \"import sys, json; print(json.load(sys.stdin)['artifacts'][1]['fileName'])\"")
+DISTRIBUTION_NAME=$(eval "curl -s https://wso2.org/jenkins/job/products/job/product-mi-tooling/lastSuccessfulBuild/api/json | python3 -c \"import sys, json; print(json.load(sys.stdin)['artifacts'][0]['fileName'])\"")
 echo "name: $DISTRIBUTION_NAME"
 cd ../../../target
 
