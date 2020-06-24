@@ -121,14 +121,16 @@ public class LoggingResource extends ApiResource {
                 } else {
                     if (jsonPayload.has(Constants.LOGGER_NAME)) {
                         String loggerName = jsonPayload.getString(Constants.LOGGER_NAME);
-                        if (jsonPayload.has(LOGGER_CLASS)) {
+                        boolean isRootLogger = Constants.ROOT_LOGGER.equals(loggerName);
+                        boolean hasLoggerClass = jsonPayload.has(LOGGER_CLASS);
+                        if (isRootLogger || !hasLoggerClass) {
+                            // update existing logger
+                            jsonBody = updateLoggerData(axis2MessageContext, loggerName, logLevel);
+                        } else {
                             try {
-                                boolean isRootLogger = Constants.ROOT_LOGGER.equals(loggerName);
-                                if (isRootLogger || isLoggerExist(loggerName)) {
-                                    String errorMsg = isRootLogger ?
-                                            "Root logger cannot have a class specified" :
-                                            "Specified logger name ('" + loggerName
-                                                    + "') already exists, try updating the level instead";
+                                if (isLoggerExist(loggerName)) {
+                                    String errorMsg = "Specified logger name ('" + loggerName
+                                            + "') already exists, try updating the level instead";
                                     jsonBody = createJsonError(errorMsg, "", axis2MessageContext);
                                 } else {
                                     String loggerClass = jsonPayload.getString(LOGGER_CLASS);
@@ -137,9 +139,6 @@ public class LoggingResource extends ApiResource {
                             } catch (IOException exception) {
                                 jsonBody = createJsonError(EXCEPTION_MSG, exception, axis2MessageContext);
                             }
-                        } else {
-                            // update existing logger
-                            jsonBody = updateLoggerData(axis2MessageContext, loggerName, logLevel);
                         }
                     } else {
                         // 400-Bad Request logger name is missing
@@ -226,11 +225,10 @@ public class LoggingResource extends ApiResource {
     private JSONObject getLoggerData(org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName) {
 
         String logLevel;
-        String componentName;
+        String componentName = "";
         jsonBody = new JSONObject();
         try {
             if (loggerName.equals(Constants.ROOT_LOGGER)) {
-                componentName = "Not available for rootLogger";
                 logLevel = Utils.getProperty(logPropFile, loggerName + LOGGER_LEVEL_SUFFIX);
             } else {
                 componentName = Utils.getProperty(logPropFile, LOGGER_PREFIX + loggerName + LOGGER_NAME_SUFFIX);
