@@ -105,7 +105,7 @@ public class CryptoUtil {
         // decode to get the binary DER representation.
         byte[] publicKeyDER = Base64.getDecoder().decode(publicKeyPEM);
 
-        KeyFactory keyFactory = KeyFactory.getInstance(TransactionConstants.ENCRYPTION_ALGORITHM);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyDER));
     }
 }
