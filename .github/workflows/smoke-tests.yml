@@ -1,4 +1,4 @@
-name: Smoke Tests ( openjdk8 )
+name: Smoke Tests (OpenJDK8)
 
 on: [push, pull_request]
 
