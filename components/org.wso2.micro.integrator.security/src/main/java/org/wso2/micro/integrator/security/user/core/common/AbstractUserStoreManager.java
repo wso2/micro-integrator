@@ -386,6 +386,15 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         return hybridRoleManager.getHybridRoleListOfUser(userName, filter);
     }
 
+    /**
+     * Only Gets the default internal role list defined in the realm configuration.
+     *
+     * @return the default internal role list defined for the realm configuration
+     */
+    protected String[] doGetDefaultInternalRoleList() {
+        return new String[]{realmConfig.getEveryOneRoleName()};
+    }
+
     protected Map<String, List<String>> doGetInternalRoleListOfUsers(List<String> userNames, String domainName)
             throws UserStoreException {
 
@@ -3956,7 +3965,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 || APPLICATION_DOMAIN.equalsIgnoreCase(UserCoreUtil.extractDomainFromName(roleName)) ||
                 WORKFLOW_DOMAIN.equalsIgnoreCase(UserCoreUtil.extractDomainFromName(roleName))) {
 
-            String[] internalRoles = doGetInternalRoleListOfUser(userName, roleName);
+            String[] internalRoles = doGetDefaultInternalRoleList();
             if (UserCoreUtil.isContain(roleName, internalRoles)) {
                 addToIsUserHasRole(modifiedUserName, roleName, roles);
                 return true;
@@ -5286,7 +5295,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         if (requireRoles) {
             roles = getRoleListOfUser(userName);
         } else if (requireIntRoles) {
-            roles = doGetInternalRoleListOfUser(userName, "*");
+            roles = doGetDefaultInternalRoleList();
         } else if (requireExtRoles) {
 
             List<String> rolesList = new ArrayList<String>();
@@ -5716,7 +5725,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             return roleList;
         }
 
-        String[] internalRoles = doGetInternalRoleListOfUser(userName, filter);
+        String[] internalRoles = doGetDefaultInternalRoleList();
 
         String[] modifiedExternalRoleList = new String[0];
 
