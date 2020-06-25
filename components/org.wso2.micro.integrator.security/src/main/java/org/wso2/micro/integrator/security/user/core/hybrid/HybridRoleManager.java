@@ -84,7 +84,7 @@ public class HybridRoleManager {
      * @throws UserStoreException
      */
     public void addHybridRole(String roleName, String[] userList) throws UserStoreException {
-        log.error("This Functionality is not available in WSO2 Micro Integrator");
+        UserCoreUtil.logUnsupportedOperation();
         // TODO Revisit and decide whether we need this for MI
         /*Connection dbConnection = null;
         try {
@@ -333,7 +333,7 @@ public class HybridRoleManager {
     public void updateUserListOfHybridRole(String roleName, String[] deletedUsers, String[] newUsers)
             throws UserStoreException {
 
-        log.error("This Functionality is not available in WSO2 Micro Integrator");
+        UserCoreUtil.logUnsupportedOperation();
         // TODO Revisit and decide whether we need this for MI
         /*String sqlStmt1 = HybridJDBCConstants.REMOVE_USER_FROM_ROLE_SQL;
         String sqlStmt2 = HybridJDBCConstants.ADD_USER_TO_ROLE_SQL;
@@ -591,7 +591,7 @@ public class HybridRoleManager {
      */
     public void updateHybridRoleListOfUser(String user, String[] deletedRoles, String[] addRoles)
             throws UserStoreException {
-        log.error("This Functionality is not available in WSO2 Micro Integrator");
+        UserCoreUtil.logUnsupportedOperation();
         // TODO Revisit and decide whether we need this for MI
         /*String sqlStmt1 = HybridJDBCConstants.REMOVE_ROLE_FROM_USER_SQL;
         String sqlStmt2 = HybridJDBCConstants.ADD_ROLE_TO_USER_SQL;

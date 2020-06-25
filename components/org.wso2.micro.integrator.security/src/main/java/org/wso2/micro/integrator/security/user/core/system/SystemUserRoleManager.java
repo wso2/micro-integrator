@@ -64,7 +64,7 @@ public class SystemUserRoleManager {
 
     public void addSystemRole(String roleName, String[] userList) throws UserStoreException {
 
-        log.error("This Functionality is not available in WSO2 Micro Integrator");
+        UserCoreUtil.logUnsupportedOperation();
         // TODO Revisit and decide whether we need this for MI
         /*Connection dbConnection = null;
         try {
@@ -191,7 +191,7 @@ public class SystemUserRoleManager {
     public void updateUserListOfSystemRole(String roleName, String[] deletedUsers, String[] newUsers)
             throws UserStoreException {
 
-        log.error("This Functionality is not available in WSO2 Micro Integrator");
+        UserCoreUtil.logUnsupportedOperation();
         // TODO Revisit and decide whether we need this for MI
         /*String sqlStmt1 = SystemJDBCConstants.REMOVE_USER_FROM_ROLE_SQL;
         String sqlStmt2 = SystemJDBCConstants.ADD_USER_TO_ROLE_SQL;
@@ -255,7 +255,7 @@ public class SystemUserRoleManager {
 
     public void updateSystemRoleListOfUser(String user, String[] deletedRoles, String[] addRoles)
             throws UserStoreException {
-        log.error("This Functionality is not available in WSO2 Micro Integrator");
+        UserCoreUtil.logUnsupportedOperation();
         // TODO Revisit and decide whether we need this for MI
 
         /*String sqlStmt1 = SystemJDBCConstants.REMOVE_ROLE_FROM_USER_SQL;
