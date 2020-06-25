@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
@@ -10,30 +11,33 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
 package org.wso2.micro.integrator.management.apis.models.dataServices;
 
-public class QuerySummary {
-    private String id;
+import java.util.Map;
+
+public class DataSourceInfo {
+
     private String dataSourceId;
-    private String namespace;
+    private String dataSourceType;
+    private Map<String, String> dataSourceProperties;
 
-    public void setId(String id) {
-
-        this.id = id;
-    }
-
-    public void setConfigId(String dataSourceId) {
+    public void setDataSourceId(String dataSourceId) {
 
         this.dataSourceId = dataSourceId;
     }
 
-    public void setNamespace(String namespace) {
+    public void setDataSourceType(String dataSourceType) {
 
-        this.namespace = namespace;
+        this.dataSourceType = dataSourceType;
+    }
+
+    public void setDataSourceProperties(Map<String, String> dataSourceProperties) {
+
+        this.dataSourceProperties = dataSourceProperties;
     }
 }
