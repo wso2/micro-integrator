@@ -21,6 +21,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.common.FileManager;
 import org.wso2.carbon.automation.test.utils.generic.MutualSSLClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -52,6 +53,10 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
     private String configLocation =
             getESBResourceLocation() + File.separator + "dynamicsslprofiles" + File.separator + "pttlistener"
                     + File.separator;
+    private final String CERT_CONFIG_LOCATION =
+            FrameworkPathUtil.getSystemResourceLocation() + "keystores" + File.separator + "products"
+                    + File.separator;
+
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @BeforeClass(alwaysRun = true)
@@ -75,9 +80,9 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
                 + "      </echo:echoString>\n" + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
 
         //load key store file
-        MutualSSLClient.loadKeyStore(configLocation + keyStoreName, keyStorePassword);
+        MutualSSLClient.loadKeyStore(CERT_CONFIG_LOCATION + keyStoreName, keyStorePassword);
         //load trust store file
-        MutualSSLClient.loadTrustStore(configLocation + trustStoreName, trustStorePassword);
+        MutualSSLClient.loadTrustStore(CERT_CONFIG_LOCATION + trustStoreName, trustStorePassword);
         //create ssl socket factory instance with given key/trust stores
         MutualSSLClient.initMutualSSLConnection();
 

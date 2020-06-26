@@ -23,6 +23,7 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.synapse.SynapseException;
 import org.awaitility.Awaitility;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -66,6 +67,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,11 +108,17 @@ public abstract class ESBIntegrationTest {
     private List<String> priorityExecutorList = null;
     private List<String[]> scheduledTaskList = null;
     private List<String> inboundEndpointList = null;
-    private static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
-    private String hostName = null;
-    private int portOffset;
+    protected static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
+    protected String hostName = null;
+    protected int portOffset;
     protected final int DEFAULT_TIMEOUT = 60;
     protected boolean isManagementApiAvailable = false;
+
+    private final String SERVER_DEPLOYMENT_DIR =
+            System.getProperty(ESBTestConstant.CARBON_HOME) + File.separator + "repository" + File.separator
+            + "deployment" + File.separator + "server" + File.separator + "synapse-configs" + File.separator
+            + "default" + File.separator;
+    protected final String PROXY_DIRECTORY = SERVER_DEPLOYMENT_DIR + File.separator + "proxy-services";
 
     /**
      * Initialize the context given a tenant domain and a user.
@@ -136,6 +145,12 @@ public abstract class ESBIntegrationTest {
         contextUrls = context.getContextUrls();
         esbUtils = new ESBTestCaseUtils();
         hostName = UrlGenerationUtil.getManagerHost(context.getInstance());
+        portOffset = Integer.parseInt(System.getProperty("port.offset"));
+        isManagementApiAvailable = false;
+    }
+
+    protected void initLight() {
+        hostName = "localhost";
         portOffset = Integer.parseInt(System.getProperty("port.offset"));
         isManagementApiAvailable = false;
     }
@@ -843,7 +858,7 @@ public abstract class ESBIntegrationTest {
     }
 
     protected String getESBResourceLocation() {
-        return FrameworkPathUtil.getSystemResourceLocation() + File.separator + "artifacts" + File.separator + "ESB";
+        return FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB";
     }
 
     protected String getBackEndServiceUrl(String serviceName) throws XPathExpressionException {
@@ -966,6 +981,18 @@ public abstract class ESBIntegrationTest {
         return response.contains(sequenceName);
     }
 
+    protected boolean checkLocalEntryExistence(String localEntryName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("local-entries");
+        return response.contains(localEntryName);
+    }
+
+    protected boolean checkMessageStoreExistence(String messageStoreName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("message-stores");
+        return response.contains(messageStoreName);
+    }
+
     private String retrieveArtifactUsingManagementApi(String artifactType) throws IOException {
 
         if (!isManagementApiAvailable) {
@@ -1078,5 +1105,52 @@ public abstract class ESBIntegrationTest {
     protected void reloadSessionCookie() throws Exception {
         /*context = new AutomationContext(ESBTestConstant.ESB_PRODUCT_GROUP, TestUserMode.SUPER_TENANT_ADMIN);
         sessionCookie = login(context);*/
+    }
+
+    /**
+     * This method enables the HTTP wire logs in log4j2 properties file.
+     *
+     * @param logLevel - The log-level of synapse-transport-http-wire logger
+     */
+    public void configureHTTPWireLogs(String logLevel) {
+        if (!isManagementApiAvailable) {
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+                    until(isManagementApiAvailable());
+        }
+        try {
+            SimpleHttpClient client = new SimpleHttpClient();
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Accept", "application/json");
+
+            String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
+                    + "logging";
+
+            JSONObject payload = new JSONObject();
+            payload.put("loggerName", "synapse-transport-http-wire");
+            payload.put("loggingLevel", logLevel);
+
+            client.doPatch(endpoint, headers, payload.toString(), "application/json");
+        } catch (IOException e) {
+            throw new SynapseException("Error updating the log-level of synapse-transport-http-wire logger", e);
+        }
+    }
+
+    private void copyArtifactToDeploymentDirectory(String sourceArtifactPath, String artifactName,
+                                                   String deploymentDirectory) throws IOException {
+        Files.copy(new File(sourceArtifactPath + File.separator + artifactName + ".xml").toPath(),
+                   new File(deploymentDirectory + File.separator + artifactName + ".xml").toPath(),
+                   StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void deleteArtifactFromDeploymentDirectory(String artifactName, String deploymentDirectory) throws IOException {
+        Files.delete(new File(deploymentDirectory + File.separator + artifactName).toPath());
+    }
+
+    protected void undeployProxyService(String name) throws IOException {
+        deleteArtifactFromDeploymentDirectory(name + ".xml", PROXY_DIRECTORY);
+    }
+
+    protected void deployProxyService(String name, String resourcePath) throws IOException {
+        copyArtifactToDeploymentDirectory(resourcePath, name, PROXY_DIRECTORY);
     }
 }

@@ -258,6 +258,7 @@ public class FileBasedTaskRepository implements TaskRepository {
             if (metaFile.exists()) {
                 if (metaFile.delete()) {
                     deleteSuccess = true;
+                    taskMetaPropMap.remove(getSystemDependentPath(resourcePath + taskName));
                 } else {
                     log.error("Error occurred while deleting task. Unable to delete: " + getSystemDependentPath(
                             resourcePath + tasksPath + "/_meta_" + taskName));

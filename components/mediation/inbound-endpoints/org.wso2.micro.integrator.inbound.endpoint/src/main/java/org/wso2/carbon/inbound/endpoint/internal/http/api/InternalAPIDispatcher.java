@@ -129,7 +129,8 @@ public class InternalAPIDispatcher {
     }
 
     private String getSupportedMethodsForInternalApis() {
-        return "GET, POST, PUT, DELETE, OPTIONS";
+
+        return RESTConstants.REST_ALL_SUPPORTED_METHODS + ",OPTIONS, PATCH";
     }
 
     private Boolean isOptions(MessageContext synCtx) {

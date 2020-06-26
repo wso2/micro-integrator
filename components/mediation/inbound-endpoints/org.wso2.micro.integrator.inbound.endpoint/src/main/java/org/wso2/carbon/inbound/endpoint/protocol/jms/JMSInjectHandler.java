@@ -28,6 +28,7 @@ import org.apache.axis2.builder.SOAPBuilder;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.format.DataSourceMessageBuilder;
 import org.apache.axis2.transport.TransportUtils;
+import org.apache.axis2.transport.base.BaseConstants;
 import org.apache.commons.io.input.AutoCloseInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -90,6 +91,7 @@ public class JMSInjectHandler {
         try {
             org.apache.synapse.MessageContext msgCtx = createMessageContext();
             msgCtx.setProperty(SynapseConstants.INBOUND_ENDPOINT_NAME, name);
+            msgCtx.setProperty(SynapseConstants.ARTIFACT_NAME, SynapseConstants.FAIL_SAFE_MODE_INBOUND_ENDPOINT + name);
             msgCtx.setProperty(SynapseConstants.IS_INBOUND, true);
             InboundEndpoint inboundEndpoint = msgCtx.getConfiguration().getInboundEndpoint(name);
             CustomLogSetter.getInstance().setLogAppender(inboundEndpoint.getArtifactContainerName());
@@ -120,6 +122,9 @@ public class JMSInjectHandler {
             //setting transport headers
             axis2MsgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS,
                                     JMSUtils.getTransportHeaders(msg, axis2MsgCtx));
+            // set transaction property
+            axis2MsgCtx.setProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED,
+                                    msg.getBooleanProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED));
             // set the JMS Message ID as the Message ID of the MessageContext
             try {
                 msgCtx.setMessageID(msg.getJMSMessageID());
@@ -201,7 +206,7 @@ public class JMSInjectHandler {
                 SequenceMediator faultSequence = getFaultSequence(msgCtx, inboundEndpoint);
                 faultSequence.mediate(msgCtx);
 
-                if (isRollback(msgCtx)) {
+                if (isRollback(msgCtx) || isToRecover(msgCtx)) {
                     return false;
                 }
                 return true;
@@ -243,7 +248,7 @@ public class JMSInjectHandler {
                 log.error("Sequence: " + injectingSeq + " not found");
             }
 
-            if (isRollback(msgCtx)) {
+            if (isRollback(msgCtx) || isToRecover(msgCtx)) {
                 return false;
             }
         } catch (SynapseException se) {
@@ -255,24 +260,26 @@ public class JMSInjectHandler {
         return true;
     }
 
+    /**
+     * Evaluate if JMS session need to be rollback judging
+     * from properties set to message context
+     *
+     * @param msgCtx MessageContext to evaluate
+     * @return true if JMS session need to be recovered
+     */
     private boolean isRollback(org.apache.synapse.MessageContext msgCtx) {
-        // First check for rollback property from synapse context
-        Object rollbackProp = msgCtx.getProperty(JMSConstants.SET_ROLLBACK_ONLY);
-        if (rollbackProp != null) {
-            if ((rollbackProp instanceof Boolean && ((Boolean) rollbackProp)) || (rollbackProp instanceof String
-                    && Boolean.valueOf((String) rollbackProp))) {
-                return true;
-            }
-            return false;
-        }
-        // Then from axis2 context - This is for make it consistent with JMS Transport config parameters
-        rollbackProp = (((Axis2MessageContext) msgCtx).getAxis2MessageContext())
-                .getProperty(JMSConstants.SET_ROLLBACK_ONLY);
-        if ((rollbackProp instanceof Boolean && ((Boolean) rollbackProp)) || (rollbackProp instanceof String && Boolean
-                .valueOf((String) rollbackProp))) {
-            return true;
-        }
-        return false;
+        return JMSUtils.checkIfBooleanPropertyIsSet(JMSConstants.SET_ROLLBACK_ONLY, msgCtx);
+    }
+
+    /**
+     * Evaluate if JMS session need to be recovered judging
+     * from properties set to message context
+     *
+     * @param msgCtx MessageContext to evaluate
+     * @return true if JMS session need to be recovered
+     */
+    private boolean isToRecover(org.apache.synapse.MessageContext msgCtx) {
+        return JMSUtils.checkIfBooleanPropertyIsSet(JMSConstants.SET_RECOVER, msgCtx);
     }
 
     /**

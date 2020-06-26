@@ -29,6 +29,8 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_TRANSACTION;
+import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_USER;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_APIS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CONNECTORS;
@@ -39,6 +41,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOCAL_E
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOGGING;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOGIN;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOGOUT;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOG_FILES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_PROCESSORS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
@@ -46,6 +49,8 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SEQUENC
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SERVER_DATA;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TASKS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TEMPLATES;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TRANSACTION;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_USERS;
 import static org.wso2.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
 
 public class ManagementInternalApi implements InternalAPI {
@@ -58,11 +63,9 @@ public class ManagementInternalApi implements InternalAPI {
 
     public ManagementInternalApi() {
 
-        LOG.warn("Micro Integrator Management REST API is enabled");
-
         ArrayList<APIResource> resourcesList = new ArrayList<>();
         resourcesList.add(new ApiResource(PREFIX_APIS));
-        resourcesList.add(new EndpointResource(PREFIX_ENDPOINTS));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_ENDPOINTS, new EndpointResource()));
         resourcesList.add(new InboundEndpointResource(PREFIX_INBOUND_ENDPOINTS));
         resourcesList.add(new ProxyServiceResource(PREFIX_PROXY_SERVICES));
         resourcesList.add(new CarbonAppResource(PREFIX_CARBON_APPS));
@@ -76,8 +79,13 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOCAL_ENTRIES, new LocalEntryResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_CONNECTORS, new ConnectorResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGIN, new LoginResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_USERS + PATH_PARAM_USER, new UserResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_USERS, new UsersResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGOUT, new LogoutResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_SERVER_DATA, new MetaDataResource()));
+        resourcesList.add(new LogFilesResource(PREFIX_LOG_FILES));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_TRANSACTION + PATH_PARAM_TRANSACTION,
+                                                 new RequestCountResource()));
 
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);

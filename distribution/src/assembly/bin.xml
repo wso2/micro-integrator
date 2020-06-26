@@ -95,7 +95,7 @@
             <directory>target/wso2carbon-core-${carbon.kernel.version}</directory>
             <outputDirectory>wso2mi-${pom.version}</outputDirectory>
             <excludes>
-<!--                TODO add version and echo services-->
+                <exclude>**/dbscripts/**</exclude>
                 <exclude>**/*.aar</exclude>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/wso2</exclude>
@@ -234,6 +234,10 @@
             <fileMode>755</fileMode>
         </fileSet>
 
+        <fileSet>
+            <directory>src/dbscripts</directory>
+            <outputDirectory>wso2mi-${pom.version}/dbscripts</outputDirectory>
+        </fileSet>
 
         <fileSet>
             <directory>src/resources/dockerfiles</directory>
@@ -314,6 +318,11 @@
             <directory>target/update/</directory>
             <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
             <fileMode>744</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>src/resources/security</directory>
+            <outputDirectory>wso2mi-${pom.version}/repository/resources/security</outputDirectory>
+            <fileMode>444</fileMode>
         </fileSet>
     </fileSets>
 
@@ -561,6 +570,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>src/conf/deployment.toml.container</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>deployment.toml.container</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>src/resources/config-tool/templates/conf/carbon.xml.j2</source>
             <outputDirectory>wso2mi-${pom.version}/repository/resources/conf/templates/conf</outputDirectory>
             <destName>carbon.xml.j2</destName>
@@ -576,7 +592,7 @@
             <includes>
                 <include>org.wso2.ei:org.wso2.micro.integrator.server:jar</include>
                 <include>net.sf.saxon:Saxon-HE:jar</include>
-                <include>xerces.wso2:xercesImpl</include>
+                <include>org.wso2.orbit.xerces:xercesImpl:jar</include>
                 <include>commons-logging:commons-logging</include>
                 <!--
                     woodstox should be in class path to xml builder (need javax.xml.stream.XMLInputFactory
@@ -607,6 +623,11 @@
                 ( needs javax.jms.JMSException )
                 -->
                 <include>javax.jms:javax.jms-api:jar</include>
+                <!--
+                javax jaxb-api need to be in class path for ciphertool
+                to run in jdk 11
+                -->
+                <include>javax.xml.bind:jaxb-api:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>

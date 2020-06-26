@@ -92,6 +92,9 @@
                                 <featureArtifactDef>
                                     org.apache.synapse:org.apache.synapse.transport.vfs.feature:${synapse.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.apache.synapse:org.apache.synapse.transport.vfs.smb2.feature:${synapse.version}
+                                </featureArtifactDef>
 <!--                                &lt;!&ndash;1. Carbon-Mediation&ndash;&gt;-->
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediators.server.feature:${project.version}
@@ -172,7 +175,7 @@
                                     org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher.tool.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.mediation:org.wso2.carbon.transports.sap.feature:${carbon.mediation.version}
+                                    org.wso2.carbon.mediation:org.wso2.carbon.transports.sap.feature:${sap-adapter.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.websocket.feature:${project.version}
@@ -185,7 +188,7 @@
                                     org.wso2.ei:org.wso2.micro.integrator.identity.xacml.mediator.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.mediator.publishevent.server.feature:${project.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.mediator.dataservice.feature:${project.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
@@ -250,10 +253,6 @@
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
                                 <feature>
-                                    <id>org.wso2.micro.integrator.mediator.publishevent.server.feature.group</id>
-                                    <version>${project.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.apache.synapse.wso2.feature.group</id>
                                     <version>${synapse.version}</version>
                                 </feature>
@@ -267,6 +266,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.apache.synapse.transport.vfs.feature.group</id>
+                                    <version>${synapse.version}</version>
+                                </feature>
+                                <!-- SMB2 -->
+                                <feature>
+                                    <id>org.apache.synapse.transport.vfs.smb2.feature.group</id>
                                     <version>${synapse.version}</version>
                                 </feature>
                                 <!--1 Carbon Mediation -->
@@ -293,7 +297,7 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.transports.sap.feature.group</id>
-                                    <version>${carbon.mediation.version}</version>
+                                    <version>${sap-adapter.feature.version}</version>
                                 </feature>
 
                                 <feature>
@@ -316,6 +320,10 @@
                                 </feature>-->
                                 <feature>
                                     <id>org.wso2.micro.integrator.identity.xacml.mediator.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.micro.integrator.mediator.dataservice.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>

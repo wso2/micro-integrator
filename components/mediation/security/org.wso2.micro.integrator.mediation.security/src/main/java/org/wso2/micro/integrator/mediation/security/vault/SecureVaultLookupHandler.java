@@ -29,6 +29,18 @@ public interface SecureVaultLookupHandler {
 	 * @param aliasPasword alias for the password
 	 * @return the string value of the password
 	 */
+	@Deprecated
 	public String evaluate(String aliasPasword, MessageContext synCtx);
+
+	/**
+	 * Method to evaluate the parameters passed to extract values from
+	 * secure-vault lookup
+	 *
+	 * @param aliasPasword
+	 * @param secretSrcData Information about the secret
+	 * @return
+	 * @throws org.wso2.carbon.registry.core.exceptions.RegistryException
+	 */
+	public String evaluate(String aliasPasword, SecretSrcData secretSrcData, MessageContext synCtx);
 
 }

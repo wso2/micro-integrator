@@ -50,6 +50,8 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
+import static org.wso2.micro.core.util.CarbonUtils.resolveSystemProperty;
+
 public class RealmConfigXMLProcessor {
 
     public static final String REALM_CONFIG_FILE = "user-mgt.xml";
@@ -180,6 +182,9 @@ public class RealmConfigXMLProcessor {
             Map.Entry<String, String> entry = ite.next();
             String name = entry.getKey();
             String value = entry.getValue();
+            if (value != null) {
+                value = resolveSystemProperty(value);
+            }
             OMElement propElem = factory.createOMElement(new QName(
                     UserCoreConstants.RealmConfig.LOCAL_NAME_PROPERTY));
             OMAttribute propAttr = factory.createOMAttribute(

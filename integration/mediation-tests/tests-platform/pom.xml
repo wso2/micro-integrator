@@ -33,6 +33,8 @@
 
     <modules>
         <module>tests-rabbitmq</module>
+        <module>tests-coordination</module>
+        <module>tests-userstore</module>
 <!--        <module>tests-wso2mb</module>-->
         <!--<module>tests-sap</module>-->
     </modules>

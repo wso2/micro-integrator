@@ -32,6 +32,10 @@
     <url>http://wso2.org</url>
 
     <dependencies>
+	<dependency>
+            <groupId>libthrift.wso2</groupId>
+            <artifactId>libthrift</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
@@ -61,16 +65,16 @@
             <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>libthrift.wso2</groupId>
-            <artifactId>libthrift</artifactId>
-        </dependency>
-        <dependency>
             <groupId>slf4j.wso2</groupId>
             <artifactId>slf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.opensaml</groupId>
+            <artifactId>opensaml</artifactId>
         </dependency>
     </dependencies>
     <build>

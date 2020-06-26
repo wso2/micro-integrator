@@ -57,6 +57,10 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.inbound.endpoint.persistence</artifactId>
         </dependency>
@@ -67,14 +71,6 @@
         <dependency>
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-nhttp-transport</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.orbit.org.apache.cxf</groupId>
-            <artifactId>cxf-bundle</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.orbit.org.eclipse.jetty</groupId>
-            <artifactId>jetty-bundle</artifactId>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -114,6 +110,20 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -139,6 +149,10 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.transport</groupId>
+            <artifactId>axis2-transport-rabbitmq-amqp</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -185,15 +199,13 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
-                    <systemProperties>
-                        <property>
-                            <name>jacoco-agent.destfile</name>
-                            <value>
-                                target/coverage-reports/jacoco-unit-commons.exec
-                            </value>
-                        </property>
-                    </systemProperties>
-                    <argLine>${argLine}</argLine>
+                    <systemPropertyVariables>
+                        <jacoco-agent.destfile>target/coverage-reports/jacoco-unit-commons.exec</jacoco-agent.destfile>
+                        <org.apache.commons.logging.Log>org.apache.commons.logging.impl.SimpleLog
+                        </org.apache.commons.logging.Log>
+                        <org.apache.commons.logging.simplelog.defaultlog>error
+                        </org.apache.commons.logging.simplelog.defaultlog>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>

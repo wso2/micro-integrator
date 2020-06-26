@@ -19,10 +19,21 @@ package org.wso2.micro.integrator.management.apis.models.dataServices;
 
 public class QuerySummary {
     private String id;
+    private String dataSourceId;
     private String namespace;
 
-    public QuerySummary(String id, String namespace) {
+    public void setId(String id) {
+
         this.id = id;
+    }
+
+    public void setConfigId(String dataSourceId) {
+
+        this.dataSourceId = dataSourceId;
+    }
+
+    public void setNamespace(String namespace) {
+
         this.namespace = namespace;
     }
 }

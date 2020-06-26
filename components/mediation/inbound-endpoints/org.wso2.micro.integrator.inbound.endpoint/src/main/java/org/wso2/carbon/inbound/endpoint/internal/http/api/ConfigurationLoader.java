@@ -17,6 +17,23 @@
  */
 package org.wso2.carbon.inbound.endpoint.internal.http.api;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+import javax.xml.namespace.QName;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,18 +43,6 @@ import org.apache.synapse.rest.cors.CORSConfiguration;
 import org.apache.synapse.transport.passthru.core.ssl.SSLConfiguration;
 import org.wso2.carbon.inbound.endpoint.persistence.PersistenceUtils;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import javax.xml.namespace.QName;
 
 /**
  * {@code ConfigurationLoader} contains utilities to load configuration file content required for Internal APIs
@@ -53,6 +58,12 @@ public class ConfigurationLoader {
     private static final QName NAME_ATT = new QName("name");
     private static final QName PROTOCOL_Q = new QName("protocol");
     private static final QName HANDLERS_Q = new QName("handlers");
+    private static final QName RESOURCES_Q = new QName("resources");
+    private static final QName USER_STORE_Q = new QName("userStore");
+    private static final QName USERS_Q = new QName("users");
+    private static final QName USER_Q = new QName("user");
+    private static final QName USERNAME_Q = new QName("username");
+    private static final QName PASSWORD_Q = new QName("password");
 
     private static final String APIS = "apis";
     private static final String SSL_CONFIG = "sslConfig";
@@ -66,6 +77,7 @@ public class ConfigurationLoader {
 
     private static SSLConfiguration sslConfiguration;
     private static boolean sslConfiguredSuccessfully;
+    private static Map<String, char[]> userMap;
 
     private static List<InternalAPI> internalHttpApiList = new ArrayList<>();
     private static List<InternalAPI> internalHttpsApiList = new ArrayList<>();
@@ -84,6 +96,8 @@ public class ConfigurationLoader {
             if (!ROOT_Q.equals(apiConfig.getQName())) {
                 handleException("Invalid internal api configuration file");
             }
+
+            populateUserStore(apiConfig);
 
             Iterator apiIterator = apiConfig.getChildrenWithLocalName(APIS);
 
@@ -163,6 +177,48 @@ public class ConfigurationLoader {
         }
     }
 
+    /**
+     * Populates the userList hashMap by userStore OM element
+     */
+    private static void populateUserStore(OMElement apiConfig) {
+        OMElement userStoreOM = apiConfig.getFirstChildWithName(USER_STORE_Q);
+        if (Objects.nonNull(userStoreOM)) {
+            userMap = populateUsers(userStoreOM.getFirstChildWithName(USERS_Q));
+        } else {
+            userMap = null;
+        }
+    }
+
+    /**
+     * Populates individual users.
+     *
+     * @param users the parent element of users
+     * @return map of users against credentials
+     */
+    private static Map<String, char[]> populateUsers(OMElement users) {
+        HashMap<String, char[]> userMap = new HashMap<>();
+        if (users != null) {
+            @SuppressWarnings("unchecked")
+            Iterator<OMElement> usersIterator = users.getChildrenWithName(USER_Q);
+            if (usersIterator != null) {
+                while (usersIterator.hasNext()) {
+                    OMElement userElement = usersIterator.next();
+                    OMElement userNameElement = userElement.getFirstChildWithName(USERNAME_Q);
+                    OMElement passwordElement = userElement.getFirstChildWithName(PASSWORD_Q);
+                    if (userNameElement != null && passwordElement != null) {
+                        String userName = userNameElement.getText();
+                        if (userMap.containsKey(userName)) {
+                            handleException("Error parsing the file based user store. User: " + userName + " defined "
+                                            + "more than once. ");
+                        }
+                        userMap.put(userName, passwordElement.getText().toCharArray());
+                    }
+                }
+            }
+        }
+        return userMap;
+    }
+
     private static void populateHandlers(OMElement apiElement, InternalAPI api) {
 
         List<InternalAPIHandler> handlerList = new ArrayList<>();
@@ -176,7 +232,16 @@ public class ConfigurationLoader {
                     String handlerName = handlerElement.getAttributeValue(NAME_ATT);
                     if (handlerElement.getAttribute(CLASS_Q) != null) {
                         String handlerClass = handlerElement.getAttributeValue(CLASS_Q);
-                        InternalAPIHandler handler = createHandler(handlerClass);
+                        OMElement resourcesElement = handlerElement.getFirstChildWithName(RESOURCES_Q);
+                        List<String> resourcesList = new ArrayList<>();
+                        if (Objects.nonNull(resourcesElement)) {
+                            Iterator resources = resourcesElement.getChildElements();
+                            while (resources.hasNext()) {
+                                OMElement resource = (OMElement) resources.next();
+                                resourcesList.add(resource.getText());
+                            }
+                        }
+                        InternalAPIHandler handler = createHandler(handlerClass, api.getContext(), resourcesList);
                         handler.setName(handlerName);
                         handlerList.add(handler);
                     } else {
@@ -191,17 +256,21 @@ public class ConfigurationLoader {
         api.setHandlers(handlerList);
     }
 
-    private static InternalAPIHandler createHandler(String classFQName) {
+    private static InternalAPIHandler createHandler(String classFQName, String context, List<String> resources) {
 
         try {
-            Object obj = Class.forName(classFQName).newInstance();
+            Constructor c = Class.forName(classFQName).getConstructor(String.class);
+            Object obj = c.newInstance(context);
             if (obj instanceof InternalAPIHandler) {
-                return (InternalAPIHandler) obj;
+                InternalAPIHandler internalAPIHandler = (InternalAPIHandler) obj;
+                internalAPIHandler.setResources(resources);
+                return internalAPIHandler;
             } else {
                 throw new SynapseException("Error creating Internal InternalAPIHandler. "
                                                    + "The InternalAPIHandler should be of type InternalAPIHandler");
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException
+                | InvocationTargetException e) {
             throw new SynapseException("Error creating Internal InternalAPIHandler for class name : " + classFQName, e);
         }
     }
@@ -234,6 +303,10 @@ public class ConfigurationLoader {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw new SynapseException("Error creating Internal InternalAPI for class name : " + classFQName, e);
         }
+    }
+
+    public static Map<String, char[]> getUserMap() {
+        return userMap;
     }
 
     public static int getInternalInboundHttpPort() {

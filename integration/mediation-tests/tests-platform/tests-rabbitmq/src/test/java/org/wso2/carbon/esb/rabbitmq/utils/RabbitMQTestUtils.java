@@ -23,11 +23,13 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.esb.integration.common.utils.exception.RabbitMQTransportException;
 import org.wso2.esb.integration.common.utils.servers.RabbitMQServer;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -38,6 +40,7 @@ public class RabbitMQTestUtils {
     private static final long TIME_FOR_MESSAGE_PUBLISH = 10000;
 
     private static final String RABBITMQ_HOME_XPATH = "//rabbitmq/rabbitmqhome";
+    private static final String RABBITMQ_CONTAINER = "rabbitmq-1";
 
     public static RabbitMQServer getRabbitMQServerInstance()
             throws XPathExpressionException, RabbitMQTransportException {
@@ -138,6 +141,28 @@ public class RabbitMQTestUtils {
      */
     public static void waitForMssagesToGetPublished() throws InterruptedException {
         Thread.sleep(TIME_FOR_MESSAGE_PUBLISH);
+    }
+
+    public static void stopRabbitMq() throws IOException, InterruptedException {
+        executeDockerCommand("docker stop " + RABBITMQ_CONTAINER);
+    }
+
+    public static void startRabbitMq() throws IOException, InterruptedException {
+        executeDockerCommand("docker start " + RABBITMQ_CONTAINER);
+    }
+
+    private static void executeDockerCommand(String command) throws IOException, InterruptedException {
+        log.info("Executing docker command: " + command);
+        Process process = Runtime.getRuntime().exec(command);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            log.info(line);
+        }
+
+        int exitCode = process.waitFor();
+        log.info("Command execution exited with code: " + exitCode);
     }
 
 }

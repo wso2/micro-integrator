@@ -21,12 +21,9 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageConsumer;
-import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
-import org.wso2.carbon.integration.common.admin.client.ApplicationAdminClient;
 import org.wso2.esb.integration.common.clients.mediation.MessageStoreAdminClient;
 import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 
@@ -40,13 +37,15 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.rmi.RemoteException;
-import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 import javax.xml.stream.XMLStreamException;
 
 public class Utils {
 
     private static Log log = LogFactory.getLog(Utils.class);
+
+    private static String defaultDeploymentDirectory = String.join(File.separator, System.getProperty("carbon.home"),
+                                                                   "repository", "deployment");
 
     public enum ArtifactType {
         API("api"),
@@ -57,6 +56,7 @@ public class Utils {
         MESSAGE_STORES("message-stores"),
         PROXY("proxy-services"),
         SEQUENCE("sequences"),
+        TASK("tasks"),
         TEMPLATE("templates");
 
         private String type;
@@ -68,28 +68,6 @@ public class Utils {
         public String getDirName() {
             return type;
         }
-    }
-
-    public static OMElement getSimpleQuoteRequest(String symbol) {
-        OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace omNs = fac.createOMNamespace("http://services.samples", "ns");
-        OMElement omGetQuote = fac.createOMElement("getSimpleQuote", omNs);
-        OMElement value1 = fac.createOMElement("symbol", omNs);
-
-        value1.addChild(fac.createOMText(omGetQuote, symbol));
-        omGetQuote.addChild(value1);
-
-        return omGetQuote;
-    }
-
-    public static OMElement getCustomQuoteRequest(String symbol) {
-        OMFactory factory = OMAbstractFactory.getOMFactory();
-        OMNamespace ns = factory.createOMNamespace("http://services.samples", "ns");
-        OMElement chkPrice = factory.createOMElement("CheckPriceRequest", ns);
-        OMElement code = factory.createOMElement("Code", ns);
-        chkPrice.addChild(code);
-        code.setText(symbol);
-        return chkPrice;
     }
 
     public static OMElement getStockQuoteRequest(String symbol) {
@@ -104,29 +82,6 @@ public class Utils {
         method.addChild(value1);
 
         return method;
-    }
-
-    public static OMElement getIncorrectRequest(String stringValue) {
-        OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace omNs = fac.createOMNamespace("http://echo.services.core.carbon.wso2.org", "echo");
-        OMElement method = fac.createOMElement("echoInt", omNs);
-        OMElement value1 = fac.createOMElement("in", omNs);
-        value1.setText(stringValue);
-        method.addChild(value1);
-        return method;
-    }
-
-    public static OMElement getCustomPayload(String symbol) {
-        OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace omNs = fac.createOMNamespace("http://services.samples", "ns");
-        OMElement payload = fac.createOMElement("getQuote", omNs);
-        OMElement request = fac.createOMElement("request", omNs);
-        OMElement code = fac.createOMElement("Code", omNs);
-        code.setText(symbol);
-
-        request.addChild(code);
-        payload.addChild(request);
-        return payload;
     }
 
     /**
@@ -152,28 +107,6 @@ public class Utils {
         } catch (IOException e) {
             throw new IOException("Error killing the process which uses the port " + port, e);
         }
-    }
-
-    /**
-     * Check if the given queue does not contain any messages
-     *
-     * @param queueName queue to be checked
-     * @return true in queue is empty, false otherwise
-     * @throws Exception if error while checking
-     */
-    public static boolean isQueueEmpty(String queueName) throws Exception {
-
-        String poppedMessage;
-        JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
-                JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
-        try {
-            consumer.connect(queueName);
-            poppedMessage = consumer.popMessage();
-        } finally {
-            consumer.disconnect();
-        }
-
-        return poppedMessage == null;
     }
 
     /**
@@ -269,40 +202,16 @@ public class Utils {
         return messageCountFound;
     }
 
-    /**
-     * Util function to check whether specified car file is deployed
-     *
-     * @param carFileName            - Name of the car file to deploy
-     * @param applicationAdminClient - Application admin client
-     * @param timeout                - timeout for car deployment
-     * @return true if the car file deployed successfully else, false
-     */
-    public static boolean isCarFileDeployed(String carFileName, ApplicationAdminClient applicationAdminClient,
-                                            int timeout) throws Exception {
+    public static void deploySynapseConfiguration(File src, ArtifactType type) throws Exception {
+        deploySynapseConfiguration(src, defaultDeploymentDirectory, type);
+    }
 
-        log.info("waiting " + timeout + " millis for car deployment " + carFileName);
-        boolean isCarFileDeployed = false;
-        Calendar startTime = Calendar.getInstance();
-        long time;
+    public static void deploySynapseConfiguration(File src, String depDirectory, ArtifactType type) throws Exception {
+        FileUtils.copyFile(src, new File(getDestination(depDirectory, type.getDirName(), src.getName())));
+    }
 
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < timeout) {
-            String[] applicationList = applicationAdminClient.listAllApplications();
-            if (applicationList != null) {
-                if (ArrayUtils.contains(applicationList, carFileName)) {
-                    isCarFileDeployed = true;
-                    log.info("car file deployed in " + time + " mills");
-                    return isCarFileDeployed;
-                }
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // ignore
-            }
-
-        }
-        return isCarFileDeployed;
+    private static String getDestination(String depDirectory, String artifactType, String name) {
+        return String.join(File.separator, depDirectory, "server", "synapse-configs", "default", artifactType, name);
     }
 
     public static void deploySynapseConfiguration(OMElement config, String artifactName, ArtifactType type,
@@ -362,4 +271,25 @@ public class Utils {
         }
     }
 
+    /**
+     * Un-deploy a carbon application from the server artifacts location and restart if needed.
+     *
+     * @param artifactName  CAPP name ( must include the extension Ex:- app1.car )
+     * @param restartServer Server restart required
+     */
+    public static void undeployCarbonApplication(String artifactName, boolean restartServer) {
+        CarbonServerExtension.shutdownServer();
+        String pathString =
+                System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
+                        + File.separator + "server" + File.separator + "carbonapps" + File.separator + artifactName;
+        Path path = FileSystems.getDefault().getPath(pathString);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            log.error("Error while deleting the file", e);
+        }
+        if (restartServer) {
+            CarbonServerExtension.restartServer();
+        }
+    }
 }

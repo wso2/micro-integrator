@@ -17,7 +17,7 @@
   ~ under the License.
   -->
     <proxy xmlns="http://ws.apache.org/ns/synapse"
-           name="MailTranportMove"
+           name="MailTransportMove"
            transports="mailto"
            statistics="disable"
            trace="disable"

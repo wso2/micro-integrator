@@ -20,9 +20,9 @@ package org.wso2.esb.integration.common.utils;
 
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.awaitility.Awaitility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -33,15 +33,23 @@ import java.util.concurrent.TimeUnit;
  */
 public class CarbonLogReader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CarbonLogReader.class);
+    private static final Log LOG = LogFactory.getLog(CarbonLogReader.class);
+
     private CarbonLogTailer carbonLogTailer;
     private Tailer tailer;
     private File carbonLogFile;
     private boolean startReadingFromEndOfFile = true;
 
     public CarbonLogReader() {
+        init(true, System.getProperty("carbon.home"));
+    }
 
-        init(true);
+    public CarbonLogReader(String carbonHome) {
+        init(true, carbonHome);
+    }
+
+    public CarbonLogReader(boolean startReadingFromEndOfFile) {
+        init(startReadingFromEndOfFile, System.getProperty("carbon.home"));
     }
 
     /**
@@ -49,16 +57,13 @@ public class CarbonLogReader {
      *
      * @param startReadingFromEndOfFile - specify whether you want to tail from the end of file or not.
      */
-    public CarbonLogReader(boolean startReadingFromEndOfFile) {
-
-        init(startReadingFromEndOfFile);
+    public CarbonLogReader(boolean startReadingFromEndOfFile, String carbonHome) {
+        init(startReadingFromEndOfFile, carbonHome);
     }
 
-    private void init(boolean startReadingFromEndOfFile) {
+    private void init(boolean startReadingFromEndOfFile, String carbonHome) {
         carbonLogTailer = new CarbonLogTailer();
-        carbonLogFile = new File(
-                System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "logs"
-                        + File.separator + "wso2carbon.log");
+        carbonLogFile = new File(String.join(File.separator, carbonHome, "repository", "logs", "wso2carbon.log"));
         this.startReadingFromEndOfFile = startReadingFromEndOfFile;
     }
 
@@ -66,11 +71,8 @@ public class CarbonLogReader {
      * Start tailer thread.
      */
     public void start() {
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Starting to tail carbon logs from : " + carbonLogFile.getPath());
-        }
-        tailer = new Tailer(carbonLogFile, carbonLogTailer, 1, startReadingFromEndOfFile);
+        clearLogs();
+        tailer = new Tailer(carbonLogFile, carbonLogTailer, 1000, startReadingFromEndOfFile);
         Thread thread = new Thread(tailer);
         thread.setDaemon(true);
         thread.start();
@@ -99,7 +101,6 @@ public class CarbonLogReader {
      * Stops the thread which started tailing the logs.
      */
     public void stop() {
-        LOGGER.debug("Stopped tailing carbon logs.");
         tailer.stop();
     }
 
@@ -120,7 +121,7 @@ public class CarbonLogReader {
      * @param numberofOccurrences numberofOccurrences expected number of log occurrences
      * @return true if the expected number of log occurrences are found, false otherwise
      */
-    public boolean assertIfLogExists(String expected, int numberofOccurrences) {
+    private boolean assertIfLogExists(String expected, int numberofOccurrences) {
         return numberofOccurrences == StringUtils.countMatches(this.getLogs(), expected);
     }
 
@@ -137,8 +138,8 @@ public class CarbonLogReader {
             throws InterruptedException {
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);
-            if (assertIfLogExists(startWith) && assertIfLogExists(endWith) && !StringUtils
-                    .substringBetween(this.getLogs(), startWith, endWith).isEmpty()) {
+            if (assertIfLogExists(startWith) && assertIfLogExists(endWith) && !StringUtils.substringBetween(
+                    this.getLogs(), startWith, endWith).isEmpty()) {
                 return StringUtils.substringBetween(this.getLogs(), startWith, endWith);
             }
         }
@@ -181,26 +182,22 @@ public class CarbonLogReader {
             }
             TimeUnit.SECONDS.sleep(1);
         }
+        LOG.warn("Found " + this.getNumberOfOccurencesForLog(expected) + " occurrences while expecting " + numberofOccurrences
+                + "\n Current carbon log starts here == \n" + this.getLogs() + "\n Current carbon log ends here ==");
         return false;
     }
 
     /**
      * Check for the existence of the given log message occurrences. The polling will happen in one second intervals.
      *
-     * @param expected            expected log message
+     * @param expected expected log message
      * @return true if the expected number of log occurrences are found within the given timeout, false otherwise
-     * @throws InterruptedException if interrupted while sleeping
      */
-    public int getNumberOfOccurencesForLog(String expected) throws InterruptedException {
+    public int getNumberOfOccurencesForLog(String expected) {
         return StringUtils.countMatches(this.getLogs(), expected);
     }
 
     private Callable<Boolean> hasThreadStarted(final Thread thread) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return thread.isAlive();
-            }
-        };
+        return thread::isAlive;
     }
 }

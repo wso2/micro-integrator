@@ -64,11 +64,11 @@ public class CarbonServerManager {
     private static final String SERVER_SHUTDOWN_MESSAGE = "Halting JVM";
     private static final long DEFAULT_START_STOP_WAIT_MS = 1000 * 60 * 5;
     private static final String CMD_ARG = "cmdArg";
-    private static int defaultHttpPort = Integer.parseInt(FrameworkConstants.SERVER_DEFAULT_HTTP_PORT);
     private static int defaultHttpsPort = Integer.parseInt(FrameworkConstants.SERVER_DEFAULT_HTTPS_PORT);
     private String scriptName;
-    private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
     private int managementPort;
+    private int retryLimit = 3;
+    private int retryAttempt = 0;
 
     public CarbonServerManager(AutomationContext context) {
         this.automationContext = context;
@@ -145,10 +145,20 @@ public class CarbonServerManager {
             }));
 
             managementPort = 9154 + portOffset;
-            waitTill(() -> !isRemotePortInUse("localhost", managementPort), 180, TimeUnit.SECONDS);
+            waitTill(() -> !isRemotePortInUse("localhost", managementPort), 180, "startup");
 
             if (!isRemotePortInUse("localhost", managementPort)) {
-                throw new RuntimeException("Server initialization failed");
+                if (retryAttempt < retryLimit) {
+                    retryAttempt++;
+                    log.info("Restarting server due to startup failure. Retry attempt: " + retryAttempt);
+                    serverShutdown(portOffset, true);
+                    startServerUsingCarbonHome(carbonHome, commandMap);
+                } else {
+                    retryAttempt = 0;
+                    throw new RuntimeException("Server initialization failed");
+                }
+            } else {
+                retryAttempt = 0;
             }
 
             log.info("Server started successfully ...");
@@ -196,9 +206,6 @@ public class CarbonServerManager {
         new ArchiveExtractor().extractFile(carbonServerZipFile, baseDir + File.separator + extractDir);
         carbonHome =
                 new File(baseDir).getAbsolutePath() + File.separator + extractDir + File.separator + extractedCarbonDir;
-
-        System.setProperty("miCarbonHome", carbonHome);
-
         copyResources();
         try {
             //read coverage status from automation.xml
@@ -238,9 +245,20 @@ public class CarbonServerManager {
             log.info("Shutting down server ...");
 
             try {
+                // Waiting for 3 mins max until the server gets shut down
+                int retryCount = 36;
+                for (int i = 0; i < retryCount; i++) {
+                    if (isRemotePortInUse("localhost", managementPort)) {
+                        startProcess(carbonHome, getStartScriptCommand("stop"));
+                        waitTill(() -> isRemotePortInUse("localhost", managementPort), 5, "shutdown");
+                    } else {
+                        break;
+                    }
+                }
 
-                startProcess(carbonHome, getStartScriptCommand("stop"));
-                waitTill(() -> isRemotePortInUse("localhost", managementPort), 180, TimeUnit.SECONDS);
+                if (isRemotePortInUse("localhost", managementPort)) {
+                    throw new AutomationFrameworkException("Failed shutting down the sever");
+                }
 
                 log.info("Server stopped successfully ...");
 
@@ -280,10 +298,10 @@ public class CarbonServerManager {
         return processBuilder.start();
     }
 
-    private void waitTill(BooleanSupplier predicate, int maxWaitTime, TimeUnit timeUnit) throws InterruptedException {
-        long time = System.currentTimeMillis() + timeUnit.toMillis(maxWaitTime);
+    private void waitTill(BooleanSupplier predicate, int maxWaitTime, String task) throws InterruptedException {
+        long time = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(maxWaitTime);
         while (predicate.getAsBoolean() && System.currentTimeMillis() < time) {
-            log.info("waiting for server startup/shutdown");
+            log.info("waiting for server " + task);
             TimeUnit.SECONDS.sleep(1);
         }
     }

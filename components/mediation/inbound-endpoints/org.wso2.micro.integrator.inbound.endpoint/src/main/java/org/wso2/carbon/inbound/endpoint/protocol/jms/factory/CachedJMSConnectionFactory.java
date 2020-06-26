@@ -151,6 +151,23 @@ public class CachedJMSConnectionFactory extends JMSConnectionFactory {
         return super.createProducer(session, destination, isQueue);
     }
 
+    /**
+     * Recover JMS session
+     *
+     * @param session    JMS session to issue recover() on
+     * @param forcefully True if recover needs to be done without conditions. Otherwise, recover
+     *                   will be done based on cache level
+     * @throws JMSException Upon error recovering the session
+     */
+    public void recoverSession(Session session, boolean forcefully) throws JMSException {
+        if (this.cacheLevel >= JMSConstants.CACHE_SESSION || forcefully) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Recovered JMS session");
+            }
+            session.recover();
+        }
+    }
+
     public boolean closeConnection() {
         try {
             if (cachedConnection != null) {

@@ -107,7 +107,7 @@
             </class>
         </classes>
     </test>
-    
+
     <test name="Stats-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.statistics"/>
@@ -118,12 +118,29 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
+            <class name="org.wso2.carbon.esb.statistics.PrometheusStatisticsTest">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
+    </test>
+
+    <test name="Hot-Deployment-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.hotdeployment.test"/>
+        </packages>
     </test>
 
     <test name="LocalEntry-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.localentry.test.*"/>
+        </packages>
+    </test>
+
+    <test name="Kubernetes probe tests" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.probes.test"/>
         </packages>
     </test>
 

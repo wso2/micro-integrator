@@ -46,7 +46,7 @@ public class AxisServiceClient {
             options = new Options();
             options.setTo(new EndpointReference(endPointReference));
             options.setProperty(org.apache.axis2.transport.http.HTTPConstants.CHUNKED, Boolean.FALSE);
-            options.setTimeOutInMilliSeconds(45000);
+            options.setTimeOutInMilliSeconds(ClientUtils.getReadTimeout());
             options.setAction("urn:" + operation);
             sender.setOptions(options);
 

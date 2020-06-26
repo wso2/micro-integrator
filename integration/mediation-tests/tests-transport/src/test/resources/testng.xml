@@ -167,9 +167,12 @@
     <!--</test>-->
 
     <test name="inbound-MQTT-Transport-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.mqtt.inbound.transport.test"/>
-        </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.mqtt.inbound.transport.test.MQTTInboundMessagePollingTestCase"/>
+            <!--
+             <class name="org.wso2.carbon.esb.mqtt.inbound.transport.test.MQTTInboundTempFileCreationTestCase"/>
+             -->
+        </classes>
     </test>
 
     <!-- Kafka is not availble with framework-->
@@ -203,12 +206,11 @@
         </packages>
     </test>
 
-    <!-- Disable due to https://github.com/wso2/micro-integrator/issues/457 -->
-    <!--<test name="WebSocket-Inbound-Test" preserve-order="true" verbose="2">-->
-        <!--<packages>-->
-            <!--<package name="org.wso2.carbon.esb.websocket.inbound.transport.test"/>-->
-        <!--</packages>-->
-    <!--</test>-->
+    <test name="WebSocket-Inbound-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.websocket.inbound.transport.test"/>
+        </packages>
+    </test>
 
     <!-- Tests should not be added beyond this point since all those will run with the nhttp transport enabled
     unlike the default axis2.xml-->

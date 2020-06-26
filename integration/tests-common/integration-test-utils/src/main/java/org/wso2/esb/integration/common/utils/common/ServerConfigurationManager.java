@@ -26,6 +26,7 @@ import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,7 +44,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +58,6 @@ public class ServerConfigurationManager {
     private static final Log log = LogFactory.getLog(ServerConfigurationManager.class);
     private static final long TIME_OUT = 600000;
     private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
-    private static final String MI_HOME_SYSTEM_PROPERTY = "miCarbonHome";
     private File originalConfig;
     private File backUpConfig;
     private int port;
@@ -248,16 +247,20 @@ public class ServerConfigurationManager {
      * restore to a last configuration and restart the server
      */
     public void restoreToLastMIConfiguration() throws IOException, AutomationUtilException {
+
+        // shut down the server before applying configs to avoid file lock issues.
+        CarbonServerExtension.shutdownServer();
+
         for (ConfigData data : configData) {
             Files.move(data.getBackupConfig().toPath(), data.getOriginalConfig().toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
+                       StandardCopyOption.REPLACE_EXISTING);
 
             if (data.getBackupConfig().exists()) {
                 throw new IOException(
                         "File rename from " + data.getBackupConfig() + "to " + data.getOriginalConfig() + "fails");
             }
         }
-        restartMicroIntegrator();
+        CarbonServerExtension.startServer();
     }
 
     /**
@@ -296,15 +299,15 @@ public class ServerConfigurationManager {
     /**
      * apply configuration file and restart micro integrator server to take effect the configuration
      *
-     * @param newConfig       configuration file
+     * @param newConfig configuration file
      * @throws AutomationUtilException - throws if apply configuration fails
      * @throws IOException             - throws if apply configuration fails
      */
-    public void applyMIConfigurationWithRestart(File newConfig)
-            throws AutomationUtilException, IOException {
+    public void applyMIConfigurationWithRestart(File newConfig) throws AutomationUtilException, IOException {
         //to backup existing configuration
+        CarbonServerExtension.shutdownServer();
         applyConfigurationUtil(newConfig, newConfig);
-        restartMicroIntegrator();
+        CarbonServerExtension.startServer();
     }
 
     /**
@@ -316,41 +319,6 @@ public class ServerConfigurationManager {
     public void applyMIConfiguration(File newConfig) throws IOException {
         //to backup existing configuration
         appluConfigurationUtilUtil(newConfig, newConfig);
-    }
-
-    /**
-     * A util function which edits the log4j2 properties file and the entries to enable http
-     * wire logs.
-     *
-     * @return - A new File object with wire logs configurations applied.
-     */
-    public File enableHTTPWireLogs() {
-
-        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        File log4j2PropertiesFile = new File(
-                carbonHome + File.separator + "conf" + File.separator + "log4j2.properties");
-        String loggers = getProperty(log4j2PropertiesFile, "loggers");
-
-        if (loggers == null) {
-            Assert.fail("Loggers property became null");
-        }
-        File destinationFile = new File(log4j2PropertiesFile.getName());
-
-        try (FileInputStream fis = new FileInputStream(log4j2PropertiesFile);
-                FileOutputStream fos = new FileOutputStream(destinationFile)) {
-
-            Properties properties = new Properties();
-            properties.load(fis);
-            properties.setProperty("loggers", "" + loggers + ", synapse-transport-http-wire");
-            properties.setProperty("logger.synapse-transport-http-wire.name", "org.apache.synapse.transport.http.wire");
-            properties.setProperty("logger.synapse-transport-http-wire.level", "DEBUG");
-            properties.store(fos, null);
-            fos.flush();
-
-        } catch (Exception e) {
-            Assert.fail("Exception occurred with the message : " + e.getMessage());
-        }
-        return destinationFile;
     }
 
     /**
@@ -417,7 +385,7 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if server restart fails
      */
     public void restartMicroIntegrator() throws AutomationUtilException {
-                org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
+        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
     }
 
     /**
@@ -443,26 +411,6 @@ public class ServerConfigurationManager {
         while (predicate.getAsBoolean() && System.currentTimeMillis() < time) {
             TimeUnit.MILLISECONDS.sleep(1);
         }
-    }
-
-    private String[] getStartScriptCommand(String... commands) {
-        String operatingSystem = System.getProperty("os.name").toLowerCase();
-        String scriptName = "micro-integrator";
-
-        String miHome = System.getProperty(MI_HOME_SYSTEM_PROPERTY);
-
-        ArrayList<String> commandArray;
-        if (operatingSystem.contains("windows")) {
-            commandArray = new ArrayList<>(Arrays.asList("cmd.exe", "/c",
-                                                         miHome + File.separator + "bin" + File.separator + scriptName
-                                                                 + ".bat"));
-        } else {
-            commandArray = new ArrayList<>(
-                    Arrays.asList("sh", miHome + File.separator + "bin" + File.separator + scriptName + ".sh"));
-        }
-
-        commandArray.addAll(Arrays.asList(commands));
-        return commandArray.toArray(new String[0]);
     }
 
     /**

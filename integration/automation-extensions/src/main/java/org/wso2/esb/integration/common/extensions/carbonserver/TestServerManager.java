@@ -18,6 +18,7 @@
 
 package org.wso2.esb.integration.common.extensions.carbonserver;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.FrameworkConstants;
@@ -25,40 +26,21 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.ExtensionConstants;
-import org.wso2.carbon.integration.common.utils.FileManager;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
-import javax.xml.xpath.XPathExpressionException;
 
 public class TestServerManager {
 
-    protected static CarbonServerManager carbonServer;
-    protected String carbonZip;
-    protected static int portOffset;
-    protected static Map<String, String> commandMap = new HashMap<>();
     private static final Log log = LogFactory.getLog(TestServerManager.class);
-    protected static String carbonHome;
-    protected String runtimePath;
+    private CarbonServerManager carbonServer;
+    private String carbonZip;
+    private int portOffset;
+    private Map<String, String> commandMap;
+    protected String carbonHome;
 
-    public TestServerManager(AutomationContext context) {
-        carbonServer = new CarbonServerManager(context);
-    }
-
-    public TestServerManager(AutomationContext context, String carbonZip) {
-        carbonServer = new CarbonServerManager(context);
-        this.carbonZip = carbonZip;
-    }
-
-    public TestServerManager(AutomationContext context, int portOffset) {
-        carbonServer = new CarbonServerManager(context);
-        this.portOffset = portOffset;
-        commandMap.put(ExtensionConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND, String.valueOf(portOffset));
-    }
-
-    public TestServerManager(AutomationContext context, String carbonZip, Map<String, String> commandMap) {
+    TestServerManager(AutomationContext context, String carbonZip, Map<String, String> commandMap) {
         carbonServer = new CarbonServerManager(context);
         this.carbonZip = carbonZip;
         if (commandMap.get(ExtensionConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND) != null) {
@@ -69,39 +51,39 @@ public class TestServerManager {
         this.commandMap = commandMap;
     }
 
-    public String getCarbonZip() {
-        return carbonZip;
-    }
-
     public String getCarbonHome() {
         return carbonHome;
     }
 
-    public int getPortOffset() {
-        return portOffset;
-    }
+    private void configureServer(String deploymentDirectory, String registryDir) throws IOException {
 
-    public String getRuntimePath() {
-        return runtimePath;
-    }
-
-    public void configureServer() throws AutomationFrameworkException {
-
-    }
-
-    private void copyFileToServer(String sourcePath, String destinationPath) {
-        log.info("Updating " + destinationPath + " for product EI");
-        String catalinaResourcePath = Paths.get(FrameworkPathUtil.getSystemResourceLocation(), sourcePath).toString();
-        try {
-            FileManager.copyFile(Paths.get(catalinaResourcePath).toFile(),
-                    Paths.get(carbonHome, destinationPath).toString());
-        } catch (IOException e) {
-            log.warn("IOException while replacing " + destinationPath);
+        if ("ESB".equalsIgnoreCase(System.getProperty("server.list"))) {
+            //copying the files before server start. Ex: synapse artifacts, conf, etc...
+            ServerUtils.copyResources("ESB", this.getCarbonHome(), deploymentDirectory, registryDir);
+            String resourceHome =
+                    FrameworkPathUtil.getSystemResourceLocation() + File.separator + "artifacts" + File.separator
+                            + "ESB" + File.separator + "server";
+            File dropinsDirectorySource = new File(resourceHome + File.separator + "dropins");
+            File dropinsDestination = new File(this.getCarbonHome() + File.separator + "dropins");
+            if (dropinsDirectorySource.exists() && dropinsDirectorySource.isDirectory()) {
+                try {
+                    log.info("Copying " + dropinsDirectorySource.getPath() + " to " + dropinsDestination.getPath());
+                    FileUtils.copyDirectory(dropinsDirectorySource, dropinsDestination);
+                } catch (IOException e) {
+                    log.error("Error while copying lib directory.", e);
+                }
+            }
+        } else if ("DSS".equalsIgnoreCase(System.getProperty("server.list"))) {
+            ServerUtils.copyResources("DSS", this.getCarbonHome(), deploymentDirectory, registryDir);
         }
     }
 
     public Map<String, String> getCommands() {
         return commandMap;
+    }
+
+    public String startServer() throws AutomationFrameworkException, IOException {
+        return startServer(null, null);
     }
 
     /**
@@ -114,16 +96,10 @@ public class TestServerManager {
      * @throws IOException If an error occurs while copying the deployment artifacts into the
      *                     Carbon server
      */
-    public String startServer() throws AutomationFrameworkException, IOException, XPathExpressionException {
+    public String startServer(String deploymentDirectory, String registryDir)
+            throws AutomationFrameworkException, IOException {
         if (carbonHome == null) {
-            if (carbonZip == null) {
-                carbonZip = System.getProperty(FrameworkConstants.SYSTEM_PROPERTY_CARBON_ZIP_LOCATION);
-            }
-            if (carbonZip == null) {
-                throw new IllegalArgumentException("carbon zip file cannot find in the given location");
-            }
-            carbonHome = carbonServer.setUpCarbonHome(carbonZip, commandMap.get("startupScript"));
-            configureServer();
+            setUpCarbonHome(deploymentDirectory, registryDir);
         }
         log.info("Carbon Home - " + carbonHome);
         if (commandMap.get(ExtensionConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND) != null) {
@@ -131,18 +107,24 @@ public class TestServerManager {
         } else {
             this.portOffset = 0;
         }
-
-        if (commandMap.get("runtimePath") != null) {
-            this.runtimePath = commandMap.get("runtimePath");
-        }
         carbonServer.startServerUsingCarbonHome(carbonHome, commandMap);
         return carbonHome;
     }
 
+    private void setUpCarbonHome(String deploymentDirectory, String registryDir)
+            throws IOException, AutomationFrameworkException {
+        if (carbonZip == null) {
+            carbonZip = System.getProperty(FrameworkConstants.SYSTEM_PROPERTY_CARBON_ZIP_LOCATION);
+        }
+        if (carbonZip == null) {
+            throw new IllegalArgumentException("carbon zip file cannot find in the given location");
+        }
+        carbonHome = carbonServer.setUpCarbonHome(carbonZip, commandMap.get("startupScript"));
+        configureServer(deploymentDirectory, registryDir);
+    }
+
     /**
-     * Restarting server already started by the method startServer
-     *
-     * @throws AutomationFrameworkException
+     * Restarting server already started by the method startServer.
      */
     public void restartGracefully() throws AutomationFrameworkException {
         if (carbonHome == null) {
@@ -163,10 +145,17 @@ public class TestServerManager {
         carbonServer.serverShutdown(portOffset, true);
     }
 
-    public static void restartServer() throws AutomationFrameworkException {
+    void restartServer() throws AutomationFrameworkException {
 
         log.info("Preparing to restart the server ...");
         carbonServer.serverShutdown(portOffset, true);
+        carbonServer.startServerUsingCarbonHome(carbonHome, commandMap);
+        log.info("Server restarted successfully ...");
+    }
+
+    void startMIServer() throws AutomationFrameworkException {
+
+        log.info("Preparing to start the MI server ...");
         carbonServer.startServerUsingCarbonHome(carbonHome, commandMap);
         log.info("Server restarted successfully ...");
     }

@@ -187,7 +187,7 @@
 <!--                                <bundleDef>org.slf4j:slf4j-log4j12:${slf4j.version}</bundleDef>-->
                                 <bundleDef>com.sun.xml.bind.wso2:jaxb:${version.jaxb}</bundleDef>
 <!--                                <bundleDef>com.jezhumble.wso2:javasysmon:${javasysmon.version}</bundleDef>-->
-                                <bundleDef>org.wso2.orbit.org.apache.tomcat:jdbc-pool:${jdbc-pool.version}</bundleDef>
+                                <bundleDef>org.wso2.orbit.org.apache.tomcat:jdbc-pool:${jdbc-pool.orbit.version}</bundleDef>
                                 <bundleDef>org.eclipse.jdt.core.compiler:ecj:${version.eclipse.ecj}</bundleDef>
                                 <bundleDef>com.google.code.gson:gson:${version.com.google.code.gson}</bundleDef>
 
@@ -258,15 +258,27 @@
                                     org.wso2.ei:org.wso2.micro.integrator.management.apis:${project.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.orbit.com.fasterxml.jackson.core:jackson-core:${fasterxml.jackson.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.probes:${project.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.orbit.com.fasterxml.jackson.core:jackson-databind:${fasterxml.jackson.version}
+                                    com.fasterxml.jackson.core:jackson-core:${fasterxml.jackson.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.orbit.com.fasterxml.jackson.core:jackson-annotations:${fasterxml.jackson.version}
+                                    com.fasterxml.jackson.core:jackson-databind:${fasterxml.jackson.version}
+                                </bundleDef>
+                                <bundleDef>
+                                    com.fasterxml.jackson.core:jackson-annotations:${fasterxml.jackson.version}
                                 </bundleDef>
                                 <bundleDef>org.atomikos.wso2:atomikos:${atomikos.version}</bundleDef>
+                                <bundleDef>org.eclipse.platform:org.eclipse.equinox.cm:${version.eclipse.equinox.cm}</bundleDef>
+                                <bundleDef>commons-configuration:commons-configuration:${commons.configuration.version}</bundleDef>
+                                <!-- bundles needed to swagger for DSS feature -->
+                                <bundleDef>io.swagger:swagger-models:${io.swagger.models.version}</bundleDef>
+                                <bundleDef>io.swagger:swagger-core:${io.swagger.core.version}</bundleDef>
+                                <bundleDef>io.swagger:swagger-annotations:${io.swagger.annotation.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson.dataformat.yaml.version}</bundleDef>
+                                <bundleDef>javax.validation:validation-api:${javax.validation.version}</bundleDef>
+                                <bundleDef>org.yaml:snakeyaml:${snakeyaml.version}</bundleDef>
                             </bundles>
 
                             <importFeatures>

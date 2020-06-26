@@ -23,6 +23,7 @@ import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.impl.llom.OMDocumentImpl;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
@@ -55,6 +56,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.DEFAULT_MEDIA_TYPE;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTY_EXTENTION;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.URL_SEPARATOR;
 
 public class MicroIntegratorRegistry extends AbstractRegistry {
@@ -510,21 +512,32 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             if (isDirectory && !targetPath.endsWith(URL_SEPARATOR)) {
                 targetPath += URL_SEPARATOR;
             }
-
             String parent = getParentPath(targetPath, isDirectory);
-            String fileName = getResourceName(targetPath);
-
-            Properties metadata = new Properties();
-            if (mediaType != null) {
-                metadata.setProperty(METADATA_KEY_MEDIA_TYPE, mediaType);
-            }
-
             try {
-                writeToFile(new URI(parent), fileName, content, metadata);
+                if (isDirectory) {
+                    File parentFile = new File(parent);
+                    if (!parentFile.exists() && !parentFile.mkdirs()) {
+                        handleException("Unable to create directory: " + parent);
+                    }
+                    if (StringUtils.isNotEmpty(propertyName)) {
+                        writeToFile(new URI(parent), PROPERTY_EXTENTION, propertyName + "=" + content, null);
+                    }
+                } else {
+                    String fileName = getResourceName(targetPath);
+                    if (StringUtils.isEmpty(propertyName)) {
+                        Properties metadata = new Properties();
+                        if (mediaType != null) {
+                            metadata.setProperty(METADATA_KEY_MEDIA_TYPE, mediaType);
+                        }
+                        writeToFile(new URI(parent), fileName, content, metadata);
+                    } else {
+                        writeToFile(new URI(parent), fileName, "", null);
+                        writeToFile(new URI(parent), fileName + PROPERTY_EXTENTION, propertyName + "=" + content, null);
+                    }
+                }
             } catch (Exception e) {
                 handleException("Error when adding a new resource", e);
             }
-
         } else {
             log.warn("Creating new resource in remote registry is NOT SUPPORTED. Unable to create: " + path);
         }
@@ -605,14 +618,19 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
      */
     private void removeResource(String key) {
         try {
-            File resource = new File(new URI(resolveRegistryURI(key)));
+            String resourcePath = resolveRegistryURI(key);
+            File resource = new File(new URI(resourcePath));
             if (resource.exists()) {
                 if (resource.isFile()) {
                     deleteFile(resource);
+                    // the properties also need to be removed when removing the resource
+                    File resourceProperties = new File(new URI(resourcePath + PROPERTY_EXTENTION));
+                    if (resourceProperties.exists()) {
+                        deleteFile(resourceProperties);
+                    }
                 } else if (resource.isDirectory()) {
                     deleteDirectory(resource);
                 }
-
             } else {
                 handleException("Parent folder: " + key + " does not exists.");
             }
@@ -765,8 +783,9 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(newFile))) {
             writer.write(content);
             writer.flush();
-            writeMetadata(parent, newFileName, metadata);
-
+            if (metadata != null) {
+                writeMetadata(parent, newFileName, metadata);
+            }
             if (log.isDebugEnabled()) {
                 log.debug("Successfully content written to file : " + parentName + URL_SEPARATOR + newFileName);
             }
@@ -848,13 +867,24 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             if (resourcePath.startsWith(URL_SEPARATOR)) {
                 resourcePath = resourcePath.substring(1);
             }
-
             resolvedPath = registryRoot + resourcePath;
-        }
 
+            //Test whether registry key has any illegel access
+            File resolvedPathFile = null;
+            File registryRootFile = null;
+            try {
+                resolvedPathFile = new File(new URI(resolvedPath));
+                registryRootFile = new File(new URI(registryRoot));
+                if (!resolvedPathFile.getCanonicalPath().startsWith(registryRootFile.getCanonicalPath())) {
+                    handleException("The registry key  '" + key +
+                            "' is illegal which points to a location outside the registry");
+                }
+            } catch (URISyntaxException | IOException e) {
+                handleException("Error while resolving the canonical path of the registry key : " + key, e);
+            }
+        }
         return resolvedPath;
     }
-
 
     /**
      * Function to retrieve resource content as text

@@ -34,6 +34,14 @@ public class DataServiceInfo {
 
     private List<QuerySummary> queries;
 
+    private List<ResourceInfo> resources;
+
+    private List<OperationInfo> operations;
+
+    private List<DataSourceInfo> dataSources;
+
+    private String configuration;
+
     public DataServiceInfo(String serviceName, String serviceDescription, String serviceGroupName, String[] wsdlUrls) {
         this.serviceName = serviceName;
         this.serviceDescription = serviceDescription;
@@ -45,5 +53,22 @@ public class DataServiceInfo {
 
     public void addQuery(QuerySummary querySummary) {
         queries.add(querySummary);
+    }
+
+    public void setResources(List<ResourceInfo> resources){
+        this.resources = resources;
+    }
+
+    public void setOperations(List<OperationInfo> operations) {
+        this.operations = operations;
+    }
+
+    public void setConfiguration(String configuration) {
+        this.configuration = configuration;
+    }
+
+    public void setDataSources(List<DataSourceInfo> dataSources) {
+
+        this.dataSources = dataSources;
     }
 }

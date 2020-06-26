@@ -125,7 +125,7 @@ public class ServiceComponent {
                     break;
                 case SecurityConstants.DEFAULT_JDBC_USERSTORE_MANAGER:
                     userStoreManager = new JDBCUserStoreManager(config, new Hashtable<>(), null, null, null,
-                            Constants.SUPER_TENANT_ID, true);
+                            Constants.SUPER_TENANT_ID, false);
                     break;
                 default:
                     userStoreManager =

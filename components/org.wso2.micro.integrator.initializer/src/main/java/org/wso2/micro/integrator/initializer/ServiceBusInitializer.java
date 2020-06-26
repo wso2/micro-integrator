@@ -25,17 +25,19 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.AbstractExtendedSynapseHandler;
 import org.apache.synapse.ServerConfigurationInformation;
 import org.apache.synapse.ServerConfigurationInformationFactory;
 import org.apache.synapse.ServerContextInformation;
 import org.apache.synapse.ServerManager;
 import org.apache.synapse.SynapseConstants;
-import org.apache.synapse.commons.util.FilePropertyLoader;
+import org.apache.synapse.SynapseHandler;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -43,15 +45,17 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.ServerShutdownHandler;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandler;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandlerComponent;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationService;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationServiceImpl;
@@ -61,6 +65,7 @@ import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServic
 import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServiceImpl;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
+import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.securevault.SecurityConstants;
 
@@ -69,7 +74,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -94,6 +104,12 @@ public class ServiceBusInitializer {
     private ServerManager serverManager;
 
     private TaskService taskService;
+
+    private DataSourceService dataSourceService;
+
+    private TransactionCountHandlerComponent transactionCountHandlerComponent;
+
+    private ExecutorService transactionCountExecutor;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
@@ -155,6 +171,19 @@ public class ServiceBusInitializer {
                 handleFatal("Couldn't register the SynapseConfigurationService, " + "SynapseConfiguration not found");
             }
             SynapseEnvironment synapseEnvironment = contextInfo.getSynapseEnvironment();
+            List handlers = synapseEnvironment.getSynapseHandlers();
+            Iterator<SynapseHandler> iterator = handlers.iterator();
+            while (iterator.hasNext()) {
+                SynapseHandler handler = iterator.next();
+                if ((handler instanceof AbstractExtendedSynapseHandler)) {
+                    AbstractExtendedSynapseHandler abstractExtendedSynapseHandler =
+                            (AbstractExtendedSynapseHandler) handler;
+                    if (!abstractExtendedSynapseHandler.handleServerInit()) {
+                        log.warn("Server initialization not executed in the server init path of the " +
+                                "AbstractExtendedSynapseHandler");
+                    }
+                }
+            }
             if (synapseEnvironment != null) {
                 // Properties props = new Properties();
                 SynapseEnvironmentService synEnvSvc = new SynapseEnvironmentServiceImpl(synapseEnvironment, Constants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
@@ -164,6 +193,15 @@ public class ServiceBusInitializer {
 
                 synapseEnvironment.registerSynapseHandler(new SynapseExternalPropertyConfigurator());
                 synapseEnvironment.registerSynapseHandler(new ProxyLogHandler());
+
+                // Register internal transaction synapse handler
+                boolean transactionPropertyEnabled = TransactionCountHandlerComponent.isTransactionPropertyEnabled();
+                if (transactionPropertyEnabled) {
+                    transactionCountHandlerComponent = new TransactionCountHandlerComponent();
+                    transactionCountHandlerComponent.start(dataSourceService);
+                    transactionCountExecutor = Executors.newFixedThreadPool(100);
+                    synapseEnvironment.registerSynapseHandler(new TransactionCountHandler(transactionCountExecutor));
+                }
                 if (log.isDebugEnabled()) {
                     log.debug("SynapseEnvironmentService Registered");
                 }
@@ -178,7 +216,6 @@ public class ServiceBusInitializer {
             bndCtx.registerService(SynapseRegistrationsService.class.getName(), synRegistrationsSvc, null);
             /*configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
                     configurationManager);*/
-
             // Start Inbound Endpoint Listeners
             EndpointListenerLoader.loadListeners();
         } catch (Exception e) {
@@ -193,7 +230,25 @@ public class ServiceBusInitializer {
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
-
+        if (Objects.nonNull(transactionCountHandlerComponent)) {
+            transactionCountHandlerComponent.cleanup();
+        }
+        if (Objects.nonNull(transactionCountExecutor)) {
+            transactionCountExecutor.shutdownNow();
+        }
+        List handlers = serverManager.getServerContextInformation().getSynapseEnvironment().getSynapseHandlers();
+        Iterator<SynapseHandler> iterator = handlers.iterator();
+        while (iterator.hasNext()) {
+            SynapseHandler handler = iterator.next();
+            if ((handler instanceof AbstractExtendedSynapseHandler)) {
+                AbstractExtendedSynapseHandler abstractExtendedSynapseHandler =
+                        (AbstractExtendedSynapseHandler) handler;
+                if (!abstractExtendedSynapseHandler.handleServerShutDown()) {
+                    log.warn("Server shut down not executed in the server shut down path of the " +
+                            "AbstractExtendedSynapseHandler");
+                }
+            }
+        }
         serverManager.stop();
         serverManager.shutdown();
     }
@@ -506,5 +561,32 @@ public class ServiceBusInitializer {
     protected void unsetTaskService(TaskService taskService) {
 
         this.taskService = null;
+    }
+
+    @Reference(name = "osgi.configadmin.service",
+            service = ConfigurationAdmin.class,
+            unbind = "unsetConfigAdminService",
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC)
+    public void setConfigAdminService(ConfigurationAdmin configAdminService) {
+        log.debug("Setting ConfigurationAdmin Service");
+        ConfigurationHolder.getInstance().setConfigAdminService(configAdminService);
+    }
+
+    public void unsetConfigAdminService(ConfigurationAdmin configAdminService) {
+        log.debug("Unsetting ConfigurationAdmin Service");
+    }
+
+    @Reference(name = "org.wso2.carbon.ndatasource",
+               service = DataSourceService.class,
+               cardinality = ReferenceCardinality.MANDATORY,
+               policy = ReferencePolicy.DYNAMIC,
+               unbind = "unsetDatasourceHandlerService")
+    protected void setDatasourceHandlerService(DataSourceService dataSourceService) {
+        this.dataSourceService = dataSourceService;
+    }
+
+    protected void unsetDatasourceHandlerService(DataSourceService dataSourceService) {
+        this.dataSourceService = null;
     }
 }

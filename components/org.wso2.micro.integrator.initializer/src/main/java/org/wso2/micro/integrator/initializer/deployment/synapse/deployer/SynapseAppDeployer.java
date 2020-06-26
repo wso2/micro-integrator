@@ -31,6 +31,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.Startup;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.config.Entry;
@@ -39,6 +40,7 @@ import org.apache.synapse.config.xml.EntryFactory;
 import org.apache.synapse.config.xml.SynapseImportFactory;
 import org.apache.synapse.config.xml.SynapseImportSerializer;
 import org.apache.synapse.config.xml.XMLConfigConstants;
+import org.apache.synapse.core.axis2.ProxyService;
 import org.apache.synapse.deployers.APIDeployer;
 import org.apache.synapse.deployers.AbstractSynapseArtifactDeployer;
 import org.apache.synapse.deployers.EndpointDeployer;
@@ -52,9 +54,17 @@ import org.apache.synapse.deployers.SequenceDeployer;
 import org.apache.synapse.deployers.SynapseArtifactDeploymentStore;
 import org.apache.synapse.deployers.TaskDeployer;
 import org.apache.synapse.deployers.TemplateDeployer;
+import org.apache.synapse.endpoints.Endpoint;
+import org.apache.synapse.endpoints.Template;
+import org.apache.synapse.inbound.InboundEndpoint;
 import org.apache.synapse.libraries.imports.SynapseImport;
 import org.apache.synapse.libraries.model.Library;
 import org.apache.synapse.libraries.util.LibDeployerUtils;
+import org.apache.synapse.mediators.base.SequenceMediator;
+import org.apache.synapse.mediators.template.TemplateMediator;
+import org.apache.synapse.message.processor.MessageProcessor;
+import org.apache.synapse.message.store.MessageStore;
+import org.apache.synapse.rest.API;
 import org.apache.synapse.transport.customlogsetter.CustomLogSetter;
 import org.wso2.micro.application.deployer.AppDeployerConstants;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
@@ -62,6 +72,7 @@ import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusUtils;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
@@ -241,7 +252,8 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
             } else if(SynapseAppDeployerConstants.SYNAPSE_LIBRARY_TYPE.equals(artifact.getType())) {
                 deployer = getSynapseLibraryDeployer(axisConfig);
             } else {
-                String artifactDirName = getArtifactDirName(artifact);
+                String artifactType = artifact.getType();
+                String artifactDirName = getArtifactDirName(artifactType);
                 if (artifactDirName == null) {
                     continue;
                 }
@@ -273,6 +285,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                         deployer.undeploy(artifactPath);
                     } else if (SynapseAppDeployerConstants.SEQUENCE_TYPE.equals(artifact.getType())
                                && handleMainFaultSeqUndeployment(artifact, axisConfig)) {
+                        log.debug("Handling main and fault sequence un-deployment");
                     } else if (artifactInRepo.exists()) {
                         log.info("Deleting artifact at " + artifactInRepo.getAbsolutePath());
                         if (!artifactInRepo.delete()) {
@@ -795,7 +808,10 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 String mainXMLPath = getMainXmlPath(axisConfig);
                 log.info("Copying main sequence to " + mainXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(mainXMLPath));
-                deployer.deploy(new DeploymentFileData(new File(mainXMLPath), deployer));
+
+                if (!MicroIntegratorBaseUtils.getCarbonAxisConfigurator().isHotDeploymentEnabled()) {
+                    deployer.deploy(new DeploymentFileData(new File(mainXMLPath), deployer));
+                }
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
             } catch (DeploymentException e) {
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_FAILED);
@@ -820,7 +836,10 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 String faultXMLPath = getFaultXmlPath(axisConfig);
                 log.info("Copying fault sequence to " + faultXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(faultXMLPath));
-                deployer.deploy(new DeploymentFileData(new File(faultXMLPath), deployer));
+
+                if (!MicroIntegratorBaseUtils.getCarbonAxisConfigurator().isHotDeploymentEnabled()) {
+                    deployer.deploy(new DeploymentFileData(new File(faultXMLPath), deployer));
+                }
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
             } catch (DeploymentException e) {
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_FAILED);
@@ -960,12 +979,11 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
     /**
      * Get the artifact directory name for the artifact type
      *
-     * @param artifact  synapse artifact
+     * @param artifactType  type of the synapse artifact
      * @return artifact directory
      */
-    private String getArtifactDirName(Artifact artifact) {
+    private String getArtifactDirName(String artifactType) {
 
-        String artifactType = artifact.getType();
         if (SynapseAppDeployerConstants.SEQUENCE_TYPE.equals(artifactType)) {
             return SynapseAppDeployerConstants.SEQUENCES_FOLDER;
         } else if (SynapseAppDeployerConstants.ENDPOINT_TYPE.equals(artifactType)) {
@@ -987,7 +1005,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
         } else if (SynapseAppDeployerConstants.TEMPLATE_TYPE.endsWith(artifactType)) {
             return SynapseAppDeployerConstants.TEMPLATES_FOLDER;
         } else if (SynapseAppDeployerConstants.INBOUND_ENDPOINT_TYPE.endsWith(artifactType)) {
-           return SynapseAppDeployerConstants.INBOUND_ENDPOINT_FOLDER;            
+           return SynapseAppDeployerConstants.INBOUND_ENDPOINT_FOLDER;
         } else if (SynapseAppDeployerConstants.SYNAPSE_LIBRARY_TYPE.equals(artifactType)) {
             return SynapseAppDeployerConstants.SYNAPSE_LIBS;
         }
@@ -1058,7 +1076,8 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                                 AxisConfiguration axisConfig) throws DeploymentException {
         for (Artifact.Dependency dep : artifacts) {
             Artifact artifact = dep.getArtifact();
-            String artifactDirName = getArtifactDirName(artifact);
+            String artifactType = artifact.getType();
+            String artifactDirName = getArtifactDirName(artifactType);
 
             if (!validateArtifact(artifact) || artifactDirName == null) {
                 continue;
@@ -1076,6 +1095,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
 
                 if (SynapseAppDeployerConstants.SEQUENCE_TYPE.equals(artifact.getType()) &&
                         handleMainFaultSeqDeployment(artifact, axisConfig, deployer)) {
+                    log.debug("Handling main and fault sequence deployment");
                 } else if (artifactInRepo.exists()) {
                     log.warn("Artifact " + fileName + " already found in " + artifactInRepo.getAbsolutePath() +
                             ". Ignoring CAPP's artifact");
@@ -1145,13 +1165,115 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
             return;
         }
         if (configContext != null) {
-            // Initialize the Deployer
+            // Initialize and register Deployer
             deployer.init(configContext);
+            registerSynapseDeployer(configContext.getAxisConfiguration(), type, deployer);
         } else {
             log.warn("ConfigurationContext has not been set. Deployer: " +
                      deployer.getClass() + "is not initialized");
         }
         synapseDeployers.put(type, deployer);
+    }
+
+    /**
+     * Register synapse deployers to the deployment engine.
+     *
+     * @param axisConfig   - axisConfiguration to which this deployer belongs
+     * @param artifactType - type of the artifact
+     * @param deployer     - related deployer
+     */
+    private void registerSynapseDeployer(AxisConfiguration axisConfig, String artifactType, Deployer deployer) {
+
+        DeploymentEngine deploymentEngine = (DeploymentEngine) axisConfig.getConfigurator();
+        String artifactDirName = getArtifactDirName(artifactType);
+
+        if (artifactDirName != null) {
+            SynapseArtifactDeploymentStore deploymentStore = getSynapseConfiguration(axisConfig).getArtifactDeploymentStore();
+            SynapseConfiguration synCfg = getSynapseConfiguration(axisConfig);
+            String artifactDir = getArtifactDirPath(axisConfig, artifactDirName);
+
+            switch (artifactType) {
+                case SynapseAppDeployerConstants.SEQUENCE_TYPE:
+                    for (SequenceMediator seq : synCfg.getDefinedSequences().values()) {
+                        if (seq.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + seq.getFileName());
+                        }
+                    }
+                    break;
+                case SynapseAppDeployerConstants.ENDPOINT_TYPE:
+                    for (Endpoint ep : synCfg.getDefinedEndpoints().values()) {
+                        if (ep.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + ep.getFileName());
+                        }
+                    }
+                    break;
+                case SynapseAppDeployerConstants.PROXY_SERVICE_TYPE:
+                    for (ProxyService proxyService : synCfg.getProxyServices()) {
+                        if (proxyService.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + proxyService.getFileName());
+                        }
+                    }
+                    break;
+                case SynapseAppDeployerConstants.LOCAL_ENTRY_TYPE:
+                    for (Entry entry : synCfg.getDefinedEntries().values()) {
+                        if (entry.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + entry.getFileName());
+                        }
+                    }
+                    break;
+                case SynapseAppDeployerConstants.TASK_TYPE:
+                    for (Startup stp : synCfg.getStartups()) {
+                        if (stp.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + stp.getFileName());
+                        }
+                    }
+                    break;
+                case SynapseAppDeployerConstants.MESSAGE_STORE_TYPE:
+                    for (MessageStore messageStore : synCfg.getMessageStores().values()) {
+                        if (messageStore.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + messageStore.getFileName());
+                        }
+                    }
+                    break;
+                case SynapseAppDeployerConstants.MESSAGE_PROCESSOR_TYPE:
+                    for (MessageProcessor processor : synCfg.getMessageProcessors().values()) {
+                        if (processor.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + processor.getFileName());
+                        }
+                    }
+                    break;
+                case SynapseAppDeployerConstants.API_TYPE:
+                    for (API api : synCfg.getAPIs()) {
+                        if (api.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + api.getFileName());
+                        }
+                    }
+                    break;
+                case SynapseAppDeployerConstants.TEMPLATE_TYPE:
+                    for (TemplateMediator seqTempl : synCfg.getSequenceTemplates().values()) {
+                        if (seqTempl.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + seqTempl.getFileName());
+                        }
+                    }
+                    for (Template epTempl : synCfg.getEndpointTemplates().values()) {
+                        if (epTempl.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + epTempl.getFileName());
+                        }
+                    }
+                    break;
+                case SynapseAppDeployerConstants.INBOUND_ENDPOINT_TYPE:
+                    for (InboundEndpoint inboundEndpoint : synCfg.getInboundEndpoints()) {
+                        if (inboundEndpoint.getFileName() != null) {
+                            deploymentStore.addRestoredArtifact(artifactDir + File.separator + inboundEndpoint.getFileName());
+                        }
+                    }
+                    break;
+                default:
+                    // do nothing
+
+            }
+            deploymentEngine.addDeployer(deployer, artifactDir, ServiceBusConstants.ARTIFACT_EXTENSION);
+        }
     }
 }
 

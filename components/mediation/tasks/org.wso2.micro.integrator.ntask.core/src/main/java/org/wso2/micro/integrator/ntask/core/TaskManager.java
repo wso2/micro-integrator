@@ -30,68 +30,86 @@ public interface TaskManager {
     /**
      * Initialize the startup tasks.
      *
-     * @throws TaskException
+     * @throws TaskException Exception
      */
-    public void initStartupTasks() throws TaskException;
-
-    /**
-     * Starts a task with the given name.
-     *
-     * @param taskName The name of the task
-     * @throws TaskException
-     */
-    public void scheduleTask(String taskName) throws TaskException;
+    void initStartupTasks() throws TaskException;
 
     /**
      * Reschedules a task with the given name, only the trigger information will be updated in the
      * reschedule.
      *
      * @param taskName The task to be rescheduled
-     * @throws TaskException
+     * @throws TaskException Exception
      */
-    public void rescheduleTask(String taskName) throws TaskException;
+    void rescheduleTask(String taskName) throws TaskException;
 
     /**
      * Stops and deletes a task with the given name.
      *
      * @param taskName The name of the task
      * @return true if the task was found and deleted
-     * @throws TaskException
+     * @throws TaskException Exception
      */
-    public boolean deleteTask(String taskName) throws TaskException;
+    boolean deleteTask(String taskName) throws TaskException;
 
     /**
-     * Pauses a task with the given name.
+     * Handles the task with given name. Schedule if its not coordinated else update the task DB.
      *
      * @param taskName The name of the task
-     * @throws TaskException
+     * @throws TaskException Exception
      */
-    public void pauseTask(String taskName) throws TaskException;
+    void handleTask(String taskName) throws TaskException;
+
+    /**
+     * Get all the coordinated tasks ( the tasks which need db interaction ) deployed in this node.
+     *
+     * @return List of deployed coordinated tasks.
+     */
+    List<String> getAllCoordinatedTasksDeployed();
+
+    /**
+     * Get all the locally running coordinated tasks.
+     *
+     * @return List of all locally running coordinated tasks.
+     */
+    List<String> getLocallyRunningCoordinatedTasks();
+
+    void removeTaskFromLocallyRunningTaskList(String taskName);
+
+    /**
+     * Handles the pause operation for the task with the given name.
+     *
+     * @param taskName The name of the task
+     * @throws TaskException Exception
+     */
+    void handleTaskPause(String taskName) throws TaskException;
 
     /**
      * Resumes a paused task with the given name.
      *
      * @param taskName The name of the task
-     * @throws TaskException
+     * @throws TaskException Exception
      */
-    public void resumeTask(String taskName) throws TaskException;
+    void handleTaskResume(String taskName) throws TaskException;
 
     /**
      * Registers a new task or updates if one already exists.
      *
      * @param taskInfo The task information
-     * @throws TaskException
+     * @throws TaskException Exception
      */
-    public void registerTask(org.wso2.micro.integrator.ntask.core.TaskInfo taskInfo) throws TaskException;
+    void registerTask(TaskInfo taskInfo) throws TaskException;
 
     /**
      * Gets tasks state information
      *
      * @param taskName The name of the task
      * @return State of the task
-     * @throws TaskException
+     * @throws TaskException Exception
      */
-    public TaskState getTaskState(String taskName) throws TaskException;
+    TaskState getTaskState(String taskName) throws TaskException;
+
+    boolean isDeactivated(String taskName) throws TaskException;
 
     /**
      * Get task information.
@@ -100,24 +118,15 @@ public interface TaskManager {
      * @return The task information
      * @throws TaskException if the task cannot be found
      */
-    public org.wso2.micro.integrator.ntask.core.TaskInfo getTask(String taskName) throws TaskException;
+    TaskInfo getTask(String taskName) throws TaskException;
 
     /**
      * Get all task information.
      *
      * @return Task information list
-     * @throws TaskException
+     * @throws TaskException Exception
      */
-    public List<TaskInfo> getAllTasks() throws TaskException;
-
-    /**
-     * Checks if the given task is already scheduled.
-     *
-     * @param taskName The task name
-     * @return true if already scheduled
-     * @throws TaskException
-     */
-    public boolean isTaskScheduled(String taskName) throws TaskException;
+    List<TaskInfo> getAllTasks() throws TaskException;
 
     /**
      * Registers a listener to be notified when an action is performed on a task.
@@ -130,8 +139,14 @@ public interface TaskManager {
     /**
      * Task states.
      */
-    public enum TaskState {
-        NORMAL, PAUSED, ERROR, FINISHED, NONE, BLOCKED, UNKNOWN
+    enum TaskState {
+        NORMAL,
+        PAUSED,
+        ERROR,
+        FINISHED,
+        NONE,
+        BLOCKED,
+        UNKNOWN
     }
 
 }

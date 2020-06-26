@@ -95,7 +95,7 @@
         -->
         <truststore name="wso2">
             <!--  trust-store file location  -->
-            <fileName>client-truststore.jks</fileName>
+            <fileName>keystores/products/client-truststore.jks</fileName>
             <!--  trust-store type (JKS/PKCS12 etc.)  -->
             <type>JKS</type>
             <!--  trust-store password  -->
@@ -266,7 +266,6 @@
                 <class>
                     <name>org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension</name>
                     <parameter name="-DportOffset" value="10"/>
-                    <parameter name="-DenableManagementApi" value="true"/>
                     <parameter name="startupScript" value="micro-integrator"/>
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>

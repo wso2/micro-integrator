@@ -5,6 +5,7 @@ hostname = "localhost"
 offset  = 0     # inferred
 hide_admin_service_wsdl = true #inferred
 proxy_context_path = "" # empty by default
+hot_deployment = true # true by default
 
 # axis2.xml file
 enable_mtom = false # optional  default: false
@@ -120,7 +121,7 @@ content_type = "application/json/badgerfish"
 class = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
 
 ################## Massege builders and formatters for blocking transport #########################
-[message_formatters.blocking]
+[blocking.message_formatters]
 form_urlencoded =  "org.apache.synapse.commons.formatters.XFormURLEncodedFormatter"
 multipart_form_data =  "org.apache.axis2.transport.http.MultipartFormDataFormatter"
 application_xml = "org.apache.axis2.transport.http.ApplicationXMLFormatter"
@@ -133,7 +134,7 @@ text_javascript = "org.apache.axis2.json.JSONMessageFormatter"
 octet_stream = "org.wso2.carbon.relay.ExpandingMessageFormatter"
 application_binary =  "org.apache.axis2.format.BinaryFormatter"
 
-[message_builders.blocking]
+[blocking.message_builders]
 application_xml = "org.apache.axis2.builder.ApplicationXMLBuilder"
 form_urlencoded = "org.apache.synapse.commons.builders.XFormURLEncodedBuilder"
 multipart_form_data = "org.apache.axis2.builder.MultipartFormDataBuilder"
@@ -144,11 +145,11 @@ text_javascript = "org.apache.axis2.json.JSONBuilder"
 octet_stream =  "org.wso2.carbon.relay.BinaryRelayBuilder"
 application_binary = "org.apache.axis2.format.BinaryBuilder"
 
-[[custom_message_formatters.blocking]]
+[[blocking.custom_message_formatters]]
 content_type = "application/json/badgerfish"
 class = "org.apache.axis2.json.JSONBadgerfishMessageFormatter"
 
-[[custom_message_builders.blocking]]
+[[blocking.custom_message_builders]]
 content_type = "application/json/badgerfish"
 class = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
 
@@ -922,3 +923,93 @@ order_before="before"
 order_after="after"
 order_phase_first="phasefirst"
 order_phase_last="phaselast"
+
+########################## Synapse handlers ###################################
+[[synapse_handlers]]
+name="IntegratorSynapseHandler"
+class="org.wso2.micro.integrator.dataservices.odata.endpoint.ODataPassThroughHandler"
+
+########################## Internal Apis ###################################
+
+[prometheus_api]
+protocols = "http"
+
+[prometheus_api.basic_security_handler]
+enable = true
+
+[prometheus_api.authorization_handler]
+enable = true
+
+[[prometheus_api.authorization_handler.resources]]
+path = "/metric"
+
+[[prometheus_api.custom_handlers]]
+name = "CustomHandler"
+class = "CustomImpl"
+
+[[prometheus_api.custom_handlers.resources]]
+path = "/resource1"
+
+[management_api]
+protocols = "http"
+
+[management_api.cors]
+enabled = true
+allowed_origins = "host1.com"
+allowed_headers = "SomeHeader"
+
+[management_api.basic_security_handler]
+enable = true
+
+[management_api.jwt_token_security_handler]
+enable = false
+
+[management_api.jwt_token_security_handler]
+token_store_config.max_size= "200"
+token_store_config.clean_up_interval= "600"
+token_store_config.remove_oldest_token_on_overflow= "true"
+token_config.expiry= "3600"
+token_config.size= "2048"
+
+[management_api.authorization_handler]
+enable = false
+
+[[management_api.authorization_handler.resources]]
+path = "/user"
+
+[[management_api.authorization_handler.resources]]
+path = "/apis"
+
+[[management_api.custom_handlers]]
+name = "CustomHandler"
+class = "CustomerImpl"
+
+[[management_api.custom_handlers.resources]]
+path = "/"
+
+[[management_api.custom_handlers]]
+name = "CustomHandler2"
+class = "CustomerImpl2"
+
+[[management_api.custom_handlers.resources]]
+path = "/endpoints"
+
+[[management_api.custom_handlers.resources]]
+path = "/apis"
+
+[[internal_apis.users]]
+user.name = "user-1"
+user.password = "pwd-1"
+
+[[internal_apis.users]]
+user.name = "user-2"
+user.password = "pwd-2"
+
+[internal_apis.file_user_store]
+enable = false
+
+####################Transaction Counter Handler ############################
+[transaction_counter]
+enable = true
+data_source = "WSO2_COORDINATION_DB"
+update_interval = 2

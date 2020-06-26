@@ -41,7 +41,15 @@ public abstract class InboundOneTimeTriggerEventBasedProcessor extends InboundOn
      * undeployed/redeployed or when server stop
      */
     public void destroy() {
-        super.destroy();
+        destroy(true);
+    }
+
+    /**
+     * Stop the inbound polling processor This will be called when inbound is
+     * undeployed/redeployed or when server stop
+     */
+    public void destroy(boolean removeTask) {
+        super.destroy(removeTask);
         //Terminate waiting events
         eventBasedConsumer.destroy();
     }

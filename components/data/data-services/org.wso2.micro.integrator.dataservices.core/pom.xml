@@ -54,16 +54,20 @@
                     <groupId>org.wso2.carbon.mediation</groupId>
                     <artifactId>org.wso2.carbon.mediation.initializer</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.poi.wso2</groupId>
+                    <artifactId>poi-scratchpad</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.poi.wso2</groupId>
+                    <artifactId>poi-ooxml</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.ndatasource.rdbms</artifactId>
         </dependency>
-        <!--<dependency>--><!--todo test and remove later - rajith-->
-        <!--<groupId>au.com.bytecode.opencsv</groupId>-->
-        <!--<artifactId>opencsv</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>au.com.bytecode.opencsv.wso2</groupId>
             <artifactId>opencsv</artifactId>
@@ -144,16 +148,6 @@
             <groupId>org.jboss.spec.javax.transaction</groupId>
             <artifactId>jboss-transaction-api_1.1_spec</artifactId>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>ojdbc</groupId>-->
-        <!--<artifactId>ojdbc6</artifactId>-->
-        <!--<scope>test</scope>-->
-        <!--<systemPath>${basedir}/src/test/resources/lib/ojdbc6.jar</systemPath>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.apache.poi.wso2</groupId>-->
-        <!--<artifactId>poi-scratchpad</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
@@ -187,7 +181,7 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.tomcat.wso2</groupId>
+            <groupId>org.wso2.orbit.org.apache.tomcat</groupId>
             <artifactId>jdbc-pool</artifactId>
         </dependency>
         <dependency>
@@ -195,18 +189,12 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>com.google.api-client</groupId>-->
-        <!--<artifactId>google-api-client</artifactId>-->
-        <!--&lt;!&ndash;<version>1.18.0-rc</version>&ndash;&gt;-->
-        <!--<version>1.20.0</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.wso2.orbit.com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>xerces</groupId>
+            <groupId>org.wso2.orbit.xerces</groupId>
             <artifactId>xercesImpl</artifactId>
         </dependency>
         <dependency>
@@ -220,20 +208,25 @@
         <dependency>
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-jaxws</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.security.wso2</groupId>
             <artifactId>wss4j</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.undercouch</groupId>
+            <artifactId>bson4jackson</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- <plugin>
-                 <groupId>org.apache.felix</groupId>
-                 <artifactId>maven-scr-plugin</artifactId>
-             </plugin> -->
-
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>true</inherited>
@@ -241,7 +234,6 @@
                     <forkMode>pertest</forkMode>
                     <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m</argLine>
                     <testFailureIgnore>false</testFailureIgnore>
-                    <skip>${dss.test.skip}</skip>
                     <includes>
                         <include>**/*TestSuite.java</include>
                     </includes>
@@ -249,6 +241,12 @@
                         <exclude>**/MySQLTestSuite.java</exclude>
                         <exclude>**/OracleTestSuite.java</exclude>
                     </excludes>
+                    <systemProperties>
+                        <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
+                    </systemProperties>
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -428,14 +426,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>smoke-tests</id>
-            <properties>
-                <dss.test.skip>true</dss.test.skip>
-            </properties>
-        </profile>
-    </profiles>
-
 </project>
-

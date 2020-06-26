@@ -88,6 +88,26 @@
                             <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>unpack-mar-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.ei</groupId>
+                                    <artifactId>wso2mi</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
+                                    <includes>**/*.jks</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <!--
 
                                         <execution>
@@ -117,26 +137,6 @@
                                                 <includeTypes>aar</includeTypes>
                                                 <includeArtifactIds>SecVerifier</includeArtifactIds>
                                                 <stripVersion>true</stripVersion>
-                                            </configuration>
-                                        </execution>
-                                        <execution>
-                                            <id>unpack-mar-jks</id>
-                                            <phase>compile</phase>
-                                            <goals>
-                                                <goal>unpack</goal>
-                                            </goals>
-                                            <configuration>
-                                                <artifactItems>
-                                                    <artifactItem>
-                                                        <groupId>org.wso2.ei</groupId>
-                                                        <artifactId>wso2ei</artifactId>
-                                                        <version>${project.version}</version>
-                                                        <type>zip</type>
-                                                        <overWrite>true</overWrite>
-                                                        <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
-                                                        <includes>**/*.jks,**/*.mar,**/synapse_sample*.xml</includes>
-                                                    </artifactItem>
-                                                </artifactItems>
                                             </configuration>
                                         </execution>
                     -->
@@ -196,6 +196,48 @@
                                     </directory>
                                     <includes>
                                         <include>**/*.mar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/keystores/products
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/resources/security/
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.jks</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-stratos-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/keystores/stratos
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/resources/security/
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.jks</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -639,7 +681,7 @@
 
         <dependency>
             <groupId>org.eclipse.paho</groupId>
-            <artifactId>mqtt-client</artifactId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
         </dependency>
 
         <!--Netty Dependency-->

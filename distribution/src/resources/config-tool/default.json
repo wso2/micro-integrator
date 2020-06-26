@@ -1,4 +1,5 @@
 {
+  "server.hot_deployment": true,
   "server.enableMTOM": false,
   "server.enableSwA": false,
   "server.userAgent": "WSO2 Micro Integrator 1.0.0",
@@ -114,10 +115,10 @@
 
   "transport.mqtt.listener.mqttConFactory.parameter.'mqtt.server.host.name'": "$ref{server.hostname}",
 
-  "transport.mail.listener.enable": true,
+  "transport.mail.listener.enable": false,
   "transport.mail.listener.name": "mailto",
 
-  "transport.blocking.mail.listener.enable": true,
+  "transport.blocking.mail.listener.enable": false,
   "transport.blocking.mail.listener.name": "mailto",
 
   "transport.modules": [
@@ -355,27 +356,27 @@
   "message_builders.octet_stream": "org.wso2.carbon.relay.BinaryRelayBuilder",
   "message_builders.application_binary": "org.apache.axis2.format.BinaryBuilder",
 
-  "message_formatters.blocking.form_urlencoded": "org.apache.axis2.transport.http.XFormURLEncodedFormatter",
-  "message_formatters.blocking.multipart_form_data": "org.apache.axis2.transport.http.MultipartFormDataFormatter",
-  "message_formatters.blocking.application_xml": "org.apache.axis2.transport.http.ApplicationXMLFormatter",
-  "message_formatters.blocking.text_xml":  "org.apache.axis2.transport.http.SOAPMessageFormatter",
-  "message_formatters.blocking.soap_xml": "org.apache.axis2.transport.http.SOAPMessageFormatter",
-  "message_formatters.blocking.text_plain": "org.apache.axis2.format.PlainTextFormatter",
-  "message_formatters.blocking.application_json": "org.apache.synapse.commons.json.JsonStreamFormatter",
-  "message_formatters.blocking.json_badgerfish": "org.apache.axis2.json.JSONBadgerfishMessageFormatter",
-  "message_formatters.blocking.text_javascript": "org.apache.axis2.json.JSONMessageFormatter",
-  "message_formatters.blocking.octet_stream": "org.wso2.carbon.relay.ExpandingMessageFormatter",
-  "message_formatters.blocking.application_binary": "org.apache.axis2.format.BinaryFormatter",
+  "blocking.message_formatters.form_urlencoded": "org.apache.axis2.transport.http.XFormURLEncodedFormatter",
+  "blocking.message_formatters.multipart_form_data": "org.apache.axis2.transport.http.MultipartFormDataFormatter",
+  "blocking.message_formatters.application_xml": "org.apache.axis2.transport.http.ApplicationXMLFormatter",
+  "blocking.message_formatters.text_xml":  "org.apache.axis2.transport.http.SOAPMessageFormatter",
+  "blocking.message_formatters.soap_xml": "org.apache.axis2.transport.http.SOAPMessageFormatter",
+  "blocking.message_formatters.text_plain": "org.apache.axis2.format.PlainTextFormatter",
+  "blocking.message_formatters.application_json": "org.apache.synapse.commons.json.JsonStreamFormatter",
+  "blocking.message_formatters.json_badgerfish": "org.apache.axis2.json.JSONBadgerfishMessageFormatter",
+  "blocking.message_formatters.text_javascript": "org.apache.axis2.json.JSONMessageFormatter",
+  "blocking.message_formatters.octet_stream": "org.wso2.carbon.relay.ExpandingMessageFormatter",
+  "blocking.message_formatters.application_binary": "org.apache.axis2.format.BinaryFormatter",
 
-  "message_builders.blocking.application_xml": "org.apache.axis2.builder.ApplicationXMLBuilder",
-  "message_builders.blocking.form_urlencoded": "org.apache.synapse.commons.builders.XFormURLEncodedBuilder",
-  "message_builders.blocking.multipart_form_data": "org.apache.axis2.builder.MultipartFormDataBuilder",
-  "message_builders.blocking.text_plain": "org.apache.axis2.format.PlainTextBuilder",
-  "message_builders.blocking.application_json": "org.wso2.micro.integrator.core.json.JsonStreamFormatter",
-  "message_builders.blocking.json_badgerfish": "org.apache.axis2.json.JSONBadgerfishOMBuilder",
-  "message_builders.blocking.text_javascript": "org.apache.axis2.json.JSONBuilder",
-  "message_builders.blocking.octet_stream": "org.wso2.carbon.relay.BinaryRelayBuilder",
-  "message_builders.blocking.application_binary": "org.apache.axis2.format.BinaryBuilder",
+  "blocking.message_builders.application_xml": "org.apache.axis2.builder.ApplicationXMLBuilder",
+  "blocking.message_builders.form_urlencoded": "org.apache.synapse.commons.builders.XFormURLEncodedBuilder",
+  "blocking.message_builders.multipart_form_data": "org.apache.axis2.builder.MultipartFormDataBuilder",
+  "blocking.message_builders.text_plain": "org.apache.axis2.format.PlainTextBuilder",
+  "blocking.message_builders.application_json": "org.apache.synapse.commons.json.JsonStreamBuilder",
+  "blocking.message_builders.json_badgerfish": "org.apache.axis2.json.JSONBadgerfishOMBuilder",
+  "blocking.message_builders.text_javascript": "org.apache.axis2.json.JSONBuilder",
+  "blocking.message_builders.octet_stream": "org.wso2.carbon.relay.BinaryRelayBuilder",
+  "blocking.message_builders.application_binary": "org.apache.axis2.format.BinaryBuilder",
 
   "keystore.primary.file_name": "wso2carbon.jks",
   "keystore.primary.type": "JKS",
@@ -403,6 +404,48 @@
   "monitoring.ei_analytics.password": "admin",
 
   "system.parameter.'org.wso2.CipherTransformation'": "RSA/ECB/OAEPwithSHA1andMGF1Padding",
-  "system.parameter.'org.wso2.SecureVaultPasswordRegEx'": "^[\\\\S]{5,30}$"
+  "system.parameter.'org.wso2.SecureVaultPasswordRegEx'": "^[\\\\S]{5,30}$",
+
+  "prometheus_api.protocols": "http",
+  "prometheus_api.basic_security_handler.enable": false,
+  "prometheus_api.authorization_handler.enable": false,
+
+  "management_api.protocols": "https http",
+  "management_api.jwt_token_security_handler.enable": "true",
+  "management_api.jwt_token_security_handler.token_store_config.max_size": "200",
+  "management_api.jwt_token_security_handler.token_store_config.clean_up_interval": "600",
+  "management_api.jwt_token_security_handler.token_store_config.remove_oldest_token_on_overflow": "true",
+  "management_api.jwt_token_security_handler.token_config.expiry": "3600",
+  "management_api.jwt_token_security_handler.token_config.size": "2048",
+
+  "management_api.cors.enable": "true",
+  "management_api.cors.allowed_origins": "*",
+  "management_api.cors.allowed_headers": "Authorization, Content-Type",
+  "management_api.basic_security_handler.enable": "false",
+  "management_api.authorization_handler.enable": "true",
+
+  "internal_apis.file_user_store.enable": true,
+  "internal_apis.users": [
+    {
+      "user.name": "admin",
+      "user.password": "admin"
+    }
+  ],
+
+  "internal_api_ssl_config.parameter.sslVerifyClient": "false",
+  "internal_api_ssl_config.parameter.httpsProtocols": "TLSv1,TLSv1.1,TLSv1.2",
+  "internal_api_ssl_config.parameter.sslProtocol": "SSLV3",
+  "internal_api_ssl_config.key_store.location": "repository/resources/security/wso2carbon.jks",
+  "internal_api_ssl_config.key_store.type": "JKS",
+  "internal_api_ssl_config.key_store.password": "wso2carbon",
+  "internal_api_ssl_config.key_store.key_password": "wso2carbon",
+  "internal_api_ssl_config.trust_store.location": "repository/resources/security/client-truststore.jks",
+  "internal_api_ssl_config.trust_store.type": "JKS",
+  "internal_api_ssl_config.trust_store.password": "wso2carbon",
+  "internal_api_ssl_config.certificate_revocation_verifier_enabled": "false",
+  "internal_api_ssl_config.certificate_revocation_verifier": {
+    "cache_size": "10",
+    "cache_delay": "2"
+  }
 
 }

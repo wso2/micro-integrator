@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,6 +43,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.util.SecurityManager;
@@ -50,6 +52,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
+
+import static org.wso2.micro.integrator.core.Constants.DYNAMIC_PROPERTY_PLACEHOLDER_PREFIX;
+import static org.wso2.micro.integrator.core.Constants.ENV_VAR_PLACEHOLDER_PREFIX;
+import static org.wso2.micro.integrator.core.Constants.PLACEHOLDER_SUFFIX;
+import static org.wso2.micro.integrator.core.Constants.SYS_PROPERTY_PLACEHOLDER_PREFIX;
 
 public class CarbonUtils {
 
@@ -113,12 +120,40 @@ public class CarbonUtils {
     }
 
     public static String resolveSystemProperty(String text) {
+        String sysRefs = StringUtils.substringBetween(text, SYS_PROPERTY_PLACEHOLDER_PREFIX, PLACEHOLDER_SUFFIX);
+        String envRefs = StringUtils.substringBetween(text, ENV_VAR_PLACEHOLDER_PREFIX, PLACEHOLDER_SUFFIX);
+
+        // Resolves system property references ($sys{ref}) in an individual string.
+        if (sysRefs != null) {
+            String property = System.getProperty(sysRefs);
+            if (StringUtils.isNotEmpty(property)) {
+                text = text.replaceAll(Pattern.quote(SYS_PROPERTY_PLACEHOLDER_PREFIX + sysRefs + PLACEHOLDER_SUFFIX), property);
+            } else {
+                log.error("System property is not available for " + sysRefs);
+            }
+            return text;
+        }
+        // Resolves environment variable references ($env{ref}) in an individual string.
+        if (envRefs != null) {
+            String resolvedValue = System.getenv(envRefs);
+            if (StringUtils.isNotEmpty(resolvedValue)) {
+                text = text.replaceAll(Pattern.quote(ENV_VAR_PLACEHOLDER_PREFIX + envRefs + PLACEHOLDER_SUFFIX), resolvedValue);
+            } else {
+                log.error("Environment variable is not available for " + envRefs);
+            }
+            return text;
+        }
         int indexOfStartingChars = -1;
 
         int indexOfClosingBrace;
-        while(indexOfStartingChars < text.indexOf("${") && (indexOfStartingChars = text.indexOf("${")) != -1 && (indexOfClosingBrace = text.indexOf(125)) != -1) {
+        while(indexOfStartingChars < text.indexOf(DYNAMIC_PROPERTY_PLACEHOLDER_PREFIX)
+                && (indexOfStartingChars = text.indexOf(DYNAMIC_PROPERTY_PLACEHOLDER_PREFIX)) != -1
+                && (indexOfClosingBrace = text.indexOf(125)) != -1) {
             String sysProp = text.substring(indexOfStartingChars + 2, indexOfClosingBrace);
             String propValue = System.getProperty(sysProp);
+            if (propValue == null) {
+                propValue = System.getenv(sysProp);
+            }
             if (propValue != null) {
                 text = text.substring(0, indexOfStartingChars) + propValue + text.substring(indexOfClosingBrace + 1);
             }

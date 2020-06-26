@@ -19,8 +19,12 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import com.google.gson.JsonObject;
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.endpoints.EndpointSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
@@ -28,54 +32,76 @@ import org.apache.synapse.endpoints.Endpoint;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
+import javax.xml.namespace.QName;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class EndpointResource extends APIResource {
+import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.NAME;
+import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
 
-    private static final String CHILDREN_ATTRIBUTE = "children";
+public class EndpointResource implements MiApiResource {
 
-    public EndpointResource(String urlTemplate){
-        super(urlTemplate);
+    private static Log LOG = LogFactory.getLog(EndpointResource.class);
+    //HTTP method types supported by the resource
+    private Set<String> methods;
+    // Endpoint is active property
+    private static final String IS_ACTIVE = "isActive";
+
+    public EndpointResource() {
+        methods = new HashSet<>();
+        methods.add(Constants.HTTP_GET);
+        methods.add(Constants.HTTP_POST);
     }
 
     @Override
     public Set<String> getMethods() {
-
-        Set<String> methods = new HashSet<>();
-        methods.add(Constants.HTTP_GET);
         return methods;
     }
 
     @Override
-    public boolean invoke(MessageContext messageContext) {
+    public boolean invoke(MessageContext messageContext,
+                          org.apache.axis2.context.MessageContext axis2MessageContext,
+                          SynapseConfiguration synapseConfiguration) {
 
-        buildMessage(messageContext);
+        if (messageContext.isDoingGET()) {
+            String param = Utils.getQueryParameter(messageContext, "endpointName");
 
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
-        String param = Utils.getQueryParameter(messageContext, "endpointName");
-
-        if (Objects.nonNull(param)) {
-            populateEndpointData(messageContext, param);
+            if (Objects.nonNull(param)) {
+                populateEndpointData(messageContext, param);
+            } else {
+                populateEndpointList(messageContext, synapseConfiguration);
+            }
         } else {
-            populateEndpointList(messageContext);
+            try {
+                if (!JsonUtil.hasAJsonPayload(axis2MessageContext)) {
+                    Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("JSON payload is missing"));
+                    return true;
+                }
+                JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
+                if (payload.has(NAME) && payload.has(STATUS)) {
+                    changeEndpointStatus(axis2MessageContext, synapseConfiguration, payload);
+                } else {
+                    Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Missing parameters in payload"));
+                }
+            } catch (IOException e) {
+                LOG.error("Error when parsing JSON payload", e);
+                Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Error when parsing JSON payload"));
+            }
         }
 
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
-    private void populateEndpointList(MessageContext messageContext) {
+    private void populateEndpointList(MessageContext messageContext, SynapseConfiguration configuration) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
-        SynapseConfiguration configuration = messageContext.getConfiguration();
 
         Map<String, Endpoint> namedEndpointMap = configuration.getDefinedEndpoints();
         Collection<Endpoint> namedEndpointCollection = namedEndpointMap.values();
@@ -91,9 +117,15 @@ public class EndpointResource extends APIResource {
 
             OMElement element = EndpointSerializer.getElementFromEndpoint(ep);
             OMElement firstElement = element.getFirstElement();
-
-            String type = firstElement.getLocalName();
+            String type;
+            // For template endpoints the endpoint type can not be retrieved from firstElement
+            if (firstElement == null) {
+                type = element.getAttribute(new QName("template")).getLocalName();
+            } else {
+                type = firstElement.getLocalName();
+            }
             endpointObject.put(Constants.TYPE, type);
+            endpointObject.put(IS_ACTIVE, isEndpointActive(ep));
 
             jsonBody.getJSONArray(Constants.LIST).put(endpointObject);
         }
@@ -136,8 +168,44 @@ public class EndpointResource extends APIResource {
         JSONObject endpointObject = endpoint.getJsonRepresentation();
         OMElement synapseConfiguration = EndpointSerializer.getElementFromEndpoint(endpoint);
         endpointObject.put(Constants.SYNAPSE_CONFIGURATION, synapseConfiguration);
+        endpointObject.put(IS_ACTIVE, isEndpointActive(endpoint));
 
         return endpointObject;
     }
 
+    /**
+     * Changes the endpoint state based on json payload.
+     *
+     * @param axis2MessageContext Axis2Message context
+     * @param configuration       Synapse configuration
+     * @param payload             Request json payload
+     */
+    private void changeEndpointStatus(org.apache.axis2.context.MessageContext axis2MessageContext,
+                                      SynapseConfiguration configuration, JsonObject payload) {
+
+        String endpointName = payload.get(NAME).getAsString();
+        String status = payload.get(STATUS).getAsString();
+        Endpoint ep = configuration.getEndpoint(endpointName);
+        if (ep != null) {
+            JSONObject jsonResponse = new JSONObject();
+            if (INACTIVE_STATUS.equalsIgnoreCase(status)) {
+                ep.getContext().switchOff();
+                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, endpointName + " is switched Off");
+            } else if (ACTIVE_STATUS.equalsIgnoreCase(status)) {
+                ep.getContext().switchOn();
+                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, endpointName + " is switched On");
+            } else {
+                jsonResponse = Utils.createJsonError("Provided state is not valid", axis2MessageContext, Constants.BAD_REQUEST);
+            }
+            Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
+        } else {
+            Utils.setJsonPayLoad(axis2MessageContext,  Utils.createJsonError("Endpoint does not exist",
+                    axis2MessageContext, Constants.NOT_FOUND));
+        }
+    }
+
+    private Boolean isEndpointActive(Endpoint endpoint) {
+        // 1 represents the endpoint active state
+        return endpoint.getContext().isState(1);
+    }
 }

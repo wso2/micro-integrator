@@ -34,9 +34,7 @@ public class TestUtils {
      * Get the mi build path to run mi commands.
      */
     public static String getMIBuildPath() throws IOException {
-        File miBuildFilePath = new File(".." + File.separator + ".." + File.separator + ".." + File.separator
-                + "cmd" + File.separator + "build" + File.separator + "wso2mi-cli-" + System.getProperty("version")
-                + File.separator + "bin" + File.separator + "mi");
+        File miBuildFilePath = new File("wso2mi-cli" + File.separator + "bin" + File.separator + "mi");
         return miBuildFilePath.getCanonicalPath();
     }
 

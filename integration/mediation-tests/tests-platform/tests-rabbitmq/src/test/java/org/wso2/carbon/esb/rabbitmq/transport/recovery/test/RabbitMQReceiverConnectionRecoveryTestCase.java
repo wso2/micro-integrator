@@ -15,115 +15,163 @@
  * under the License.
  */
 
-/*
 package org.wso2.carbon.esb.rabbitmq.transport.recovery.test;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQTestUtils;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQConsumerClient;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
-import org.wso2.esb.integration.common.utils.servers.RabbitMQServer;
+import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
 import java.io.File;
 import java.io.IOException;
 
+import static org.wso2.carbon.esb.rabbitmq.TestConstants.SIMPLE_CONSUMER_QUEUE;
+
 public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTest {
 
-    private RabbitMQServer rabbitMQServer;
+    private CarbonLogReader logReader;
     private RabbitMQProducerClient sender;
     private RabbitMQConsumerClient consumer;
-    private LogViewerClient logViewer;
-    private ServerConfigurationManager configurationManagerAxis2;
+    private final String PROXY_NAME = "RabbitMQConsumerProxy";
+    private final String SOURCE_DIR =
+            TestConfigurationProvider.getResourceLocation(ESBTestConstant.ESB_PRODUCT_GROUP) + File.separator
+            + "server" + File.separator + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator + "synapse"
+            + "-configs" + File.separator + "default" + File.separator + "proxy-services" + File.separator;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-
-        rabbitMQServer = RabbitMQTestUtils.getRabbitMQServerInstance();
         sender = new RabbitMQProducerClient("localhost", 5672, "guest", "guest");
-        consumer = new RabbitMQConsumerClient("localhost");
-
-        configurationManagerAxis2 = new ServerConfigurationManager(
-                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        File customAxisConfigAxis2 = new File(
-                getESBResourceLocation() + File.separator + "axis2config" + File.separator + "axis2.xml");
-        configurationManagerAxis2.applyConfiguration(customAxisConfigAxis2);
-        super.init();
-
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
-        loadESBConfigurationFromClasspath("/artifacts/ESB/rabbitmq/transport/rabbitmq_consumer_proxy.xml");
+        logReader = new CarbonLogReader();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with connection recovery - success case")
+            "wso2.esb"}, description = "Test ESB as a RabbitMQ Consumer with connection recovery when the rabbit MQ "
+                                       + "server goes down while messaging")
     public void testRabbitMQConsumerRecoverySuccess() throws Exception {
-        int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
-
-        rabbitMQServer.start();
-        rabbitMQServer.initialize();
+        logReader.start();
 
         //publish 10 messages to broker and wait for ESB to pick up the messages
         publishMessages(10);
         Thread.sleep(30000);
 
         //Stop rabbitmq server
-        rabbitMQServer.stop();
+        RabbitMQTestUtils.stopRabbitMq();
 
         //Recovery time is 10000(retry interval) * 5 (retry count) ms. Therefore continue within recovery time.
         Thread.sleep(30000);
 
         //Restart the server
-        rabbitMQServer.start();
-        rabbitMQServer.initialize();
+        RabbitMQTestUtils.startRabbitMq();
+        Thread.sleep(10000);
 
         //publish another 10 messages to broker and wait for ESB to pick up the messages
+        sender = new RabbitMQProducerClient("localhost", 5672, "guest", "guest");
         publishMessages(10);
         Thread.sleep(30000);
+        logReader.stop();
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int afterLogSize = logs.length;
-        int count = 0;
-
-        for (int i = (afterLogSize - beforeLogSize - 1); i >= 0; i--) {
-            String message = logs[i].getMessage();
-            if (message.contains("received = true")) {
-                count++;
-            }
-        }
+        Assert.assertEquals(logReader.getNumberOfOccurencesForLog("received = true"),
+                            20, "All messages are not received from queue");
 
         //All 20 messages (10 messages before restarting and 10 messages after restarting)
-        Assert.assertEquals(count, 20, "Connection recovery has an error");
-
-        consumer.declareAndConnect("exchange2", "queue2");
+        consumer = new RabbitMQConsumerClient("localhost");
+        consumer.declareAndConnect("exchange2", SIMPLE_CONSUMER_QUEUE);
         Assert.assertEquals(consumer.popAllMessages().size(), 0, "All messages are not received from ESB");
-
-        rabbitMQServer.stop();
     }
 
-    */
-/**
+    @Test(groups = {
+            "wso2.esb"}, description = "Test ESB as a RabbitMQ Consumer with connection recovery when the RabbitMQ "
+                                       + "server is down when the proxy service is deployed and it doesn't come up "
+                                       + "before the recovery interval")
+    public void testRabbitMQFailureConnectionRetry() throws Exception {
+        logReader.start();
+
+        //Stop rabbitmq server
+        RabbitMQTestUtils.stopRabbitMq();
+
+        //Re-deploy the proxy service
+        undeployProxyService(PROXY_NAME);
+        deployProxyService(PROXY_NAME, SOURCE_DIR);
+
+        //Recovery time is 10000(retry interval) * 5 (retry count) = 50000 ms. Therefore the RabbitMQ server starts
+        // after the recovery time.
+        Thread.sleep(70000);
+
+        //Start rabbitmq server
+        RabbitMQTestUtils.startRabbitMq();
+        Thread.sleep(10000);
+        logReader.stop();
+        String retryLog = "Attempting to create connection to RabbitMQ Broker in 10000 ms";
+
+        //Assert connection delay and retry attempts
+        Assert.assertTrue(logReader.checkForLog(retryLog, 5), "The connection retry delay is incorrect");
+        Assert.assertEquals(
+                logReader.getNumberOfOccurencesForLog(retryLog), 5, "The connection retry count is incorrect");
+    }
+
+    @Test(groups = {
+            "wso2.esb"}, description = "Test ESB as a RabbitMQ Consumer with connection recovery when the RabbitMQ "
+                                       + "server is down when the proxy service is deployed and it does come up "
+                                       + "before the recovery interval")
+    public void testRabbitMQSuccessfulConnectionRetry() throws Exception {
+        logReader.start();
+
+        //Stop rabbitmq server
+        RabbitMQTestUtils.stopRabbitMq();
+
+        //Re-deploy the proxy service
+        undeployProxyService(PROXY_NAME);
+        deployProxyService(PROXY_NAME, SOURCE_DIR);
+
+        //Recovery time is 10000(retry interval) * 5 (retry count) ms. Therefore continue within recovery time.
+        Thread.sleep(20000);
+
+        //Restart rabbitmq server
+        RabbitMQTestUtils.startRabbitMq();
+        Thread.sleep(20000);
+
+        logReader.stop();
+        String retryLog = "Attempting to create connection to RabbitMQ Broker in 10000 ms";
+        Assert.assertTrue(logReader.checkForLog(retryLog, 5), "The connection retry delay is incorrect");
+        Assert.assertTrue(logReader.checkForLog("Successfully connected to RabbitMQ Broker", 5),
+                          "Unable to establish the connection with the broker");
+        logReader.clearLogs();
+        logReader.start();
+        //publish another 10 messages to broker and wait for ESB to pick up the messages
+        sender = new RabbitMQProducerClient("localhost", 5672, "guest", "guest");
+        publishMessages(10);
+        Thread.sleep(30000);
+        logReader.stop();
+
+        Assert.assertEquals(logReader.getNumberOfOccurencesForLog("received = true"),
+                            10, "All messages are not received from queue");
+
+        //All 20 messages (10 messages before restarting and 10 messages after restarting)
+        consumer = new RabbitMQConsumerClient("localhost");
+        consumer.declareAndConnect("exchange2", SIMPLE_CONSUMER_QUEUE);
+        Assert.assertEquals(consumer.popAllMessages().size(), 0, "All messages are not received from ESB");
+    }
+
+    /**
      * Publish messages to broker
      *
      * @param messageCount number of messages to publish
-     *//*
-
-    private void publishMessages(int messageCount) throws InterruptedException {
+     */
+    private void publishMessages(int messageCount) {
         try {
-            sender.declareAndConnect("exchange2", "queue2");
+            sender.declareAndConnect("exchange2", SIMPLE_CONSUMER_QUEUE);
             for (int i = 0; i < messageCount; i++) {
                 String message = "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" + "<ser:order>\n"
-                        + "<ser:price>100</ser:price>\n" + "<ser:quantity>2000</ser:quantity>\n"
-                        + "<ser:symbol>RMQ</ser:symbol>\n" + "</ser:order>\n" + "</ser:placeOrder>";
+                                 + "<ser:price>100</ser:price>\n" + "<ser:quantity>2000</ser:quantity>\n"
+                                 + "<ser:symbol>RMQ</ser:symbol>\n" + "</ser:order>\n" + "</ser:placeOrder>";
                 sender.sendMessage(message, "text/plain");
             }
         } catch (IOException e) {
@@ -136,12 +184,7 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
     @AfterClass(alwaysRun = true)
     public void end() throws Exception {
         super.cleanup();
-        logViewer = null;
-        rabbitMQServer.stop();
-        rabbitMQServer = null;
         sender = null;
         consumer = null;
-        configurationManagerAxis2.restoreToLastConfiguration();
     }
 }
-*/

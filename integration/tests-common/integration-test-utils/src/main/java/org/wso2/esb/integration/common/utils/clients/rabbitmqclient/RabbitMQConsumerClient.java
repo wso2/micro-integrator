@@ -57,7 +57,7 @@ public class RabbitMQConsumerClient {
             if (!channel.isOpen()) {
                 channel = connection.createChannel();
             }
-            channel.exchangeDeclare(exchangeName, "direct");
+            channel.exchangeDeclare(exchangeName, "direct", true);
         }
 
         try {
@@ -66,7 +66,7 @@ public class RabbitMQConsumerClient {
             if (!channel.isOpen()) {
                 channel = connection.createChannel();
             }
-            channel.queueDeclare(routeKey, false, false, false, null);
+            channel.queueDeclare(routeKey, true, false, false, null);
         }
 
         channel.queueBind(routeKey, exchangeName, routeKey);

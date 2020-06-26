@@ -172,45 +172,6 @@ public final class UserCoreUtil {
     }
 
     /**
-     * @param password
-     * @param passwordHashMethod
-     * @param isKdcEnabled
-     * @return
-     * @throws UserStoreException
-     */
-    @Deprecated
-    public static String getPasswordToStore(String password, String passwordHashMethod,
-                                            boolean isKdcEnabled) throws UserStoreException {
-
-        if (isKdcEnabled) {
-            // If KDC is enabled we will always use plain text passwords.
-            // Cause - KDC cannot operate with hashed passwords.
-
-            return password;
-        }
-
-        String passwordToStore = password;
-
-        if (passwordHashMethod != null) {
-
-            if (passwordHashMethod
-                    .equals(UserCoreConstants.RealmConfig.PASSWORD_HASH_METHOD_PLAIN_TEXT)) {
-                return passwordToStore;
-            }
-
-            try {
-                MessageDigest messageDigest = MessageDigest.getInstance(passwordHashMethod);
-                byte[] digestValue = messageDigest.digest(password.getBytes());
-                passwordToStore = "{" + passwordHashMethod + "}" + Base64.encode(digestValue);
-//				passwordToStore = Base64.encode(digestValue);
-            } catch (NoSuchAlgorithmException e) {
-                throw new UserStoreException("Invalid hashMethod", e);
-            }
-        }
-        return passwordToStore;
-    }
-
-    /**
      * process the original password to be stored as per the given hash method and the status of Kerberos Key
      * Distribution Center (KDC).
      * If KDC is enabled plain text password is returned in a byte array since it cannot operate with hashed passwords.
@@ -1117,5 +1078,10 @@ public final class UserCoreUtil {
                 getFirstProperty(UserCoreConstants.ENABLE_EMAIL_USER_NAME);
         return enableEmailUserName != null && "true".equals(enableEmailUserName.trim());
 
+    }
+
+    public static void logUnsupportedOperation() {
+        log.debug("This Functionality is not available in WSO2 Micro Integrator",
+                 new Throwable("Unsupported operation"));
     }
 }

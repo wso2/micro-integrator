@@ -305,6 +305,11 @@ public class JMSPollingConsumer {
                                 logger.error("Error acknowledging message : " + msg.getJMSMessageID(), e);
                             }
                         } else {
+                            // recoverSession method is used only in non transacted session
+                            if (!jmsConnectionFactory.isTransactedSession()) {
+                                jmsConnectionFactory.recoverSession(session, false);
+                            }
+
                             // Need to create a new consumer and session since
                             // we need to rollback the message
                             if (messageConsumer != null) {
@@ -420,14 +425,16 @@ public class JMSPollingConsumer {
     }
 
     public void destroy() {
-        if (messageConsumer != null) {
-            jmsConnectionFactory.closeConsumer(messageConsumer, true);
-        }
-        if (session != null) {
-            jmsConnectionFactory.closeSession(session, true);
-        }
-        if (connection != null) {
-            jmsConnectionFactory.closeConnection(connection, true);
+        synchronized (jmsConnectionFactory) {
+            if (messageConsumer != null) {
+                jmsConnectionFactory.closeConsumer(messageConsumer, true);
+            }
+            if (session != null) {
+                jmsConnectionFactory.closeSession(session, true);
+            }
+            if (connection != null) {
+                jmsConnectionFactory.closeConnection(connection, true);
+            }
         }
     }
 

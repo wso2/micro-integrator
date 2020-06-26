@@ -18,9 +18,8 @@
 package org.wso2.micro.integrator.initializer.deployment;
 
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentEngine;
-import org.apache.axis2.deployment.DeploymentException;
+import org.apache.axis2.engine.AxisConfigurator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
@@ -30,19 +29,17 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.micro.integrator.dataservices.core.DBDeployer;
-import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
-import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
-import org.wso2.micro.integrator.initializer.StartupFinalizer;
-import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
-import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
-import org.wso2.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager;
-import org.wso2.micro.integrator.initializer.deployment.artifact.deployer.ArtifactDeploymentManager;
+import org.wso2.micro.core.CarbonAxisConfigurator;
+import org.wso2.micro.integrator.dataservices.core.DBDeployer;
+import org.wso2.micro.integrator.initializer.ServiceBusConstants;
+import org.wso2.micro.integrator.initializer.StartupFinalizer;
+import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
+import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
+import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
-
-import java.io.File;
+import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
 
 @Component(name = "org.wso2.micro.integrator.initializer.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
@@ -57,40 +54,28 @@ public class AppDeployerServiceComponent {
     protected void activate(ComponentContext ctxt) {
 
         if (log.isDebugEnabled()) {
-            log.debug(AppDeployerServiceComponent.class.getName() + "#activate() BEGIN - " + System.currentTimeMillis());
+            log.debug(
+                    AppDeployerServiceComponent.class.getName() + "#activate() BEGIN - " + System.currentTimeMillis());
             log.debug("Activating AppDeployerServiceComponent");
         }
 
         // ConfigurationHolder is updated by org.wso2.micro.integrator.initializer.ServiceBusInitializer
         configCtx = ConfigurationHolder.getInstance().getAxis2ConfigurationContextService().getServerConfigContext();
 
-        // Initialize deployers
-        ArtifactDeploymentManager artifactDeploymentManager = new ArtifactDeploymentManager(configCtx.getAxisConfiguration());
-        CAppDeploymentManager cAppDeploymentManager = new CAppDeploymentManager(configCtx.getAxisConfiguration());
-        initializeDeployers(artifactDeploymentManager, cAppDeploymentManager);
+        // Initialize deployers in micro integrator
+        initializeDeployers();
 
-        // Register eventSink deployer
-        registerEventSinkDeployer(artifactDeploymentManager);
-
-        // Deploy artifacts
-        artifactDeploymentManager.deploy();
-
-        // Deploy carbon applications
-        try {
-            cAppDeploymentManager.deploy();
-        } catch (CarbonException e) {
-            log.error("Error occurred while deploying carbon application", e);
-        }
-        log.debug("MicroIntegrator artifact/Capp Deployment completed");
+        // Invoke all registered deployers to deploy services
+        invokeRegisteredDeployers();
 
         // Finalize server startup
         startupFinalizer = new StartupFinalizer(configCtx, ctxt.getBundleContext());
         startupFinalizer.finalizeStartup();
 
         if (log.isDebugEnabled()) {
-            log.debug(AppDeployerServiceComponent.class.getName() + "#activate() COMPLETE - " + System.currentTimeMillis());
+            log.debug(AppDeployerServiceComponent.class.getName() + "#activate() COMPLETE - " +
+                              System.currentTimeMillis());
         }
-
     }
 
     @Deactivate
@@ -143,71 +128,71 @@ public class AppDeployerServiceComponent {
     }
 
     /**
-     * Function to initialize deployer
-     *
-     * @param artifactDeploymentManager
-     * @param cAppDeploymentManager
+     * Function to initialize deployers.
      */
-    private void initializeDeployers(ArtifactDeploymentManager artifactDeploymentManager,
-                                     CAppDeploymentManager cAppDeploymentManager) {
+    private void initializeDeployers() {
+        DeploymentEngine deploymentEngine = (DeploymentEngine) configCtx.getAxisConfiguration().getConfigurator();
 
+        // Register data services deployer in DeploymentEngine
+        addDBDeployer(deploymentEngine);
+
+        // Register CappDeployer in DeploymentEngine (required for CApp hot deployment)
+        addCAppDeployer(deploymentEngine);
+
+    }
+
+    /**
+     * Initialize and add the CappDeployer to the Deployment Engine.
+     */
+    private void addCAppDeployer(DeploymentEngine deploymentEngine) {
         String artifactRepoPath = configCtx.getAxisConfiguration().getRepository().getPath();
 
-        log.debug("Initializing ArtifactDeploymentManager deployment manager");
+        // Initialize CApp deployer here
+        CappDeployer cappDeployer = new CappDeployer();
+        cappDeployer.setDirectory(artifactRepoPath + DeploymentConstants.CAPP_DIR_NAME);
+        cappDeployer.init(configCtx);
 
-        // TODO :- unComment after installing DSS
+        // Register application deployment handlers
+        cappDeployer.registerDeploymentHandler(new FileRegistryResourceDeployer(
+                synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration().getRegistry()));
+        cappDeployer.registerDeploymentHandler(new DataSourceCappDeployer());
+        cappDeployer.registerDeploymentHandler(new DefaultAppDeployer());
+        cappDeployer.registerDeploymentHandler(new SynapseAppDeployer());
+
+        //Add the deployer to deployment engine. This should be done after registering the deployment handlers.
+        deploymentEngine.addDeployer(cappDeployer, artifactRepoPath + DeploymentConstants.CAPP_DIR_NAME,
+                                     DeploymentConstants.CAPP_TYPE_EXTENSION);
+        if (log.isDebugEnabled()) {
+            log.debug("Successfully registered CappDeployer");
+        }
+    }
+
+    /**
+     * Initialize and add the Data Service Deployer to the Deployment Engine.
+     */
+    private void addDBDeployer(DeploymentEngine deploymentEngine) {
+        String artifactRepoPath = configCtx.getAxisConfiguration().getRepository().getPath();
+
         // Create data services deployer
         DBDeployer dbDeployer = new DBDeployer();
         dbDeployer.setDirectory(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME);
         dbDeployer.setExtension(DeploymentConstants.DSS_TYPE_EXTENSION);
 
-        // Register artifact deployers in ArtifactDeploymentManager
-        try {
-            artifactDeploymentManager.registerDeployer(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME, dbDeployer);
-        } catch (DeploymentException e) {
-            log.error("Error occurred while registering data services deployer");
-        }
-
-        // Initialize micro integrator carbon application deployer
-        log.debug("Initializing carbon application deployment manager");
-
-        // Register deployers in DeploymentEngine (required for CApp deployment)
-        DeploymentEngine deploymentEngine = (DeploymentEngine) configCtx.getAxisConfiguration().getConfigurator();
+        // Register deployer in DeploymentEngine
         deploymentEngine.addDeployer(dbDeployer, DeploymentConstants.DSS_DIR_NAME, DeploymentConstants.DSS_TYPE_DBS);
 
-        // Register application deployment handlers
-        //TODO
-       cAppDeploymentManager.registerDeploymentHandler(new FileRegistryResourceDeployer(
-                synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration().getRegistry()));
-        cAppDeploymentManager.registerDeploymentHandler(new DataSourceCappDeployer());
-        cAppDeploymentManager.registerDeploymentHandler(new SynapseAppDeployer());
-        cAppDeploymentManager.registerDeploymentHandler(new DefaultAppDeployer());
-
+        if (log.isDebugEnabled()) {
+            log.debug("Successfully registered Data Service Deployer");
+        }
     }
 
     /**
-     * Function to register eventSink deployer.
-     *
-     * @param artifactDeploymentManager artifactDeploymentManager which manages and performs artifact deployment
+     * Invoke all registered deployers.
      */
-    public void registerEventSinkDeployer(ArtifactDeploymentManager artifactDeploymentManager) {
-        try {
-            String carbonRepoPath = configCtx.getAxisConfiguration().getRepository().getPath();
-            String eventSinkPath = carbonRepoPath + File.separator + "event-sinks";
-            Class deployerClass = Class.forName("org.wso2.micro.integrator.event.sink.EventSinkDeployer");
-            Deployer deployer = (Deployer) deployerClass.newInstance();
-            artifactDeploymentManager.registerDeployer(eventSinkPath, deployer);
-            if (log.isDebugEnabled()) {
-                log.debug("Successfully registered eventSink deployer");
-            }
-        } catch (ClassNotFoundException e) {
-            log.error("Can not find class EventSinkDeployer", e);
-        } catch (InstantiationException e) {
-            log.error("Error instantiating EventSinkDeployer class", e);
-        } catch (DeploymentException e) {
-            log.error("Error registering eventSink deployer", e);
-        } catch (IllegalAccessException e) {
-            log.error("Error instantiating EventSinkDeployer class", e);
+    private void invokeRegisteredDeployers() {
+        AxisConfigurator axisConfigurator = configCtx.getAxisConfiguration().getConfigurator();
+        if (axisConfigurator instanceof CarbonAxisConfigurator) {
+            ((CarbonAxisConfigurator) axisConfigurator).deployServices();
         }
     }
 }

@@ -55,6 +55,8 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import static org.wso2.micro.core.util.CarbonUtils.resolveSystemProperty;
+
 /**
  * This class stores the configuration of the Carbon Server.
  */
@@ -84,6 +86,11 @@ public class CarbonServerConfigurationService {
 	 * transport.
 	 */
 	public static final String HTTP_PORT = "HTTP.Port";
+
+	/**
+	 * Constant used to define the WSO2 server version.
+	 */
+	public static final String SERVER_VERSION = "Version";
 
 	private static final int ENTITY_EXPANSION_LIMIT = 0;
 
@@ -292,7 +299,7 @@ public class CarbonServerConfigurationService {
 				} else {
 					value = element.getText();
 				}
-				value = replaceSystemProperty(value);
+				value = resolveSystemProperty(value);
 				addToConfiguration(key, value);
 			}
 			readChildElements(element, nameStack);
@@ -317,38 +324,6 @@ public class CarbonServerConfigurationService {
 		List<String> list = new ArrayList<String>();
 		list.add(value);
 		configuration.put(key, list);
-	}
-
-	private String replaceSystemProperty(String text) {
-		int indexOfStartingChars = -1;
-		int indexOfClosingBrace;
-
-		// The following condition deals with properties.
-		// Properties are specified as ${system.property},
-		// and are assumed to be System properties
-		while (indexOfStartingChars < text.indexOf("${")
-				&& (indexOfStartingChars = text.indexOf("${")) != -1
-				&& (indexOfClosingBrace = text.indexOf('}')) != -1) { // Is a
-																		// property
-																		// used?
-			String sysProp = text.substring(indexOfStartingChars + 2,
-                                            indexOfClosingBrace);
-			String propValue = System.getProperty(sysProp);
-			if (propValue == null) {
-				propValue = System.getenv(sysProp);
-			}
-			if (propValue != null) {
-				text = text.substring(0, indexOfStartingChars) + propValue
-						+ text.substring(indexOfClosingBrace + 1);
-			}
-			if (sysProp.equals("carbon.home") && propValue != null
-					&& propValue.equals(".")) {
-
-				text = new File(".").getAbsolutePath() + File.separator + text;
-
-			}
-		}
-		return text;
 	}
 
 	/**
@@ -551,5 +526,14 @@ public class CarbonServerConfigurationService {
 
 	protected String getProtectedValue(String key) {
 		return secretResolver.resolve("Carbon." + key);
+	}
+
+	/**
+	 * Take the WSO2 server version from the carbon.xml file.
+	 *
+	 * @return WSO2 server version.
+	 */
+	public String getServerVersion() {
+	    return getFirstProperty(SERVER_VERSION);
 	}
 }

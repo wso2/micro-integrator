@@ -65,6 +65,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import static org.apache.axis2.transport.TransportListener.HOST_ADDRESS;
+import static org.wso2.micro.core.util.CarbonUtils.resolveSystemProperty;
 
 public class CoreServerInitializer {
 
@@ -111,10 +112,6 @@ public class CoreServerInitializer {
             log.debug(CoreServerInitializer.class.getName() + "#initMIServer() BEGIN - " + System.currentTimeMillis());
         }
         try {
-
-            ApplicationManager applicationManager = ApplicationManager.getInstance();
-            applicationManager.init(); // this will allow application manager to register deployment handlers
-
             // read required-features.xml
             URL reqFeaturesResource = bundleContext.getBundle().getResource(AppDeployerConstants.REQ_FEATURES_XML);
             if (reqFeaturesResource != null) {
@@ -164,7 +161,7 @@ public class CoreServerInitializer {
             hence we are setting it manually here */
             //TODO: proper fix would be to move the networkUtil class to carbon.base level
             String serverURL = serverConfigurationService.getFirstProperty(org.wso2.micro.core.Constants.SERVER_URL);
-            serverURL = Utils.replaceSystemProperty(serverURL);
+            serverURL = resolveSystemProperty(serverURL);
             serverConfigurationService.overrideConfigurationProperty(org.wso2.micro.core.Constants.SERVER_URL, serverURL);
             serverName = serverConfigurationService.getFirstProperty("Name");
 
@@ -286,6 +283,7 @@ public class CoreServerInitializer {
             bundleContext.registerService(Axis2ConfigurationContextService.class.getName(),
                     axis2ConfigurationContextService, null);
             CarbonCoreDataHolder.getInstance().setAxis2ConfigurationContextService(axis2ConfigurationContextService);
+            MicroIntegratorBaseUtils.setCarbonAxisConfigurator(carbonAxisConfigurator);
 
         } catch (Throwable e) {
             log.fatal("WSO2 Carbon initialization Failed", e);

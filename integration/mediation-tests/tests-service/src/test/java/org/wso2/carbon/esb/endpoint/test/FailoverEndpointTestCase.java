@@ -275,7 +275,7 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         for (int i = 0; i < 4; i++) {
             try {
                 lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"), null,
-                                                "5000");
+                                                "10000");
             } catch (AxisFault e) {
                 Assert.assertFalse(e.getMessage().equalsIgnoreCase(ESBTestConstant.READ_TIME_OUT),
                                    "The client was timeout due to Failover Logic doesn't retry for connection refused");

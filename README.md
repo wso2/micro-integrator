@@ -8,14 +8,14 @@
 WSO2 Micro integrator is a open-source, lightweight, fast,
 scalable, and distributed microservice integration layer which is the
 cloud-native distribution of [WSO2 Enterprise Integration
-(EI)](https://wso2.com/integration/)
+(EI)](https://wso2.com/enterprise-integrator/6.6.0). Please refer to the [official 
+documentation of WSO2 Micro Integrator](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/introduction/) for further information. 
 
 ## Summary
 
 - [**Why Micro Integrator?**](#why-micro-integrator?)
 - [**Getting Started**](#getting-started)
 - [**Contributing**](#contributing)
-- [**Enterprise Support & Demo**](#enterprise-support--demo)
 - [**Licence**](#licence)
 - [**Copyright**](#copyright)
 
@@ -27,13 +27,13 @@ configuration-driven approach. The Micro Integrator gives developers
 the best possible experience for developing, testing, and deploying
 integrations and tooling.
 
-The Micro integrator developer experience is especially tuned for,
+The Micro Integrator developer experience is especially tuned for,
 - Integration developers who prefer config driven approach.
 - People who are looking for a solution to make their brownfield (ie.
   legacy systems) integrated into their new microservices based
   solutions.
 - Existing WSO2 EI and integration middleware users who want to move
-  into cloud native or Micro services architecture.
+  into cloud native or Microservices architecture.
 
 The Micro Integrator also provides an enhanced experience for those
 using a container-based architecture and works natively on the Kubernetes
@@ -55,8 +55,8 @@ are the main design objectives for developing the Micro Integrator.
 ## Getting Started
 
 Please refer to the instructions on the installation of, and working with, the Micro Integrator by visiting the documentation for
-[Working with the Micro Integrator](doc/working-with-the-micro-integrator.md).
-You can also try out on a simple scenario of forwarding a request to a service by following the documenation on [Getting Started.](examples/getting-started/README.md)
+[Setup and Install](https://ei.docs.wso2.com/en/latest/micro-integrator/setup/installation/install_prerequisites/).
+You can also try out on a simple scenario of forwarding a request to a service by following the documenation on [Getting Started.](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/introduction/)
 
 ## Contributing
 
@@ -79,11 +79,6 @@ maven build. This builds and pushes the micro-integrator Docker image to the loc
 ```bash
 mvn clean install -Ddocker.skip=false
 ```
-
-## Enterprise Support & Demo
-
-If you are looking for enterprise level support for the solutions you develop using WSO2 Micro Integrator please visit
-https://wso2.com/integration/.
 
 ## License
 

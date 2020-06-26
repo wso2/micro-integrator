@@ -23,10 +23,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpException;
 import org.apache.http.nio.NHttpServerConnection;
+import org.apache.synapse.commons.CorrelationConstants;
+import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.transport.passthru.ProtocolState;
 import org.apache.synapse.transport.passthru.SourceContext;
 import org.apache.synapse.transport.passthru.SourceHandler;
 import org.apache.synapse.transport.passthru.SourceRequest;
+import org.apache.synapse.transport.passthru.TargetContext;
 import org.apache.synapse.transport.passthru.config.SourceConfiguration;
 import org.wso2.carbon.inbound.endpoint.protocol.http.config.WorkerPoolConfiguration;
 import org.wso2.carbon.inbound.endpoint.protocol.http.management.HTTPEndpointManager;
@@ -57,6 +60,13 @@ public class InboundHttpSourceHandler extends SourceHandler {
     @Override
     public void requestReceived(NHttpServerConnection conn) {
         try {
+
+            if (sourceConfiguration.isCorrelationLoggingEnabled()) {
+                setCorrelationId(conn);
+                SourceContext sourceContext = (SourceContext) conn.getContext()
+                        .getAttribute(TargetContext.CONNECTION_INFORMATION);
+                sourceContext.updateLastStateUpdatedTime();
+            }
             //Create Source Request related to HTTP Request
             SourceRequest request = getSourceRequest(conn);
             if (request == null) {
@@ -70,23 +80,37 @@ public class InboundHttpSourceHandler extends SourceHandler {
 
             Pattern dispatchPattern = null;
 
-            WorkerPoolConfiguration workerPoolConfiguration = HTTPEndpointManager.getInstance()
-                    .getWorkerPoolConfiguration(SUPER_TENANT_DOMAIN_NAME, port);
-            if (workerPoolConfiguration != null) {
-                workerPool = sourceConfiguration.getWorkerPool(workerPoolConfiguration.getWorkerPoolCoreSize(),
-                                                               workerPoolConfiguration.getWorkerPoolSizeMax(),
-                                                               workerPoolConfiguration
-                                                                       .getWorkerPoolThreadKeepAliveSec(),
-                                                               workerPoolConfiguration.getWorkerPoolQueuLength(),
-                                                               workerPoolConfiguration.getThreadGroupID(),
-                                                               workerPoolConfiguration.getThreadID());
+            // Need to initialize workerPool only once
+            if (workerPool == null) {
+                WorkerPoolConfiguration workerPoolConfiguration = HTTPEndpointManager.getInstance()
+                        .getWorkerPoolConfiguration(SUPER_TENANT_DOMAIN_NAME, port);
+                if (workerPoolConfiguration != null) {
+                    workerPool = sourceConfiguration.getWorkerPool(workerPoolConfiguration.getWorkerPoolCoreSize(),
+                            workerPoolConfiguration.getWorkerPoolSizeMax(),
+                            workerPoolConfiguration
+                                    .getWorkerPoolThreadKeepAliveSec(),
+                            workerPoolConfiguration.getWorkerPoolQueuLength(),
+                            workerPoolConfiguration.getThreadGroupID(),
+                            workerPoolConfiguration.getThreadID());
+                } else {
+                    workerPool = sourceConfiguration.getWorkerPool();
+                }
             }
 
-            if (workerPool == null) {
-                workerPool = sourceConfiguration.getWorkerPool();
+            Object correlationId = conn.getContext().getAttribute(CorrelationConstants.CORRELATION_ID);
+            if (correlationId != null) {
+                workerPool.execute(
+                        new InboundCorrelationEnabledHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request,
+                                                                      sourceConfiguration, os,
+                                                                      System.currentTimeMillis(),
+                                                                      correlationId.toString()));
+            } else {
+                workerPool.execute(
+                        new InboundHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request, sourceConfiguration, os));
             }
-            workerPool.execute(
-                    new InboundHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request, sourceConfiguration, os));
+            //increasing the input request metric
+            sourceConfiguration.getMetrics().requestReceived();
+
         } catch (HttpException e) {
             log.error("HttpException occurred when creating Source Request", e);
             informReaderError(conn);
@@ -99,5 +123,4 @@ public class InboundHttpSourceHandler extends SourceHandler {
             sourceConfiguration.getSourceConnections().shutDownConnection(conn, true);
         }
     }
-
 }

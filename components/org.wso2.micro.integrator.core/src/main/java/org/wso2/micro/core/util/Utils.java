@@ -25,27 +25,6 @@ public class Utils {
 
     private static Log log = LogFactory.getLog(Utils.class);
 
-    public static String replaceSystemProperty(String text) {
-        int indexOfStartingChars = -1;
-        int indexOfClosingBrace;
-
-        // The following condition deals with properties.
-        // Properties are specified as ${system.property},
-        // and are assumed to be System properties
-        while (indexOfStartingChars < text.indexOf("${") &&
-                (indexOfStartingChars = text.indexOf("${")) != -1 &&
-                (indexOfClosingBrace = text.indexOf('}')) != -1) { // Is a property used?
-            String sysProp = text.substring(indexOfStartingChars + 2,
-                    indexOfClosingBrace);
-            String propValue = System.getProperty(sysProp);
-            if (propValue != null) {
-                text = text.substring(0, indexOfStartingChars) + propValue +
-                        text.substring(indexOfClosingBrace + 1);
-            }
-        }
-        return text;
-    }
-
     public static boolean addCAppDeployer(AxisConfiguration axisConfiguration) {
         boolean successfullyAdded = false;
         try {

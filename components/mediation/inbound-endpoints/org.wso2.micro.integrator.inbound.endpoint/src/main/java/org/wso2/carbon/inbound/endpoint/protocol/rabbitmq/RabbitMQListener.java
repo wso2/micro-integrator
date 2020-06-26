@@ -18,8 +18,10 @@
 
 package org.wso2.carbon.inbound.endpoint.protocol.rabbitmq;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.SynapseException;
 import org.apache.synapse.inbound.InboundProcessorParams;
 import org.wso2.carbon.inbound.endpoint.common.InboundOneTimeTriggerRequestProcessor;
 import org.wso2.carbon.inbound.endpoint.protocol.PollingConstants;
@@ -27,23 +29,19 @@ import org.wso2.carbon.inbound.endpoint.protocol.PollingConstants;
 import java.util.Properties;
 
 /**
- * Listener to get a rabbitmq client from the factory
+ * The listener implementation to initialize the RabbitMQ consumer once with inbound parameters.
  */
 public class RabbitMQListener extends InboundOneTimeTriggerRequestProcessor {
 
     private static final String ENDPOINT_POSTFIX = "RABBITMQ" + COMMON_ENDPOINT_POSTFIX;
     private static final Log log = LogFactory.getLog(RabbitMQListener.class);
-
     private String injectingSeq;
     private String onErrorSeq;
-
     private Properties rabbitmqProperties;
     private boolean sequential;
-
     private RabbitMQConnectionFactory rabbitMQConnectionFactory;
-    private RabbitMQConnectionConsumer connectionConsumer;
+    private RabbitMQConsumer rabbitMQConsumer;
     private RabbitMQInjectHandler injectHandler;
-    private InboundProcessorParams params;
 
     public RabbitMQListener(InboundProcessorParams params) {
         this.name = params.getName();
@@ -51,43 +49,43 @@ public class RabbitMQListener extends InboundOneTimeTriggerRequestProcessor {
         this.onErrorSeq = params.getOnErrorSeq();
         this.synapseEnvironment = params.getSynapseEnvironment();
         this.rabbitmqProperties = params.getProperties();
-        this.params = params;
 
-        this.sequential = true;
-        if (rabbitmqProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL) != null) {
-            this.sequential = Boolean
-                    .parseBoolean(rabbitmqProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL));
+        this.sequential = BooleanUtils.toBooleanDefaultIfNull(BooleanUtils.toBooleanObject(
+                rabbitmqProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL)), true);
+
+        this.coordination = BooleanUtils.toBooleanDefaultIfNull(BooleanUtils.toBooleanObject(
+                rabbitmqProperties.getProperty(PollingConstants.INBOUND_COORDINATION)), true);
+
+        try {
+            rabbitMQConnectionFactory = new RabbitMQConnectionFactory(rabbitmqProperties);
+        } catch (RabbitMQException e) {
+            throw new SynapseException("Error occurred while initializing the connection factory.", e);
         }
-
-        this.coordination = true;
-        if (rabbitmqProperties.getProperty(PollingConstants.INBOUND_COORDINATION) != null) {
-            this.coordination = Boolean
-                    .parseBoolean(rabbitmqProperties.getProperty(PollingConstants.INBOUND_COORDINATION));
-        }
-
-        rabbitMQConnectionFactory = new RabbitMQConnectionFactory(rabbitmqProperties);
 
         injectHandler = new RabbitMQInjectHandler(injectingSeq, onErrorSeq, sequential, synapseEnvironment);
     }
 
     @Override
     public void destroy() {
-        connectionConsumer.requestShutdown();
-        super.destroy();
+        destroy(true);
+    }
+
+    @Override
+    public void destroy(boolean removeTask) {
+        rabbitMQConsumer.close();
+        super.destroy(removeTask);
     }
 
     @Override
     public void init() {
         log.info("RABBITMQ inbound endpoint " + name + " initializing ...");
-        connectionConsumer = new RabbitMQConnectionConsumer(rabbitMQConnectionFactory, rabbitmqProperties,
-                                                            injectHandler);
-        connectionConsumer.setInboundName(name);
+        rabbitMQConsumer = new RabbitMQConsumer(rabbitMQConnectionFactory, rabbitmqProperties, injectHandler);
+        rabbitMQConsumer.setInboundName(name);
         start();
     }
 
-    public void start() {
-
-        RabbitMQTask rabbitMQTask = new RabbitMQTask(connectionConsumer);
+    private void start() {
+        RabbitMQTask rabbitMQTask = new RabbitMQTask(rabbitMQConsumer);
         start(rabbitMQTask, ENDPOINT_POSTFIX);
     }
 

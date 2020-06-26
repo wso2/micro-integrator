@@ -94,7 +94,9 @@ parameter.password = "wso2_secondary"
 parameter.from = "wso2_secondary@localhost"
 
 [transport.ws]
-sender.enable = false
+sender.enable = "true"
+sender.outflow_dispatch_sequence = "outflowDispatchSeq"
+sender.outflow_dispatch_fault_sequence = "outflowFaultSeq"
 
 [transport.mqtt]
 listener.enable = true
@@ -116,3 +118,5 @@ sender.enable = true
 [transport.local]
 sender.nonblocking.enable = true
 
+[management_api.jwt_token_security_handler]
+enable = false
