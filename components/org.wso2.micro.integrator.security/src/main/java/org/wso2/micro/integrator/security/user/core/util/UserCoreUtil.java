@@ -1079,4 +1079,9 @@ public final class UserCoreUtil {
         return enableEmailUserName != null && "true".equals(enableEmailUserName.trim());
 
     }
+
+    public static void logUnsupportedOperation() {
+        log.debug("This Functionality is not available in WSO2 Micro Integrator",
+                 new Throwable("Unsupported operation"));
+    }
 }
