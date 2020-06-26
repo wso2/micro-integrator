@@ -22,7 +22,7 @@ import org.wso2.micro.integrator.initializer.handler.transaction.exception.Trans
 import org.wso2.micro.integrator.initializer.handler.transaction.exception.TransactionCounterInitializationException;
 import org.wso2.micro.integrator.initializer.handler.transaction.store.connector.RDBMSConnector;
 
-import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 import javax.crypto.Cipher;
 import javax.sql.DataSource;
@@ -55,21 +55,32 @@ public class TransactionStore {
      * @throws TransactionCounterException -
      */
     public void addTransaction() throws TransactionCounterException {
-        try {
-            this.rdbmsConnector.addTransaction();
-        } catch (SQLException e) {
-            throw new TransactionCounterException(
-                    "Error occurred while adding transaction count to the database", e);
-        }
+        this.rdbmsConnector.addTransaction();
     }
 
+    /**
+     * Get the transaction count for the given year and month.
+     *
+     * @param year        Year.
+     * @param monthNumber Month.
+     * @throws TransactionCounterException -
+     */
     public long getTransactionCountOfMonth(int year, int monthNumber) throws TransactionCounterException {
-        try {
-            return this.rdbmsConnector.getTransactionCountOfMonth(year, monthNumber);
-        } catch (SQLException e) {
-            throw new TransactionCounterException(
-                    "Error occurred while getting the transaction count from the database", e);
-        }
+        return this.rdbmsConnector.getTransactionCountOfMonth(year, monthNumber);
+
+    }
+
+    /**
+     * Get transaction count data for a given period of time.
+     *
+     * @param startDate Start date.
+     * @param endDate   End date.
+     * @return a list of string arrays with information of the column names and row data
+     * @throws TransactionCounterException -
+     */
+    public List<String[]> getTransactionCountDataWithColumnNames(String startDate, String endDate)
+            throws TransactionCounterException {
+        return this.rdbmsConnector.getTransactionCountDataWithColumnNames(startDate, endDate);
     }
 
     /**
