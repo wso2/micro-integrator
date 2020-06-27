@@ -156,12 +156,9 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
 
     @Override
     public boolean handleResponseOutFlow(MessageContext synCtx) {
-        org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) synCtx)
-                .getAxis2MessageContext();
-
         if (null != synCtx.getProperty(SynapseConstants.PROXY_SERVICE)) {
             stopTimers(synCtx.getProperty(MetricConstants.PROXY_LATENCY_TIMER), synCtx);
-        } else if (null == axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL)) {
+        } else {
             serviceInvokePort = getServiceInvokePort(synCtx);
             if (null != synCtx.getProperty(SynapseConstants.IS_INBOUND) &&
                     (serviceInvokePort != internalHttpApiPort)) {
