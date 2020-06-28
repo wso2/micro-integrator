@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.observability.handler.metrichandler;
+package org.wso2.micro.integrator.observability.metric.handler;
 
 /**
  * The Metric Reporter allows one to access the relevant Metric Reporter implementation.

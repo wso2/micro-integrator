@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.observability.handler.metrichandler;
+package org.wso2.micro.integrator.observability.metric.handler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,8 +30,8 @@ import org.apache.synapse.rest.RESTUtils;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
-import org.wso2.micro.integrator.observability.handler.metrichandler.prometheus.reporter.PrometheusReporter;
-import org.wso2.micro.integrator.observability.handler.util.MetricConstants;
+import org.wso2.micro.integrator.observability.metric.handler.prometheus.reporter.PrometheusReporter;
+import org.wso2.micro.integrator.observability.util.MetricConstants;
 
 import java.util.Map;
 

@@ -30,7 +30,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>org.wso2.micro.integrator.prometheus.publisher</module>
         <module>org.wso2.micro.integrator.analytics.messageflow.data.publisher</module>
         <module>org.wso2.micro.integrator.analytics.data.publisher.util</module>
         <module>org.wso2.micro.integrator.observability</module>

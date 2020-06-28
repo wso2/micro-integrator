@@ -50,8 +50,17 @@
             <artifactId>org.wso2.micro.integrator.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.synapse</groupId>
-            <artifactId>synapse-core</artifactId>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+         <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.inbound.endpoint</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -66,8 +75,9 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Axis2Module>${project.artifactId}-${project.version}</Axis2Module>
                         <Export-Package>
-                            org.wso2.micro.integrator.prometheus.observability.* ;version="${project.version}"
+                            org.wso2.micro.integrator.observability.* ;version="${project.version}"
                         </Export-Package>
+                        <Private-Package>io.prometheus.client.*</Private-Package>
                         <Import-Package>
                             org.wso2.carbon.inbound.endpoint.internal.http.api ;version="${project.version}",
                             *;resolution:=optional

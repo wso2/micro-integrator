@@ -20,7 +20,7 @@
 -->
 <internalApis>
     <apis>
-        <api name="PrometheusApi" protocol="{{prometheus_api.protocols}}" class="org.wso2.micro.integrator.prometheus.publisher.service.MetricAPI">
+        <api name="PrometheusApi" protocol="{{prometheus_api.protocols}}" class="org.wso2.micro.integrator.observability.metric.publisher.MetricAPI">
             {% if prometheus_api.basic_security_handler.enable == true
                 or prometheus_api.authorization_handler.enable == true or prometheus_api.custom_handlers is defined %}
             <handlers>

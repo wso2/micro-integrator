@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -15,18 +15,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.prometheus.publisher.service;
+package org.wso2.micro.integrator.observability.metric.publisher;
 
 import org.apache.synapse.rest.cors.CORSConfiguration;
+
+import java.util.List;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 
-import java.util.List;
-
-/**
- * Internal API class for API exposing metric data
- */
 public class MetricAPI implements InternalAPI {
 
     private String name;
@@ -43,7 +40,6 @@ public class MetricAPI implements InternalAPI {
 
     @Override
     public String getContext() {
-
         return "/metric-service";
     }
 
@@ -55,7 +51,6 @@ public class MetricAPI implements InternalAPI {
 
     @Override
     public void setName(String name) {
-
         this.name = name;
     }
 
