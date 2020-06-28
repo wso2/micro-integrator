@@ -8,37 +8,36 @@
         <version>1.2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>org.wso2.micro.integrator.observability.feature</artifactId>
-
     <description>
-       This feature contains the core bundles required for publishing metrics data to Prometheus
-   </description>
+        This feature contains the core bundles required for publishing metrics data to Prometheus
+    </description>
 
-   <dependencies>
-       <dependency>
-           <groupId>org.wso2.ei</groupId>
-           <artifactId>org.wso2.micro.integrator.observability</artifactId>
-           <version>${project.version}</version>
-       </dependency>
-       <dependency>
-           <groupId>org.apache.synapse</groupId>
-           <artifactId>synapse-core</artifactId>
-       </dependency>
-       <dependency>
-           <groupId>io.prometheus</groupId>
-           <artifactId>simpleclient</artifactId>
-       </dependency>
-       <dependency>
-           <groupId>io.prometheus</groupId>
-           <artifactId>simpleclient_common</artifactId>
-       </dependency>
-       <dependency>
-           <groupId>io.prometheus</groupId>
-           <artifactId>simpleclient_hotspot</artifactId>
-       </dependency>
-       <dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.observability</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.synapse</groupId>
+            <artifactId>synapse-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_hotspot</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.core</artifactId>
         </dependency>
@@ -51,37 +50,37 @@
             <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
             <scope>provided</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.inbound.endpoint</artifactId>
         </dependency>
-   </dependencies>
+    </dependencies>
 
-   <build>
-       <plugins>
-           <plugin>
-               <groupId>org.wso2.maven</groupId>
-               <artifactId>carbon-p2-plugin</artifactId>
-               <version>${carbon.p2.plugin.version}</version>
-               <executions>
-                   <execution>
-                       <id>4-p2-feature-generation</id>
-                       <phase>package</phase>
-                       <goals>
-                           <goal>p2-feature-gen</goal>
-                       </goals>
-                       <configuration>
-                           <id>org.wso2.micro.integrator.observability</id>
-                           <propertiesFile>../../../etc/feature.properties</propertiesFile>
-                           <bundles>
-                               <bundleDef>
-                                   org.wso2.ei:org.wso2.micro.integrator.observability:${project.version}
-                               </bundleDef>
-                           </bundles>
-                       </configuration>
-                   </execution>
-               </executions>
-           </plugin>
-       </plugins>
-   </build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>4-p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.micro.integrator.observability</id>
+                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
+                            <bundles>
+                                <bundleDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.observability:${project.version}
+                                </bundleDef>
+                            </bundles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
