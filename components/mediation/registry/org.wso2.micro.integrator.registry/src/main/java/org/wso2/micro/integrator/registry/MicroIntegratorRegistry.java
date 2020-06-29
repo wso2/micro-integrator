@@ -58,6 +58,8 @@ import javax.xml.stream.XMLStreamReader;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.DEFAULT_MEDIA_TYPE;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTY_EXTENTION;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.URL_SEPARATOR;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.CONFIG_DIRECTORY_NAME;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.GOVERNANCE_DIRECTORY_NAME;
 
 public class MicroIntegratorRegistry extends AbstractRegistry {
 
@@ -473,7 +475,19 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     @Override
     public void delete(String path) {
         if (registryType == MicroIntegratorRegistryConstants.LOCAL_HOST_REGISTRY) {
-            removeResource(path);
+            try {
+                String targetPath = resolveRegistryURI(path);
+                File parentFile = new File(new URI(getParentPath(targetPath, false)));
+                String fileName = getResourceName(targetPath);
+                removeResource(path);
+                deleteMetadata(parentFile, fileName);
+                if (RegistryHelper.isDirectoryEmpty(parentFile.getPath()) && !CONFIG_DIRECTORY_NAME.equals
+                        (parentFile.getName()) && !GOVERNANCE_DIRECTORY_NAME.equals(parentFile.getName())) {
+                    deleteDirectory(parentFile);
+                }
+            } catch (URISyntaxException e) {
+                handleException("Error while deleting the registry path " + path, e);
+            }
         } else {
             // Warn the user that unable to delete remote registry resources
             log.warn("Deleting remote resources NOT SUPPORTED. Unable to delete: " + path);
@@ -815,6 +829,29 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             }
         } catch (IOException e) {
             handleException("Couldn't write to metadata file: " + newMetadataFile.getPath(), e);
+        }
+    }
+
+    /**
+     * Delete metadata related to the given resource.
+     *
+     * @param parent           parent dir of the resource
+     * @param resourceFileName filename of the resource
+     */
+    private void deleteMetadata(File parent, String resourceFileName) {
+
+        String metadataDirPath = parent.getPath() + File.separator + METADATA_DIR_NAME;
+        File metadataDir = new File(metadataDirPath);
+        if (!metadataDir.exists()) {
+            return;
+        }
+        File metadataFile = new File(metadataDir, resourceFileName + METADATA_FILE_SUFFIX);
+        deleteFile(metadataFile);
+        if (RegistryHelper.isDirectoryEmpty(metadataDirPath)) {
+            deleteDirectory(metadataDir);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Successfully deleted metadata file: " + metadataFile.getPath());
         }
     }
 

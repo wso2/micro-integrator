@@ -69,4 +69,18 @@ public class RegistryHelper {
         return path.replace(URL_SEPARATOR_CHAR, File.separatorChar);
     }
 
+    /**
+     * Check whether the directory is empty
+     *
+     * @param directory  directory path
+     */
+    public static boolean isDirectoryEmpty (String directory) {
+        File file = new File(directory);
+        if (file.isDirectory()) {
+            return file.list().length == 0;
+        } else {
+            return false;
+        }
+    }
+
 }
