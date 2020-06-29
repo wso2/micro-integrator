@@ -48,8 +48,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -96,6 +100,8 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
      */
     private int registryProtocol = FILE;
 
+    private static Map<String, Long> resourceLastModifiedMap = new HashMap<String, Long>();
+
 
     public MicroIntegratorRegistry() {
         //default registry is file system based resided in carbon home
@@ -115,6 +121,34 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         this.govRegistry = getUri(defaultFSRegRoot, "governance");
 
         initSecurityRepo();
+        initRegistryListener(defaultFSRegRoot);
+    }
+
+    private void initRegistryListener(String regRoot) {
+        try {
+            MicroIntegratorRegistryListener watcher = new MicroIntegratorRegistryListener(Paths.get(regRoot));
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.submit(watcher);
+            executor.shutdown();
+        } catch (IOException e) {
+            log.error(e);
+        }
+    }
+
+    public static Long getResourceLastModifiedEntry(String path) {
+        return resourceLastModifiedMap.get(path);
+    }
+
+    public static void addResourceLastModifiedEntry(String path, Long version) {
+        synchronized (resourceLastModifiedMap) {
+            resourceLastModifiedMap.put(path, version);
+        }
+    }
+
+    public static void deleteResourceLastModifiedEntry(String path) {
+        synchronized (resourceLastModifiedMap) {
+            resourceLastModifiedMap.remove(path);
+        }
     }
 
     /**
@@ -367,7 +401,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             entryEmbedded.setType(MicroIntegratorRegistryConstants.FILE);
             entryEmbedded.setDescription("Resource at : " + url.toString());
             entryEmbedded.setLastModified(urlc.getLastModified());
-            entryEmbedded.setVersion(urlc.getLastModified());
+            entryEmbedded.setVersion(getLastModifiedTimestamp(resolveRegistryURI(key), urlc));
 
             if (urlc.getExpiration() > 0) {
                 entryEmbedded.setCachableDuration(
@@ -383,6 +417,21 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         }
 
         return entryEmbedded;
+    }
+
+    private long getLastModifiedTimestamp(String filePath, URLConnection urlc) {
+        Long lastModifiedFromMap = getResourceLastModifiedEntry(filePath);
+        Long timestamp;
+        if (lastModifiedFromMap != null) {
+            timestamp = lastModifiedFromMap;
+        } else {
+            timestamp = urlc.getLastModified();
+        }
+        Long lastModifiedPropertiesFromMap = getResourceLastModifiedEntry(filePath + ".properties");
+        if (lastModifiedPropertiesFromMap != null && lastModifiedPropertiesFromMap > timestamp) {
+            timestamp = lastModifiedPropertiesFromMap;
+        }
+        return timestamp;
     }
 
     @Override
