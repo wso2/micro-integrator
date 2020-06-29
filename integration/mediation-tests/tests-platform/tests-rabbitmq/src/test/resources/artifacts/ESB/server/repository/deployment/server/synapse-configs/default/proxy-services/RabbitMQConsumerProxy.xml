@@ -17,7 +17,7 @@
   -->
 
 <proxy xmlns="http://ws.apache.org/ns/synapse" name="RabbitMQConsumerProxy" transports="rabbitmq"
-       statistics="disable" trace="enable" startOnLoad="true">
+       statistics="disable" trace="disable" startOnLoad="true">
     <target>
         <inSequence>
             <log level="full">
