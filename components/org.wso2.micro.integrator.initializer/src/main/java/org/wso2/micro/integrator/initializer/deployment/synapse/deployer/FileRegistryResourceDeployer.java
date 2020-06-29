@@ -78,7 +78,16 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
 
     @Override
     public void undeployArtifacts(CarbonApplication carbonApplication, AxisConfiguration axisConfiguration) throws DeploymentException {
+        ApplicationConfiguration appConfig = carbonApplication.getAppConfig();
+        List<Artifact.Dependency> deps = appConfig.getApplicationArtifact().getDependencies();
 
+        List<Artifact> artifacts = new ArrayList<Artifact>();
+        for (Artifact.Dependency dep : deps) {
+            if (dep.getArtifact() != null) {
+                artifacts.add(dep.getArtifact());
+            }
+        }
+        undeployRegistryArtifacts(artifacts, carbonApplication.getAppNameWithVersion());
     }
 
     /**
@@ -95,6 +104,23 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
             }
             RegistryConfig regConfig = buildRegistryConfig(artifact, parentAppName);
             writeArtifactToRegistry(regConfig);
+        });
+    }
+
+    /**
+     * Deploys registry artifacts recursively. A Registry artifact can exist as a sub artifact in
+     * any type of artifact. Therefore, have to search recursively
+     *
+     * @param artifacts     - list of artifacts to be deployed
+     * @param parentAppName - name of the parent cApp
+     */
+    private void undeployRegistryArtifacts(List<Artifact> artifacts, String parentAppName) {
+        artifacts.stream().filter(artifact -> REGISTRY_RESOURCE_TYPE.equals(artifact.getType())).forEach(artifact -> {
+            if (log.isDebugEnabled()) {
+                log.debug("Undeploying registry artifact: " + artifact.getName());
+            }
+            RegistryConfig regConfig = buildRegistryConfig(artifact, parentAppName);
+            removeArtifactFromRegistry(regConfig);
         });
     }
 
@@ -176,6 +202,29 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
             String resourcePath = AppDeployerUtils.computeResourcePath(createRegistryKey(resource),resource.getFileName());
             String mediaType = resource.getMediaType();
             lightweightRegistry.newNonEmptyResource(resourcePath, false, mediaType, readResourceContent(file), null);
+        }
+    }
+
+    /**
+     * Remove all registry contents (resources) of the given artifact from the registry.
+     *
+     * @param registryConfig - Artifact instance
+     */
+    private void removeArtifactFromRegistry(RegistryConfig registryConfig){
+
+        // get resources
+        List<RegistryConfig.Resourse> resources = registryConfig.getResources();
+        for (RegistryConfig.Resourse resource : resources) {
+            String filePath = registryConfig.getExtractedPath() + File.separator + AppDeployerConstants.RESOURCES_DIR
+                    + File.separator + resource.getFileName();
+            // check whether the file exists
+            File file = new File(filePath);
+            if (!file.exists()) {
+                // the file is already deleted.
+                continue;
+            }
+            String resourcePath = AppDeployerUtils.computeResourcePath(createRegistryKey(resource),resource.getFileName());
+            lightweightRegistry.delete(resourcePath);
         }
     }
 
