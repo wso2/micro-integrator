@@ -79,6 +79,7 @@ ldap_connection_timeout = 5000   #inferred          timeout in milliseconds
 read_timeout = '' # empty by default
 retry_attempts = '' # empty by default
 replace_escape_characters_at_user_login = true   #inferred
+read_only = false #inferred
 
 [authorization_manager]
 class = "org.wso2.micro.integrator.security.user.core.authorization.JDBCAuthorizationManager"   # inferred
