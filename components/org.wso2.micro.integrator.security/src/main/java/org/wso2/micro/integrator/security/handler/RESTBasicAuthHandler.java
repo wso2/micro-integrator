@@ -33,11 +33,12 @@ import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 import java.util.Map;
 
 /**
- + * This class can be added as a handler to enforce Basic Auth
- + */
+ * This class can be added as a handler to enforce Basic Auth
+ */
 public class RESTBasicAuthHandler implements Handler {
 
     private static final Log log = LogFactory.getLog(RESTBasicAuthHandler.class);
+    private static final String AUTH_FAILED_MESSAGE = "Authentication failed. ";
 
     @Override
     public boolean handleRequest(MessageContext messageContext) {
@@ -46,11 +47,10 @@ public class RESTBasicAuthHandler implements Handler {
         Object headers = axis2MessageContext.getProperty(
                 org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
 
-
-
         if (headers != null && headers instanceof Map) {
             Map headersMap = (Map) headers;
             if (headersMap.get(HTTPConstants.HEADER_AUTHORIZATION) == null) {
+                log.error(AUTH_FAILED_MESSAGE + HTTPConstants.HEADER_AUTHORIZATION + " header does not exist.");
                 headersMap.clear();
                 axis2MessageContext.setProperty(BasicAuthConstants.HTTP_STATUS_CODE, BasicAuthConstants.SC_UNAUTHORIZED);
                 headersMap.put(BasicAuthConstants.WWW_AUTHENTICATE, BasicAuthConstants.WWW_AUTH_METHOD);
@@ -60,13 +60,13 @@ public class RESTBasicAuthHandler implements Handler {
                 Axis2Sender.sendBack(messageContext);
                 return false;
 
-
             } else {
                 String authHeader = (String) headersMap.get(HTTPConstants.HEADER_AUTHORIZATION);
                 String credentials = authHeader.substring(6).trim();
                 if (processSecurity(credentials)) {
                     return true;
                 } else {
+                    log.error(AUTH_FAILED_MESSAGE + "Invalid username or password has been provided.");
                     headersMap.clear();
                     axis2MessageContext.setProperty(BasicAuthConstants.HTTP_STATUS_CODE, BasicAuthConstants.SC_FORBIDDEN);
                     axis2MessageContext.setProperty(BasicAuthConstants.NO_ENTITY_BODY, true);
@@ -77,6 +77,7 @@ public class RESTBasicAuthHandler implements Handler {
                 }
             }
         }
+        log.error(AUTH_FAILED_MESSAGE + "Could not authenticate due to missing headers in request.");
         return false;
     }
 
