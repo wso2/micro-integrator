@@ -32,11 +32,13 @@
             <Property name="dataSource">jdbc/{{realm_manager.data_source}}</Property>
         </Configuration>
 
+        {% if user_store.class is defined %}
         <UserStoreManager class="{{user_store.class}}">
             {% for property_name,property_value in user_store.properties.items() %}
             <Property name="{{property_name}}">{{property_value}}</Property>
             {% endfor %}
         </UserStoreManager>
+        {% endif %}
 
         {% if authorization_manager.class is defined %}
         <AuthorizationManager class="{{authorization_manager.class}}">
