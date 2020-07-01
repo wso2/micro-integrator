@@ -26,18 +26,35 @@
     <includeBaseDirectory>false</includeBaseDirectory>
 
     <fileSets>
-        <fileSet>
-            <directory>target/runtime/wso2mi-${project.version}</directory>
-            <outputDirectory>wso2ei-runtime-with-dashboard-${pom.version}/runtime</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>target/dashboard/wso2mi-monitoring-dashboard-${project.version}</directory>
-            <outputDirectory>wso2ei-runtime-with-dashboard-${pom.version}/dashboard</outputDirectory>
-        </fileSet>
+        <!--                <fileSet>-->
+        <!--                    <directory>target/runtime/wso2mi-${project.version}</directory>-->
+        <!--                    <outputDirectory>wso2ei-runtime-with-dashboard-${pom.version}/runtime</outputDirectory>-->
+        <!--                </fileSet>-->
+        <!--                <fileSet>-->
+        <!--                    <directory>target/dashboard/wso2mi-monitoring-dashboard-${project.version}</directory>-->
+        <!--                    <outputDirectory>wso2ei-runtime-with-dashboard-${pom.version}/dashboard</outputDirectory>-->
+        <!--                </fileSet>-->
         <fileSet>
             <directory>src/home/</directory>
             <outputDirectory>wso2ei-runtime-with-dashboard-${pom.version}</outputDirectory>
         </fileSet>
     </fileSets>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>wso2ei-runtime-with-dashboard-${pom.version}</outputDirectory>
+            <includes>
+                <include>org.wso2.ei:wso2mi:zip</include>
+            </includes>
+            <unpack>true</unpack>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>wso2ei-runtime-with-dashboard-${pom.version}</outputDirectory>
+            <includes>
+                <include>org.wso2.ei:monitoring-dashboard-distribution:zip</include>
+            </includes>
+            <unpack>true</unpack>
+        </dependencySet>
+    </dependencySets>
 
 </assembly>
