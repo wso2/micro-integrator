@@ -23,6 +23,7 @@ import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.rest.APISerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
@@ -46,7 +47,9 @@ import java.util.Set;
 
 public class ApiResource extends APIResource {
 
-    public ApiResource(String urlTemplate){
+    private static final String API_NAME = "apiName";
+
+    public ApiResource(String urlTemplate) {
         super(urlTemplate);
     }
 
@@ -54,26 +57,65 @@ public class ApiResource extends APIResource {
 
         Set<String> methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
+        methods.add(Constants.HTTP_POST);
         return methods;
     }
 
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-
-        org.apache.axis2.context.MessageContext axis2MessageContext =
+        org.apache.axis2.context.MessageContext axisMsgCtx =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        String param = Utils.getQueryParameter(messageContext, "apiName");
-
-        if (Objects.nonNull(param)) {
-            populateApiData(messageContext, param);
+        String httpMethod = axisMsgCtx.getProperty(Constants.HTTP_METHOD_PROPERTY).toString();
+        String apiName = Utils.getQueryParameter(messageContext, API_NAME);
+        if (httpMethod.equals(Constants.HTTP_GET)) {
+            if (Objects.nonNull(apiName)) {
+                populateApiData(messageContext, apiName);
+            } else {
+                populateApiList(messageContext);
+            }
         } else {
-            populateApiList(messageContext);
+            handlePost(apiName, messageContext, axisMsgCtx);
         }
-
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
+    }
+
+    private void handlePost(String apiName, MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
+
+        JSONObject response = new JSONObject();
+        if (Objects.nonNull(apiName)) {
+            SynapseConfiguration configuration = msgCtx.getConfiguration();
+            API api = configuration.getAPI(apiName);
+            if (api != null) {
+                JSONObject payload = new JSONObject(JsonUtil.jsonPayloadToString(axisMsgCtx));
+                if (payload.has(Constants.TRACE)) {
+                    String traceState = payload.get(Constants.TRACE).toString();
+                    String msg;
+                    if (Constants.ENABLE.equalsIgnoreCase(traceState)) {
+                        api.getAspectConfiguration().enableTracing();
+                        msg = "Successfully enabled tracing for api ('" + apiName + "')";
+                        response.put(Constants.MESSAGE, msg);
+                    } else if (Constants.DISABLE.equalsIgnoreCase(traceState)) {
+                        api.getAspectConfiguration().disableTracing();
+                        msg = "Successfully disabled tracing for api ('" + apiName + "')";
+                        response.put(Constants.MESSAGE, msg);
+                    } else {
+                        response = Utils.createJsonError("Invalid value for state " + Constants.TRACE, axisMsgCtx,
+                                                         Constants.BAD_REQUEST);
+                    }
+                } else {
+                    response = Utils.createJsonError("Missing attribute " + Constants.TRACE + " in payload", axisMsgCtx,
+                                                     Constants.BAD_REQUEST);
+                }
+            } else {
+                response = Utils.createJsonError("Specified API ('" + apiName + "') not found", axisMsgCtx,
+                                                 Constants.BAD_REQUEST);
+            }
+        } else {
+            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+        }
+        Utils.setJsonPayLoad(axisMsgCtx, response);
     }
 
     private void populateApiList(MessageContext messageContext) {

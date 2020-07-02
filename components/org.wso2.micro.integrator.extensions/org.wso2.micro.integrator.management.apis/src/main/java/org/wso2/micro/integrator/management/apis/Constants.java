@@ -117,4 +117,8 @@ public class Constants {
 
     public static final String MGT_API_NAME = "ManagementApi";
 
+    // tracing constants
+    static final String TRACE = "trace";
+    static final String ENABLE = "enable";
+    static final String DISABLE = "disable";
 }
