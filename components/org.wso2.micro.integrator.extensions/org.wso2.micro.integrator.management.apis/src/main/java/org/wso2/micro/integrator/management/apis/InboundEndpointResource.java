@@ -46,6 +46,7 @@ public class InboundEndpointResource extends APIResource {
     public Set<String> getMethods() {
         Set<String> methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
+        methods.add(Constants.HTTP_POST);
         return methods;
     }
 
@@ -53,20 +54,38 @@ public class InboundEndpointResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-
-        org.apache.axis2.context.MessageContext axis2MessageContext =
+        org.apache.axis2.context.MessageContext axisMsgCtx =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
-        String param = Utils.getQueryParameter(messageContext, "inboundEndpointName");
-
-        if (Objects.nonNull(param)) {
-            populateInboundEndpointData(messageContext, param);
+        String inboundName = Utils.getQueryParameter(messageContext, "inboundEndpointName");
+        if (messageContext.isDoingGET()) {
+            if (Objects.nonNull(inboundName)) {
+                populateInboundEndpointData(messageContext, inboundName);
+            } else {
+                populateInboundEndpointList(messageContext);
+            }
         } else {
-            populateInboundEndpointList(messageContext);
+            handlePost(inboundName, messageContext, axisMsgCtx);
         }
-
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
+    }
+
+    private void handlePost(String inboundName, MessageContext msgCtx,
+                            org.apache.axis2.context.MessageContext axisMsgCtx) {
+
+        JSONObject response;
+        if (Objects.nonNull(inboundName)) {
+            SynapseConfiguration configuration = msgCtx.getConfiguration();
+            InboundEndpoint inboundEndpoint = configuration.getInboundEndpoint(inboundName);
+            if (inboundEndpoint != null) {
+                response = Utils.handleTracing(inboundEndpoint.getAspectConfiguration(), inboundName, axisMsgCtx);
+            } else {
+                response = Utils.createJsonError("Specified inbound endpoint ('" + inboundName + "') not found",
+                                                 axisMsgCtx, Constants.BAD_REQUEST);
+            }
+        } else {
+            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+        }
+        Utils.setJsonPayLoad(axisMsgCtx, response);
     }
 
     private void populateInboundEndpointList(MessageContext messageContext) {
