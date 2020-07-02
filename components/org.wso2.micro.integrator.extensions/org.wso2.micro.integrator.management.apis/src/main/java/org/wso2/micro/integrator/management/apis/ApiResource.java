@@ -23,7 +23,6 @@ import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.synapse.MessageContext;
-import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.rest.APISerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
@@ -67,9 +66,8 @@ public class ApiResource extends APIResource {
         org.apache.axis2.context.MessageContext axisMsgCtx =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        String httpMethod = axisMsgCtx.getProperty(Constants.HTTP_METHOD_PROPERTY).toString();
         String apiName = Utils.getQueryParameter(messageContext, API_NAME);
-        if (httpMethod.equals(Constants.HTTP_GET)) {
+        if (messageContext.isDoingGET()) {
             if (Objects.nonNull(apiName)) {
                 populateApiData(messageContext, apiName);
             } else {
@@ -83,31 +81,12 @@ public class ApiResource extends APIResource {
 
     private void handlePost(String apiName, MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
 
-        JSONObject response = new JSONObject();
+        JSONObject response;
         if (Objects.nonNull(apiName)) {
             SynapseConfiguration configuration = msgCtx.getConfiguration();
             API api = configuration.getAPI(apiName);
             if (api != null) {
-                JSONObject payload = new JSONObject(JsonUtil.jsonPayloadToString(axisMsgCtx));
-                if (payload.has(Constants.TRACE)) {
-                    String traceState = payload.get(Constants.TRACE).toString();
-                    String msg;
-                    if (Constants.ENABLE.equalsIgnoreCase(traceState)) {
-                        api.getAspectConfiguration().enableTracing();
-                        msg = "Successfully enabled tracing for api ('" + apiName + "')";
-                        response.put(Constants.MESSAGE, msg);
-                    } else if (Constants.DISABLE.equalsIgnoreCase(traceState)) {
-                        api.getAspectConfiguration().disableTracing();
-                        msg = "Successfully disabled tracing for api ('" + apiName + "')";
-                        response.put(Constants.MESSAGE, msg);
-                    } else {
-                        response = Utils.createJsonError("Invalid value for state " + Constants.TRACE, axisMsgCtx,
-                                                         Constants.BAD_REQUEST);
-                    }
-                } else {
-                    response = Utils.createJsonError("Missing attribute " + Constants.TRACE + " in payload", axisMsgCtx,
-                                                     Constants.BAD_REQUEST);
-                }
+                response = Utils.handleTracing(api.getAspectConfiguration(), apiName, axisMsgCtx);
             } else {
                 response = Utils.createJsonError("Specified API ('" + apiName + "') not found", axisMsgCtx,
                                                  Constants.BAD_REQUEST);

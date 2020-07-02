@@ -25,6 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.aspects.AspectConfiguration;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.rest.RESTConstants;
 import org.json.JSONArray;
@@ -113,6 +114,33 @@ public class Utils {
         axis2MessageContext.setProperty("messageType", Constants.HEADER_VALUE_APPLICATION_JSON);
         axis2MessageContext.setProperty("ContentType", Constants.HEADER_VALUE_APPLICATION_JSON);
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+    }
+
+    static JSONObject handleTracing(AspectConfiguration config, String artifactName,
+                                    org.apache.axis2.context.MessageContext axisMsgCtx) {
+
+        JSONObject payload = new JSONObject(JsonUtil.jsonPayloadToString(axisMsgCtx));
+        JSONObject response = new JSONObject();
+        if (payload.has(Constants.TRACE)) {
+            String traceState = payload.get(Constants.TRACE).toString();
+            String msg;
+            if (Constants.ENABLE.equalsIgnoreCase(traceState)) {
+                config.enableTracing();
+                msg = "Enabled tracing for ('" + artifactName + "')";
+                response.put(Constants.MESSAGE, msg);
+            } else if (Constants.DISABLE.equalsIgnoreCase(traceState)) {
+                config.disableTracing();
+                msg = "Disabled tracing for ('" + artifactName + "')";
+                response.put(Constants.MESSAGE, msg);
+            } else {
+                response = createJsonError("Invalid value for state " + Constants.TRACE, axisMsgCtx,
+                                           Constants.BAD_REQUEST);
+            }
+        } else {
+            response = createJsonError("Missing attribute " + Constants.TRACE + " in payload", axisMsgCtx,
+                                       Constants.BAD_REQUEST);
+        }
+        return response;
     }
 
     public static JSONObject createJSONList(int count) {
