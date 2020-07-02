@@ -11,8 +11,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.micro.integrator.observability.feature</artifactId>
+    <name>WSO2 Micro Integrator - Observablity Feature</name>
     <description>
-        This feature contains the core bundles required for publishing metrics data to Prometheus
+        This feature contains the core bundles required for publishing metrics data for observability purpose
     </description>
 
     <dependencies>
