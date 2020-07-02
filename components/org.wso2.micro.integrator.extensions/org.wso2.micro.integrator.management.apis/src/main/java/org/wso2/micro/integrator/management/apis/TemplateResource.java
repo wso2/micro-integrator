@@ -69,37 +69,70 @@ public class TemplateResource extends APIResource {
     }
 
     @Override
-    public boolean invoke(MessageContext messageContext) {
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
-        if (Objects.isNull(axis2MessageContext) || Objects.isNull(synapseConfiguration)) {
-            return false;
-        }
+    public boolean invoke(MessageContext msgCtx) {
 
-        String templateTypeParam = Utils.getQueryParameter(messageContext, TEMPLATE_TYPE_PARAM);
-        if (Objects.nonNull(templateTypeParam)) {
-            String templateNameParam = Utils.getQueryParameter(messageContext, TEMPLATE_NAME_PARAM);
-            if (Objects.nonNull(templateNameParam)) {
-                populateTemplateData(messageContext, templateNameParam, templateTypeParam);
+        buildMessage(msgCtx);
+        org.apache.axis2.context.MessageContext axis2MsgCtx = ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
+        String templateTypeParam = Utils.getQueryParameter(msgCtx, TEMPLATE_TYPE_PARAM);
+
+        if (msgCtx.isDoingGET()) {
+            if (Objects.nonNull(templateTypeParam)) {
+                String templateNameParam = Utils.getQueryParameter(msgCtx, TEMPLATE_NAME_PARAM);
+                if (Objects.nonNull(templateNameParam)) {
+                    populateTemplateData(msgCtx, templateNameParam, templateTypeParam);
+                } else {
+                    populateTemplateListByType(msgCtx, templateTypeParam);
+                }
             } else {
-                populateTemplateListByType(messageContext, templateTypeParam);
+                populateFullTemplateList(axis2MsgCtx, msgCtx);
             }
         } else {
-            populateFullTemplateList(axis2MessageContext, synapseConfiguration);
+            JSONObject response;
+            if (Objects.nonNull(templateTypeParam) && SEQUENCE_TEMPLATE_TYPE.equals(templateTypeParam)) {
+                String seqTempName = Utils.getQueryParameter(msgCtx, TEMPLATE_NAME_PARAM);
+                if (Objects.nonNull(seqTempName)) {
+                    response = handleTracing(seqTempName, msgCtx, axis2MsgCtx);
+                } else {
+                    response = Utils.createJsonError("Missing parameters in the request", axis2MsgCtx,
+                                                     Constants.BAD_REQUEST);
+                }
+            } else {
+                response = Utils.createJsonError("Unsupported operation", axis2MsgCtx, Constants.BAD_REQUEST);
+            }
+            Utils.setJsonPayLoad(axis2MsgCtx, response);
         }
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
+    }
+
+    private JSONObject handleTracing(String seqTempName, MessageContext msgCtx,
+                                     org.apache.axis2.context.MessageContext axisMsgCtx) {
+
+        JSONObject response;
+        if (Objects.nonNull(seqTempName)) {
+            SynapseConfiguration configuration = msgCtx.getConfiguration();
+            TemplateMediator sequenceTemplate = configuration.getSequenceTemplate(seqTempName);
+            if (sequenceTemplate != null) {
+                response = Utils.handleTracing(sequenceTemplate.getAspectConfiguration(), seqTempName, axisMsgCtx);
+            } else {
+                response = Utils.createJsonError("Specified sequence template ('" + seqTempName + "') not found",
+                                                 axisMsgCtx, Constants.BAD_REQUEST);
+            }
+        } else {
+            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+        }
+        return response;
     }
 
     /**
      * Creates a response json with all templates available in the synapse configuration
      *
      * @param axis2MessageContext AXIS2 message context
-     * @param synapseConfiguration Synapse configuration object
+     * @param messageContext      Synapse msg ctx
      */
     private void populateFullTemplateList(org.apache.axis2.context.MessageContext axis2MessageContext,
-                                          SynapseConfiguration synapseConfiguration) {
+                                          MessageContext messageContext) {
+
+        SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
         Map<String, Template> endpointTemplateMap = synapseConfiguration.getEndpointTemplates();
         Map<String, TemplateMediator> sequenceTemplateMap = synapseConfiguration.getSequenceTemplates();
         JSONObject jsonBody = new JSONObject();
