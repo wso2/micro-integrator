@@ -3912,7 +3912,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             UserStoreManager manager = entry.getValue();
             if (manager != null && ((AbstractUserStoreManager) manager).isSharedGroupEnabled()) {
                 if (sharedRoleManager != null) {
-                    throw new UserStoreException("There can not be more than one user store that support" +
+                    throw new UserStoreException("There cannot be more than one user store that support" +
                             "shared groups");
                 }
                 sharedRoleManager = manager;
@@ -5912,9 +5912,9 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
 
         if (!userExist) {
             if (isReadOnly()) {
-                String message = "Admin user can not be created in primary user store. " +
+                String message = "Admin user cannot be created in primary user store. " +
                         "User store is read only. " +
-                        "Please pick a user name which is exist in the primary user store as Admin user";
+                        "Please pick a user name which exists in the primary user store as Admin user";
                 if (initialSetup) {
                     throw new UserStoreException(message);
                 } else if (log.isDebugEnabled()) {
@@ -5941,9 +5941,9 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 }
             } else {
                 if (initialSetup) {
-                    String message = "Admin user can not be created in primary user store. " +
+                    String message = "Admin user cannot be created in primary user store. " +
                             "Add-Admin has been set to false. " +
-                            "Please pick a User name which is exist in the primary user store as Admin user";
+                            "Please pick a User name which exists in the primary user store as Admin user";
                     if (initialSetup) {
                         throw new UserStoreException(message);
                     } else if (log.isDebugEnabled()) {
@@ -5996,9 +5996,9 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                     }
                 }
             } else {
-                String message = "Admin role can not be created in primary user store. " +
+                String message = "Admin role cannot be created in primary user store. " +
                         "Add-Admin has been set to false. " +
-                        "Please pick a Role name which is exist in the primary user store as Admin Role";
+                        "Please pick a Role name which exists in the primary user store as Admin Role";
                 if (initialSetup) {
                     throw new UserStoreException(message);
                 } else if (log.isDebugEnabled()) {
@@ -6040,7 +6040,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                         }
                     }
                 } else {
-                    String message = "Admin user can not be assigned to Admin role " +
+                    String message = "Admin user cannot be assigned to Admin role " +
                             "Add-Admin has been set to false. Please do the assign it in user store level";
                     if (initialSetup) {
                         throw new UserStoreException(message);
