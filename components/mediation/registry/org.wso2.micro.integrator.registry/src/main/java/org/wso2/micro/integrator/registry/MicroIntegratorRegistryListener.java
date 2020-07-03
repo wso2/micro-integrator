@@ -113,6 +113,7 @@ public class MicroIntegratorRegistryListener implements Runnable {
             }
         } catch (InterruptedException e) {
             log.error("Error while listening to registry file changes ", e);
+            Thread.currentThread().interrupt();
         }
     }
 
