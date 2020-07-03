@@ -131,7 +131,9 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             executor.submit(watcher);
             executor.shutdown();
         } catch (IOException e) {
-            log.error(e);
+            String msg = "Error while initiating registry resource listener task";
+            log.error(msg, e);
+            throw new SynapseException(msg, e);
         }
     }
 
