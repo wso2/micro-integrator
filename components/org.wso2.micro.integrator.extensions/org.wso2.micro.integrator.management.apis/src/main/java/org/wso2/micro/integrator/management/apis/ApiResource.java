@@ -118,7 +118,8 @@ public class ApiResource extends APIResource {
 
             apiObject.put(Constants.NAME, api.getName());
             apiObject.put(Constants.URL, apiUrl);
-
+            apiObject.put(Constants.TRACING,
+                          api.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED);
             jsonBody.getJSONArray(Constants.LIST).put(apiObject);
 
         }
