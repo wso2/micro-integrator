@@ -194,13 +194,13 @@ listener.certificate_revocation_verifier_enable = false # false by default
 listener.certificate_revocation_cache_size = 1024     # inferred
 listener.certificate_revocation_cache_delay = 1000     # inferred
 
-listener.keystore.file_name ="repository/resources/security/$ref{keystore.tls.file_name}" # inferred
-listener.keystore.type = "$ref{keystore.tls.type}" # inferred
-listener.keystore.password = "$ref{keystore.tls.password}" # inferred
-listener.keystore.key_password = "$ref{keystore.tls.key_password}" # inferred
-listener.truststore.file_name = "repository/resources/security/$ref{truststore.file_name}" # inferred
-listener.truststore.type = "$ref{truststore.type}" # inferred
-listener.truststore.password = "$ref{truststore.password}" # inferred
+listener.keystore.location ="repository/resources/security/wso2carbon.jks" # inferred
+listener.keystore.type = "JKS" # inferred
+listener.keystore.password = "wso2carbon" # inferred
+listener.keystore.key_password = "wso2carbon" # inferred
+listener.truststore.location = "repository/resources/security/client-truststore.jks" # inferred
+listener.truststore.type = "JKS" # inferred
+listener.truststore.password = "wso2carbon" # inferred
 
 sender.enable = true        # inferred default true
 sender.warn_on_http_500 = "*"       # optional
@@ -216,13 +216,13 @@ sender.certificate_revocation_cache_size = 1024     # inferred
 sender.certificate_revocation_cache_delay = 1000     # inferred delay in milliseconds
 
 sender.secured_enable = true                # inferred default true
-sender.keystore.file_name ="repository/resources/security/$ref{keystore.tls.file_name}" # inferred
-sender.keystore.type = "$ref{keystore.tls.type}" # inferred
-sender.keystore.password = "$ref{keystore.tls.password}" # inferred
-sender.keystore.key_password = "$ref{keystore.tls.key_password}" # inferred
-sender.truststore.file_name = "repository/resources/security/$ref{truststore.file_name}" # inferred
-sender.truststore.type = "$ref{truststore.type}" # inferred
-sender.truststore.password = "$ref{truststore.password}" # inferred
+sender.keystore.location ="repository/resources/security/wso2carbon.jks" # inferred
+sender.keystore.type = "JKS" # inferred
+sender.keystore.password = "wso2carbon" # inferred
+sender.keystore.key_password = "wso2carbon" # inferred
+sender.truststore.location = "repository/resources/security/client-truststore.jks" # inferred
+sender.truststore.type = "JKS" # inferred
+sender.truststore.password = "wso2carbon" # inferred
 
 sender.ssl_profile.file_path = "conf/sslprofiles/senderprofiles.xml"
 sender.ssl_profile.read_interval = 600000   # inferred interval in milliseconds
@@ -280,11 +280,11 @@ sender.secured_proxy_port = 3128                        # no defaults
 [transport.vfs] # enable by default
 
 listener.enable = true
-listener.keystore.file_name = "$ref{keystore.tls.file_name}"  # inferred
-listener.keystore.type = "$ref{keystore.tls.type}"                   # inferred
-listener.keystore.password = "$ref{keystore.tls.password}"           # inferred
-listener.keystore.key_password = "$ref{keystore.tls.key_password}"   # inferred
-listener.keystore.alias = "$ref{keystore.tls.alias}"                 # inferred
+listener.keystore.location = "repository/resources/security/wso2carbon.jks"  # inferred
+listener.keystore.type = "JKS"                   # inferred
+listener.keystore.password = "wso2carbon"           # inferred
+listener.keystore.key_password = "wso2carbon"   # inferred
+listener.keystore.alias = "wso2carbon"                 # inferred
 
 listener.parameter.customParameter = ""
 
@@ -311,13 +311,13 @@ parameter.non_blocking = true
 parameter.bind_address = "$ref{server.hostname}"
 parameter.wsdl_epr_prefix = "$ref{server.hostname}"  # inferred
 
-keystore.file_name = "$ref{keystore.tls.file_name}"
-keystore.type = "$ref{keystore.tls.type}"
-keystore.password = "$ref{keystore.tls.password}"
-keystore.key_password = "$ref{keystore.tls.key_password}"
-truststore.file_name = "$ref{truststore.file_name}"
-truststore.type = "$ref{truststore.type}"
-truststore.password = "$ref{truststore.password}"
+keystore.location = "repository/resources/security/wso2carbon.jks"
+keystore.type = "JKS"
+keystore.password = "wso2carbon"
+keystore.key_password = "wso2carbon"
+truststore.location = "repository/resources/security/client-truststore.jks"
+truststore.type = "JKS"
+truststore.password = "wso2carbon"
 
 ssl_profile.file_path= "conf/sslprofiles/listenerprofiles.xml"
 ssl_profile.read_interval = 30000       # interval in milliseconds
@@ -331,13 +331,13 @@ parameter.proxy_port = 9000
 parameter.non_proxy_host = ""
 parameter.non_blocking = true
 
-keystore.file_name = "$ref{keystore.tls.file_name}"
-keystore.type = "$ref{keystore.tls.type}"
-keystore.password = "$ref{keystore.tls.password}"
-keystore.key_password = "$ref{keystore.tls.key_password}"
-truststore.file_name = "$ref{truststore.file_name}"
-truststore.type = "$ref{truststore.type}"
-truststore.password = "$ref{truststore.password}"
+keystore.location = "repository/resources/security/wso2carbon.jks"
+keystore.type = "JKS"
+keystore.password = "wso2carbon"
+keystore.key_password = "wso2carbon"
+truststore.location = "repository/resources/security/client-truststore.jks"
+truststore.type = "JKS"
+truststore.password = "wso2carbon"
 
 ssl_profile.file_path = "conf/sslprofiles/senderprofiles.xml"
 ssl_profile.read_interval = 30000       # interval in milliseconds
@@ -619,10 +619,10 @@ parameter.connection_pool_size = 25
 
 parameter.ssl_enable = true
 parameter.ssl_version = "SSL"
-parameter.keystore_file_name =""
+parameter.keystore_location =""
 parameter.keystore_type = ""
 parameter.keystore_password = ""
-parameter.truststore_file_name =""
+parameter.truststore_location =""
 parameter.truststore_type = ""
 parameter.truststore_password = ""
 
@@ -665,8 +665,8 @@ sender.outflow_dispatch_sequence = "outflowDispatchSeq"               # inferred
 sender.outflow_dispatch_fault_sequence = "outflowFaultSeq"            # inferred
 sender.parameter.customParameter = ""
 
-sender.truststore_location = "$ref{truststore.file_name}" # inferred
-sender.truststore_password = "$ref{truststore.password}" # inferred
+sender.truststore_location = "repository/resources/security/client-truststore.jks" # inferred
+sender.truststore_password = "wso2carbon" # inferred
 
 ###################################     SAP configurations          ###################################
 [transport.sap] # optional
@@ -819,6 +819,7 @@ url= "jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TI
 username="username"
 password="password"
 driver="org.h2.Driver"
+jmx_enable=false
 pool_options.maxActive=50
 pool_options.maxWait = 60000 # wait in milliseconds
 pool_options.testOnBorrow = true
@@ -836,7 +837,7 @@ resolver_type = "RoundRobin" # inferred         RoundRobin/Random/RuleBased
 rules = ["HIVE_TASK,HTTP_SCRIPT.*,192.168.1.*", "HIVE_TASK,.*,192.168.2.*"]     # only applied for RuleBased type
 
 ###################################     Keystore configurations     ###################################
-[keystore.tls]
+[keystore.primary]
 file_name = "wso2carbon.jks"        # infered
 type = "JKS"                        # infered
 password = "wso2carbon"             # infered
@@ -851,11 +852,11 @@ alias = "symmetric.key.value"       # infered
 algorithm = "AES"                   # infered
 
 [keystore.internal]
-file_name = "$ref{keystore.tls.file_name}"  # inferred
-type = "$ref{keystore.tls.type}"            # inferred
-password = "$ref{keystore.tls.password}"    # inferred
-alias = "$ref{keystore.tls.alias}"          # inferred
-key_password = "$ref{keystore.tls.key_password}"    # inferred
+file_name = "$ref{keystore.primary.file_name}"  # inferred
+type = "$ref{keystore.primary.type}"            # inferred
+password = "$ref{keystore.primary.password}"    # inferred
+alias = "$ref{keystore.primary.alias}"          # inferred
+key_password = "$ref{keystore.primary.key_password}"    # inferred
 
 [secrets]
 admin_password = "password_2"
