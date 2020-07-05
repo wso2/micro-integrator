@@ -13,7 +13,7 @@ type = "database"
 [transport.vfs] # enable by default
 
 listener.enable = true
-listener.keystore.file_name = "repository/resources/security/vfsKeystore.jks"
+listener.keystore.location = "repository/resources/security/vfsKeystore.jks"
 listener.keystore.type = "JKS"
 listener.keystore.password = "edcrfv"
 listener.keystore.key_password = "qazwsx"
