@@ -51,11 +51,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.orbit.org.apache.tomcat</groupId>
-            <artifactId>jdbc-pool</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.core</artifactId>
             <scope>compile</scope>
