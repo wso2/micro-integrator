@@ -76,8 +76,6 @@ public class MetaDataResource implements MiApiResource {
         jsonObject.put("osVersion", System.getProperty("os.version"));
         jsonObject.put("productName", serverConfigurationService.getFirstProperty("Name"));
         jsonObject.put("productVersion", serverConfigurationService.getFirstProperty("Version"));
-        jsonObject.put("workDirectory", serverConfigurationService.getFirstProperty("WorkDirectory"));
-        jsonObject.put("repositoryLocation", serverConfigurationService.getFirstProperty("Axis2Config.ClientRepositoryLocation"));
         Utils.setJsonPayLoad(axis2MessageContext, jsonObject);
     }
 }
