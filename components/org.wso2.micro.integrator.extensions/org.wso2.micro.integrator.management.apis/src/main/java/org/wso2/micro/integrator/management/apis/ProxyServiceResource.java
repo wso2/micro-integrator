@@ -79,10 +79,10 @@ public class ProxyServiceResource extends APIResource {
             serviceAdmin = Utils.getServiceAdmin(messageContext);
         }
 
+        String proxyServiceName = Utils.getQueryParameter(messageContext, "proxyServiceName");
         if (messageContext.isDoingGET()) {
-            String param = Utils.getQueryParameter(messageContext, "proxyServiceName");
-            if (Objects.nonNull(param)) {
-                populateProxyServiceData(messageContext, param);
+            if (Objects.nonNull(proxyServiceName)) {
+                populateProxyServiceData(messageContext, proxyServiceName);
             } else {
                 populateProxyServiceList(messageContext);
             }
@@ -97,7 +97,7 @@ public class ProxyServiceResource extends APIResource {
                 if (payload.has(NAME) && payload.has(STATUS)) {
                     changeProxyState(messageContext, axis2MessageContext, payload);
                 } else {
-                    Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Missing parameters in payload"));
+                    handleTracing(proxyServiceName, messageContext, axis2MessageContext);
                 }
             } catch (IOException e) {
                 LOG.error("Error when parsing JSON payload", e);
@@ -105,6 +105,25 @@ public class ProxyServiceResource extends APIResource {
             }
         }
         return true;
+    }
+
+    private void handleTracing(String proxyName, MessageContext msgCtx,
+                               org.apache.axis2.context.MessageContext axisMsgCtx) {
+
+        JSONObject response;
+        if (Objects.nonNull(proxyName)) {
+            SynapseConfiguration configuration = msgCtx.getConfiguration();
+            ProxyService proxyService = configuration.getProxyService(proxyName);
+            if (proxyService != null) {
+                response = Utils.handleTracing(proxyService.getAspectConfiguration(), proxyName, axisMsgCtx);
+            } else {
+                response = Utils.createJsonError("Specified proxy ('" + proxyName + "') not found", axisMsgCtx,
+                                                 Constants.BAD_REQUEST);
+            }
+        } else {
+            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+        }
+        Utils.setJsonPayLoad(axisMsgCtx, response);
     }
 
     private void populateProxyServiceList(MessageContext messageContext) {

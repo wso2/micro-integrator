@@ -46,7 +46,9 @@ import java.util.Set;
 
 public class ApiResource extends APIResource {
 
-    public ApiResource(String urlTemplate){
+    private static final String API_NAME = "apiName";
+
+    public ApiResource(String urlTemplate) {
         super(urlTemplate);
     }
 
@@ -54,26 +56,45 @@ public class ApiResource extends APIResource {
 
         Set<String> methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
+        methods.add(Constants.HTTP_POST);
         return methods;
     }
 
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-
-        org.apache.axis2.context.MessageContext axis2MessageContext =
+        org.apache.axis2.context.MessageContext axisMsgCtx =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        String param = Utils.getQueryParameter(messageContext, "apiName");
-
-        if (Objects.nonNull(param)) {
-            populateApiData(messageContext, param);
+        String apiName = Utils.getQueryParameter(messageContext, API_NAME);
+        if (messageContext.isDoingGET()) {
+            if (Objects.nonNull(apiName)) {
+                populateApiData(messageContext, apiName);
+            } else {
+                populateApiList(messageContext);
+            }
         } else {
-            populateApiList(messageContext);
+            handlePost(apiName, messageContext, axisMsgCtx);
         }
-
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
+    }
+
+    private void handlePost(String apiName, MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
+
+        JSONObject response;
+        if (Objects.nonNull(apiName)) {
+            SynapseConfiguration configuration = msgCtx.getConfiguration();
+            API api = configuration.getAPI(apiName);
+            if (api != null) {
+                response = Utils.handleTracing(api.getAspectConfiguration(), apiName, axisMsgCtx);
+            } else {
+                response = Utils.createJsonError("Specified API ('" + apiName + "') not found", axisMsgCtx,
+                                                 Constants.BAD_REQUEST);
+            }
+        } else {
+            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+        }
+        Utils.setJsonPayLoad(axisMsgCtx, response);
     }
 
     private void populateApiList(MessageContext messageContext) {
@@ -97,7 +118,8 @@ public class ApiResource extends APIResource {
 
             apiObject.put(Constants.NAME, api.getName());
             apiObject.put(Constants.URL, apiUrl);
-
+            apiObject.put(Constants.TRACING,
+                          api.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED);
             jsonBody.getJSONArray(Constants.LIST).put(apiObject);
 
         }

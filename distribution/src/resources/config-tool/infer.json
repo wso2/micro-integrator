@@ -3,7 +3,7 @@
     "database": {
       "user_store.class": "org.wso2.micro.integrator.security.user.core.jdbc.JDBCUserStoreManager",
       "user_store.properties.TenantManager": "org.wso2.carbon.user.core.tenant.JDBCTenantManager",
-      "user_store.properties.ReadOnly": true,
+      "user_store.properties.ReadOnly": false,
       "user_store.properties.ReadGroups": true,
       "user_store.properties.WriteGroups": true,
       "user_store.properties.UsernameJavaRegEx": "^[\\S]{3,30}$",
@@ -92,7 +92,7 @@
       "transport.wss.sender.parameter.'ws.outflow.dispatch.sequence'": "outflowDispatchSeq",
       "transport.wss.sender.parameter.'ws.outflow.dispatch.fault.sequence'": "outflowFaultSeq",
       "transport.wss.sender.truststore_location": "$ref{truststore.file_name}",
-      "transport.wss.sender.truststore_password": "$ref{truststore.tls.password}"
+      "transport.wss.sender.truststore_password": "$ref{truststore.primary.password}"
     }
   },
   "transport.http.listener.certificate_revocation_verifier_enable": {

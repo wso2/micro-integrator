@@ -221,7 +221,7 @@
         {% endfor %}
         <parameter name="keystore" locked="false">
             <KeyStore>
-                <Location>{{transport.http.listener.keystore.file_name}}</Location>
+                <Location>{{transport.http.listener.keystore.location}}</Location>
                 <Type>{{transport.http.listener.keystore.type}}</Type>
                 <Password>{{transport.http.listener.keystore.password}}</Password>
                 <KeyPassword>{{transport.http.listener.keystore.key_password}}</KeyPassword>
@@ -229,7 +229,7 @@
         </parameter>
         <parameter name="truststore" locked="false">
             <TrustStore>
-                <Location>{{transport.http.listener.truststore.file_name}}</Location>
+                <Location>{{transport.http.listener.truststore.location}}</Location>
                 <Type>{{transport.http.listener.truststore.type}}</Type>
                 <Password>{{transport.http.listener.truststore.password}}</Password>
             </TrustStore>
@@ -259,7 +259,7 @@
 
     {% if transport.vfs.listener.enable == true %}
     <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener">
-        <parameter locked="false" name="keystore.identity.location">{{transport.vfs.listener.keystore.file_name}}</parameter>
+        <parameter locked="false" name="keystore.identity.location">{{transport.vfs.listener.keystore.location}}</parameter>
         <parameter locked="false" name="keystore.identity.type">{{transport.vfs.listener.keystore.type}}</parameter>
         <parameter locked="false" name="keystore.identity.store.password">{{transport.vfs.listener.keystore.password}}</parameter>
         <parameter locked="false" name="keystore.identity.key.password">{{transport.vfs.listener.keystore.key_password}}</parameter>
@@ -366,7 +366,7 @@
         {% if transport_item.keystore is defined %}
         <parameter name="keystore" locked="false">
             <KeyStore>
-                <Location>{{transport_item.keystore.file_name}}</Location>
+                <Location>{{transport_item.keystore.location}}</Location>
                 <Type>{{transport_item.keystore.type}}</Type>
                 <Password>{{transport_item.keystore.password}}</Password>
                 <KeyPassword>{{transport_item.keystore.key_password}}</KeyPassword>
@@ -376,7 +376,7 @@
         {% if transport_item.trust_store is defined %}
         <parameter name="truststore" locked="false">
             <TrustStore>
-                <Location>{{transport_item.truststore.file_name}}</Location>
+                <Location>{{transport_item.truststore.location}}</Location>
                 <Type>{{transport_item.truststore.type}}</Type>
                 <Password>{{transport_item.truststore.password}}</Password>
             </TrustStore>
@@ -457,7 +457,7 @@
         {% endfor %}
         <parameter name="keystore" locked="false">
             <KeyStore>
-                <Location>{{transport.http.sender.keystore.file_name}}</Location>
+                <Location>{{transport.http.sender.keystore.location}}</Location>
                 <Type>{{transport.http.sender.keystore.type}}</Type>
                 <Password>{{transport.http.sender.keystore.password}}</Password>
                 <KeyPassword>{{transport.http.sender.keystore.key_password}}</KeyPassword>
@@ -465,7 +465,7 @@
         </parameter>
         <parameter name="truststore" locked="false">
             <TrustStore>
-                <Location>{{transport.http.sender.truststore.file_name}}</Location>
+                <Location>{{transport.http.sender.truststore.location}}</Location>
                 <Type>{{transport.http.sender.truststore.type}}</Type>
                 <Password>{{transport.http.sender.truststore.password}}</Password>
             </TrustStore>
@@ -632,7 +632,7 @@
         {% if transport_item.keystore is defined %}
         <parameter name="keystore" locked="false">
             <KeyStore>
-                <Location>{{transport_item.keystore.file_name}}</Location>
+                <Location>{{transport_item.keystore.location}}</Location>
                 <Type>{{transport_item.keystore.type}}</Type>
                 <Password>{{transport_item.keystore.password}}</Password>
                 <KeyPassword>{{transport_item.keystore.key_password}}</KeyPassword>
@@ -642,7 +642,7 @@
         {% if transport_item.trust_store is defined %}
         <parameter name="truststore" locked="false">
             <TrustStore>
-                <Location>{{transport_item.truststore.file_name}}</Location>
+                <Location>{{transport_item.truststore.location}}</Location>
                 <Type>{{transport_item.truststore.type}}</Type>
                 <Password>{{transport_item.truststore.password}}</Password>
             </TrustStore>

@@ -304,8 +304,7 @@ public class MediationStatisticsComponent {
     }
 
     private void checkPublishingEnabled() {
-
-        flowStatisticsEnabled = RuntimeStatisticCollector.isStatisticsEnabled();
+        flowStatisticsEnabled = RuntimeStatisticCollector.isMediationFlowStatisticsEnabled();
         MessageFlowDataPublisherDataHolder.getInstance().setGlobalStatisticsEnabled(flowStatisticsEnabled);
         if (!flowStatisticsEnabled) {
             log.info("Global Message-Flow Statistic Reporting is Disabled");

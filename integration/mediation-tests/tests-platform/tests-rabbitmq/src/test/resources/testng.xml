@@ -64,5 +64,11 @@
         </classes>
     </test>
 
+    <test name="RabbitMQ-Dual-Channel-test" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.esb.rabbitmq.dual.channel.RabbitMQDualChannelTestCase"/>
+        </classes>
+    </test>
+
 </suite>
 

@@ -36,6 +36,8 @@ import java.util.Set;
 
 public class SequenceResource extends APIResource {
 
+    private static final String SEQUENCE_NAME = "sequenceName";
+
     public SequenceResource(String urlTemplate){
         super(urlTemplate);
     }
@@ -44,6 +46,7 @@ public class SequenceResource extends APIResource {
     public Set<String> getMethods() {
         Set<String> methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
+        methods.add(Constants.HTTP_POST);
         return methods;
     }
 
@@ -51,20 +54,38 @@ public class SequenceResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-
-        org.apache.axis2.context.MessageContext axis2MessageContext =
+        org.apache.axis2.context.MessageContext axisMsgCtx =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        String param = Utils.getQueryParameter(messageContext, "sequenceName");
-
-        if (Objects.nonNull(param)) {
-            populateSequenceData(messageContext, param);
+        String seqName = Utils.getQueryParameter(messageContext, SEQUENCE_NAME);
+        if (messageContext.isDoingGET()) {
+            if (Objects.nonNull(seqName)) {
+                populateSequenceData(messageContext, seqName);
+            } else {
+                populateSequenceList(messageContext);
+            }
         } else {
-            populateSequenceList(messageContext);
+            handlePost(seqName, messageContext, axisMsgCtx);
         }
-
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
+    }
+
+    private void handlePost(String seqName, MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
+
+        JSONObject response;
+        if (Objects.nonNull(seqName)) {
+            SynapseConfiguration configuration = msgCtx.getConfiguration();
+            SequenceMediator sequence = configuration.getDefinedSequences().get(seqName);
+            if (sequence != null) {
+                response = Utils.handleTracing(sequence.getAspectConfiguration(), seqName, axisMsgCtx);
+            } else {
+                response = Utils.createJsonError("Specified sequence ('" + seqName + "') not found", axisMsgCtx,
+                                                 Constants.BAD_REQUEST);
+            }
+        } else {
+            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+        }
+        Utils.setJsonPayLoad(axisMsgCtx, response);
     }
 
     private void populateSequenceList(MessageContext messageContext) {
