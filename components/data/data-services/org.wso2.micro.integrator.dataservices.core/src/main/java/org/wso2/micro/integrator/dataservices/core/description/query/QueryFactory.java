@@ -1090,15 +1090,13 @@ public class QueryFactory {
 				currentTmpOrdinal++;
 				ordinal = currentTmpOrdinal;
 			}
-			sqlType = paramEl.getAttributeValue(new QName(DBSFields.SQL_TYPE));
+			sqlType = paramEl.getAttributeValue(new QName(DBSFields.SQL_TYPE)).toUpperCase();
+			sqlType = (sqlType == null || sqlType.trim().length() == 0) ? sqlType :  sqlType.toUpperCase();
 			type = paramEl.getAttributeValue(new QName(DBSFields.TYPE));
-			if (type == null || type.trim().length() == 0) {
-				type = QueryTypes.IN;
-			}
+			type = (type == null || type.trim().length() == 0) ? QueryTypes.IN :  type.toUpperCase();
 			paramType = paramEl.getAttributeValue(new QName(DBSFields.PARAM_TYPE));
-			if (paramType == null || paramType.trim().length() == 0) {
-				paramType = QueryParamTypes.SCALAR;
-			}
+			paramType = (paramType == null || paramType.trim().length() == 0) ? QueryParamTypes.SCALAR :
+					paramType.toUpperCase();
 			if (paramEl.getAttributeValue(new QName(DBSFields.FORCED_DEFAULT)) != null) {
 			    forceDefault = Boolean.parseBoolean(paramEl.getAttributeValue(new QName(DBSFields.FORCED_DEFAULT)));
 			}
