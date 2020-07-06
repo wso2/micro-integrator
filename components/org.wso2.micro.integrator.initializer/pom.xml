@@ -97,10 +97,6 @@
             <artifactId>org.wso2.carbon.mediation.library</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.micro.integrator.event.sink</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-io.wso2</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
