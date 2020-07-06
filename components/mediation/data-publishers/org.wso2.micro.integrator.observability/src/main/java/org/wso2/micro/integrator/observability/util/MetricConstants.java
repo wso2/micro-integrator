@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.observability.handler.util;
+package org.wso2.micro.integrator.observability.util;
 
 /**
  * Constants required in instrumenting Prometheus metrics.

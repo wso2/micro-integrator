@@ -21,18 +21,25 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>data-publishers</artifactId>
+        <artifactId>data-publisher-features</artifactId>
         <groupId>org.wso2.ei</groupId>
         <version>1.2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.micro.integrator.observability</artifactId>
-    <packaging>bundle</packaging>
-    <name>WSO2 Micro Integrator - Observablity</name>
+    <artifactId>org.wso2.micro.integrator.observability.feature</artifactId>
+    <name>WSO2 Micro Integrator - Observablity Feature</name>
+    <description>
+        This feature contains the core bundles required for publishing metrics data for observability purpose
+    </description>
 
     <dependencies>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.observability</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-core</artifactId>
@@ -40,6 +47,10 @@
         <dependency>
             <groupId>io.prometheus</groupId>
             <artifactId>simpleclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_common</artifactId>
         </dependency>
         <dependency>
             <groupId>io.prometheus</groupId>
@@ -58,37 +69,36 @@
             <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
             <scope>provided</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.inbound.endpoint</artifactId>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Axis2Module>${project.artifactId}-${project.version}</Axis2Module>
-                        <Export-Package>
-                            org.wso2.micro.integrator.observability.* ;version="${project.version}"
-                        </Export-Package>
-                        <Private-Package>io.prometheus.client.*</Private-Package>
-                        <Import-Package>
-                            org.wso2.carbon.inbound.endpoint.internal.http.api ;version="${project.version}",
-                            *;resolution:=optional
-                        </Import-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>4-p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.micro.integrator.observability</id>
+                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
+                            <bundles>
+                                <bundleDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.observability:${project.version}
+                                </bundleDef>
+                            </bundles>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

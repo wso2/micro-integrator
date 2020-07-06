@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.prometheus.publisher.service;
+package org.wso2.micro.integrator.observability.metric.publisher;
 
 import io.prometheus.client.CollectorRegistry;
 import org.apache.axiom.om.OMAbstractFactory;
@@ -27,34 +27,25 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
-import org.wso2.micro.integrator.prometheus.publisher.publisher.MetricPublisher;
-import org.wso2.micro.integrator.prometheus.publisher.util.MetricFormatter;
 
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-/**
- * Resource class for endpoint exposing metric data
- */
 public class MetricResource extends APIResource {
 
     private static Log log = LogFactory.getLog(MetricResource.class);
-    private MetricPublisher metricPublisher;
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     private CollectorRegistry registry = CollectorRegistry.defaultRegistry;
 
     public MetricResource(String urlTemplate) {
-
         super(urlTemplate);
-        metricPublisher = new MetricPublisher();
+
     }
 
     @Override
     public Set<String> getMethods() {
-
         Set<String> methods = new HashSet<>();
         methods.add("GET");
         return methods;
@@ -69,20 +60,12 @@ public class MetricResource extends APIResource {
 
         log.debug("Retrieving metric data to be published to Prometheus");
 
-        List<String> metrics = metricPublisher.getMetrics();
-
-        if (metrics != null && !metrics.isEmpty()) {
-            log.debug("Retrieving metric data successful");
-            try {
-                String formattedMetric = MetricFormatter.formatMetrics(registry.
-                                                                     filteredMetricFamilySamples(parseQuery(query)));
-                textRootElem.setText(formattedMetric);
-            } catch (IOException e) {
-                log.error("Error in parsing metrics.", e);
-            }
-        } else {
-            textRootElem.setText("");
-            log.info("No metrics retrieved to be published to Prometheus");
+        try {
+            String formattedMetric = MetricFormatter.formatMetrics(registry.
+                    filteredMetricFamilySamples(parseQuery(query)));
+            textRootElem.setText(formattedMetric);
+        } catch (IOException e) {
+            log.error("Error in parsing metrics.", e);
         }
 
         synCtx.getEnvelope().getBody().addChild(textRootElem);

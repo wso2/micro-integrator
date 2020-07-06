@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.observability.handler.metrichandler.prometheus.reporter;
+package org.wso2.micro.integrator.observability.metric.handler.prometheus.reporter;
 
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
@@ -25,8 +25,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseConstants;
 import org.wso2.config.mapper.ConfigParser;
-import org.wso2.micro.integrator.observability.handler.metrichandler.MetricReporter;
-import org.wso2.micro.integrator.observability.handler.util.MetricConstants;
+import org.wso2.micro.integrator.observability.metric.handler.MetricReporter;
+import org.wso2.micro.integrator.observability.util.MetricConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
