@@ -19,20 +19,29 @@
 package org.wso2.micro.integrator.management.apis.security.handler;
 
 import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
+import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
+
 /**
  * This class provides an abstraction for all security handlers using authentication for management api.
  */
 public abstract class AuthenticationHandlerAdapter extends SecurityHandlerAdapter {
+
+    private static final Log LOG = LogFactory.getLog(AuthenticationHandlerAdapter.class);
 
     public AuthenticationHandlerAdapter(String context) throws CarbonException, XMLStreamException, IOException,
             ManagementApiUndefinedException {
@@ -88,4 +97,72 @@ public abstract class AuthenticationHandlerAdapter extends SecurityHandlerAdapte
      */
     protected abstract Boolean authenticate(String authHeaderToken);
 
+    /**
+     * Processes authentication request with basic auth and carbon user store.
+     *
+     * @param token extracted basic auth token
+     * @return if successfully authenticated
+     */
+    boolean processAuthRequestWithCarbonUserStore(String token) throws UserStoreException {
+
+        String[] userDetails = extractDetails(token);
+        if (userDetails.length == 0) {
+            return false;
+        }
+        boolean isAuthenticated = MicroIntegratorSecurityUtils.getUserStoreManager().authenticate(userDetails[0],
+                                                                                                  userDetails[1]);
+        if (isAuthenticated) {
+            messageContext.setProperty(USERNAME_PROPERTY, userDetails[0]);
+            LOG.info("User " + userDetails[0] + " logged in successfully");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Processes authentication request with basic auth and in memory user store
+     *
+     * @param token extracted basic auth token
+     * @return boolean if successfully authenticated
+     */
+    boolean processAuthRequestWithFileBasedUserStore(String token) {
+
+        String[] userDetails = extractDetails(token);
+        if (userDetails.length == 0) {
+            return false;
+        }
+        if (!usersList.isEmpty()) {
+            for (String userNameFromStore : usersList.keySet()) {
+                if (userNameFromStore.equals(userDetails[0])) {
+                    String passwordFromStore = String.valueOf(usersList.get(userNameFromStore));
+                    if (isValid(passwordFromStore) && passwordFromStore.equals(userDetails[1])) {
+                        messageContext.setProperty(USERNAME_PROPERTY, userDetails[0]);
+                        LOG.info("User " + userDetails[0] + " logged in successfully");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private String[] extractDetails(String token) {
+
+        String decodedCredentials = new String(new Base64().decode(token.getBytes()));
+        String[] usernamePasswordArray = decodedCredentials.split(":");
+        if (usernamePasswordArray.length != 2) {
+            return new String[] {};
+        }
+        return new String[] { usernamePasswordArray[0], usernamePasswordArray[1] };
+    }
+
+    /**
+     * Checks if a given value is not null and not empty.
+     *
+     * @param value String value
+     */
+    private Boolean isValid(String value) {
+
+        return (Objects.nonNull(value) && !value.isEmpty());
+    }
 }

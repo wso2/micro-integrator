@@ -18,17 +18,15 @@
 
 package org.wso2.micro.integrator.management.apis.security.handler;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.MessageContext;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.Objects;
-
-import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * This class extends the AuthenticationHandlerAdapter to create a basic security handler with a user store defined in
@@ -56,37 +54,25 @@ public class BasicSecurityHandler extends AuthenticationHandlerAdapter {
     }
 
     @Override
+    public Boolean invoke(MessageContext messageContext) {
+        this.messageContext = messageContext;
+        return super.invoke(messageContext);
+    }
+
+    @Override
     protected Boolean authenticate(String authHeaderToken) {
-        LOG.debug("Handling authentication");
-        String decodedCredentials = new String(new Base64().decode(authHeaderToken.getBytes()));
-        String[] usernamePasswordArray = decodedCredentials.split(":");
-        // Avoid possible array index out of bound errors
-        if (usernamePasswordArray.length != 2) {
-            return false;
-        }
-        String userNameFromHeader = usernamePasswordArray[0];
-        String passwordFromHeader = usernamePasswordArray[1];
-        if (!usersList.isEmpty()) {
-            for (String userNameFromStore : usersList.keySet()) {
-                if (userNameFromStore.equals(userNameFromHeader)) {
-                    String passwordFromStore = String.valueOf(usersList.get(userNameFromStore));
-                    if (isValid(passwordFromStore) && passwordFromStore.equals(passwordFromHeader)) {
-                        messageContext.setProperty(USERNAME_PROPERTY, userNameFromHeader);
-                        return true;
-                    }
-                }
+
+        LOG.debug("Handling authentication with BasicSecurityHandler");
+        if (useCarbonUserStore) {
+            try {
+                return processAuthRequestWithCarbonUserStore(authHeaderToken);
+            } catch (UserStoreException e) {
+                LOG.error("Error while authenticating with carbon user store", e);
+                return false;
             }
+        } else {
+            return processAuthRequestWithFileBasedUserStore(authHeaderToken);
         }
-
-        return false;
     }
 
-    /**
-     * Checks if a given value is not null and not empty.
-     *
-     * @param value String value
-     */
-    private Boolean isValid(String value) {
-        return (Objects.nonNull(value) && !value.isEmpty());
-    }
 }
