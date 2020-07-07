@@ -47,7 +47,7 @@ properties.isCascadeDeleteEnabled = true    #inferred
 
 [user_store]
 #usr-mgt.xml
-type = "read_only_ldap" # inferred default read_only_ldap
+type = "read_only_ldap" # inferred default read_only_ldap # OR  read_write_ldap
 class = "org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreManager" # inferred
 connection_url = "ldap://localhost:10389"   #inferred
 connection_name = "uid=admin,ou=system"   #inferred
