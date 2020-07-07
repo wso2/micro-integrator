@@ -43,6 +43,7 @@ public class MIMigrationServiceComponent {
         } else {
             log.error("Provided product version is invalid");
         }
+        System.exit(0);
     }
 
     @Deactivate
