@@ -167,8 +167,10 @@ public class PrometheusReporter implements MetricReporter {
 
     @Override
     public void incrementCount(String metricName,  String[] properties) {
+        log.info("############################## 22222222");
         Counter counter = (Counter) metricMap.get(metricName);
         counter.labels(properties).inc();
+        System.out.println("Count------> " + counter.labels(properties).get());
     }
 
     @Override
@@ -202,6 +204,15 @@ public class PrometheusReporter implements MetricReporter {
     public void serverDown(String host, String port, String javaHome, String javaVersion) {
         Gauge gauge = (Gauge) metricMap.get(MetricConstants.SERVER_UP);
         gauge.labels(host, port, javaHome, javaVersion).set(0);
+
+        Counter counter44 = TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
+        counter44.labels();
+
+        Counter counter14 = TOTAL_REQUESTS_RECEIVED_API;
+        counter14.labels();
+
+        Counter counter24 = TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
+        counter24.labels();
     }
 
     @Override
