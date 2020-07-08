@@ -128,6 +128,12 @@
             </packages>
         </test>-->
 
+    <test name="inbound-File Transport-Test" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.esb.file.inbound.transport.test.FileInboundWithDynamicSequenceTestCase"/>
+        </classes>
+    </test>
+
     <!--<test name="inbound-File Transport-Test" preserve-order="true" verbose="2">-->
     <!--<packages>-->
     <!--<package name="org.wso2.carbon.esb.file.inbound.transport.test"/>-->

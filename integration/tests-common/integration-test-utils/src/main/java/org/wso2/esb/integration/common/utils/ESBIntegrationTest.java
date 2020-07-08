@@ -164,54 +164,6 @@ public abstract class ESBIntegrationTest {
     }
 
     protected void cleanup() throws Exception {
-		/*try {
-			if (synapseConfiguration != null) {
-				esbUtils.deleteArtifact(synapseConfiguration, contextUrls.getBackEndUrl(), sessionCookie);
-				if (context.getProductGroup().isClusterEnabled()) {
-
-					long deploymentDelay = Long.parseLong(context.getConfigurationValue("//deploymentDelay"));
-					Thread.sleep(deploymentDelay);
-					Iterator<OMElement> proxies = synapseConfiguration.getChildrenWithLocalName("proxy");
-					while (proxies.hasNext()) {
-						String proxy = proxies.next().getAttributeValue(new QName("name"));
-
-						Assert.assertTrue(isProxyWSDlNotExist(getProxyServiceURLHttp(proxy), deploymentDelay)
-								, "UnDeployment Synchronizing failed in workers");
-						Assert.assertTrue(isProxyWSDlNotExist(getProxyServiceURLHttp(proxy), deploymentDelay)
-								, "UnDeployment Synchronizing failed in workers");
-						Assert.assertTrue(isProxyWSDlNotExist(getProxyServiceURLHttp(proxy), deploymentDelay)
-								, "UnDeployment Synchronizing failed in workers");
-					}
-				}
-			}
-			deleteScheduledTasks();
-			deleteMessageProcessors();
-			deleteMessageStores();
-			deleteInboundEndpoints();
-			deleteApi();
-			deleteProxyServices();
-			deleteEndpoints();
-			deleteSequences();
-			deleteSequenceTemplates();
-			deleteLocalEntries();
-			deletePriorityExecutors();
-		} finally {
-			restoreSynapseConfig();
-			synapseConfiguration = null;
-			proxyServicesList = null;
-			messageProcessorsList = null;
-			proxyServicesList = null;
-			sequencesList = null;
-			endpointsList = null;
-			localEntryList = null;
-			apiList = null;
-			priorityExecutorList = null;
-			axis2Client.destroy();
-			axis2Client = null;
-			esbUtils = null;
-			scheduledTaskList = null;
-		}*/
-
         // DO NOTHING;
     }
 
