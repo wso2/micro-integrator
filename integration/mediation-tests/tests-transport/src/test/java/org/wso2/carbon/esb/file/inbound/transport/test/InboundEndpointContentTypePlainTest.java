@@ -68,6 +68,8 @@ public class InboundEndpointContentTypePlainTest extends ESBIntegrationTest {
         } finally {
             deleteFile(targetFile);
             logViewerClient.stop();
+            Utils.undeploySynapseConfiguration("testInboundEndpointReadFileContentTypePlain",
+                                               Utils.ArtifactType.INBOUND_ENDPOINT, false);
         }
     }
 
