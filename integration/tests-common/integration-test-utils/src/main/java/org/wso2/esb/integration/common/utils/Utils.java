@@ -256,7 +256,10 @@ public class Utils {
     }
 
     public static void undeploySynapseConfiguration(String artifactName, String artifactType, boolean restartServer) {
-        CarbonServerExtension.shutdownServer();
+
+        if (restartServer) {
+            CarbonServerExtension.shutdownServer();
+        }
         String pathString = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
                 + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
                 + File.separator + artifactType + File.separator + artifactName + ".xml";
@@ -267,7 +270,7 @@ public class Utils {
             log.error("Error while deleting the file", e);
         }
         if (restartServer) {
-            CarbonServerExtension.restartServer();
+            CarbonServerExtension.startServer();
         }
     }
 
