@@ -133,21 +133,9 @@
             <class name="org.wso2.carbon.esb.file.inbound.transport.test.FileInboundWithDynamicSequenceTestCase"/>
             <class name="org.wso2.carbon.esb.file.inbound.transport.test.FtpInboundTransportTest"/>
             <class name="org.wso2.carbon.esb.file.inbound.transport.test.InboundEndpointContentTypePlainTest"/>
+            <class name="org.wso2.carbon.esb.file.inbound.transport.test.InboundTransportTest"/>
         </classes>
     </test>
-
-    <!--<test name="inbound-File Transport-Test" preserve-order="true" verbose="2">-->
-    <!--<packages>-->
-    <!--<package name="org.wso2.carbon.esb.file.inbound.transport.test"/>-->
-    <!--</packages>-->
-    <!--<classes>-->
-    <!--<class name="org.wso2.carbon.esb.file.inbound.transport.test.FtpInboundTransportTest">-->
-    <!--<methods>-->
-    <!--<exclude name=".*"/>-->
-    <!--</methods>-->
-    <!--</class>-->
-    <!--</classes>-->
-    <!--</test>-->
 
     <test name="inbound-Generic Transport-Test" preserve-order="true" verbose="2">
         <packages>
