@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/*
 package org.wso2.carbon.esb.generic.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -24,86 +23,90 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
 public class GenericInboundTransportTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader logViewerClient;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
 
         init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/generic/inbound/transport/generic_inbound_transport_config.xml");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        logViewerClient = new CarbonLogReader();
+        logViewerClient.start();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test Adding Generic Inbound End point")
+    @Test(groups = { "wso2.esb" },
+            description = "Test Adding Generic Inbound End point")
     public void testAddingGenericInboundEndpoints() throws Exception {
-        addInboundEndpoint(addEndpoint1());
-        boolean status = Utils.checkForLog(logViewerClient, "Generic Polling Consumer Invoked", 5);
+
+        logViewerClient.clearLogs();
+        Utils.deploySynapseConfiguration(addEndpoint1(), "Test1", Utils.ArtifactType.INBOUND_ENDPOINT, false);
+        boolean status = Utils.checkForLog(logViewerClient, "Generic Polling Consumer Invoked", 60);
         Assert.assertTrue(status, "There is no Generic Inbound Endpoint.");
+        Utils.undeploySynapseConfiguration("Test1", Utils.ArtifactType.INBOUND_ENDPOINT, false);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test creating Generic Inbound EP without sequence")
+    @Test(groups = { "wso2.esb" },
+            description = "Test creating Generic Inbound EP without sequence")
     public void testInjectingInvalidSequence() throws Exception {
-        addInboundEndpoint(addEndpoint2());
-        boolean status = Utils.checkForLog(logViewerClient, "Sequence name not specified", 5);
+
+        logViewerClient.clearLogs();
+        Utils.deploySynapseConfiguration(addEndpoint2(), "Test2", Utils.ArtifactType.INBOUND_ENDPOINT, false);
+        boolean status = Utils.checkForLog(logViewerClient, "Sequence name not specified", 60);
         Assert.assertTrue(status, "There is no Generic Inbound Endpoint.");
+        Utils.undeploySynapseConfiguration("Test2", Utils.ArtifactType.INBOUND_ENDPOINT, false);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test creating Generic Inbound EP without implementation class")
+    @Test(groups = { "wso2.esb" },
+            description = "Test creating Generic Inbound EP without implementation class")
     public void testWithoutImplementationClass() throws Exception {
-        addInboundEndpoint(addEndpoint3());
-        boolean status = Utils
-                .checkForLog(logViewerClient, "Please check the required class is added to the classpath", 5);
+
+        logViewerClient.clearLogs();
+        Utils.deploySynapseConfiguration(addEndpoint3(), "Test3", Utils.ArtifactType.INBOUND_ENDPOINT, false);
+        boolean status = Utils.checkForLog(logViewerClient, "Please check the required class is added to the classpath",
+                                           60);
         Assert.assertTrue(status, "There is no Generic Inbound Endpoint.");
+        Utils.undeploySynapseConfiguration("Test3", Utils.ArtifactType.INBOUND_ENDPOINT, false);
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        logViewerClient.stop();
     }
 
     private OMElement addEndpoint1() throws Exception {
-        OMElement synapseConfig = null;
-        synapseConfig = AXIOMUtil.stringToOM(
+
+        return AXIOMUtil.stringToOM(
                 "<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "                 name=\"Test1\"\n"
                         + "                 sequence=\"requestHandlerSeq\"\n" + "                 onError=\"inFault\"\n"
                         + "                 class=\"org.wso2.carbon.inbound.endpoint.test.GenericConsumer\"\n"
                         + "                 suspend=\"false\">\n" + "   <parameters>\n"
                         + "      <parameter name=\"interval\">1000</parameter>\n" + "   </parameters>\n"
                         + "</inboundEndpoint>");
-
-        return synapseConfig;
     }
 
     private OMElement addEndpoint2() throws Exception {
-        OMElement synapseConfig = null;
-        synapseConfig = AXIOMUtil.stringToOM(
+
+        return AXIOMUtil.stringToOM(
                 "<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "                 name=\"Test2\"\n"
                         + "                 sequence=\"\"\n" + "                 onError=\"inFault\"\n"
                         + "                 class=\"org.wso2.carbon.inbound.endpoint.test.GenericConsumer\"\n"
                         + "                 suspend=\"false\">\n" + "   <parameters>\n"
                         + "      <parameter name=\"interval\">1000</parameter>\n" + "   </parameters>\n"
                         + "</inboundEndpoint>");
-
-        return synapseConfig;
     }
 
     private OMElement addEndpoint3() throws Exception {
-        OMElement synapseConfig = null;
-        synapseConfig = AXIOMUtil.stringToOM(
-                "<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "                 name=\"Test4\"\n"
+
+        return AXIOMUtil.stringToOM(
+                "<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "                 name=\"Test3\"\n"
                         + "                 sequence=\"requestHandlerSeq\"\n" + "                 onError=\"inFault\"\n"
                         + "                 class=\"\"\n" + "                 suspend=\"false\">\n"
                         + "   <parameters>\n" + "      <parameter name=\"interval\">1000</parameter>\n"
                         + "   </parameters>\n" + "</inboundEndpoint>");
-
-        return synapseConfig;
     }
 }
-*/
