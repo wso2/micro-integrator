@@ -24,6 +24,8 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageConsumer;
+import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.esb.integration.common.clients.mediation.MessageStoreAdminClient;
 import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 
@@ -234,9 +236,9 @@ public class Utils {
                 throw new IOException("Error while creating the directory, " + directory + ".", e);
             }
         }
+        log.info("Deploying artifact named ('" + artifactName + "') of type ('" + artifactType + "')");
         try (OutputStream outputStream = new FileOutputStream(path)) {
             config.serialize(outputStream);
-            config.serialize(System.out);
             if (isRestartRequired) {
                 CarbonServerExtension.restartServer();
             }
@@ -294,5 +296,27 @@ public class Utils {
         if (restartServer) {
             CarbonServerExtension.restartServer();
         }
+    }
+
+    /**
+     * Check if the given queue does not contain any messages
+     *
+     * @param queueName queue to be checked
+     * @return true in queue is empty, false otherwise
+     * @throws Exception if error while checking
+     */
+    public static boolean isQueueEmpty(String queueName) throws Exception {
+
+        String poppedMessage;
+        JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
+                JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
+        try {
+            consumer.connect(queueName);
+            poppedMessage = consumer.popMessage();
+        } finally {
+            consumer.disconnect();
+        }
+
+        return poppedMessage == null;
     }
 }

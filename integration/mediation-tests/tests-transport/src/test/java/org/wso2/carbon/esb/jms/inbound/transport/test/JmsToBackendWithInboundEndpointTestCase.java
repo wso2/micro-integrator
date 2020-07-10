@@ -13,83 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageProducer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
 
-import java.io.File;
-
-*/
 /**
  * This testcase tests consuming message from a queue and sending to a backend works
- *//*
-
+ */
 public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest {
 
-    private static final String QUEUE_NAME = "jmsQueueToHttpWithInboundEndpointTestCase";
+    private static final String QUEUE_NAME = "JmsToBackendWithInboundEndpointTestCase";
 
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
-        super.init();
 
-        verifySequenceExistence("jmsQueueToHttpWithInboundEPSendInSequence");
-
-        //Add inbound endpoint configuration
-        OMElement inboundEpConfig = esbUtils.loadResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator
-                        + "inbound" + File.separator + "transport" + File.separator
-                        + "jmsQueueToHttpInboundEndpoint.xml");
-        addInboundEndpoint(inboundEpConfig);
+        init();
     }
-
-    */
-/**
-     * Test whether consuming message from a queue and sending to a backend works (i.e. JMS -> HTTP)
-     *
-     * @throws Exception if any error occurred while running tests
-     *//*
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" }, description = "Test JMS to HTTP communication with inbound endpoint")
+    @Test(groups = { "wso2.esb" },
+            description = "Test JMS to HTTP communication with inbound endpoint")
     public void testJmsQueueToHttpWithInboundEndpoint() throws Exception {
-        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logViewerClient.clearLogs();
 
-        //send a message to the queue
+        CarbonLogReader logViewerClient = new CarbonLogReader();
+        logViewerClient.start();
         sendMessage();
-
-        //check for the log
-        boolean assertValue = Utils
-                .assertIfSystemLogContains(logViewerClient, "** testJmsQueueToHttpWithInboundEndpoint RESPONSE **");
-
+        boolean assertValue = logViewerClient.checkForLog("** testJmsQueueToHttpWithInboundEndpoint RESPONSE **", 60);
         Assert.assertTrue(assertValue, "HTTP backend response did not receive with the inbound endpoint.");
+        logViewerClient.stop();
     }
-
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
-        super.cleanup();
-    }
-
-    */
-/**
-     * Send a message to testInboundQueue queue
-     *
-     * @throws Exception
-     *//*
 
     private void sendMessage() throws Exception {
+
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
         String message = "<?xml version='1.0' encoding='UTF-8'?>"
@@ -101,10 +64,8 @@ public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest 
         try {
             sender.connect(QUEUE_NAME);
             sender.pushMessage(message);
-            Thread.sleep(2000);
         } finally {
             sender.disconnect();
         }
     }
 }
-*/
