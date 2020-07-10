@@ -44,12 +44,7 @@ public class CSVSampleServiceTestCase extends DSSIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
-
         super.init();
-        deployService(serviceName, AXIOMUtil.stringToOM(FileManager.readFile(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "csv" + File.separator
-                        + "CSVSampleService.dbs")));
-
     }
 
     @AfterClass(alwaysRun = true)

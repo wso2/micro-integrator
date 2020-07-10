@@ -17,7 +17,10 @@
  */
 package org.wso2.ei.dataservice.integration.test.samples;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
@@ -26,11 +29,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import javax.activation.DataHandler;
 
 public class ResourcesSampleTestCase extends DSSIntegrationTest {
@@ -49,9 +55,6 @@ public class ResourcesSampleTestCase extends DSSIntegrationTest {
     public void serviceDeployment() throws Exception {
 
         super.init();
-        deployService(serviceName, new DataHandler(
-                new URL("file:///" + getResourceLocation() + File.separator + "samples" + File.separator + "dbs"
-                        + File.separator + "rdbms" + File.separator + "ResourcesSample.dbs")));
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
         //to avoid conflict of primary key violation in the database when running user and tenant modes
         if (isTenant()) {
@@ -115,9 +118,10 @@ public class ResourcesSampleTestCase extends DSSIntegrationTest {
 
     private void deleteProduct() throws Exception {
 
-        HttpClientUtil httpClient = new HttpClientUtil();
         for (int i = productId; i < productId + 10; i++) {
-            httpClient.delete(serviceEndPoint + "product/", "" + i);
+            SimpleHttpClient client = new SimpleHttpClient();
+            String endpoint = serviceEndPoint + "product/" + i;
+            client.doDelete(endpoint, null);
         }
     }
 
@@ -134,13 +138,14 @@ public class ResourcesSampleTestCase extends DSSIntegrationTest {
 
     private void editProduct() throws Exception {
 
-        HttpClientUtil httpClient = new HttpClientUtil();
         for (int i = productId; i < productId + 10; i++) {
 
-            String para =
-                    "productCode=" + i + "&" + "productName=" + "product" + i + " edited" + "&" + "productLine=2" + "&"
-                            + "quantityInStock=200" + "&" + "buyPrice=15";
-            httpClient.put(serviceEndPoint + "_putproduct", para);
+            SimpleHttpClient client = new SimpleHttpClient();
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", "application/xml");
+            String endpoint = serviceEndPoint + "product";
+            client.doPut(endpoint, headers, createPayload(i, " edited", "15.0").toString(),
+                    "application/xml");
         }
     }
 
@@ -153,12 +158,44 @@ public class ResourcesSampleTestCase extends DSSIntegrationTest {
 
     private void addProduct() throws Exception {
 
-        HttpClientUtil httpClient = new HttpClientUtil();
         for (int i = productId; i < productId + 10; i++) {
 
-            String para = "productCode=" + i + "&" + "productName=" + "product" + i + "&" + "productLine=2" + "&"
-                    + "quantityInStock=200" + "&" + "buyPrice=10";
-            httpClient.post(serviceEndPoint + "_postproduct", para);
+            SimpleHttpClient client = new SimpleHttpClient();
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", "application/xml");
+            String endpoint = serviceEndPoint + "product";
+            client.doPost(endpoint, headers, createPayload(i, "", "10").toString(), "application/xml");
+
         }
+    }
+
+    private OMElement createPayload(int i, String status, String price) {
+
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace p = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/resources_sample", "p");
+        OMNamespace xs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/resources_sample", "xs");
+        OMElement payload = fac.createOMElement("_postproduct", p);
+
+        OMElement id = fac.createOMElement("productCode", xs);
+        id.setText(Integer.toString(i));
+        payload.addChild(id);
+
+        id = fac.createOMElement("productName", xs);
+        id.setText("product" + i + status);
+        payload.addChild(id);
+
+        id = fac.createOMElement("productLine", xs);
+        id.setText("2");
+        payload.addChild(id);
+
+        id = fac.createOMElement("quantityInStock", xs);
+        id.setText("200");
+        payload.addChild(id);
+
+        id = fac.createOMElement("buyPrice", xs);
+        id.setText(price);
+        payload.addChild(id);
+
+        return payload;
     }
 }

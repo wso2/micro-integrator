@@ -48,23 +48,10 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
-
         super.init();
-
-        deployService(serviceName, AXIOMUtil.stringToOM(FileManager.readFile(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "excel" + File.separator
-                        + "ExcelSampleService.dbs")));
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
-    public void testServiceDeployment() throws RemoteException, XPathExpressionException {
-        DSSTestCaseUtils dssTestCaseUtils = new DSSTestCaseUtils();
-        assertTrue(dssTestCaseUtils
-                .isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
-        log.info(serviceName + " is deployed");
-    }
-
-    @Test(groups = { "wso2.dss" }, invocationCount = 5, dependsOnMethods = "testServiceDeployment")
+    @Test(groups = { "wso2.dss" }, invocationCount = 5)
     public void selectOperation() throws AxisFault, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");

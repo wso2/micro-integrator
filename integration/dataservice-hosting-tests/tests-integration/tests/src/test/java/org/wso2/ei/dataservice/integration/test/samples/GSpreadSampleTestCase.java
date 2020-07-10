@@ -18,24 +18,22 @@
 
 package org.wso2.ei.dataservice.integration.test.samples;
 
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.dataservices.samples.gspread_sample_service.DataServiceFault;
-import org.wso2.carbon.dataservices.samples.gspread_sample_service.GSpreadSample;
-import org.wso2.carbon.dataservices.samples.gspread_sample_service.GSpreadSampleStub;
+import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import java.io.File;
-import java.net.URL;
 import java.rmi.RemoteException;
-import javax.activation.DataHandler;
-
-import static org.testng.Assert.assertTrue;
 
 public class GSpreadSampleTestCase extends DSSIntegrationTest {
 
@@ -43,6 +41,8 @@ public class GSpreadSampleTestCase extends DSSIntegrationTest {
 
     private final String serviceName = "GSpreadSample";
     private String serverEpr;
+    private final OMFactory fac = OMAbstractFactory.getOMFactory();
+    private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
 
     @Factory(dataProvider = "userModeDataProvider")
     public GSpreadSampleTestCase(TestUserMode userMode) {
@@ -52,29 +52,24 @@ public class GSpreadSampleTestCase extends DSSIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
         super.init();
-        String resourceFileLocation;
         serverEpr = getServiceUrlHttp(serviceName);
-        resourceFileLocation = getResourceLocation();
-        deployService(serviceName, new DataHandler(
-                new URL("file:///" + resourceFileLocation + File.separator + "samples" + File.separator + "dbs"
-                        + File.separator + "gspread" + File.separator + "GSpreadSample.dbs")));
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = true)
-    public void testServiceDeployment() throws Exception {
-        assertTrue(isServiceDeployed(serviceName));
-        log.info(serviceName + " is deployed");
-    }
-
-    @Test(groups = {
-            "wso2.dss" }, dependsOnMethods = "testServiceDeployment", description = "invoke GSspread sheet test", enabled = true)
-    public void testGSpreadQuery() throws DataServiceFault, RemoteException {
+    @Test(groups = {"wso2.dss" }, description = "invoke GSspread sheet test", enabled = true)
+    public void testGSpreadQuery() throws RemoteException {
 
         if (this.isOnlineTestsEnabled()) {
             log.info("Running GSpreadSampleTestCase#testGSpreadQuery");
-            GSpreadSample stub = new GSpreadSampleStub(serverEpr);
-            assert stub.getCustomers().length > 0 : "No of customers should be greater than zero";
+            OMElement payload = fac.createOMElement("getProducts", omNs);
+            OMElement result = new AxisServiceClient().sendReceive(payload, serverEpr, "getProducts");
+            Assert.assertTrue((result.toString().indexOf("Products") == 1),
+                    "Expected Result not found on response message");
+            Assert.assertTrue(result.toString().contains("<Product>"), "Expected Result not found on response message");
+            Assert.assertTrue(result.toString().contains("<ID>"), "Expected Result not found on response message");
+            Assert.assertTrue(result.toString().contains("<Category>"), "Expected Result not found on response message");
+            Assert.assertTrue(result.toString().contains("<Price>"), "Expected Result not found on response message");
+            Assert.assertTrue(result.toString().contains("<Name>"), "Expected Result not found on response message");
 
         }
     }

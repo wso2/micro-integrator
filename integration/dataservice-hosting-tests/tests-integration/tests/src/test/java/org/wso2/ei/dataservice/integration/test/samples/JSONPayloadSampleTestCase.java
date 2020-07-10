@@ -29,13 +29,10 @@ import org.wso2.ei.dataservice.integration.test.requestBox.RequestBoxJsonTestCas
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class contains test cases to check the json functionality in sending batch request and single request to
@@ -55,11 +52,6 @@ public class JSONPayloadSampleTestCase extends DSSIntegrationTest {
     public void serviceDeployment() throws Exception {
 
         super.init();
-        List<File> sqlFileLis = new ArrayList<>();
-        sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
-                        + File.separator + "JSONSampleTest.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 

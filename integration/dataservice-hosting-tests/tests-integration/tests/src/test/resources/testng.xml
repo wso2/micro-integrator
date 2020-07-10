@@ -174,8 +174,20 @@
 
     <test name="DSS-samples-tests" parallel="false" verbose="2">
         <packages>
-            <package name="org.wso2.dss.integration.test.samples"/>
+            <package name="org.wso2.ei.dataservice.integration.test.samples"/>
         </packages>
+        <classes>
+            <class name="org.wso2.ei.dataservice.integration.test.samples.DTPBatchRequestSampleTestcase">
+                <methods>
+                    <exclude name=".*" />
+                </methods>
+            </class>
+            <class name="org.wso2.ei.dataservice.integration.test.samples.InMemoryDSSampleTestCase">
+                <methods>
+                    <exclude name=".*" />
+                </methods>
+            </class>
+        </classes>
     </test>
 
     <!--    <test name="DSS-jira-issues-tests-email" parallel="false" verbose="2">
