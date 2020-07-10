@@ -91,7 +91,7 @@ public class Utils {
      */
     public static void shutdownFailsafe(int port) throws IOException {
         try {
-            Process p = Runtime.getRuntime().exec("lsof -Pi tcp:" + port);
+            Process p = Runtime.getRuntime().exec("lsof -i:" + port);
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             reader.readLine();
@@ -105,7 +105,7 @@ public class Utils {
                 }
             }
         } catch (IOException e) {
-            throw new IOException("Error killing the process which uses the port " + port, e);
+            log.error("Error while shutting down the process in port " + port, e);
         }
     }
 
