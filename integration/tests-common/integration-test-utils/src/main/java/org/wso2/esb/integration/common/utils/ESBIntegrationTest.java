@@ -139,6 +139,19 @@ public abstract class ESBIntegrationTest {
         userInfo = tenantInfo.getContextUser();
     }
 
+    protected void init(TestUserMode userMode) throws Exception {
+
+        axis2Client = new StockQuoteClient();
+        context = new AutomationContext(ESBTestConstant.ESB_PRODUCT_GROUP, userMode);
+        contextUrls = context.getContextUrls();
+        esbUtils = new ESBTestCaseUtils();
+        tenantInfo = context.getContextTenant();
+        userInfo = tenantInfo.getContextUser();
+        hostName = UrlGenerationUtil.getManagerHost(context.getInstance());
+        portOffset = Integer.parseInt(System.getProperty("port.offset"));
+        isManagementApiAvailable = false;
+    }
+
     protected void init() throws Exception {
         axis2Client = new StockQuoteClient();
         context = new AutomationContext();
