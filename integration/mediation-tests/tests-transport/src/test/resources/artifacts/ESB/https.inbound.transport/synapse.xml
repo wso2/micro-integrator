@@ -16,9 +16,9 @@
 
 <inboundEndpoint name="HttpsListenerEP"
                  protocol="https"
-                  suspend="false" sequence="TestIn" onError="fault" >
+                 suspend="false" sequence="HTTPSInboundTestIn" onError="fault">
     <p:parameters xmlns:p="http://ws.apache.org/ns/synapse">
-        <p:parameter  name="inbound.http.port">8081</p:parameter>
+        <p:parameter name="inbound.http.port">8087</p:parameter>
         <p:parameter name="keystore">
             <KeyStore>
                 <Location>repository/resources/security/wso2carbon.jks</Location>

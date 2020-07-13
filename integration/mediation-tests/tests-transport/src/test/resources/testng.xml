@@ -109,6 +109,12 @@
         </classes>
     </test>
 
+    <test name="HTPPS_Inbound_Test" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.esb.https.inbound.transport.test.HttpsInboundTransportTestCase"/>
+        </classes>
+    </test>
+
     <test name="VFS-transport-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.vfs.transport.test.*"/>
