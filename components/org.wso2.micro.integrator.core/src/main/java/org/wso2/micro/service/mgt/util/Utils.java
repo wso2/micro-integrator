@@ -41,32 +41,46 @@ public final class Utils {
     private Utils() {
     }
 
-    public static String[] getWsdlInformation(String serviceName,
-                                              AxisConfiguration axisConfig) throws AxisFault {
+    public static String getSwaggerUrl(String serviceName, AxisConfiguration axisConfig) throws AxisFault {
+
+        String swaggerUrl = "";
+        String swaggerPrefix = getUrlPrefix(serviceName, axisConfig);
+        if (!swaggerPrefix.isEmpty()) {
+            swaggerUrl = swaggerPrefix + "?swagger.json";
+        }
+        return swaggerUrl;
+    }
+
+    public static String[] getWsdlInformation(String serviceName, AxisConfiguration axisConfig) throws AxisFault {
+
+        String wsdlUrlPrefix = getUrlPrefix(serviceName, axisConfig);
+        if (!wsdlUrlPrefix.isEmpty()) {
+            return new String[] { wsdlUrlPrefix + "?wsdl", wsdlUrlPrefix + "?wsdl2" };
+        }
+        return new String[] {};
+    }
+
+    private static String getUrlPrefix(String serviceName, AxisConfiguration axisConfig) throws AxisFault {
+
         String ip;
+        String urlPrefix = "";
         try {
             ip = NetworkUtils.getLocalHostname();
         } catch (SocketException e) {
             throw new AxisFault("Cannot get local host name", e);
         }
-
-        //TODO Ideally, The transport on which wsdls are displayed, should be configurable.
         TransportInDescription transportInDescription = axisConfig.getTransportIn("http");
-
         if (transportInDescription == null) {
             transportInDescription = axisConfig.getTransportIn("https");
         }
-
         if (transportInDescription != null) {
-            EndpointReference[] epr =
-                    transportInDescription.getReceiver().getEPRsForService(serviceName, ip);
-            String wsdlUrlPrefix = epr[0].getAddress();
-            if (wsdlUrlPrefix.endsWith("/")) {
-                wsdlUrlPrefix = wsdlUrlPrefix.substring(0, wsdlUrlPrefix.length() - 1);
+            EndpointReference[] epr = transportInDescription.getReceiver().getEPRsForService(serviceName, ip);
+            urlPrefix = epr[0].getAddress();
+            if (urlPrefix.endsWith("/")) {
+                urlPrefix = urlPrefix.substring(0, urlPrefix.length() - 1);
             }
-            return new String[]{wsdlUrlPrefix + "?wsdl", wsdlUrlPrefix + "?wsdl2"};
         }
-        return new String[]{};
+        return urlPrefix;
     }
 
     /**
