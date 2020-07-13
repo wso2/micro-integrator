@@ -28,6 +28,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 
 @Component(name = "org.wso2.carbon.inbound.endpoint.osgi.service.InboundEndpointServiceDSComponent",
@@ -35,6 +36,8 @@ import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 public class InboundEndpointServiceDSComponent {
 
     private static final Log log = LogFactory.getLog(InboundEndpointServiceDSComponent.class);
+
+    private static SecretCallbackHandlerService secretCallbackHandlerService;
 
     @Activate
     protected void activate(ComponentContext ctx) throws Exception {
@@ -67,5 +70,32 @@ public class InboundEndpointServiceDSComponent {
         log.debug("ConfigurationContextService unbound from the ESB environment");
 
         ServiceReferenceHolder.getInstance().setConfigurationContextService(null);
+    }
+
+    @Reference(
+            name = "secret.callback.handler.service",
+            service = org.wso2.carbon.securevault.SecretCallbackHandlerService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetSecretCallbackHandlerService")
+    protected void setSecretCallbackHandlerService(SecretCallbackHandlerService secretCallbackHandlerService) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("SecretCallbackHandlerService bound to the ESB initialization process");
+        }
+        this.secretCallbackHandlerService = secretCallbackHandlerService;
+    }
+
+    protected void unsetSecretCallbackHandlerService(SecretCallbackHandlerService secretCallbackHandlerService) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("SecretCallbackHandlerService unbound from the ESB environment");
+        }
+        this.secretCallbackHandlerService = null;
+    }
+
+    public static SecretCallbackHandlerService getSecretCallbackHandlerService() {
+
+        return secretCallbackHandlerService;
     }
 }

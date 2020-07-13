@@ -41,8 +41,12 @@ import org.apache.synapse.SynapseException;
 import org.apache.synapse.commons.util.MiscellaneousUtil;
 import org.apache.synapse.rest.cors.CORSConfiguration;
 import org.apache.synapse.transport.passthru.core.ssl.SSLConfiguration;
+import org.wso2.carbon.inbound.endpoint.osgi.service.InboundEndpointServiceDSComponent;
 import org.wso2.carbon.inbound.endpoint.persistence.PersistenceUtils;
+import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
 
 /**
  * {@code ConfigurationLoader} contains utilities to load configuration file content required for Internal APIs
@@ -85,6 +89,8 @@ public class ConfigurationLoader {
     private static String internalInboundHttpPortProperty;
     private static String internalInboundHttpsPortProperty;
 
+    private static SecretResolver secretResolver;
+
     private static final int PORT_OFFSET = PersistenceUtils.getPortOffset();
 
     public static void loadInternalApis(String apiFilePath) {
@@ -97,6 +103,7 @@ public class ConfigurationLoader {
                 handleException("Invalid internal api configuration file");
             }
 
+            setSecretResolver(apiConfig);
             populateUserStore(apiConfig);
 
             Iterator apiIterator = apiConfig.getChildrenWithLocalName(APIS);
@@ -211,12 +218,28 @@ public class ConfigurationLoader {
                             handleException("Error parsing the file based user store. User: " + userName + " defined "
                                             + "more than once. ");
                         }
-                        userMap.put(userName, passwordElement.getText().toCharArray());
+                        userMap.put(userName, resolveSecret(passwordElement.getText()).toCharArray());
                     }
                 }
             }
         }
         return userMap;
+    }
+
+    /**
+     * Checks if the text is protected and returns decrypted text if protected, else returns the plain text
+     * @param text
+     * @return Decrypted text if protected else plain text
+     */
+    private static String resolveSecret(String text) {
+        String alias = org.wso2.securevault.commons.MiscellaneousUtil.getProtectedToken(text);
+        if (!StringUtils.isEmpty(alias)) {
+            if (!secretResolver.isInitialized()) {
+                secretResolver.init(InboundEndpointServiceDSComponent.getSecretCallbackHandlerService().getSecretCallbackHandler());
+            }
+            return secretResolver.resolve(alias);
+        }
+        return text;
     }
 
     private static void populateHandlers(OMElement apiElement, InternalAPI api) {
@@ -319,6 +342,15 @@ public class ConfigurationLoader {
 
         return getPort(Constants.INTERNAL_HTTPS_API_PORT, internalInboundHttpsPortProperty,
                        Constants.DEFAULT_INTERNAL_HTTPS_API_PORT);
+    }
+
+    /**
+     * Sets the SecretResolver the document OMElement.
+     *
+     * @param rootElement Document OMElement
+     */
+    private static void setSecretResolver(OMElement rootElement) {
+        secretResolver = SecretResolverFactory.create(rootElement, true);
     }
 
     private static int getPort(String propertyName, String portProperty, int defaultPort) {
