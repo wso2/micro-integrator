@@ -1348,7 +1348,7 @@
         <carbon.analytics.common.version>5.2.10</carbon.analytics.common.version>
         <carbon.analytics.common.imp.pkg.version>[5.2.0, 6.0.0)</carbon.analytics.common.imp.pkg.version>
         <fasterxml.jackson.version>2.10.3</fasterxml.jackson.version>
-        <carbon.commons.version>4.7.12</carbon.commons.version>
+        <carbon.commons.version>4.7.32</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
         <wss4j.version>1.5.11-wso2v20</wss4j.version>
