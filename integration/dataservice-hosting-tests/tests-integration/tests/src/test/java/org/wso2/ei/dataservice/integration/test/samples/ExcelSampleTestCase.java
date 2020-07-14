@@ -18,30 +18,30 @@
 
 package org.wso2.ei.dataservice.integration.test.samples;
 
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.dataservices.samples.excel_sample_service.DataServiceFault;
-import org.wso2.carbon.dataservices.samples.excel_sample_service.ExcelSampleService;
-import org.wso2.carbon.dataservices.samples.excel_sample_service.ExcelSampleServiceStub;
+import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import java.io.File;
-import java.net.URL;
 import java.rmi.RemoteException;
-import javax.activation.DataHandler;
-
-import static org.testng.Assert.assertTrue;
 
 public class ExcelSampleTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(ExcelSampleTestCase.class);
 
     private final String serviceName = "ExcelSampleService";
     private String serverEpr;
+    private final OMFactory fac = OMAbstractFactory.getOMFactory();
+    private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
 
     @Factory(dataProvider = "userModeDataProvider")
     public ExcelSampleTestCase(TestUserMode userMode) {
@@ -51,37 +51,29 @@ public class ExcelSampleTestCase extends DSSIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
         super.init();
-        String resourceFileLocation;
         serverEpr = getServiceUrlHttp(serviceName);
-        resourceFileLocation = getResourceLocation();
-        deployService(serviceName, new DataHandler(
-                new URL("file:///" + resourceFileLocation + File.separator + "samples" + File.separator + "dbs"
-                        + File.separator + "excel" + File.separator + "ExcelSampleService.dbs")));
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
-    public void testServiceDeployment() throws Exception {
-        assertTrue(isServiceDeployed(serviceName));
-        log.info(serviceName + " is deployed");
-    }
-
     @Test(groups = {
-            "wso2.dss" }, dependsOnMethods = "testServiceDeployment", description = "invoke excel sample service")
-    public void testGetProducts() throws RemoteException, DataServiceFault {
+            "wso2.dss" }, description = "invoke excel sample service")
+    public void testGetProducts() throws RemoteException {
 
         log.info("Running ExcelSampleServiceTestCase#testGetProducts");
-        ExcelSampleService stub = new ExcelSampleServiceStub(serverEpr);
-        assertTrue(stub.getProducts().length > 0, "No of products should be greater than zero");
+        OMElement payload = fac.createOMElement("getProducts", omNs);
+        OMElement result = new AxisServiceClient().sendReceive(payload, serverEpr, "getProducts");
+        Assert.assertTrue((result.toString().indexOf("Products") == 1),
+                "Expected Result not found on response message");
     }
 
     @Test(groups = {
-            "wso2.dss" }, dependsOnMethods = "testGetProducts", description = "Get product classifications", enabled = false)
-    public void testGetProductClassifications() throws RemoteException, DataServiceFault {
+            "wso2.dss" }, dependsOnMethods = "testGetProducts", description = "Get product classifications")
+    public void testGetProductClassifications() throws RemoteException {
 
-        ExcelSampleService stub = new ExcelSampleServiceStub(serverEpr);
-        assertTrue(stub.getProductClassifications().length > 0,
-                "No of product classifications should be greater than zero");
+        OMElement payload = fac.createOMElement("getProductClassifications", omNs);
+        OMElement result = new AxisServiceClient().sendReceive(payload, serverEpr, "getProductClassifications");
+        Assert.assertTrue((result.toString().indexOf("Products") == 1),
+                "Expected Result not found on response message");
     }
 
     @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")

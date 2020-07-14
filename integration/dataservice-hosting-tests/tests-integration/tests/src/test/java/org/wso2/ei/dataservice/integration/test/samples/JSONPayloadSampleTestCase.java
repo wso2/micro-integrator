@@ -55,11 +55,6 @@ public class JSONPayloadSampleTestCase extends DSSIntegrationTest {
     public void serviceDeployment() throws Exception {
 
         super.init();
-        List<File> sqlFileLis = new ArrayList<>();
-        sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
-                        + File.separator + "JSONSampleTest.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
