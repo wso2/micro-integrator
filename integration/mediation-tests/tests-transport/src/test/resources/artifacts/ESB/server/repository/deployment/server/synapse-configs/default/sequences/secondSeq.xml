@@ -16,21 +16,15 @@
   ~ under the License.
   -->
 
-<proxy name="GenericProxy"
-       transports="jms"
-       startOnLoad="true"
-       trace="disable">
-    <target>
-        <inSequence>
-            <property name="OUT_ONLY" value="true"/>
-            <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
-            <header name="Action" value="urn:placeOrder"/>
-        </inSequence>
-    </target>
-    <parameter name="transport.jms.ContentType">
-        <rules>
-            <jmsProperty>contentType</jmsProperty>
-            <default>text/xml</default>
-        </rules>
-    </parameter>
-</proxy>
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="secondSeq">
+    <header name="Action" value="urn:placeOrder"/>
+    <call>
+        <endpoint>
+            <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+        </endpoint>
+    </call>
+    <log level="custom">
+        <property name="secondSeq" value="In second sequence !!"/>
+    </log>
+    <drop/>
+</sequence>
