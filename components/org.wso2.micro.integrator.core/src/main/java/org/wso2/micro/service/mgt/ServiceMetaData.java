@@ -18,8 +18,8 @@ package org.wso2.micro.service.mgt;
 import org.apache.axis2.description.AxisEndpoint;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.micro.service.mgt.util.Utils;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.service.mgt.util.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,6 +50,7 @@ public class ServiceMetaData {
     private String[] wsdlPorts;
     private String[] wsdlPortTypes;
     private boolean isCAppArtifact = false;
+    private String swaggerUrl;
 
     private static final Log log = LogFactory.getLog(ServiceMetaData.class);
 
@@ -120,6 +121,14 @@ public class ServiceMetaData {
 
     public void setServiceVersion(String serviceVersion) {
         this.serviceVersion = serviceVersion;
+    }
+
+    public void setSwaggerUrl(String swaggerUrl) {
+        this.swaggerUrl = swaggerUrl;
+    }
+
+    public String getSwaggerUrl() {
+        return swaggerUrl;
     }
 
     public String getName() {

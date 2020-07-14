@@ -90,6 +90,7 @@ public class ServiceAdmin {
         serviceMetaData.setServiceType(serviceType);
 
         serviceMetaData.setWsdlURLs(Utils.getWsdlInformation(serviceName, axisConfiguration));
+        serviceMetaData.setSwaggerUrl(Utils.getSwaggerUrl(serviceName, axisConfiguration));
 
         AxisServiceGroup serviceGroup = (AxisServiceGroup) service.getParent();
         serviceMetaData.setFoundWebResources(serviceGroup.isFoundWebResources());

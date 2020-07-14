@@ -25,6 +25,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONObject;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.core.DBUtils;
 import org.wso2.micro.integrator.dataservices.core.description.config.Config;
@@ -32,7 +33,6 @@ import org.wso2.micro.integrator.dataservices.core.description.operation.Operati
 import org.wso2.micro.integrator.dataservices.core.description.query.Query;
 import org.wso2.micro.integrator.dataservices.core.description.resource.Resource;
 import org.wso2.micro.integrator.dataservices.core.engine.DataService;
-import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.dataservices.core.engine.DataServiceSerializer;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServiceInfo;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServiceSummary;
@@ -136,7 +136,7 @@ public class DataServiceResource extends APIResource {
             if (serviceMetaData != null) {
                 dataServiceInfo = new DataServiceInfo(serviceMetaData.getName(), serviceMetaData.getDescription(),
                                                       serviceMetaData.getServiceGroupName(),
-                                                      serviceMetaData.getWsdlURLs());
+                                                      serviceMetaData.getWsdlURLs(), serviceMetaData.getSwaggerUrl());
 
                 Map<String, Query> queries = dataService.getQueries();
                 for (Map.Entry<String, Query> stringQuery : queries.entrySet()) {

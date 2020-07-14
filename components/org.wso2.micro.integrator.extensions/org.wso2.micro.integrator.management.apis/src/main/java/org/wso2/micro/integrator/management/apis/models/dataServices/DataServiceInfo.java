@@ -17,9 +17,10 @@
 
 package org.wso2.micro.integrator.management.apis.models.dataServices;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.annotations.SerializedName;
 
 public class DataServiceInfo {
     private String serviceName;
@@ -42,12 +43,18 @@ public class DataServiceInfo {
 
     private String configuration;
 
-    public DataServiceInfo(String serviceName, String serviceDescription, String serviceGroupName, String[] wsdlUrls) {
+    @SerializedName("swagger_url")
+    private String swaggerUrl;
+
+    public DataServiceInfo(String serviceName, String serviceDescription, String serviceGroupName, String[] wsdlUrls,
+                           String swaggerUrl) {
+
         this.serviceName = serviceName;
         this.serviceDescription = serviceDescription;
         this.serviceGroupName = serviceGroupName;
         this.wsdl11 = wsdlUrls[0];
         this.wsdl20 = wsdlUrls[1];
+        this.swaggerUrl = swaggerUrl;
         queries = new ArrayList<>();
     }
 
