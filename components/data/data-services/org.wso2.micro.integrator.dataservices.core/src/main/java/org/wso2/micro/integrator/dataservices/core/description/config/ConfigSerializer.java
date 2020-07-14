@@ -17,13 +17,14 @@
  */
 package org.wso2.micro.integrator.dataservices.core.description.config;
 
-import java.util.Map.Entry;
-import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.DBSFields;
 
+import java.util.Map.Entry;
+import javax.xml.namespace.QName;
 
 /**
  * This class represents the serializing functionality of a Config.
@@ -31,7 +32,9 @@ import org.wso2.micro.integrator.dataservices.common.DBConstants.DBSFields;
  */
 public class ConfigSerializer {
 
-	public static OMElement serializeConfig(Config config) {
+	private static final String PWD_MASKED_VALUE = "*****";
+
+	public static OMElement serializeConfig(Config config, boolean isUiSerialization) {
 		OMFactory fac = OMAbstractFactory.getOMFactory();
 		OMElement configEl = fac.createOMElement(new QName(DBSFields.CONFIG));
 		String configId = config.getConfigId();
@@ -42,7 +45,11 @@ public class ConfigSerializer {
 		for (Entry<String, String> entry : config.getProperties().entrySet()) {
 			propEl = fac.createOMElement(new QName(DBSFields.PROPERTY));
 			propEl.addAttribute(DBSFields.NAME, entry.getKey(), null);
-			propEl.setText(entry.getValue());
+			if (isUiSerialization && entry.getKey().contains(DBConstants.RDBMS.PASSWORD)) {
+				propEl.setText(PWD_MASKED_VALUE);
+			} else {
+				propEl.setText(entry.getValue());
+			}
 			configEl.addChild(propEl);
 		}
 		return configEl;

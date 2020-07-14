@@ -105,7 +105,7 @@ public class Constants {
     public static final String PASSWORD = "password";
     public static final String IS_ADMIN = "isAdmin";
     public static final String PATTERN = "pattern";
-    public static final String PASSWORD_MASKED_VALUE = "*******";
+    public static final String PASSWORD_MASKED_VALUE = "*****";
 
     public static final String USERNAME_PROPERTY = "USERNAME";
 
