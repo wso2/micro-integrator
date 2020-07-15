@@ -995,7 +995,10 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             String mediaType = DEFAULT_MEDIA_TYPE;
             Properties metadata = getMetadata(url.getPath());
             if (metadata != null) {
-                mediaType = metadata.getProperty(METADATA_KEY_MEDIA_TYPE, DEFAULT_MEDIA_TYPE);
+                String mediaTypeValue = metadata.getProperty(METADATA_KEY_MEDIA_TYPE);
+                if (StringUtils.isNotEmpty(mediaTypeValue)) {
+                    mediaType = mediaTypeValue;
+                }
             }
 
             if (DEFAULT_MEDIA_TYPE.equals(mediaType)) {
