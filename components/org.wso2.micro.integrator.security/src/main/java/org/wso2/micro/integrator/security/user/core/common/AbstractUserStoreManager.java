@@ -41,6 +41,7 @@ import org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConst
 import org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants.ErrorMessages;
 import org.wso2.micro.integrator.security.user.core.dto.RoleDTO;
 import org.wso2.micro.integrator.security.user.core.hybrid.HybridRoleManager;
+import org.wso2.micro.integrator.security.user.core.hybrid.JdbcHybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.internal.UMListenerServiceComponent;
 import org.wso2.micro.integrator.security.user.core.jdbc.JDBCUserStoreManager;
 import org.wso2.micro.integrator.security.user.core.ldap.LDAPConstants;
@@ -5794,7 +5795,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
 
     protected void doInitialSetup() throws UserStoreException {
         systemUserRoleManager = new SystemUserRoleManager(dataSource, tenantId);
-        hybridRoleManager = new HybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
+        hybridRoleManager = new JdbcHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
     }
 
     /**

@@ -31,6 +31,7 @@ import org.wso2.micro.integrator.security.user.core.UserStoreException;
 import org.wso2.micro.integrator.security.user.core.claim.ClaimManager;
 import org.wso2.micro.integrator.security.user.core.common.RoleContext;
 import org.wso2.micro.integrator.security.user.core.hybrid.HybridRoleManager;
+import org.wso2.micro.integrator.security.user.core.hybrid.JdbcHybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.profile.ProfileConfigurationManager;
 import org.wso2.micro.integrator.security.user.core.tenant.Tenant;
 import org.wso2.micro.integrator.security.user.core.util.DatabaseUtil;
@@ -144,7 +145,7 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
                 .get(UserCoreConstants.FIRST_STARTUP_CHECK);
 
         // hybrid role manager used if only users needs to be read-written.
-        hybridRoleManager = new HybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
+        hybridRoleManager = new JdbcHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
 
         // obtain the ldap connection source that was created in
         // DefaultRealmService.
@@ -199,7 +200,6 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
     public ReadWriteLDAPUserStoreManager(RealmConfiguration realmConfig, ClaimManager claimManager,
                                          ProfileConfigurationManager profileManager) throws UserStoreException {
         super(realmConfig, claimManager, profileManager);
-        // checkRequiredUserStoreConfiguration();
     }
 
     @Override
