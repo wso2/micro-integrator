@@ -47,6 +47,7 @@ import org.wso2.carbon.inbound.endpoint.protocol.jms.factory.CachedJMSConnection
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
@@ -119,9 +120,12 @@ public class JMSInjectHandler {
             }
             MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
                     .getAxis2MessageContext();
+
             //setting transport headers
-            axis2MsgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS,
-                                    JMSUtils.getTransportHeaders(msg, axis2MsgCtx));
+            Map<String, Object> transportHeaders = JMSUtils.getTransportHeaders(msg, axis2MsgCtx);
+            transportHeaders.put(JMSConstants.JMS_TIMESTAMP, msg.getJMSTimestamp());
+            axis2MsgCtx.setProperty(MessageContext.TRANSPORT_HEADERS, transportHeaders);
+
             // set transaction property
             axis2MsgCtx.setProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED,
                                     msg.getBooleanProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED));
