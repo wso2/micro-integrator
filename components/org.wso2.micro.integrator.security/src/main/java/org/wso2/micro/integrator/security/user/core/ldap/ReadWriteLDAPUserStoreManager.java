@@ -31,6 +31,7 @@ import org.wso2.micro.integrator.security.user.core.UserStoreException;
 import org.wso2.micro.integrator.security.user.core.claim.ClaimManager;
 import org.wso2.micro.integrator.security.user.core.common.RoleContext;
 import org.wso2.micro.integrator.security.user.core.hybrid.HybridRoleManager;
+import org.wso2.micro.integrator.security.user.core.hybrid.JdbcHybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.profile.ProfileConfigurationManager;
 import org.wso2.micro.integrator.security.user.core.tenant.Tenant;
 import org.wso2.micro.integrator.security.user.core.util.DatabaseUtil;
@@ -144,7 +145,7 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
                 .get(UserCoreConstants.FIRST_STARTUP_CHECK);
 
         // hybrid role manager used if only users needs to be read-written.
-        hybridRoleManager = new HybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
+        hybridRoleManager = new JdbcHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
 
         // obtain the ldap connection source that was created in
         // DefaultRealmService.
@@ -199,7 +200,6 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
     public ReadWriteLDAPUserStoreManager(RealmConfiguration realmConfig, ClaimManager claimManager,
                                          ProfileConfigurationManager profileManager) throws UserStoreException {
         super(realmConfig, claimManager, profileManager);
-        // checkRequiredUserStoreConfiguration();
     }
 
     @Override
@@ -1385,7 +1385,7 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
                             // need to update authz cache of user since roles
                             // are deleted
                             String userNameWithDomain = UserCoreUtil.addDomainToName(userName, getMyDomainName());
-                            userRealm.getAuthorizationManager().clearUserAuthorization(userNameWithDomain);
+//                            userRealm.getAuthorizationManager().clearUserAuthorization(userNameWithDomain);
 
                         } else {
                             errorMessage = "The role: " + URLEncoder.encode(deletedRole, String.valueOf
@@ -1592,7 +1592,7 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
                         String deletedUserName = userDnToUserNameMapping.get(userNameDN);
                         String deletedUserNameWithDomain =
                                 UserCoreUtil.addDomainToName(deletedUserName, getMyDomainName());
-                        userRealm.getAuthorizationManager().clearUserAuthorization(deletedUserNameWithDomain);
+//                        userRealm.getAuthorizationManager().clearUserAuthorization(deletedUserNameWithDomain);
                     }
                 }
             } catch (NamingException e) {
@@ -1785,8 +1785,8 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
             String roleNameWithDomain = UserCoreUtil.addDomainToName(roleName, getMyDomainName());
             String newRoleNameWithDomain = UserCoreUtil.addDomainToName(newRoleName,
                     getMyDomainName());
-            this.userRealm.getAuthorizationManager().resetPermissionOnUpdateRole(
-                    roleNameWithDomain, newRoleNameWithDomain);
+//            this.userRealm.getAuthorizationManager().resetPermissionOnUpdateRole(
+//                    roleNameWithDomain, newRoleNameWithDomain);
         } catch (NamingException e) {
             String errorMessage = "Error occurred while modifying the name of role: " + roleName;
             if (log.isDebugEnabled()) {

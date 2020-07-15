@@ -35,6 +35,7 @@ import org.wso2.micro.integrator.security.user.core.claim.ClaimManager;
 import org.wso2.micro.integrator.security.user.core.common.AbstractUserStoreManager;
 import org.wso2.micro.integrator.security.user.core.common.PaginatedSearchResult;
 import org.wso2.micro.integrator.security.user.core.common.RoleContext;
+import org.wso2.micro.integrator.security.user.core.hybrid.HybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.internal.UserStoreMgtDSComponent;
 import org.wso2.micro.integrator.security.user.core.jdbc.JDBCUserStoreManager;
 import org.wso2.micro.integrator.security.user.core.model.Condition;
@@ -271,6 +272,8 @@ public class ReadOnlyLDAPUserStoreManager extends AbstractUserStoreManager {
         checkRequiredUserStoreConfigurations();
 
         this.connectionSource = new LDAPConnectionContext(realmConfig);
+
+        hybridRoleManager = new HybridRoleManager(tenantId, realmConfig, userRealm);
     }
 
     /**
