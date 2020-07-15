@@ -446,6 +446,8 @@
   "internal_api_ssl_config.certificate_revocation_verifier": {
     "cache_size": "10",
     "cache_delay": "2"
-  }
+  },
+
+  "user_store.base_dn": "dc=wso2,dc=org"
 
 }
