@@ -1385,7 +1385,7 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
                             // need to update authz cache of user since roles
                             // are deleted
                             String userNameWithDomain = UserCoreUtil.addDomainToName(userName, getMyDomainName());
-                            userRealm.getAuthorizationManager().clearUserAuthorization(userNameWithDomain);
+//                            userRealm.getAuthorizationManager().clearUserAuthorization(userNameWithDomain);
 
                         } else {
                             errorMessage = "The role: " + URLEncoder.encode(deletedRole, String.valueOf
@@ -1592,7 +1592,7 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
                         String deletedUserName = userDnToUserNameMapping.get(userNameDN);
                         String deletedUserNameWithDomain =
                                 UserCoreUtil.addDomainToName(deletedUserName, getMyDomainName());
-                        userRealm.getAuthorizationManager().clearUserAuthorization(deletedUserNameWithDomain);
+//                        userRealm.getAuthorizationManager().clearUserAuthorization(deletedUserNameWithDomain);
                     }
                 }
             } catch (NamingException e) {
@@ -1785,8 +1785,8 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
             String roleNameWithDomain = UserCoreUtil.addDomainToName(roleName, getMyDomainName());
             String newRoleNameWithDomain = UserCoreUtil.addDomainToName(newRoleName,
                     getMyDomainName());
-            this.userRealm.getAuthorizationManager().resetPermissionOnUpdateRole(
-                    roleNameWithDomain, newRoleNameWithDomain);
+//            this.userRealm.getAuthorizationManager().resetPermissionOnUpdateRole(
+//                    roleNameWithDomain, newRoleNameWithDomain);
         } catch (NamingException e) {
             String errorMessage = "Error occurred while modifying the name of role: " + roleName;
             if (log.isDebugEnabled()) {

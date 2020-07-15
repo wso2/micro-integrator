@@ -3630,8 +3630,8 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             }
 
             // This is a special case. We need to pass roles with domains.
-            userRealm.getAuthorizationManager().resetPermissionOnUpdateRole(
-                    userStore.getDomainAwareName(), userStoreNew.getDomainAwareName());
+//            userRealm.getAuthorizationManager().resetPermissionOnUpdateRole(
+//                    userStore.getDomainAwareName(), userStoreNew.getDomainAwareName());
 
             // To make sure to maintain the back-ward compatibility, only audit log listener will be called.
             handlePostUpdateRoleName(roleName, newRoleName, false);
@@ -3676,8 +3676,8 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         }
 
         // This is a special case. We need to pass domain aware name.
-        userRealm.getAuthorizationManager().resetPermissionOnUpdateRole(
-                userStore.getDomainAwareName(), userStoreNew.getDomainAwareName());
+//        userRealm.getAuthorizationManager().resetPermissionOnUpdateRole(
+//                userStore.getDomainAwareName(), userStoreNew.getDomainAwareName());
 
         // #################### <Listeners> #####################################################
         handlePostUpdateRoleName(roleName, newRoleName, false);
@@ -4536,8 +4536,8 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                     action = "read";
                 }
                 // This is a special case. We need to pass domain aware name.
-                userRealm.getAuthorizationManager().authorizeRole(roleWithDomain, resourceId,
-                        action);
+//                userRealm.getAuthorizationManager().authorizeRole(roleWithDomain, resourceId,
+//                        action);
             }
         }
 
@@ -4769,7 +4769,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         }
 
         // clear role authorization
-        userRealm.getAuthorizationManager().clearRoleAuthorization(roleWithDomain);
+//        userRealm.getAuthorizationManager().clearRoleAuthorization(roleWithDomain);
 
         // Call relevant listeners after deleting the role.
         handleDoPostDeleteRole(roleName, false);
@@ -5000,8 +5000,8 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 String resourceId = permission.getResourceId();
                 String action = permission.getAction();
                 // This is a special case. We need to pass domain aware name.
-                userRealm.getAuthorizationManager().authorizeRole(
-                        UserCoreUtil.addInternalDomainName(roleName), resourceId, action);
+//                userRealm.getAuthorizationManager().authorizeRole(
+//                        UserCoreUtil.addInternalDomainName(roleName), resourceId, action);
             }
         }
     }
