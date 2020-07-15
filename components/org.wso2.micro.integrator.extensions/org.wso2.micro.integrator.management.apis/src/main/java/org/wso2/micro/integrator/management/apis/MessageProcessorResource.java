@@ -144,7 +144,7 @@ public class MessageProcessorResource extends APIResource {
         if (Objects.nonNull(messageProcessor)) {
             Utils.setJsonPayLoad(axis2MessageContext, getMessageProcessorAsJson(messageProcessor));
         } else {
-            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Message processor does not exist"));
+            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonError("Specified message processor ('" + name + "') not found", axis2MessageContext, Constants.NOT_FOUND));
         }
     }
 
