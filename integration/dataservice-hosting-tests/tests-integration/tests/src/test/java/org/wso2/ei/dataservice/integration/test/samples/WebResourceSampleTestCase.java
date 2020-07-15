@@ -53,23 +53,12 @@ public class WebResourceSampleTestCase extends DSSIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
         super.init();
-        String resourceFileLocation;
-        resourceFileLocation = getResourceLocation();
-        deployService(serviceName, new DataHandler(
-                new URL("file:///" + resourceFileLocation + File.separator + "samples" + File.separator + "dbs"
-                        + File.separator + "web" + File.separator + "WebResourceSample.dbs")));
         log.info(serviceName + " uploaded");
-    }
-
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
-    public void testServiceDeployment() throws Exception {
-        assertTrue(isServiceDeployed(serviceName));
-        log.info(serviceName + " is deployed");
     }
 
     //disabled the test since the service referring external api
     @Test(groups = {
-            "wso2.dss" }, invocationCount = 5, dependsOnMethods = "testServiceDeployment", description = "invoke the service five times", enabled = false)
+            "wso2.dss" }, invocationCount = 5, description = "invoke the service five times", enabled = false)
     public void selectOperation() throws AxisFault, InterruptedException, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://www.w3.org/2005/08/addressing", "ns1");
