@@ -47,6 +47,7 @@ import java.util.Set;
 public class ApiResource extends APIResource {
 
     private static final String API_NAME = "apiName";
+    private String serverContext = "";  // base server url
 
     public ApiResource(String urlTemplate) {
         super(urlTemplate);
@@ -107,15 +108,9 @@ public class ApiResource extends APIResource {
         Collection<API> apis = configuration.getAPIs();
 
         JSONObject jsonBody = Utils.createJSONList(apis.size());
-
-        String serverUrl = getServerContext(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
-
         for (API api: apis) {
-
             JSONObject apiObject = new JSONObject();
-
-            String apiUrl = serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext();
-
+            String apiUrl = getApiUrl(api, messageContext);
             apiObject.put(Constants.NAME, api.getName());
             apiObject.put(Constants.URL, apiUrl);
             apiObject.put(Constants.TRACING,
@@ -156,13 +151,7 @@ public class ApiResource extends APIResource {
         JSONObject apiObject = new JSONObject();
 
         apiObject.put(Constants.NAME, api.getName());
-
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
-        String serverUrl = getServerContext(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
-        String apiUrl = serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext();
-
+        String apiUrl = getApiUrl(api, messageContext);
         apiObject.put(Constants.URL, apiUrl);
 
         String version = api.getVersion().equals("") ? "N/A" : api.getVersion();
@@ -208,8 +197,22 @@ public class ApiResource extends APIResource {
         return apiObject;
     }
 
+    private String getApiUrl(API api, MessageContext msgCtx) {
+
+        org.apache.axis2.context.MessageContext axisMsgCtx = ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
+        String serverUrl = getServerContext(axisMsgCtx.getConfigurationContext().getAxisConfiguration());
+        String versionUrl = "";
+        if (!api.getVersion().isEmpty()) {
+            versionUrl = "/" + api.getVersion();
+        }
+        return serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext() + versionUrl;
+    }
+
     private String getServerContext(AxisConfiguration configuration) {
 
+        if (!serverContext.isEmpty()) {
+            return serverContext;
+        }
         String portValue;
         String protocol;
 
@@ -238,19 +241,18 @@ public class ApiResource extends APIResource {
                 host = "localhost";
             }
         }
-
-        String serverContext;
-
+        String url;
         try {
             int port = Integer.parseInt(portValue);
             if (("http".equals(protocol) && port == 80) || ("https".equals(protocol) && port == 443)) {
                 port = -1;
             }
             URL serverURL = new URL(protocol, host, port, "");
-            serverContext = serverURL.toExternalForm();
+            url = serverURL.toExternalForm();
         } catch (MalformedURLException e) {
-            serverContext = "err";
+            url = "err";
         }
-        return serverContext;
+        this.serverContext = url;
+        return url;
     }
 }
