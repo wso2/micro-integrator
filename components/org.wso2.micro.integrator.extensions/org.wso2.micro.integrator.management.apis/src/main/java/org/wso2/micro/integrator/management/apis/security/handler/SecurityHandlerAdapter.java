@@ -24,15 +24,16 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.management.apis.Constants;
 import org.wso2.micro.integrator.management.apis.ManagementApiParser;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.micro.integrator.management.apis.UserStoreUndefinedException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * This class provides an abstraction for all security handlers for management api.
@@ -82,12 +83,16 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
     }
 
     protected boolean needsHandling() {
+
         String resourcePath = messageContext.getTo().getAddress();
+        if (Constants.REST_API_CONTEXT.equals(resourcePath)) {
+            LOG.debug("Authentication is skipped for management api root context.");
+            return false;
+        }
         if (!resources.isEmpty()) {
             return isMatchingResource(resourcePath, resources);
-        } else {
-            return isMatchingResource(resourcePath, defaultResources);
         }
+        return isMatchingResource(resourcePath, defaultResources);
     }
 
     private boolean isMatchingResource(String resourcePath, List<String> defaultResources) {

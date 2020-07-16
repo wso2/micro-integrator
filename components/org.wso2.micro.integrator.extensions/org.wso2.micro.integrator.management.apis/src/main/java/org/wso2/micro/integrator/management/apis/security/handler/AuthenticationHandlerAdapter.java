@@ -29,10 +29,10 @@ import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import javax.xml.stream.XMLStreamException;
 
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
