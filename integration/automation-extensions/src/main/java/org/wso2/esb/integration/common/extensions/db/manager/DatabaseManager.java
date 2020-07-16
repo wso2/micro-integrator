@@ -67,7 +67,7 @@ public class DatabaseManager extends ExecutionListenerExtension {
     @Override
     public void initiate() throws AutomationFrameworkException {
 
-        if (System.getenv("TestGrid").equalsIgnoreCase("True")) {
+        if ("True".equalsIgnoreCase(System.getenv("TestGrid"))) {
             isTestGrid = true;
         }
         if (isTestGrid) {
