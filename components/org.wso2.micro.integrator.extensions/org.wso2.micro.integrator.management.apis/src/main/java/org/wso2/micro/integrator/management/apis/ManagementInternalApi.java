@@ -52,6 +52,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TEMPLAT
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TRANSACTION;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_USERS;
 import static org.wso2.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
+import static org.wso2.micro.integrator.management.apis.Constants.ROOT_CONTEXT;
 
 public class ManagementInternalApi implements InternalAPI {
 
@@ -64,6 +65,7 @@ public class ManagementInternalApi implements InternalAPI {
     public ManagementInternalApi() {
 
         ArrayList<APIResource> resourcesList = new ArrayList<>();
+        resourcesList.add(new ApiResourceAdapter(ROOT_CONTEXT, new RootResource()));
         resourcesList.add(new ApiResource(PREFIX_APIS));
         resourcesList.add(new ApiResourceAdapter(PREFIX_ENDPOINTS, new EndpointResource()));
         resourcesList.add(new InboundEndpointResource(PREFIX_INBOUND_ENDPOINTS));
