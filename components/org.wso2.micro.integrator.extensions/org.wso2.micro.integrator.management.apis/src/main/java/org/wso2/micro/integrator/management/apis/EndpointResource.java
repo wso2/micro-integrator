@@ -24,13 +24,14 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.aspects.AspectConfiguration;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.endpoints.EndpointSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.apache.synapse.endpoints.AbstractEndpoint;
 import org.apache.synapse.endpoints.Endpoint;
 import org.json.JSONObject;
-import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import javax.xml.namespace.QName;
 import java.io.IOException;
@@ -52,6 +53,7 @@ public class EndpointResource implements MiApiResource {
     private Set<String> methods;
     // Endpoint is active property
     private static final String IS_ACTIVE = "isActive";
+    private static final String ENDPOINT_NAME = "endpointName";
 
     public EndpointResource() {
         methods = new HashSet<>();
@@ -69,11 +71,10 @@ public class EndpointResource implements MiApiResource {
                           org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
 
+        String endpointName = Utils.getQueryParameter(messageContext, ENDPOINT_NAME);
         if (messageContext.isDoingGET()) {
-            String param = Utils.getQueryParameter(messageContext, "endpointName");
-
-            if (Objects.nonNull(param)) {
-                populateEndpointData(messageContext, param);
+            if (Objects.nonNull(endpointName)) {
+                populateEndpointData(messageContext, endpointName);
             } else {
                 populateEndpointList(messageContext, synapseConfiguration);
             }
@@ -87,7 +88,7 @@ public class EndpointResource implements MiApiResource {
                 if (payload.has(NAME) && payload.has(STATUS)) {
                     changeEndpointStatus(axis2MessageContext, synapseConfiguration, payload);
                 } else {
-                    Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Missing parameters in payload"));
+                    handleTracing(payload.get(NAME).getAsString(), messageContext, axis2MessageContext);
                 }
             } catch (IOException e) {
                 LOG.error("Error when parsing JSON payload", e);
@@ -96,6 +97,26 @@ public class EndpointResource implements MiApiResource {
         }
 
         return true;
+    }
+
+    private void handleTracing(String endpointName, MessageContext msgCtx,
+                               org.apache.axis2.context.MessageContext axisMsgCtx) {
+
+        JSONObject response;
+        if (Objects.nonNull(endpointName)) {
+            SynapseConfiguration configuration = msgCtx.getConfiguration();
+            Endpoint endpoint = configuration.getEndpoint(endpointName);
+            if (endpoint != null) {
+                AspectConfiguration aspectConfiguration = ((AbstractEndpoint) endpoint).getDefinition().getAspectConfiguration();
+                response = Utils.handleTracing(aspectConfiguration, endpointName, axisMsgCtx);
+            } else {
+                response = Utils.createJsonError("Specified endpoint ('" + endpointName + "') not found", axisMsgCtx,
+                        Constants.BAD_REQUEST);
+            }
+        } else {
+            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+        }
+        Utils.setJsonPayLoad(axisMsgCtx, response);
     }
 
     private void populateEndpointList(MessageContext messageContext, SynapseConfiguration configuration) {
