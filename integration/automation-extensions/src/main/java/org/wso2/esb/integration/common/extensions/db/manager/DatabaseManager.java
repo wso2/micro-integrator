@@ -62,9 +62,18 @@ public class DatabaseManager extends ExecutionListenerExtension {
     private static final String POSTGRES = "postgresql";
     private static final String DB2 = "db2";
     private static final String ORACLE = "oracle";
+    private boolean isTestGrid = false;
 
     @Override
     public void initiate() throws AutomationFrameworkException {
+
+        if (System.getenv("TestGrid").equalsIgnoreCase("True")) {
+            isTestGrid = true;
+        }
+        if (isTestGrid) {
+            logger.info("Running in Test Grid ....");
+            return;
+        }
         logger.info("Initializing database.");
         populateParameters();
     }
@@ -72,6 +81,10 @@ public class DatabaseManager extends ExecutionListenerExtension {
     @Override
     public void onExecutionStart() throws AutomationFrameworkException {
 
+        if (isTestGrid) {
+            logger.info("Running in Test Grid ....");
+            return;
+        }
         logger.info("Database type : " + dbType);
         logger.info("Database name : " + dbName);
         try {

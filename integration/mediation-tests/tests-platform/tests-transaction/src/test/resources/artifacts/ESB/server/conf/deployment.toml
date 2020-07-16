@@ -20,13 +20,21 @@ algorithm = "AES"
 [management_api.jwt_token_security_handler]
 enable = false
 
-## MySQL : latest
+## Test Grid - Oracle 19
 [[datasource]]
 id = "WSO2_TRANSACTION_DB"
-url = "jdbc:mysql://localhost:3306/transactiondbIntegrationTests?useSSL=false&amp;allowPublicKeyRetrieval=true"
-username = "root"
-password = "root"
-driver = "com.mysql.jdbc.Driver"
+url = "$env{oracle_url}"
+username = "$env{oracle_user}"
+password = "$env{oracle_pwd}"
+driver = "oracle.jdbc.OracleDriver"
+
+## MySQL : latest
+#[[datasource]]
+#id = "WSO2_TRANSACTION_DB"
+#url = "jdbc:mysql://localhost:3306/transactiondbIntegrationTests?useSSL=false&amp;allowPublicKeyRetrieval=true"
+#username = "root"
+#password = "root"
+#driver = "com.mysql.jdbc.Driver"
 
 [transaction_counter]
 enable = true
