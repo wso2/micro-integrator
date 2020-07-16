@@ -23,7 +23,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
-        <title>WSO2 MI v@product.version@ Released - September 2019</title>
+        <title>WSO2 MI v@product.version@ Released - July 2020</title>
     </head>
     <body>
         <div id="header">
@@ -38,8 +38,8 @@
             </p>
 
             <p>
-                WSO2 MI distribution contains another lightweight integration runtime called 'Micro Integrator' that is
-                optimized to deploy in containers.
+                WSO2 MI distribution contains the integration runtime which is
+                optimized to deploy in centralized deployments and containers .
             </p>
 
             <p>
@@ -70,8 +70,7 @@
                 <li>Built in Registry/Repository, facilitating dynamic updating and reloading
                     of the configuration and associated resources (e.g. XSLTs, XSD, WSDL,
                     Policies, JS configurations ..)</li>
-                <li>Easily extendable via custom Java classes (mediator and command)/Spring
-                    configurations, or BSF Scripting languages (Javascript, Ruby, Groovy, etc.)</li>
+                <li>Easily extendable via custom Java classes</li>
                 <li>Built in support for scheduling tasks using the Quartz scheduler.</li>
                 <li>Load-balancing (with or without sticky sessions)/Fail-over and Caching support</li>
                 <li>WS-Security, Caching &amp; Throttling configurable via
@@ -86,16 +85,24 @@
                     callouts</li>
                 <li>Database lookup &amp; store support with DBMediators with reusable database
                     connection pools</li>
-                <li>WS-Eventing support</li>
                 <li>Transactions support via the JMS transport and Transaction mediator for
                     database mediators</li>
-                <li>Internationalized GUI management console with user management for
-                    configuration development</li>
+                <li>Dashboard provides a graphical view of the artifacts</li>
                 <li>Integrated monitoring support with statistics, configurable logging and tracing</li>
-                <li>JMX monitoring support and JMX management capabilities like,
-                    Graceful/Forceful shutdown/restart</li>
             </ul>
 
+            <h2>What's new in this release</h2>
+            <p>WSO2 MI @product.version@ is a major release that is shipped with the following new features:</p>
+            <ul>
+                <li>Task Coordination In Distributed Environment</li>
+                <li>Readiness probe for health checking</li>
+                <li>Enhanced experience for handling security</li>
+                <li>Support for Hot Deployment</li>
+                <li>Swagger generation for Data services</li>
+                <li>User management with external user stores</li>
+                <li>View and configure logs without accessing the file system</li>
+                <li>Transaction counter for services</li>
+            </ul>
 
             <h2>Known Issues</h2>
             <p>
