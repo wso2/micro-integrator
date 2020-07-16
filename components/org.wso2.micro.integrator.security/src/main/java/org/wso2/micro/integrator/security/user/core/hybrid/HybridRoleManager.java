@@ -36,9 +36,9 @@ public class HybridRoleManager {
     private static Log log = LogFactory.getLog(JDBCUserStoreManager.class);
     protected UserRealm userRealm;
     protected UserRolesCache userRolesCache = null;
-    int tenantId;
-    private RealmConfiguration realmConfig;
-    private boolean userRolesCacheEnabled = true;
+    protected int tenantId;
+    protected RealmConfiguration realmConfig;
+    protected boolean userRolesCacheEnabled = true;
 
     public HybridRoleManager(int tenantId, RealmConfiguration realmConfig, UserRealm realm) {
         this.tenantId = tenantId;
