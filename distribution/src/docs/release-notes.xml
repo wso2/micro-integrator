@@ -102,6 +102,7 @@
                 <li>User management with external user stores</li>
                 <li>View and configure logs without accessing the file system</li>
                 <li>Transaction counter for services</li>
+                <li>Easy XML to JSON transformations with JSON Transform mediator</li>
             </ul>
 
             <h2>Known Issues</h2>
