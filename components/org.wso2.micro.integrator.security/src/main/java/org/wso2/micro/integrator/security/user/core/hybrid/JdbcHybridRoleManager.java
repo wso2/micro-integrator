@@ -44,11 +44,8 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
     private static Log log = LogFactory.getLog(JDBCUserStoreManager.class);
     private final int DEFAULT_MAX_ROLE_LIST_SIZE = 1000;
     private final int DEFAULT_MAX_SEARCH_TIME = 1000;
-    int tenantId;
     private DataSource dataSource;
-    private RealmConfiguration realmConfig;
     private String isCascadeDeleteEnabled;
-    private boolean userRolesCacheEnabled = true;
     private static final String APPLICATION_DOMAIN = "Application";
     private static final String WORKFLOW_DOMAIN = "Workflow";
 
