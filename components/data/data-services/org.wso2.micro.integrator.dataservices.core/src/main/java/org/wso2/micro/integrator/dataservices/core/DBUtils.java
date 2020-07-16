@@ -40,11 +40,13 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.commons.resolvers.ResolverFactory;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.apache.synapse.commons.resolvers.ResolverFactory;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.core.util.xml.XMLPrettyPrinter;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.DBSFields;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.RDBMSEngines;
@@ -59,17 +61,9 @@ import org.wso2.micro.integrator.dataservices.core.engine.InternalParam;
 import org.wso2.micro.integrator.dataservices.core.engine.ParamValue;
 import org.wso2.micro.integrator.dataservices.core.internal.DataServicesDSComponent;
 import org.wso2.micro.integrator.ndatasource.core.utils.DataSourceUtils;
-import org.wso2.micro.core.util.xml.XMLPrettyPrinter;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
-import org.wso2.micro.core.Constants;
 
-import javax.naming.InitialContext;
-import javax.transaction.TransactionManager;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -109,6 +103,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.naming.InitialContext;
+import javax.transaction.TransactionManager;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Utility class for data services based operations.

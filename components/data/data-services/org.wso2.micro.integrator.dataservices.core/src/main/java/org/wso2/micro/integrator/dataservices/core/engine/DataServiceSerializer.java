@@ -17,14 +17,9 @@
  */
 package org.wso2.micro.integrator.dataservices.core.engine;
 
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.DBSFields;
-import org.wso2.micro.integrator.dataservices.core.description.resource.Resource.ResourceID;
 import org.wso2.micro.integrator.dataservices.core.DBUtils;
 import org.wso2.micro.integrator.dataservices.core.description.config.Config;
 import org.wso2.micro.integrator.dataservices.core.description.config.ConfigSerializer;
@@ -33,7 +28,11 @@ import org.wso2.micro.integrator.dataservices.core.description.event.EventTrigge
 import org.wso2.micro.integrator.dataservices.core.description.operation.OperationSerializer;
 import org.wso2.micro.integrator.dataservices.core.description.query.Query;
 import org.wso2.micro.integrator.dataservices.core.description.query.QuerySerializer;
+import org.wso2.micro.integrator.dataservices.core.description.resource.Resource.ResourceID;
 import org.wso2.micro.integrator.dataservices.core.description.resource.ResourceSerializer;
+
+import java.util.Set;
+import javax.xml.namespace.QName;
 
 /**
  * This class represents the serializing functionality of a DataService.
@@ -42,6 +41,10 @@ import org.wso2.micro.integrator.dataservices.core.description.resource.Resource
 public class DataServiceSerializer {
 
 	public static OMElement serializeDataService(DataService dataService) {
+		return serializeDataService(dataService, false);
+	}
+
+	public static OMElement serializeDataService(DataService dataService, boolean isUiSerialization) {
 		OMFactory fac = DBUtils.getOMFactory();
 		OMElement dataEl = fac.createOMElement(new QName("data"));
 		/* set 'name' attribute */
@@ -79,7 +82,7 @@ public class DataServiceSerializer {
 
         /* add configs */
         for (Config config : dataService.getConfigs().values()) {
-        	dataEl.addChild(ConfigSerializer.serializeConfig(config));
+	        dataEl.addChild(ConfigSerializer.serializeConfig(config, isUiSerialization));
         }
         /* add event triggers */
         for (EventTrigger eventTrigger : dataService.getEventTriggers().values()) {

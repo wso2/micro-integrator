@@ -150,7 +150,7 @@ public class DataServiceResource extends APIResource {
             dataServiceInfo.setDataSources(getDataSources(dataService));
             dataServiceInfo.setResources(getResources(dataService));
             dataServiceInfo.setOperations(getOperations(dataService));
-            dataServiceInfo.setConfiguration(DataServiceSerializer.serializeDataService(dataService).toString());
+            dataServiceInfo.setConfiguration(DataServiceSerializer.serializeDataService(dataService, true).toString());
             String stringPayload = new Gson().toJson(dataServiceInfo);
             Utils.setJsonPayLoad(axis2MessageContext, new JSONObject(stringPayload));
         }

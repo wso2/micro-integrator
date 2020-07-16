@@ -32,10 +32,14 @@ import org.apache.synapse.message.store.impl.resequencer.ResequenceMessageStore;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD;
+import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD_MASKED_VALUE;
 
 /**
  * Represents Message store resource defined in the synapse configuration.
@@ -168,10 +172,17 @@ public class MessageStoreResource implements MiApiResource {
         jsonObject.put(FILE_NAME_ATTRIBUTE, messageStore.getFileName());
         jsonObject.put(CONSUMER_ATTRIBUTE, messageStore.getConsumer());
         jsonObject.put(PRODUCER_ATTRIBUTE, messageStore.getProducer());
-        jsonObject.put(PROPERTIES_ATTRIBUTE, messageStore.getParameters());
+        Map<String, Object> parameters = new HashMap<>(messageStore.getParameters());
+        parameters.replaceAll((name, value) -> {
+            if (name.contains(PASSWORD)) {
+                return PASSWORD_MASKED_VALUE;
+            }
+            return value;
+        });
+        jsonObject.put(PROPERTIES_ATTRIBUTE, parameters);
         jsonObject.put(STORE_SIZE_ATTRIBUTE, messageStore.size());
-        jsonObject.put(Constants.SYNAPSE_CONFIGURATION, MessageStoreSerializer.serializeMessageStore(null, messageStore));
-
+        jsonObject.put(Constants.SYNAPSE_CONFIGURATION,
+                       MessageStoreSerializer.serializeMessageStore(null, messageStore, true));
         return jsonObject;
     }
 }
