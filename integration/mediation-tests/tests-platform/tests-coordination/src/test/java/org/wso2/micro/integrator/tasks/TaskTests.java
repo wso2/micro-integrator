@@ -99,9 +99,9 @@ public class TaskTests extends ESBIntegrationTest {
                                  CLUSTER_DEP_TIMEOUT)) {
             Assert.fail("Pinned task is not skipped in node 2");
         }
-        if (isTaskExistInStore(TASK_PINNED)) {
-            Assert.fail("Pinned task is not supposed to be added to task store.");
-        }
+//        if (isTaskExistInStore(TASK_PINNED)) {
+//            Assert.fail("Pinned task is not supposed to be added to task store.");
+//        }
     }
 
     @Test(dependsOnMethods = { "testTaskScheduling" },
@@ -170,12 +170,12 @@ public class TaskTests extends ESBIntegrationTest {
         }
     }
 
-    @Test(dependsOnMethods = { "testTaskReSchedulingOfCompletedTask" })
-    void testCompletedTaskExistenceUponMemberRemoval() throws Exception {
-        if (!isTaskExistInStore(TASK_COMPLETE)) {
-            Assert.fail("Completed task is removed from task store when the running node left the cluster.");
-        }
-    }
+//    @Test(dependsOnMethods = { "testTaskReSchedulingOfCompletedTask" })
+//    void testCompletedTaskExistenceUponMemberRemoval() throws Exception {
+//        if (!isTaskExistInStore(TASK_COMPLETE)) {
+//            Assert.fail("Completed task is removed from task store when the running node left the cluster.");
+//        }
+//    }
 
     @Test(dependsOnMethods = { "testTaskReSchedulingOfCompletedTask" })
     void testTaskReScheduling() throws Exception {
