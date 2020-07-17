@@ -18,6 +18,7 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import com.google.gson.JsonObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
@@ -31,10 +32,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import static org.wso2.micro.integrator.management.apis.Constants.NAME;
 
 /**
  * Represents template resources defined in the synapse configuration.
@@ -65,6 +69,7 @@ public class TemplateResource extends APIResource {
     public Set<String> getMethods() {
         Set<String> methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
+        methods.add(Constants.HTTP_POST);
         return methods;
     }
 
@@ -88,18 +93,22 @@ public class TemplateResource extends APIResource {
             }
         } else {
             JSONObject response;
-            if (Objects.nonNull(templateTypeParam) && SEQUENCE_TEMPLATE_TYPE.equals(templateTypeParam)) {
-                String seqTempName = Utils.getQueryParameter(msgCtx, TEMPLATE_NAME_PARAM);
-                if (Objects.nonNull(seqTempName)) {
+            try {
+                JsonObject payload = Utils.getJsonPayload(axis2MsgCtx);
+                if (payload.has(TEMPLATE_TYPE_PARAM)) {
+                    templateTypeParam = payload.get(TEMPLATE_TYPE_PARAM).getAsString();
+                }
+                if (payload.has(NAME) && SEQUENCE_TEMPLATE_TYPE.equals(templateTypeParam)) {
+                    String seqTempName = payload.get(NAME).getAsString();
                     response = handleTracing(seqTempName, msgCtx, axis2MsgCtx);
                 } else {
-                    response = Utils.createJsonError("Missing parameters in the request", axis2MsgCtx,
-                                                     Constants.BAD_REQUEST);
+                    response = Utils.createJsonError("Unsupported operation", axis2MsgCtx, Constants.BAD_REQUEST);
                 }
-            } else {
-                response = Utils.createJsonError("Unsupported operation", axis2MsgCtx, Constants.BAD_REQUEST);
+                Utils.setJsonPayLoad(axis2MsgCtx, response);
+            } catch (IOException e) {
+                LOG.error("Error when parsing JSON payload", e);
+                Utils.setJsonPayLoad(axis2MsgCtx, Utils.createJsonErrorObject("Error when parsing JSON payload"));
             }
-            Utils.setJsonPayLoad(axis2MsgCtx, response);
         }
         return true;
     }
@@ -108,17 +117,13 @@ public class TemplateResource extends APIResource {
                                      org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
-        if (Objects.nonNull(seqTempName)) {
-            SynapseConfiguration configuration = msgCtx.getConfiguration();
-            TemplateMediator sequenceTemplate = configuration.getSequenceTemplate(seqTempName);
-            if (sequenceTemplate != null) {
-                response = Utils.handleTracing(sequenceTemplate.getAspectConfiguration(), seqTempName, axisMsgCtx);
-            } else {
-                response = Utils.createJsonError("Specified sequence template ('" + seqTempName + "') not found",
-                                                 axisMsgCtx, Constants.BAD_REQUEST);
-            }
+        SynapseConfiguration configuration = msgCtx.getConfiguration();
+        TemplateMediator sequenceTemplate = configuration.getSequenceTemplate(seqTempName);
+        if (sequenceTemplate != null) {
+            response = Utils.handleTracing(sequenceTemplate.getAspectConfiguration(), seqTempName, axisMsgCtx);
         } else {
-            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+            response = Utils.createJsonError("Specified sequence template ('" + seqTempName + "') not found",
+                    axisMsgCtx, Constants.BAD_REQUEST);
         }
         return response;
     }

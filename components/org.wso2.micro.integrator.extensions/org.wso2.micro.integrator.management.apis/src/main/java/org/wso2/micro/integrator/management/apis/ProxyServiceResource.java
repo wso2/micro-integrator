@@ -97,7 +97,7 @@ public class ProxyServiceResource extends APIResource {
                 if (payload.has(NAME) && payload.has(STATUS)) {
                     changeProxyState(messageContext, axis2MessageContext, payload);
                 } else {
-                    handleTracing(proxyServiceName, messageContext, axis2MessageContext);
+                    handleTracing(payload, messageContext, axis2MessageContext);
                 }
             } catch (IOException e) {
                 LOG.error("Error when parsing JSON payload", e);
@@ -107,11 +107,12 @@ public class ProxyServiceResource extends APIResource {
         return true;
     }
 
-    private void handleTracing(String proxyName, MessageContext msgCtx,
+    private void handleTracing(JsonObject payload, MessageContext msgCtx,
                                org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
-        if (Objects.nonNull(proxyName)) {
+        if (payload.has(NAME)) {
+            String proxyName = payload.get(NAME).getAsString();
             SynapseConfiguration configuration = msgCtx.getConfiguration();
             ProxyService proxyService = configuration.getProxyService(proxyName);
             if (proxyService != null) {

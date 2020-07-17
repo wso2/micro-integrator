@@ -19,6 +19,9 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import com.google.gson.JsonObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.inbound.InboundEndpointSerializer;
@@ -28,15 +31,19 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.wso2.micro.integrator.management.apis.Constants.NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 public class InboundEndpointResource extends APIResource {
+
+    private static Log LOG = LogFactory.getLog(InboundEndpointResource.class);
 
     public InboundEndpointResource(String urlTemplate){
         super(urlTemplate);
@@ -64,28 +71,35 @@ public class InboundEndpointResource extends APIResource {
                 populateInboundEndpointList(messageContext);
             }
         } else {
-            handlePost(inboundName, messageContext, axisMsgCtx);
+            handlePost(messageContext, axisMsgCtx);
         }
         return true;
     }
 
-    private void handlePost(String inboundName, MessageContext msgCtx,
+    private void handlePost(MessageContext msgCtx,
                             org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
-        if (Objects.nonNull(inboundName)) {
-            SynapseConfiguration configuration = msgCtx.getConfiguration();
-            InboundEndpoint inboundEndpoint = configuration.getInboundEndpoint(inboundName);
-            if (inboundEndpoint != null) {
-                response = Utils.handleTracing(inboundEndpoint.getAspectConfiguration(), inboundName, axisMsgCtx);
+        try {
+            JsonObject payload = Utils.getJsonPayload(axisMsgCtx);
+            if (payload.has(NAME)) {
+                String inboundName = payload.get(NAME).getAsString();
+                SynapseConfiguration configuration = msgCtx.getConfiguration();
+                InboundEndpoint inboundEndpoint = configuration.getInboundEndpoint(inboundName);
+                if (inboundEndpoint != null) {
+                    response = Utils.handleTracing(inboundEndpoint.getAspectConfiguration(), inboundName, axisMsgCtx);
+                } else {
+                    response = Utils.createJsonError("Specified inbound endpoint ('" + inboundName + "') not found",
+                            axisMsgCtx, Constants.BAD_REQUEST);
+                }
             } else {
-                response = Utils.createJsonError("Specified inbound endpoint ('" + inboundName + "') not found",
-                                                 axisMsgCtx, Constants.BAD_REQUEST);
+                response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
             }
-        } else {
-            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+            Utils.setJsonPayLoad(axisMsgCtx, response);
+        } catch (IOException e) {
+            LOG.error("Error when parsing JSON payload", e);
+            Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject("Error when parsing JSON payload"));
         }
-        Utils.setJsonPayLoad(axisMsgCtx, response);
     }
 
     private void populateInboundEndpointList(MessageContext messageContext) {

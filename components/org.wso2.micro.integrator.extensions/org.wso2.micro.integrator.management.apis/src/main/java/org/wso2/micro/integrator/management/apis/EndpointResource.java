@@ -88,7 +88,7 @@ public class EndpointResource implements MiApiResource {
                 if (payload.has(NAME) && payload.has(STATUS)) {
                     changeEndpointStatus(axis2MessageContext, synapseConfiguration, payload);
                 } else {
-                    handleTracing(payload.get(NAME).getAsString(), messageContext, axis2MessageContext);
+                    handleTracing(payload, messageContext, axis2MessageContext);
                 }
             } catch (IOException e) {
                 LOG.error("Error when parsing JSON payload", e);
@@ -99,11 +99,12 @@ public class EndpointResource implements MiApiResource {
         return true;
     }
 
-    private void handleTracing(String endpointName, MessageContext msgCtx,
+    private void handleTracing(JsonObject payload, MessageContext msgCtx,
                                org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
-        if (Objects.nonNull(endpointName)) {
+        if (payload.has(NAME)) {
+            String endpointName = payload.get(NAME).getAsString();
             SynapseConfiguration configuration = msgCtx.getConfiguration();
             Endpoint endpoint = configuration.getEndpoint(endpointName);
             if (endpoint != null) {

@@ -19,6 +19,9 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import com.google.gson.JsonObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.Mediator;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
@@ -28,13 +31,18 @@ import org.apache.synapse.mediators.base.SequenceMediator;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.wso2.micro.integrator.management.apis.Constants.NAME;
+
 public class SequenceResource extends APIResource {
+
+    private static Log LOG = LogFactory.getLog(SequenceResource.class);
 
     private static final String SEQUENCE_NAME = "sequenceName";
 
@@ -65,27 +73,34 @@ public class SequenceResource extends APIResource {
                 populateSequenceList(messageContext);
             }
         } else {
-            handlePost(seqName, messageContext, axisMsgCtx);
+            handlePost(messageContext, axisMsgCtx);
         }
         return true;
     }
 
-    private void handlePost(String seqName, MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
+    private void handlePost(MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
-        if (Objects.nonNull(seqName)) {
-            SynapseConfiguration configuration = msgCtx.getConfiguration();
-            SequenceMediator sequence = configuration.getDefinedSequences().get(seqName);
-            if (sequence != null) {
-                response = Utils.handleTracing(sequence.getAspectConfiguration(), seqName, axisMsgCtx);
+        try {
+            JsonObject payload = Utils.getJsonPayload(axisMsgCtx);
+            if (payload.has(NAME)) {
+                String seqName = payload.get(NAME).getAsString();
+                SynapseConfiguration configuration = msgCtx.getConfiguration();
+                SequenceMediator sequence = configuration.getDefinedSequences().get(seqName);
+                if (sequence != null) {
+                    response = Utils.handleTracing(sequence.getAspectConfiguration(), seqName, axisMsgCtx);
+                } else {
+                    response = Utils.createJsonError("Specified sequence ('" + seqName + "') not found", axisMsgCtx,
+                            Constants.BAD_REQUEST);
+                }
             } else {
-                response = Utils.createJsonError("Specified sequence ('" + seqName + "') not found", axisMsgCtx,
-                                                 Constants.BAD_REQUEST);
+                response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
             }
-        } else {
-            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+            Utils.setJsonPayLoad(axisMsgCtx, response);
+        } catch (IOException e) {
+            LOG.error("Error when parsing JSON payload", e);
+            Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject("Error when parsing JSON payload"));
         }
-        Utils.setJsonPayLoad(axisMsgCtx, response);
     }
 
     private void populateSequenceList(MessageContext messageContext) {

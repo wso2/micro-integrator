@@ -18,10 +18,13 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import com.google.gson.JsonObject;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.rest.APISerializer;
@@ -36,6 +39,7 @@ import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.core.util.NetworkUtils;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
@@ -44,7 +48,11 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.wso2.micro.integrator.management.apis.Constants.NAME;
+
 public class ApiResource extends APIResource {
+
+    private static Log LOG = LogFactory.getLog(ApiResource.class);
 
     private static final String API_NAME = "apiName";
 
@@ -74,27 +82,34 @@ public class ApiResource extends APIResource {
                 populateApiList(messageContext);
             }
         } else {
-            handlePost(apiName, messageContext, axisMsgCtx);
+            handlePost(messageContext, axisMsgCtx);
         }
         return true;
     }
 
-    private void handlePost(String apiName, MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
+    private void handlePost(MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
-        if (Objects.nonNull(apiName)) {
-            SynapseConfiguration configuration = msgCtx.getConfiguration();
-            API api = configuration.getAPI(apiName);
-            if (api != null) {
-                response = Utils.handleTracing(api.getAspectConfiguration(), apiName, axisMsgCtx);
+        try {
+            JsonObject payload = Utils.getJsonPayload(axisMsgCtx);
+            if (payload.has(NAME)) {
+                String apiName = payload.get(NAME).getAsString();
+                SynapseConfiguration configuration = msgCtx.getConfiguration();
+                API api = configuration.getAPI(apiName);
+                if (api != null) {
+                    response = Utils.handleTracing(api.getAspectConfiguration(), apiName, axisMsgCtx);
+                } else {
+                    response = Utils.createJsonError("Specified API ('" + apiName + "') not found", axisMsgCtx,
+                            Constants.BAD_REQUEST);
+                }
             } else {
-                response = Utils.createJsonError("Specified API ('" + apiName + "') not found", axisMsgCtx,
-                                                 Constants.BAD_REQUEST);
+                response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
             }
-        } else {
-            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+            Utils.setJsonPayLoad(axisMsgCtx, response);
+        } catch (IOException e) {
+            LOG.error("Error when parsing JSON payload", e);
+            Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject("Error when parsing JSON payload"));
         }
-        Utils.setJsonPayLoad(axisMsgCtx, response);
     }
 
     private void populateApiList(MessageContext messageContext) {
