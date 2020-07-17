@@ -166,11 +166,9 @@ public class PrometheusReporter implements MetricReporter {
     }
 
     @Override
-    public void incrementCount(String metricName,  String[] properties) {
-        log.info("############################## 22222222");
+    public void incrementCount(String metricName, String[] properties) {
         Counter counter = (Counter) metricMap.get(metricName);
         counter.labels(properties).inc();
-        System.out.println("Count------> " + counter.labels(properties).get());
     }
 
     @Override
@@ -204,21 +202,23 @@ public class PrometheusReporter implements MetricReporter {
     public void serverDown(String host, String port, String javaHome, String javaVersion) {
         Gauge gauge = (Gauge) metricMap.get(MetricConstants.SERVER_UP);
         gauge.labels(host, port, javaHome, javaVersion).set(0);
-
-        Counter counter44 = TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
-        counter44.labels();
-
-        Counter counter14 = TOTAL_REQUESTS_RECEIVED_API;
-        counter14.labels();
-
-        Counter counter24 = TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
-        counter24.labels();
     }
 
     @Override
     public void serviceUp(String serviceName, String serviceType) {
         Gauge gauge = (Gauge) metricMap.get(MetricConstants.SERVICE_UP);
         gauge.labels(serviceName, serviceType).setToCurrentTime();
+
+        if(serviceType.equals(SynapseConstants.PROXY_SERVICE_TYPE)) {
+            setCounterValue(TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE, serviceName, serviceType);
+            setCounterValue(ERROR_REQUESTS_RECEIVED_PROXY_SERVICE, serviceName, serviceType);
+        } else if(serviceType.equals(SynapseConstants.FAIL_SAFE_MODE_API)){
+            setCounterValue(TOTAL_REQUESTS_RECEIVED_API, serviceName, serviceType);
+            setCounterValue(ERROR_REQUESTS_RECEIVED_API, serviceName, serviceType);
+        } else {
+            setCounterValue(TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT, serviceName, serviceType);
+            setCounterValue(ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT, serviceName, serviceType);
+        }
     }
 
     @Override
@@ -295,7 +295,6 @@ public class PrometheusReporter implements MetricReporter {
      */
     public void initializeApiMetrics() {
         String[] labels = {MetricConstants.SERVICE_NAME, MetricConstants.SERVICE_TYPE, MetricConstants.INVOCATION_URL};
-
         createMetrics(SynapseConstants.FAIL_SAFE_MODE_API, MetricConstants.COUNTER,
                 MetricConstants.API_REQUEST_COUNT_TOTAL,
                 "Total number of requests to an api", labels);
@@ -366,5 +365,14 @@ public class PrometheusReporter implements MetricReporter {
     public void initializeArtifactDeploymentMetrics() {
         createMetrics(MetricConstants.SERVICE, MetricConstants.GAUGE, MetricConstants.SERVICE_UP,
                 "Service Status", new String[]{MetricConstants.SERVICE_NAME, MetricConstants.SERVICE_TYPE});
+
+    }
+
+    public void setCounterValue(Counter counter, String serviceName, String serviceType){
+        if(serviceType.equals(SynapseConstants.FAIL_SAFE_MODE_API )) {
+            counter.labels(serviceName, serviceType, "");
+        } else {
+             counter.labels(serviceName, serviceType);
+        }
     }
 }
