@@ -20,6 +20,7 @@ package org.wso2.esb.integration.common.extensions.db.manager;
 
 import com.moandjiezana.toml.Toml;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
@@ -62,18 +63,16 @@ public class DatabaseManager extends ExecutionListenerExtension {
     private static final String POSTGRES = "postgresql";
     private static final String DB2 = "db2";
     private static final String ORACLE = "oracle";
-    private boolean isTestGrid = false;
+
+    private static final String DEFAULT_DB_URL =
+            "jdbc:mysql://localhost:3306/testDb?useSSL=false&allowPublicKeyRetrieval=true";
+    private static final String DEFAULT_DB_USER = "root";
+    private static final String DEFAULT_DB_PWD = "root";
+    private static final String DEFAULT_DRIVER = "com.mysql.jdbc.Driver";
 
     @Override
     public void initiate() throws AutomationFrameworkException {
 
-        if ("True".equalsIgnoreCase(System.getenv("TestGrid"))) {
-            isTestGrid = true;
-        }
-        if (isTestGrid) {
-            logger.info("Running in Test Grid ....");
-            return;
-        }
         logger.info("Initializing database.");
         populateParameters();
     }
@@ -81,8 +80,8 @@ public class DatabaseManager extends ExecutionListenerExtension {
     @Override
     public void onExecutionStart() throws AutomationFrameworkException {
 
-        if (isTestGrid) {
-            logger.info("Running in Test Grid ....");
+        if ("True".equalsIgnoreCase(System.getProperty("dbProvided"))) {
+            logger.info("Skipping database creation ....");
             return;
         }
         logger.info("Database type : " + dbType);
@@ -265,10 +264,12 @@ public class DatabaseManager extends ExecutionListenerExtension {
                 throw new AutomationFrameworkException(
                         "Data source " + dataSource + " is not defined in toml or not added as first datasource.");
             }
-            connectionUrl = parseToml.getString("datasource[0].url").replaceAll("amp;", "");
-            userName = parseToml.getString("datasource[0].username");
-            pwd = parseToml.getString("datasource[0].password");
-
+            connectionUrl = resolveValue(parseToml.getString("datasource[0].url").replaceAll("amp;", ""),
+                                         DEFAULT_DB_URL);
+            userName = resolveValue(parseToml.getString("datasource[0].username"), DEFAULT_DB_USER);
+            pwd = resolveValue(parseToml.getString("datasource[0].password"), DEFAULT_DB_PWD);
+            // set driver
+            resolveValue(parseToml.getString("datasource[0].driver"), DEFAULT_DRIVER);
             URI uri = URI.create(connectionUrl.substring(5));
             dbType = uri.getScheme();
             String path = uri.getPath();
@@ -281,9 +282,24 @@ public class DatabaseManager extends ExecutionListenerExtension {
                     dbName = splits[1].substring(0, splits[1].indexOf(';'));
                 }
             }
-
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
+        }
+    }
+
+    private String resolveValue(String tomlValue, String defValue) {
+
+        if (tomlValue.startsWith("$sys{")) {
+            String value = defValue;
+            String envVariableName = StringUtils.substringBetween(tomlValue, "$sys{", "}");
+            String resolvedEnvValue = System.getProperty(envVariableName);
+            if (!StringUtils.isEmpty(resolvedEnvValue)) {
+                value = resolvedEnvValue;
+            }
+            System.setProperty(envVariableName, value);
+            return value;
+        } else {
+            return tomlValue;
         }
     }
 

@@ -20,13 +20,13 @@ algorithm = "AES"
 [management_api_token_handler]
 enable = false
 
-## Test Grid - Oracle 19
+## Test Grid
 [[datasource]]
 id = "WSO2CarbonDB"
-url = "$env{oracle_url}"
-username = "$env{oracle_user}"
-password = "$env{oracle_pwd}"
-driver = "oracle.jdbc.OracleDriver"
+url = "$sys{db_url}"
+username = "$sys{db_user}"
+password = "$sys{db_pwd}"
+driver = "$sys{db_driver}"
 
 ## MySQL : latest
 #[[datasource]]
