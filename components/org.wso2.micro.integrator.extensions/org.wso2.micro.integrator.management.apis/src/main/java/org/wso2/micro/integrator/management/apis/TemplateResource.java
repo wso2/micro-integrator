@@ -38,8 +38,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.wso2.micro.integrator.management.apis.Constants.NAME;
-
 /**
  * Represents template resources defined in the synapse configuration.
  **/
@@ -98,8 +96,8 @@ public class TemplateResource extends APIResource {
                 if (payload.has(TEMPLATE_TYPE_PARAM)) {
                     templateTypeParam = payload.get(TEMPLATE_TYPE_PARAM).getAsString();
                 }
-                if (payload.has(NAME) && SEQUENCE_TEMPLATE_TYPE.equals(templateTypeParam)) {
-                    String seqTempName = payload.get(NAME).getAsString();
+                if (payload.has(Constants.NAME) && SEQUENCE_TEMPLATE_TYPE.equals(templateTypeParam)) {
+                    String seqTempName = payload.get(Constants.NAME).getAsString();
                     response = handleTracing(seqTempName, msgCtx, axis2MsgCtx);
                 } else {
                     response = Utils.createJsonError("Unsupported operation", axis2MsgCtx, Constants.BAD_REQUEST);

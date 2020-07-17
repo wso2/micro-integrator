@@ -43,8 +43,8 @@ import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
 import static org.wso2.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
-import static org.wso2.micro.integrator.management.apis.Constants.NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.TRACING;
 
 public class EndpointResource implements MiApiResource {
 
@@ -85,7 +85,7 @@ public class EndpointResource implements MiApiResource {
                     return true;
                 }
                 JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
-                if (payload.has(NAME) && payload.has(STATUS)) {
+                if (payload.has(Constants.NAME) && payload.has(STATUS)) {
                     changeEndpointStatus(axis2MessageContext, synapseConfiguration, payload);
                 } else {
                     handleTracing(payload, messageContext, axis2MessageContext);
@@ -103,8 +103,8 @@ public class EndpointResource implements MiApiResource {
                                org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
-        if (payload.has(NAME)) {
-            String endpointName = payload.get(NAME).getAsString();
+        if (payload.has(Constants.NAME)) {
+            String endpointName = payload.get(Constants.NAME).getAsString();
             SynapseConfiguration configuration = msgCtx.getConfiguration();
             Endpoint endpoint = configuration.getEndpoint(endpointName);
             if (endpoint != null) {
@@ -191,6 +191,8 @@ public class EndpointResource implements MiApiResource {
         OMElement synapseConfiguration = EndpointSerializer.getElementFromEndpoint(endpoint);
         endpointObject.put(Constants.SYNAPSE_CONFIGURATION, synapseConfiguration);
         endpointObject.put(IS_ACTIVE, isEndpointActive(endpoint));
+        String tracingState = ((AbstractEndpoint) endpoint).getDefinition().getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
+        endpointObject.put(TRACING, tracingState);
 
         return endpointObject;
     }
@@ -205,7 +207,7 @@ public class EndpointResource implements MiApiResource {
     private void changeEndpointStatus(org.apache.axis2.context.MessageContext axis2MessageContext,
                                       SynapseConfiguration configuration, JsonObject payload) {
 
-        String endpointName = payload.get(NAME).getAsString();
+        String endpointName = payload.get(Constants.NAME).getAsString();
         String status = payload.get(STATUS).getAsString();
         Endpoint ep = configuration.getEndpoint(endpointName);
         if (ep != null) {

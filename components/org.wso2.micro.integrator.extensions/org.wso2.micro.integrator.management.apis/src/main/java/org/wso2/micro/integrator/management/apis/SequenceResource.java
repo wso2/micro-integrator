@@ -38,8 +38,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.wso2.micro.integrator.management.apis.Constants.NAME;
-
 public class SequenceResource extends APIResource {
 
     private static Log LOG = LogFactory.getLog(SequenceResource.class);
@@ -83,8 +81,8 @@ public class SequenceResource extends APIResource {
         JSONObject response;
         try {
             JsonObject payload = Utils.getJsonPayload(axisMsgCtx);
-            if (payload.has(NAME)) {
-                String seqName = payload.get(NAME).getAsString();
+            if (payload.has(Constants.NAME)) {
+                String seqName = payload.get(Constants.NAME).getAsString();
                 SynapseConfiguration configuration = msgCtx.getConfiguration();
                 SequenceMediator sequence = configuration.getDefinedSequences().get(seqName);
                 if (sequence != null) {

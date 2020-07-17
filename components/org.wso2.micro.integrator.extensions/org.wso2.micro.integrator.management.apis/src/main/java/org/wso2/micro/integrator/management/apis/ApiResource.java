@@ -48,8 +48,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.wso2.micro.integrator.management.apis.Constants.NAME;
-
 public class ApiResource extends APIResource {
 
     private static Log LOG = LogFactory.getLog(ApiResource.class);
@@ -92,8 +90,8 @@ public class ApiResource extends APIResource {
         JSONObject response;
         try {
             JsonObject payload = Utils.getJsonPayload(axisMsgCtx);
-            if (payload.has(NAME)) {
-                String apiName = payload.get(NAME).getAsString();
+            if (payload.has(Constants.NAME)) {
+                String apiName = payload.get(Constants.NAME).getAsString();
                 SynapseConfiguration configuration = msgCtx.getConfiguration();
                 API api = configuration.getAPI(apiName);
                 if (api != null) {

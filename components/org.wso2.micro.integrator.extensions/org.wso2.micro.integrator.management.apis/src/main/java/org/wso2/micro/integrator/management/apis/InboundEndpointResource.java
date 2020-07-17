@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.wso2.micro.integrator.management.apis.Constants.NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 public class InboundEndpointResource extends APIResource {
@@ -82,8 +81,8 @@ public class InboundEndpointResource extends APIResource {
         JSONObject response;
         try {
             JsonObject payload = Utils.getJsonPayload(axisMsgCtx);
-            if (payload.has(NAME)) {
-                String inboundName = payload.get(NAME).getAsString();
+            if (payload.has(Constants.NAME)) {
+                String inboundName = payload.get(Constants.NAME).getAsString();
                 SynapseConfiguration configuration = msgCtx.getConfiguration();
                 InboundEndpoint inboundEndpoint = configuration.getInboundEndpoint(inboundName);
                 if (inboundEndpoint != null) {
