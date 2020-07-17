@@ -97,7 +97,7 @@ public class UserResource implements MiApiResource {
             response = Utils.createJsonError("Error initializing the user store. Please try again later", e,
                                              axis2MessageContext, INTERNAL_SERVER_ERROR);
         } catch (IOException e) {
-            response = Utils.createJsonError("Error processing the request", e, axis2MessageContext, BAD_REQUEST);
+            response = Utils.createJsonError("Error processing the request. ", e, axis2MessageContext, BAD_REQUEST);
         } catch (ResourceNotFoundException e) {
             response = Utils.createJsonError("Requested resource not found. ", e, axis2MessageContext, NOT_FOUND);
         }
