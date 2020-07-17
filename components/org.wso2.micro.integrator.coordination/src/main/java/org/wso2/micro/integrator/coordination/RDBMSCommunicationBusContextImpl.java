@@ -66,10 +66,9 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             this.databaseType = metaData.getDatabaseProductName();
             this.queryManager = new QueryManager(this.databaseType);
         } catch (SQLException e) {
-            throw new ClusterCoordinationException("Error in connecting to the datasource to create tables " +
-                                                   "for clustering", e);
+            throw new ClusterCoordinationException("Database communication failed", e);
         } finally {
-            close(connection, "Getting carbon coordination database information");
+            close(connection, "Getting coordination database information");
         }
     }
 
