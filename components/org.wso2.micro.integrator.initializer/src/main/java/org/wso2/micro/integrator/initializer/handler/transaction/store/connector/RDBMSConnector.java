@@ -18,6 +18,7 @@ Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
 package org.wso2.micro.integrator.initializer.handler.transaction.store.connector;
 
+import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandler;
@@ -182,7 +183,7 @@ public class RDBMSConnector {
 
         try (Connection dbConnection = getConnection();
              PreparedStatement prepStmt = dbConnection.prepareStatement(TransactionQueryHelper.INSERT_RAW)) {
-            prepStmt.setString(1, getCurrentMonthAndYear());
+            prepStmt.setDate(1, getCurrentMonthAndYear());
             prepStmt.setString(2, nodeId);
             prepStmt.setLong(3, transactionCount);
             prepStmt.setString(4, encryptedCount);
@@ -194,7 +195,7 @@ public class RDBMSConnector {
     private boolean checkDataExists() throws SQLException {
         try (Connection dbConnection = getConnection();
              PreparedStatement prepStmt = dbConnection.prepareStatement(TransactionQueryHelper.GET_TRAN_COUNT)) {
-            prepStmt.setString(1, getCurrentMonthAndYear());
+            prepStmt.setDate(1, getCurrentMonthAndYear());
             prepStmt.setString(2, nodeId);
             try (ResultSet rs = prepStmt.executeQuery()) {
                 return rs.next();
@@ -216,7 +217,7 @@ public class RDBMSConnector {
         }
         try (Connection dbConnection = getConnection();
              PreparedStatement prepStmt = dbConnection.prepareStatement(TransactionQueryHelper.UPDATE_TRAN_COUNT)) {
-            prepStmt.setString(4, getCurrentMonthAndYear());
+            prepStmt.setDate(4, getCurrentMonthAndYear());
             prepStmt.setString(3, nodeId);
             prepStmt.setLong(1, transactionCount);
             prepStmt.setString(2, encryptedCount);
@@ -224,11 +225,17 @@ public class RDBMSConnector {
         }
     }
 
-    // get current month and year in the format yyyy-mm-01
-    private String getCurrentMonthAndYear() {
+    /**
+     * Create a Date object from the current date.
+     *
+     * @return SQL DataObject in the format of yyyy-mm-01
+     */
+    public static java.sql.Date getCurrentMonthAndYear() {
         Date date = new Date();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return localDate.getYear() + "-" + localDate.getMonthValue() + "-01";
+        String localDateStr = localDate.toString();
+        date = ConverterUtil.convertToDate(localDateStr.substring(0, localDateStr.length() - 2) + "01");
+        return new java.sql.Date(date.getTime());
     }
 
     /**
