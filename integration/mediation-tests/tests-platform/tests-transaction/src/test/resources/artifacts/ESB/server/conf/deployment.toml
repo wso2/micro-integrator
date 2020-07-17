@@ -21,20 +21,20 @@ algorithm = "AES"
 enable = false
 
 ## Test Grid
-[[datasource]]
-id = "WSO2_TRANSACTION_DB"
-url = "$sys{db_url}"
-username = "$sys{db_user}"
-password = "$sys{db_pwd}"
-driver = "$sys{db_driver}"
-
-## MySQL : latest
 #[[datasource]]
 #id = "WSO2_TRANSACTION_DB"
-#url = "jdbc:mysql://localhost:3306/transactiondbIntegrationTests?useSSL=false&amp;allowPublicKeyRetrieval=true"
-#username = "root"
-#password = "root"
-#driver = "com.mysql.jdbc.Driver"
+#url = "$sys{db_url}"
+#username = "$sys{db_user}"
+#password = "$sys{db_pwd}"
+#driver = "$sys{db_driver}"
+
+## MySQL : latest
+[[datasource]]
+id = "WSO2_TRANSACTION_DB"
+url = "jdbc:mysql://localhost:3306/transactiondbIntegrationTests?useSSL=false&amp;allowPublicKeyRetrieval=true"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
 
 [transaction_counter]
 enable = true
