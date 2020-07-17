@@ -54,7 +54,7 @@
       "user_store.properties.ConnectionPoolingEnabled": true,
       "user_store.properties.LDAPConnectionTimeout": "5000",
       "user_store.properties.ReplaceEscapeCharactersAtUserLogin": true,
-      "user_store.properties.ConnectionRetryDelay": "2",
+      "user_store.properties.ConnectionRetryDelay": "120000",
       "user_store.properties.EnableMaxUserLimitForSCIM": "false"
     },
     "read_write_ldap": {
@@ -94,7 +94,7 @@
       "user_store.properties.ConnectionPoolingEnabled": true,
       "user_store.properties.LDAPConnectionTimeout": "5000",
       "user_store.properties.ReplaceEscapeCharactersAtUserLogin": true,
-      "user_store.properties.ConnectionRetryDelay": "2",
+      "user_store.properties.ConnectionRetryDelay": "120000",
       "user_store.properties.EnableMaxUserLimitForSCIM": "false"
     }
   },
