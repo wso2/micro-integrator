@@ -47,9 +47,9 @@ public class CliEndpointTestCase extends AbstractCliTest {
         Assert.assertEquals(outputForCLICommand.size(), 3);
         // 3: Table heading, SimpleEP, SimpleStockQuoteServiceEndpoint
 
-        final String TABLE_HEADING = "NAME                              TYPE      METHOD   URL";
-        final String SIMPLE_EP_TABLE_ROW = "SimpleEP                          address";
-        final String STOCK_EP_TABLE_ROW = "SimpleStockQuoteServiceEndpoint   address";
+        final String TABLE_HEADING = "NAME                              TYPE      Active";
+        final String SIMPLE_EP_TABLE_ROW = "SimpleEP                          address   true";
+        final String STOCK_EP_TABLE_ROW = "SimpleStockQuoteServiceEndpoint   address   true";
 
         Assert.assertEquals(outputForCLICommand.get(0), TABLE_HEADING);
         Assert.assertTrue(outputForCLICommand.contains(SIMPLE_EP_TABLE_ROW));
