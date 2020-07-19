@@ -123,6 +123,26 @@
       "transport.sap.sender.bapi.class": "org.wso2.carbon.transports.sap.SAPTransportSender"
     }
   },
+  "transport.blocking.sap.listener.idoc.enable": {
+    "true": {
+      "transport.blocking.sap.listener.idoc.class": "org.wso2.carbon.transports.sap.SAPTransportListener"
+    }
+  },
+  "transport.blocking.sap.listener.bapi.enable": {
+    "true": {
+      "transport.blocking.sap.listener.bapi.class": "org.wso2.carbon.transports.sap.SAPTransportListener"
+    }
+  },
+  "transport.blocking.sap.sender.idoc.enable": {
+    "true": {
+      "transport.blocking.sap.sender.idoc.class": "org.wso2.carbon.transports.sap.SAPTransportSender"
+    }
+  },
+  "transport.blocking.sap.sender.bapi.enable": {
+    "true": {
+      "transport.blocking.sap.sender.bapi.class": "org.wso2.carbon.transports.sap.SAPTransportSender"
+    }
+  },
   "transport.ws.sender.enable": {
     "true": {
       "transport.ws.sender.parameter.'ws.outflow.dispatch.sequence'": "outflowDispatchSeq",
