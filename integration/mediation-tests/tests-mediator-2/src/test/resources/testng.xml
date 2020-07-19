@@ -165,6 +165,12 @@
         </packages>
     </test>
 
+    <test name="JsonTransform-mediator-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.mediator.test.transform"/>
+        </packages>
+    </test>
+
     <test name="Class-mediator-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.classMediator"/>
