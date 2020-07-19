@@ -21,20 +21,20 @@ algorithm = "AES"
 enable = false
 
 ## Test Grid
-[[datasource]]
-id = "WSO2_COORDINATION_DB"
-url = "$sys{db_url}"
-username = "$sys{db_user}"
-password = "$sys{db_pwd}"
-driver = "$sys{db_driver}"
-
-## MySQL : latest
 #[[datasource]]
 #id = "WSO2_COORDINATION_DB"
-#url = "jdbc:mysql://localhost:3306/clusterdbIntegrationTests?useSSL=false&amp;allowPublicKeyRetrieval=true"
-#username = "root"
-#password = "root"
-#driver = "com.mysql.jdbc.Driver"
+#url = "$sys{db_url}"
+#username = "$sys{db_user}"
+#password = "$sys{db_pwd}"
+#driver = "$sys{db_driver}"
+
+## MySQL : latest
+[[datasource]]
+id = "WSO2_COORDINATION_DB"
+url = "jdbc:mysql://localhost:3306/clusterdbIntegrationTests?useSSL=false&amp;allowPublicKeyRetrieval=true"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
 
 ## Microsoft SQL Server 2017 (RTM-CU11) (KB4462262) - 14.0.3038.14 (X64)
 #[[datasource]]
