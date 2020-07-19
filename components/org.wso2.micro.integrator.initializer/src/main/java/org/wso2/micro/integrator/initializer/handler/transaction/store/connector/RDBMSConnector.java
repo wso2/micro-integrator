@@ -112,11 +112,12 @@ public class RDBMSConnector {
      * @throws TransactionCounterException Error occurred while fetching data from the database.
      */
     public long getTransactionCountOfMonth(int year, int monthNumber) throws TransactionCounterException {
-
-        String dateString = year + "-" + monthNumber + "-01";
+        String monthNumberStr = Integer.toString(monthNumber);
+        monthNumberStr = ((monthNumberStr).length() == 1) ? "0" + monthNumberStr : monthNumberStr;
+        String dateString = year + "-" + monthNumberStr + "-01";
         try (Connection dbConnection = getConnection();
              PreparedStatement prepStmt = dbConnection.prepareStatement(TransactionQueryHelper.TRAN_COUNT_OF_MONTH)) {
-            prepStmt.setString(1, dateString);
+            prepStmt.setDate(1, new java.sql.Date(ConverterUtil.convertToDate(dateString).getTime()));
             try (ResultSet rs = prepStmt.executeQuery()) {
                 if (rs.next()) {
                     Object count = rs.getObject(1);
@@ -149,8 +150,8 @@ public class RDBMSConnector {
         try (Connection dbConnection = getConnection();
              PreparedStatement prepStmt = dbConnection.prepareStatement(
                      TransactionQueryHelper.GET_TRAN_COUNT_DATA_FOR_A_TIME_PERIOD)) {
-            prepStmt.setString(1, startDate);
-            prepStmt.setString(2, endDate);
+            prepStmt.setDate(1,  new java.sql.Date(ConverterUtil.convertToDate(startDate).getTime()));
+            prepStmt.setDate(2, new java.sql.Date(ConverterUtil.convertToDate(endDate).getTime()));
             try (ResultSet rs = prepStmt.executeQuery()) {
                 ResultSetMetaData rsmd = rs.getMetaData();
                 data.add(new String[]{rsmd.getColumnName(1), rsmd.getColumnName(2), rsmd.getColumnName(3),

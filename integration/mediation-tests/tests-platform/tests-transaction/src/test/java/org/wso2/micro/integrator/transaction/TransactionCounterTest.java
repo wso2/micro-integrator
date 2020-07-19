@@ -22,6 +22,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
@@ -39,15 +40,21 @@ public class TransactionCounterTest extends ESBIntegrationTest {
     private final String inputXML = "<Hello>World</Hello>";
     private final Map<String, String> headers = new HashMap<String, String>();
     private String transactionCountResource;
+    private String transactionReportResource;
     private final int REQUEST_COUNT = 100;
     private SimpleHttpClient client;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass
     void initialize() throws Exception {
         super.init();
         transactionCountResource = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) +
                 "/management/transactions/count";
+        transactionReportResource = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) +
+                "/management/transactions/report";
         client = new SimpleHttpClient();
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Transaction Counter Tests for an API")
@@ -102,8 +109,15 @@ public class TransactionCounterTest extends ESBIntegrationTest {
                         expectedRequestCount, getTransactionCount(transactionCountResource)));
     }
 
+    @Test(groups = "wso2.esb", description = "Transaction Counter Report Generation Log")
+    void testTransactionReportGeneration() throws Exception {
+        carbonLogReader.clearLogs();
+        client.doGet(transactionReportResource + "?end=2020-07&start=2020-05", headers);
+        carbonLogReader.checkForLog("Transaction count report is created", DEFAULT_TIMEOUT);
+    }
+
     @AfterClass
     void close() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 }
