@@ -21,7 +21,7 @@
                  protocol="http"
                  suspend="false" sequence="test" onError="fault" >
     <p:parameters xmlns:p="http://ws.apache.org/ns/synapse">
-        <p:parameter  name="inbound.http.port">8081</p:parameter>
+        <p:parameter  name="inbound.http.port">8083</p:parameter>
     </p:parameters>
 </inboundEndpoint>
 
