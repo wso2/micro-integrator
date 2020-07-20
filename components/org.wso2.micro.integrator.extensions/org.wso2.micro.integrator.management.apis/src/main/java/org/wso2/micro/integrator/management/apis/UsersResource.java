@@ -67,6 +67,12 @@ public class UsersResource extends UserResource {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Handling " + httpMethod + "request.");
         }
+
+        if (!isValidUserStore()) {
+            setInvalidUserStoreResponse(axis2MessageContext);
+            return true;
+        }
+
         JSONObject response;
         try {
             switch (httpMethod) {
