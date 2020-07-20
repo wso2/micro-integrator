@@ -86,6 +86,9 @@
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
                     </systemProperties>
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
             </plugin>

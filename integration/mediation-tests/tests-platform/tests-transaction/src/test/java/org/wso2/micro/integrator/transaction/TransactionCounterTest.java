@@ -85,7 +85,7 @@ public class TransactionCounterTest extends ESBIntegrationTest {
     @Test(dependsOnMethods = "testProxyTransactionCount", groups = "wso2.esb",
             description = "Transaction Counter Tests for an HTTP Inbound Endpoint")
     void testInboundEPTransactionCount() throws Exception {
-        String inboundEPurl = "http://localhost:8081";
+        String inboundEPurl = "http://localhost:8083";
         for (int i = 0; i < REQUEST_COUNT; i++) {
             String response = client.getResponsePayload(client.doPost(
                     inboundEPurl, headers, inputJson, "application/json"));
