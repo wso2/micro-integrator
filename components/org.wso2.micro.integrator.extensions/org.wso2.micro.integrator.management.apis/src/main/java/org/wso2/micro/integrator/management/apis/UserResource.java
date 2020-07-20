@@ -23,6 +23,8 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wso2.config.mapper.ConfigParser;
+import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
@@ -35,6 +37,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
+import static org.wso2.micro.integrator.management.apis.Constants.FORBIDDEN;
 import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
 import static org.wso2.micro.integrator.management.apis.Constants.IS_ADMIN;
 import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
@@ -75,6 +78,12 @@ public class UserResource implements MiApiResource {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Handling " + httpMethod + "request.");
         }
+
+        if (SecurityUtils.isFileBasedUserStoreEnabled()) {
+            setInvalidUserStoreResponse(axis2MessageContext);
+            return true;
+        }
+
         JSONObject response;
         try {
             switch (httpMethod) {
@@ -180,4 +189,10 @@ public class UserResource implements MiApiResource {
         return Arrays.asList(rolesList).contains(getRealmConfiguration().getAdminRoleName());
     }
 
+    protected void setInvalidUserStoreResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {
+        JSONObject response = Utils.createJsonError("User management is not supported with the file-based user store. " +
+                        "Please plug in a user store for the correct functionality",
+                axis2MessageContext, FORBIDDEN);
+        Utils.setJsonPayLoad(axis2MessageContext, response);
+    }
 }

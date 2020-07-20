@@ -24,6 +24,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONObject;
+import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.core.multiplecredentials.UserAlreadyExistsException;
 
@@ -67,6 +68,12 @@ public class UsersResource extends UserResource {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Handling " + httpMethod + "request.");
         }
+
+        if (SecurityUtils.isFileBasedUserStoreEnabled()) {
+            setInvalidUserStoreResponse(axis2MessageContext);
+            return true;
+        }
+
         JSONObject response;
         try {
             switch (httpMethod) {
