@@ -113,11 +113,11 @@ public class RDBMSConnector {
      */
     public long getTransactionCountOfMonth(int year, int monthNumber) throws TransactionCounterException {
         String monthNumberStr = Integer.toString(monthNumber);
-        monthNumberStr = ((monthNumberStr).length() == 1) ? "0" + monthNumberStr : monthNumberStr;
+        monthNumberStr = monthNumberStr.length() == 1 ? "0" + monthNumberStr : monthNumberStr;
         String dateString = year + "-" + monthNumberStr + "-01";
         try (Connection dbConnection = getConnection();
              PreparedStatement prepStmt = dbConnection.prepareStatement(TransactionQueryHelper.TRAN_COUNT_OF_MONTH)) {
-            prepStmt.setDate(1, new java.sql.Date(ConverterUtil.convertToDate(dateString).getTime()));
+            prepStmt.setDate(1, convertToSQLDate(dateString));
             try (ResultSet rs = prepStmt.executeQuery()) {
                 if (rs.next()) {
                     Object count = rs.getObject(1);
@@ -150,8 +150,8 @@ public class RDBMSConnector {
         try (Connection dbConnection = getConnection();
              PreparedStatement prepStmt = dbConnection.prepareStatement(
                      TransactionQueryHelper.GET_TRAN_COUNT_DATA_FOR_A_TIME_PERIOD)) {
-            prepStmt.setDate(1,  new java.sql.Date(ConverterUtil.convertToDate(startDate).getTime()));
-            prepStmt.setDate(2, new java.sql.Date(ConverterUtil.convertToDate(endDate).getTime()));
+            prepStmt.setDate(1,  convertToSQLDate(startDate));
+            prepStmt.setDate(2, convertToSQLDate(endDate));
             try (ResultSet rs = prepStmt.executeQuery()) {
                 ResultSetMetaData rsmd = rs.getMetaData();
                 data.add(new String[]{rsmd.getColumnName(1), rsmd.getColumnName(2), rsmd.getColumnName(3),
@@ -235,8 +235,7 @@ public class RDBMSConnector {
         Date date = new Date();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String localDateStr = localDate.toString();
-        date = ConverterUtil.convertToDate(localDateStr.substring(0, localDateStr.length() - 2) + "01");
-        return new java.sql.Date(date.getTime());
+        return convertToSQLDate(localDateStr.substring(0, localDateStr.length() - 2) + "01");
     }
 
     /**
@@ -244,5 +243,9 @@ public class RDBMSConnector {
      */
     public void setNewNodeId(String newNodeId) {
         this.nodeId = newNodeId;
+    }
+
+    private static java.sql.Date convertToSQLDate(String date) {
+        return new java.sql.Date(ConverterUtil.convertToDate(date).getTime()) ;
     }
 }
