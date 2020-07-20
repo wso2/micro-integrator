@@ -175,6 +175,7 @@ rem ---------- Add jars to classpath --c _CLASSPATH%
 
 if %JAVA_VERSION% GEQ 110 set CARBON_CLASSPATH=.\wso2\lib\*;%CARBON_CLASSPATH%
 if %JAVA_VERSION% GEQ 110 set JAVA_VER_BASED_OPTS=--add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED
+
 rem ---------------- Setting default profile for Runtime if not parsed --------------
 
 set profileSet=false
