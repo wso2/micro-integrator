@@ -84,7 +84,7 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
             } else {
                 LOG.info("File based user store has been disabled. Carbon user store settings will be used.");
                 useCarbonUserStore = true;
-                isInitialized= true;
+                isInitialized = true;
             }
         }
     }
