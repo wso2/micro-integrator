@@ -29,12 +29,6 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
-    <test name="RDF-tests" parallel="false" verbose="2">
-        <classes>
-            <class name="org.wso2.ei.dataservice.integration.test.rdf.RDFSampleTestCase"/>
-        </classes>
-    </test>
-
     <test name="DSS-service-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.services.BatchRequestTestCase"/>
