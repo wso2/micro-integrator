@@ -190,7 +190,7 @@ public class UserResource implements MiApiResource {
     }
 
     protected void setInvalidUserStoreResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {
-        JSONObject response = Utils.createJsonError("User management is not supported with the in-memory user store. " +
+        JSONObject response = Utils.createJsonError("User management is not supported with the file-based user store. " +
                         "Please plug in a user store for the correct functionality",
                 axis2MessageContext, FORBIDDEN);
         Utils.setJsonPayLoad(axis2MessageContext, response);
