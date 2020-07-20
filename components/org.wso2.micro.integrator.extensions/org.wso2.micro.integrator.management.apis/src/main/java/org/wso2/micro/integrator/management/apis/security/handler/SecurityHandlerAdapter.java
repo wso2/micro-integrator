@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
-import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.Constants;
 import org.wso2.micro.integrator.management.apis.ManagementApiParser;
