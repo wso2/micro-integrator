@@ -164,7 +164,7 @@ bcprov-jdk15on-1.60.jar                                                         
 org.eclipse.equinox.p2.repository_2.3.0.v20131211-1531.jar                                          bundle         epl1                
 org.eclipse.ecf.identity_3.2.0.v20130604-1622.jar                                                   bundle         epl1                
 synapse-nhttp-transport_2.1.7.wso2v178.jar                                                          bundle         apache2             
-org.wso2.carbon.transports.sap_4.7.34.jar                                                           bundle         apache2             
+org.wso2.carbon.transports.sap_4.7.35.jar                                                           bundle         apache2             
 tomcat-jsp-api_9.0.31.wso2v1.jar                                                                    bundle         apache2             
 smooks_1.5.1.wso2v1.jar                                                                             bundle         apache2             
 org.apache.velocity_1.7.0.jar                                                                       bundle         apache2             
