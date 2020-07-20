@@ -209,10 +209,10 @@ public class PrometheusReporter implements MetricReporter {
         Gauge gauge = (Gauge) metricMap.get(MetricConstants.SERVICE_UP);
         gauge.labels(serviceName, serviceType).setToCurrentTime();
 
-        if(serviceType.equals(SynapseConstants.PROXY_SERVICE_TYPE)) {
+        if (serviceType.equals(SynapseConstants.PROXY_SERVICE_TYPE)) {
             setCounterValue(TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE, serviceName, serviceType);
             setCounterValue(ERROR_REQUESTS_RECEIVED_PROXY_SERVICE, serviceName, serviceType);
-        } else if(serviceType.equals(SynapseConstants.FAIL_SAFE_MODE_API)){
+        } else if (serviceType.equals(SynapseConstants.FAIL_SAFE_MODE_API)) {
             setCounterValue(TOTAL_REQUESTS_RECEIVED_API, serviceName, serviceType);
             setCounterValue(ERROR_REQUESTS_RECEIVED_API, serviceName, serviceType);
         } else {
@@ -368,11 +368,11 @@ public class PrometheusReporter implements MetricReporter {
 
     }
 
-    public void setCounterValue(Counter counter, String serviceName, String serviceType){
-        if(serviceType.equals(SynapseConstants.FAIL_SAFE_MODE_API )) {
+    public void setCounterValue(Counter counter, String serviceName, String serviceType) {
+        if (serviceType.equals(SynapseConstants.FAIL_SAFE_MODE_API)) {
             counter.labels(serviceName, serviceType, "");
         } else {
-             counter.labels(serviceName, serviceType);
+            counter.labels(serviceName, serviceType);
         }
     }
 }
