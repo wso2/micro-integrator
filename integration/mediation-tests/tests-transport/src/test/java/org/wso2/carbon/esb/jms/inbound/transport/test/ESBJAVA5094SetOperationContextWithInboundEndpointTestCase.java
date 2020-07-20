@@ -120,6 +120,12 @@ public class ESBJAVA5094SetOperationContextWithInboundEndpointTestCase extends E
             description = "Test for the operation context of axis2 context with inbound endpoint")
     public void settingOperationContextWithInboundTest() throws Exception {
 
+        Assert.assertTrue(isArtifactDeployed(() -> checkSequenceExistence("firstSeq"), DEFAULT_TIMEOUT),
+                          "Seq deployment failed.");
+        Assert.assertTrue(isArtifactDeployed(() -> checkSequenceExistence("secondSeq"), DEFAULT_TIMEOUT),
+                          "Seq deployment failed.");
+        Assert.assertTrue(isArtifactDeployed(() -> checkMessageProcessorExistence("JDBCMP"), DEFAULT_TIMEOUT),
+                          "Msg processor deployment failed.");
         logReader.clearLogs();
         sendMessage();
         boolean assertValue = Utils.checkForLog(logReader, "In second sequence !!", 60);

@@ -77,6 +77,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
@@ -940,9 +941,26 @@ public abstract class ESBIntegrationTest {
         return response.contains(taskName);
     }
 
-    protected boolean checkSequenceExistence(String sequenceName) throws IOException {
+    protected boolean isArtifactDeployed(BooleanSupplier methodToCheck, int maxWaitTime) throws InterruptedException {
 
-        String response = retrieveArtifactUsingManagementApi("sequences");
+        for (int i = 0; i < maxWaitTime; i++) {
+            if (methodToCheck.getAsBoolean()) {
+                return true;
+            }
+            TimeUnit.SECONDS.sleep(1);
+        }
+        return false;
+    }
+
+    protected boolean checkSequenceExistence(String sequenceName) {
+
+        String response;
+        try {
+            response = retrieveArtifactUsingManagementApi("sequences");
+        } catch (IOException e) {
+            log.error(e);
+            return false;
+        }
         return response.contains(sequenceName);
     }
 
@@ -956,6 +974,18 @@ public abstract class ESBIntegrationTest {
 
         String response = retrieveArtifactUsingManagementApi("message-stores");
         return response.contains(messageStoreName);
+    }
+
+    protected boolean checkMessageProcessorExistence(String messageProcessorName) {
+
+        String response;
+        try {
+            response = retrieveArtifactUsingManagementApi("message-processors");
+        } catch (IOException e) {
+            log.error(e);
+            return false;
+        }
+        return response.contains(messageProcessorName);
     }
 
     private String retrieveArtifactUsingManagementApi(String artifactType) throws IOException {
