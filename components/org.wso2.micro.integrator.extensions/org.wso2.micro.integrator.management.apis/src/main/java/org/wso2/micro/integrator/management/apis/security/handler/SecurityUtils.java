@@ -23,6 +23,8 @@ import org.apache.axiom.om.OMElement;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.crypto.CryptoConstants;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.wso2.config.mapper.ConfigParser;
+import org.wso2.micro.integrator.management.apis.Constants;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecureVaultException;
 
@@ -90,5 +92,14 @@ public class SecurityUtils {
             }
         }
         return value;
+    }
+
+    public static Boolean isFileBasedUserStoreEnabled() {
+
+        Object fileUserStore = ConfigParser.getParsedConfigs().get(Constants.FILE_BASED_USER_STORE_ENABLE);
+        if (fileUserStore != null) {
+            return Boolean.valueOf(fileUserStore.toString());
+        }
+        return false;
     }
 }

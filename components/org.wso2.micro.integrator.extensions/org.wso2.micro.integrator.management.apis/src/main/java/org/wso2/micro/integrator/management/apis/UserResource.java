@@ -24,6 +24,7 @@ import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.config.mapper.ConfigParser;
+import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
@@ -78,7 +79,7 @@ public class UserResource implements MiApiResource {
             LOG.debug("Handling " + httpMethod + "request.");
         }
 
-        if (!isValidUserStore()) {
+        if (SecurityUtils.isFileBasedUserStoreEnabled()) {
             setInvalidUserStoreResponse(axis2MessageContext);
             return true;
         }
@@ -186,17 +187,6 @@ public class UserResource implements MiApiResource {
      */
     private boolean isAdmin(String[] rolesList) throws UserStoreException {
         return Arrays.asList(rolesList).contains(getRealmConfiguration().getAdminRoleName());
-    }
-
-    protected Boolean isValidUserStore() {
-
-        Object fileUserStore = ConfigParser.getParsedConfigs().get("internal_apis.file_user_store.enable");
-        if (fileUserStore != null) {
-            if (!Boolean.valueOf(fileUserStore.toString())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     protected void setInvalidUserStoreResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {

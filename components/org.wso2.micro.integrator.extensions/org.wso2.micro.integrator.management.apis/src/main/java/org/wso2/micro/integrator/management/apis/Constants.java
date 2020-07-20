@@ -123,4 +123,7 @@ public class Constants {
     static final String TRACE = "trace";
     static final String ENABLE = "enable";
     static final String DISABLE = "disable";
+
+    // toml properties
+    public static String FILE_BASED_USER_STORE_ENABLE = "internal_apis.file_user_store.enable";
 }

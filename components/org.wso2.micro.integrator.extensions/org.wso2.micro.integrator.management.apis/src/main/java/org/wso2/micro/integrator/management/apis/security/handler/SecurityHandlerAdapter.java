@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
+import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.Constants;
 import org.wso2.micro.integrator.management.apis.ManagementApiParser;
@@ -70,15 +71,21 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
     private static void initializeUserStore() throws CarbonException, IOException, ManagementApiUndefinedException,
             XMLStreamException {
         if (!isInitialized) {
-            ManagementApiParser mgtParser = new ManagementApiParser();
-            try {
-                usersList = mgtParser.getUserMap();
-            } catch (UserStoreUndefinedException e) {
+            if (SecurityUtils.isFileBasedUserStoreEnabled()) {
+                ManagementApiParser mgtParser = new ManagementApiParser();
+                try {
+                    usersList = mgtParser.getUserMap();
+                    isInitialized = true;
+                } catch (UserStoreUndefinedException e) {
+                    LOG.error("User store config has not been defined in file "
+                            + ManagementApiParser.getConfigurationFilePath(), e);
+                    isInitialized = false;
+                }
+            } else {
+                LOG.info("File based user store has been disabled. Carbon user store settings will be used.");
                 useCarbonUserStore = true;
-                LOG.info("User store config has not been defined in file "
-                         + ManagementApiParser.getConfigurationFilePath() + ". Using carbon user store settings");
+                isInitialized= true;
             }
-            isInitialized = true;
         }
     }
 
