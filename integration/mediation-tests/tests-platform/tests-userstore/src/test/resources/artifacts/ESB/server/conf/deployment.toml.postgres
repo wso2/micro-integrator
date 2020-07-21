@@ -33,3 +33,6 @@ url = "jdbc:postgresql://localhost:5432/postgres"
 username = "Root"
 password = "Root1234"
 driver = "org.postgresql.Driver"
+
+[internal_apis.file_user_store]
+enable = false

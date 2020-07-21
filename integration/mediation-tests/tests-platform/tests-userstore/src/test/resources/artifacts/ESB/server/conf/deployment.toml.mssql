@@ -33,3 +33,6 @@ url = "jdbc:sqlserver://localhost:1433;databaseName=clusterDB;SendStringParamete
 username = "SA"
 password = "Root1111"
 driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+
+[internal_apis.file_user_store]
+enable = false
