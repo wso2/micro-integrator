@@ -74,3 +74,6 @@ enable = false
 [management_api.authorization_handler]
 enable = false
 
+[internal_apis.file_user_store]
+enable = false
+

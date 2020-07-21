@@ -33,3 +33,6 @@ url = "jdbc:db2://localhost:50000/testdb"
 username = "db2inst1"
 password = "Niro"
 driver = "com.ibm.db2.jcc.DB2Driver"
+
+[internal_apis.file_user_store]
+enable = false

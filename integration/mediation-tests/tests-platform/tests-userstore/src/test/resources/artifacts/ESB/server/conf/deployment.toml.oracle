@@ -33,3 +33,6 @@ url = "jdbc:oracle:thin:@localhost:1521:ORCLCDB"
 username = "oracleusr"
 password = "mi1234"
 driver = "oracle.jdbc.OracleDriver"
+
+[internal_apis.file_user_store]
+enable = false

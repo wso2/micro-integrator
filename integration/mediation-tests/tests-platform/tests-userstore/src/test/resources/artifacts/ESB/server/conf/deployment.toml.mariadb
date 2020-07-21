@@ -33,3 +33,6 @@ url = "jdbc:mysql://localhost:3309/userdb?useSSL=false&amp;allowPublicKeyRetriev
 username = "root"
 password = "root"
 driver = "com.mysql.jdbc.Driver"
+
+[internal_apis.file_user_store]
+enable = false
