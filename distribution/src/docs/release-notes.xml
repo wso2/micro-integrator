@@ -30,7 +30,7 @@
         </div>
 
         <div id="main-content">
-            <h1>The WSO2 Micro Integrator (MI) @product.version@ Released!</h1>
+            <h1>WSO2 Micro Integrator (MI) @product.version@ Released!</h1>
 
             <p>
                 WSO2 MI team is pleased to announce the release of version @product.version@ of
@@ -38,8 +38,9 @@
             </p>
 
             <p>
-                WSO2 MI distribution contains the integration runtime which is
-                optimized to deploy in centralized deployments and containers .
+                Micro Integrator @product.version@ brings you the best from the both worlds of centralized deployments and containers.
+                The renowned synapse engine which it is based on brings in all the required integration capabilities
+                and its adaptable nature makes it easier to use for Micro services.
             </p>
 
             <p>
@@ -92,22 +93,24 @@
             </ul>
 
             <h2>What's new in this release</h2>
-            <p>WSO2 MI @product.version@ is a major release that is shipped with the following new features:</p>
+            <p>WSO2 MI @product.version@ is a minor release that is shipped with the following new features:</p>
             <ul>
-                <li>Task Coordination In Distributed Environment</li>
+                <li>Task coordination in distributed environments</li>
                 <li>Readiness probe for health checking</li>
                 <li>Enhanced experience for handling security</li>
-                <li>Support for Hot Deployment</li>
-                <li>Swagger generation for Data services</li>
+                <li>Support for hot deployment</li>
+                <li>Swagger generation for data services</li>
                 <li>User management with external user stores</li>
                 <li>View and configure logs without accessing the file system</li>
                 <li>Transaction counter for services</li>
-                <li>Easy XML to JSON transformations with JSON Transform mediator</li>
+                <li>Easy XML to JSON transformations with 'JSON Transform mediator'</li>
             </ul>
+
+            <p>View the full list of bug fixes and improvements <a href="https://github.com/wso2/micro-integrator/issues?q=is%3Aissue+closed%3A2019-10-08..2020-07-20+">here</a></p>
 
             <h2>Known Issues</h2>
             <p>
-                All the open issues pertaining to WSO2 EI @product.version@ are reported at following
+                All the open issues pertaining to WSO2 MI @product.version@ are reported at following
                 locations:
             </p>
             <ul>
@@ -117,10 +120,12 @@
 
             <h2>How You Can Contribute</h2>
             <h3>
-                Mailing Lists
+                Discussion Forums
             </h3>
             <p>
-                Join our mailing list and correspond with the developers directly.
+                Join our mailing lists and correspond with the developers directly. We also encourage you to take part
+                in discussions related to the product in the architecture mailing list. If you have any questions
+                regarding the product you can use our StackOverflow forum and Slack Channel.
             </p>
             <ul>
                 <li>
@@ -128,20 +133,24 @@
                     | <a href="mailto:dev-request@wso2.org?subject=subscribe">Subscribe</a>
                     | <a href="http://mail.wso2.org/mailarchive/dev/">Mail Archive</a>
                 </li>
+                <li>
+                    Architecture List : <a href="mailto:architecture@wso2.org">architecture@wso2.org</a>
+                    | <a href="mailto:architecture-request@wso2.org?subject=subscribe">Subscribe</a>
+                    | <a href="http://mail.wso2.org/mailarchive/architecture/">Mail Archive</a>
+                </li>
+                <li>
+                    User Forum: <a href="https://stackoverflow.com/questions/tagged/wso2mi">StackOverflow</a>
+                </li>
+                <li>
+                    User Forum: <a href="https://ei-slack.wso2.com/">Slack Channel</a>
+                </li>
             </ul>
             <h3>
                 Reporting Issues
             </h3>
             <p>
-                We encourage you to report issues, documentation faults and feature requests regarding
-                WSO2 EI through the public <a href="https://github.com/wso2/product-ei/issues">Github EI issues</a>.
-            </p>
-
-            <h3>
-                Discussion Forums
-            </h3>
-            <p>
-                Alternatively, questions could be raised on <a href="http://stackoverflow.com/questions/tagged/wso2">http://stackoverflow.com</a>.
+                We encourage you to report issues, improvements and feature requests regarding WSO2 Micro Integrator
+                through our public repository <a href="https://github.com/wso2/micro-integrator/issues">WSO2 Micro Integrator GIT Issues</a>.
             </p>
 
             <h2>Support</h2>
@@ -152,16 +161,22 @@
                 provided by the very same engineers who build the technology.
             </p>
             <p>
+                Important: Please be advised that security issues must be reported to
+                <a href="security@wso2.com">security@wso2.com</a>, not as GitHub issues, in order to reach the proper
+                audience. We strongly advise following the <a href="https://docs.wso2.com/display/Security/WSO2+Security+Vulnerability+Reporting+Guidelines">WSO2 Security Vulnerability Reporting Guidelines</a> when
+                reporting the security issues.
+            </p>
+            <p>
                 For more details and to take advantage of this unique opportunity please
                 visit <a href="http://wso2.com/support">http://wso2.com/support</a>.
             </p>
             <p>
-                For more information about WSO2 MI please see <a href="https://wso2.com/integration">
-                http://wso2.com/products/enterprise-integrator</a>.
+                For more information about WSO2 MI please see <a href="https://wso2.com/integration/micro-integrator/">
+                https://wso2.com/integration/micro-integrator/</a>.
             </p>
 
 
-            <p><i>-- The WSO2 EI Team --</i> </p>
+            <p><i>-- WSO2 EI Team --</i> </p>
         </div>
     </body>
 </html>
