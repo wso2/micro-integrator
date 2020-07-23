@@ -183,6 +183,18 @@ public class Utils {
         return logExists;
     }
 
+    public static boolean checkForFileExistence(Path filePath, int timeout) throws InterruptedException {
+
+        for (int i = 0; i < timeout; i++) {
+            if (Files.exists(filePath)) {
+                return true;
+            }
+            TimeUnit.SECONDS.sleep(1);
+        }
+        log.error("File does not exists in " + filePath, new Throwable());
+        return false;
+    }
+
     /**
      * Wait for expected message count found in the message store until a defined timeout
      *
