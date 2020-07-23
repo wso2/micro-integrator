@@ -813,6 +813,18 @@ internal_http_api_enable = true     # inferred  true by default
 internal_http_api_port = 9191       # inferred 9191 by default
 internal_https_api_port = 9154      # inferred 9154 by default
 
+[opentracing]
+enable = false
+
+[jaeger]
+sampler.manager.host="localhost"
+sampler.manager.port="5778"
+sender.agent.host="localhost"
+sender.agent.port="6831"
+reporter.log.spans=false
+reporter.max.queue.size="100"
+reporter.flush.interval="1000"
+
 ###################################   Database configurations   ###################################
 [[datasource]]
 id = "WSO2_CARBON_DB"
