@@ -72,7 +72,7 @@ public class RabbitMQInjectHandler {
      * @param inboundName Inbound Name
      * @return delivery status of the message
      */
-    public boolean onMessage(AMQP.BasicProperties properties, byte[] body, String inboundName) {
+    public AcknowledgementMode onMessage(AMQP.BasicProperties properties, byte[] body, String inboundName) {
         org.apache.synapse.MessageContext msgCtx = createMessageContext();
         try {
             MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
@@ -88,7 +88,7 @@ public class RabbitMQInjectHandler {
                 msgCtx.setProperty(SynapseConstants.IS_INBOUND, true);
                 msgCtx.setProperty(SynapseConstants.INBOUND_ENDPOINT_NAME, inboundName);
                 msgCtx.setProperty(SynapseConstants.ARTIFACT_NAME,
-                                   SynapseConstants.FAIL_SAFE_MODE_INBOUND_ENDPOINT + inboundName);
+                        SynapseConstants.FAIL_SAFE_MODE_INBOUND_ENDPOINT + inboundName);
                 synapseEnvironment.injectInbound(msgCtx, seq, sequential);
             } else {
                 log.error("Sequence: " + injectingSeq + " not found");
@@ -96,15 +96,21 @@ public class RabbitMQInjectHandler {
 
             Object rollbackProperty = msgCtx.getProperty(RabbitMQConstants.SET_ROLLBACK_ONLY);
             if ((rollbackProperty instanceof Boolean && ((Boolean) rollbackProperty)) ||
-                (rollbackProperty instanceof String && Boolean.parseBoolean((String) rollbackProperty))) {
-                return false;
+                    (rollbackProperty instanceof String && Boolean.parseBoolean((String) rollbackProperty))) {
+                return AcknowledgementMode.REQUEUE_FALSE;
+            }
+            Object requeueOnRollbackProperty = msgCtx.getProperty(RabbitMQConstants.SET_REQUEUE_ON_ROLLBACK);
+            if ((requeueOnRollbackProperty instanceof Boolean && ((Boolean) requeueOnRollbackProperty)) ||
+                    (requeueOnRollbackProperty instanceof String &&
+                            Boolean.parseBoolean((String) requeueOnRollbackProperty))) {
+                return AcknowledgementMode.REQUEUE_TRUE;
             }
 
         } catch (AxisFault axisFault) {
             log.error("Error when trying to read incoming message ...", axisFault);
-            return false;
+            return AcknowledgementMode.REQUEUE_FALSE;
         }
-        return true;
+        return AcknowledgementMode.ACKNOWLEDGE;
     }
 
     /**

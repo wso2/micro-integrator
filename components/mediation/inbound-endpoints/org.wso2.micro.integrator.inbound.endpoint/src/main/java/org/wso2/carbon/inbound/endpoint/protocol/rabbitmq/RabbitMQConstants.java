@@ -23,6 +23,8 @@ package org.wso2.carbon.inbound.endpoint.protocol.rabbitmq;
  */
 public class RabbitMQConstants {
     public static final String SET_ROLLBACK_ONLY = "SET_ROLLBACK_ONLY";
+    public static final String SET_REQUEUE_ON_ROLLBACK = "SET_REQUEUE_ON_ROLLBACK";
+    public static final String MESSAGE_REQUEUE_DELAY = "rabbitmq.message.requeue.delay";
     public static final String RABBITMQ_CON_FAC = "rabbitmq.connection.factory";
 
     public static final String SERVER_HOST_NAME = "rabbitmq.server.host.name";
