@@ -14,7 +14,7 @@ jobs:
       - name: Set up JDK 1.8
         uses: joschi/setup-jdk@v1
         with:
-          java-version: openjdk8
+          java-version: 8.0.252
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml -fae
   windows:
