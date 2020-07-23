@@ -101,6 +101,7 @@
   "mediation.internal_https_api_port": "synapse_properties.'internal.https.api.port'",
 
   "transport.http.socket_timeout": "passthru_properties.'http.socket.timeout'",
+  "transport.http.connection_timeout": "passthru_properties.'http.connection.timeout'",
   "transport.http.core_worker_pool_size": "passthru_properties.'worker_pool_size_core'",
   "transport.http.max_worker_pool_size": "passthru_properties.'worker_pool_size_max'",
   "transport.http.worker_pool_queue_length": "passthru_properties.'worker_pool_queue_length'",
