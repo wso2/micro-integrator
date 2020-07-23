@@ -67,12 +67,13 @@
         </classes>
     </test>
 
+    <!-- Disable due to https://github.com/wso2/micro-integrator/issues/1911
     <test name="RDF-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.rdf.RDFExposedAsRDFSampleTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.rdf.RDFSampleTestCase"/>
         </classes>
-    </test>
+    </test-->
 
     <test name="Swagger tests" parallel="false" verbose="2">
         <classes>
