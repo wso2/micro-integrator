@@ -120,7 +120,7 @@ public class TestMicroIntegratorRegistry {
     @Test
     public void testRegistryResourceReadWithEmptyMediaType() {
         OMNode omNode = microIntegratorRegistry.lookup("conf:/custom/QueueName");
-        Assert.assertEquals("File content should be as expected","ordersQueue", ((OMTextImpl) omNode).getText());
+        Assert.assertEquals("File content should be as expected","ordersQueue", ((OMTextImpl) omNode).getText().trim());
     }
 
     @AfterClass

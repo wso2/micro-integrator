@@ -42,6 +42,15 @@
   "synapse_properties.'inbound.threads.core'": "20",
   "synapse_properties.'inbound.threads.max'": "100",
 
+  "synapse_properties.'opentracing.enable'": false,
+  "synapse_properties.'jaeger.sampler.manager.host'": "localhost",
+  "synapse_properties.'jaeger.sampler.manager.port'":  "5778",
+  "synapse_properties.'jaeger.sender.agent.host'": "localhost",
+  "synapse_properties.'jaeger.sender.agent.port'": "6831",
+  "synapse_properties.'jaeger.reporter.log.spans'": false,
+  "synapse_properties.'jaeger.reporter.max.queue.size'": "100",
+  "synapse_properties.'jaeger.reporter.flush.interval'": "10000",
+
   "passthru_properties.'http.socket.timeout'": "180000",
   "passthru_properties.'worker_pool_size_core'": "400",
   "passthru_properties.'worker_pool_size_max'": "400",

@@ -37,28 +37,24 @@ public class SmooksMediatorConfigFromLocalEntryTestCase extends ESBIntegrationTe
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        addSmooksProxy();
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Transform from a Smook mediator config from a local entry")
     public void testSendingToSmooks() throws Exception {
+        addSmooksProxy();
         String smooksResourceDirstr = getClass().getResource("/artifacts/ESB/synapseconfig/smooks/").getFile();
         File fileSmook = new File(smooksResourceDirstr);
         String smooksResourceDir = fileSmook.getAbsolutePath();
         Path source = Paths.get(smooksResourceDir, "edi.txt");
         Path destination = Paths.get(smooksResourceDir, "test", "in", "edi.txt");
         Files.createDirectories(Paths.get(smooksResourceDir, "test", "in"));
+        log.info("Copying file to Smooks directory");
         Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
-        /*
-         * The polling interval of the VFS proxy is 1000 ms. Therefore 2000ms waiting time was added to provide
-         * enough time for the processing
-         */
-        Thread.sleep(3000);
 
         Path outPutFilePath = Paths.get(smooksResourceDir, "test", "out", "config-localentry-test-out.xml");
-        Assert.assertTrue(Files.exists(outPutFilePath), "output file has not been created, there could be an issue "
-                + "in picking up smooks configuration as a local entry");
+        Assert.assertTrue(Utils.checkForFileExistence(outPutFilePath, DEFAULT_TIMEOUT),
+                          "output file has not been created, there could be an issue in picking up smooks configuration as a local entry");
         String smooksOut = new String(Files.readAllBytes(outPutFilePath));
         Assert.assertTrue(smooksOut.contains("<?xml version='1.0' encoding='UTF-8'?>"
                         + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<soapenv:Body>"
@@ -85,7 +81,8 @@ public class SmooksMediatorConfigFromLocalEntryTestCase extends ESBIntegrationTe
                 + "    <parameter name=\"transport.vfs.FileURI\">file://" + getClass()
                 .getResource("/artifacts/ESB/synapseconfig/smooks/").getPath() + "test/in/</parameter>\n"
                 + "    <parameter name=\"transport.vfs.FileNamePattern\">.*\\.txt</parameter>\n"
-                + "    <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n" + "</proxy>"), "SmooksProxy", "proxy-services", true);
+                + "    <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n" + "</proxy>"),
+                                         "SmooksProxy", "proxy-services", false);
     }
 
 }

@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -52,6 +52,7 @@ public class RabbitMQConsumer implements Consumer {
     private Channel channel = null;
     private String queueName;
     private long maxDeadLetteredCount;
+    private long requeueDelay;
     private boolean autoAck;
     private String inboundName;
 
@@ -99,6 +100,10 @@ public class RabbitMQConsumer implements Consumer {
         // get max dead-lettered count
         maxDeadLetteredCount =
                 NumberUtils.toLong(rabbitMQProperties.get(RabbitMQConstants.MESSAGE_MAX_DEAD_LETTERED_COUNT));
+
+        // get requeue delay
+        requeueDelay =
+                NumberUtils.toLong(rabbitMQProperties.get(RabbitMQConstants.MESSAGE_REQUEUE_DELAY));
 
         // get consumer tag if given
         String consumerTag = rabbitMQProperties.get(RabbitMQConstants.CONSUMER_TAG);
@@ -192,33 +197,44 @@ public class RabbitMQConsumer implements Consumer {
     @Override
     public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
             throws IOException {
-        boolean successful = injectHandler.onMessage(properties, body, inboundName);
-        if (successful) {
-            if (!autoAck) {
-                channel.basicAck(envelope.getDeliveryTag(), false);
-            }
-        } else {
-            List<HashMap<String, Object>> xDeathHeader =
-                    (ArrayList<HashMap<String, Object>>) properties.getHeaders().get("x-death");
-            // check if message has been already dead-lettered
-            if (xDeathHeader != null && xDeathHeader.size() > 0 && maxDeadLetteredCount != -1) {
-                Long count = (Long) xDeathHeader.get(0).get("count");
-                if (count <= maxDeadLetteredCount) {
+        AcknowledgementMode acknowledgementMode = injectHandler.onMessage(properties, body, inboundName);
+        switch (acknowledgementMode) {
+            case REQUEUE_TRUE:
+                try {
+                    Thread.sleep(requeueDelay);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                channel.basicReject(envelope.getDeliveryTag(), true);
+                break;
+            case REQUEUE_FALSE:
+                List<HashMap<String, Object>> xDeathHeader =
+                        (ArrayList<HashMap<String, Object>>) properties.getHeaders().get("x-death");
+                // check if message has been already dead-lettered
+                if (xDeathHeader != null && xDeathHeader.size() > 0 && maxDeadLetteredCount != -1) {
+                    Long count = (Long) xDeathHeader.get(0).get("count");
+                    if (count <= maxDeadLetteredCount) {
+                        channel.basicReject(envelope.getDeliveryTag(), false);
+                        log.info("The rejected message with message id: " + properties.getMessageId() + " and " +
+                                "delivery tag: " + envelope.getDeliveryTag() + " on the queue: " +
+                                queueName + " is dead-lettered " + count + " time(s).");
+                    } else {
+                        // handle the message after exceeding the max dead-lettered count
+                        proceedAfterMaxDeadLetteredCount(envelope, properties, body);
+                    }
+                } else {
+                    // the message might be dead-lettered or discard if an error occurred in the mediation flow
                     channel.basicReject(envelope.getDeliveryTag(), false);
                     log.info("The rejected message with message id: " + properties.getMessageId() + " and " +
-                            "delivery tag: " + envelope.getDeliveryTag() + " on the queue: " + queueName + " is " +
-                            "dead-lettered " + count + " time(s).");
-                } else {
-                    // handle the message after exceeding the max dead-lettered count
-                    proceedAfterMaxDeadLetteredCount(envelope, properties, body);
+                            "delivery tag: " + envelope.getDeliveryTag() + " on the queue: " +
+                            queueName + " will discard or dead-lettered.");
                 }
-            } else {
-                // the message might be dead-lettered or discard if an error occurred in the mediation flow
-                channel.basicReject(envelope.getDeliveryTag(), false);
-                log.info("The rejected message with message id: " + properties.getMessageId() + " and " +
-                        "delivery tag: " + envelope.getDeliveryTag() + " on the queue: " + queueName + " will " +
-                        "discard or dead-lettered.");
-            }
+                break;
+            default:
+                if (!autoAck) {
+                    channel.basicAck(envelope.getDeliveryTag(), false);
+                }
+                break;
         }
     }
 

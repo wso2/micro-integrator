@@ -22,6 +22,7 @@ algorithm = "AES"
 # [transport.http]
 # socket_timeout = 180000   # timeout in milliseconds
 # disable_connection_keepalive = false
+# connection_timeout = 90000 # in milliseconds
 
 # [transport.jms]
 # sender_enable = true
