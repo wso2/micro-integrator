@@ -77,6 +77,8 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     private static final String METADATA_FILE_SUFFIX = ".meta";
     private static final String METADATA_KEY_MEDIA_TYPE = "mediaType";
 
+    private static final String NEW_LINE_CHAR = System.getProperty("line.separator");
+
     private static final int FILE = 1;
     private static final int HTTP = 2;
     private static final int HTTPS = 3;
@@ -1007,6 +1009,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                     String line;
                     while ((line = bReader.readLine()) != null) {
                         strBuilder.append(line);
+                        strBuilder.append(NEW_LINE_CHAR);
                     }
                 }
                 return OMAbstractFactory.getOMFactory().createOMText(strBuilder.toString());
