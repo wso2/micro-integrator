@@ -54,10 +54,11 @@ public class InternalAPIDispatcher {
      * @return whether to continue with post dispatching actions
      */
     public boolean dispatch(MessageContext synCtx) {
-        InternalAPI internalApi = findAPI(synCtx);
 
+        String path = RESTUtils.getFullRequestPath(synCtx);
+        InternalAPI internalApi = findAPI(path);
         if (internalApi == null) {
-            log.warn("No Internal API found to dispatch the message");
+            log.warn("No Internal API found to dispatch the message to : " + path);
             return false;
         }
         // check null for internal apis' CORS configuration where CORS configurations are not set
@@ -87,10 +88,9 @@ public class InternalAPIDispatcher {
     }
 
     /* Finds the API that the message should be dispatched to */
-    private InternalAPI findAPI(MessageContext synCtx) {
+    private InternalAPI findAPI(String path) {
         for (InternalAPI internalApi : internalApis) {
             String context = internalApi.getContext();
-            String path = RESTUtils.getFullRequestPath(synCtx);
             if (path.startsWith(context + "/") || path.startsWith(context + "?") || context.equals(path)) {
                 return internalApi;
             }
