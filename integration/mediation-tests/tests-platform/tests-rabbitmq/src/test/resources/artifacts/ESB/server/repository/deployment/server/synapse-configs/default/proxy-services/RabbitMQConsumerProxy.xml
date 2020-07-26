@@ -20,7 +20,7 @@
        statistics="disable" trace="disable" startOnLoad="true">
     <target>
         <inSequence>
-            <log level="full">
+            <log level="custom">
                 <property name="received" value="true"/>
             </log>
             <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
