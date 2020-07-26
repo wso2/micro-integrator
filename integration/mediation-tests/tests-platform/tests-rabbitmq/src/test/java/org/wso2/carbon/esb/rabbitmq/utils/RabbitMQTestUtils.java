@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.concurrent.TimeUnit;
 import javax.xml.xpath.XPathExpressionException;
 
 public class RabbitMQTestUtils {
@@ -149,6 +150,9 @@ public class RabbitMQTestUtils {
 
     public static void startRabbitMq() throws IOException, InterruptedException {
         executeDockerCommand("docker start " + RABBITMQ_CONTAINER);
+        int waitTime = 180;
+        log.info("Waiting for " + waitTime + " seconds for container startup.");
+        TimeUnit.SECONDS.sleep(waitTime); // waiting for the startup completion
     }
 
     private static void executeDockerCommand(String command) throws IOException, InterruptedException {
