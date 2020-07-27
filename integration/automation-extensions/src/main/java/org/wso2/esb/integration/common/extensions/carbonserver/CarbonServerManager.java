@@ -144,7 +144,12 @@ public class CarbonServerManager {
                 }
             }));
 
-            managementPort = 9154 + portOffset;
+            if (commandMap.get("managementPort") != null) {
+                managementPort = Integer.parseInt(commandMap.get("managementPort")) + portOffset;
+            } else {
+                managementPort = 9763 + portOffset;
+            }
+
             waitTill(() -> !isRemotePortInUse("localhost", managementPort), 180, "startup");
 
             if (!isRemotePortInUse("localhost", managementPort)) {
