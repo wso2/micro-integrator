@@ -121,9 +121,9 @@ public class Utils {
 
         JSONObject payload = new JSONObject(JsonUtil.jsonPayloadToString(axisMsgCtx));
         JSONObject response = new JSONObject();
+        String msg;
         if (payload.has(Constants.TRACE)) {
             String traceState = payload.get(Constants.TRACE).toString();
-            String msg;
             if (Constants.ENABLE.equalsIgnoreCase(traceState)) {
                 config.enableTracing();
                 msg = "Enabled tracing for ('" + artifactName + "')";
@@ -133,13 +133,14 @@ public class Utils {
                 msg = "Disabled tracing for ('" + artifactName + "')";
                 response.put(Constants.MESSAGE, msg);
             } else {
-                response = createJsonError("Invalid value for state " + Constants.TRACE, axisMsgCtx,
-                                           Constants.BAD_REQUEST);
+                msg = "Invalid value for state " + Constants.TRACE;
+                response = createJsonError(msg, axisMsgCtx, Constants.BAD_REQUEST);
             }
         } else {
-            response = createJsonError("Missing attribute " + Constants.TRACE + " in payload", axisMsgCtx,
-                                       Constants.BAD_REQUEST);
+            msg = "Missing attribute " + Constants.TRACE + " in payload";
+            response = createJsonError(msg, axisMsgCtx, Constants.BAD_REQUEST);
         }
+        LOG.info(msg);
         return response;
     }
 
