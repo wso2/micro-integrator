@@ -20,6 +20,7 @@ package org.wso2.esb.integration.common.extensions.carbonserver;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.FrameworkConstants;
@@ -90,7 +91,11 @@ public class CarbonServerManager {
             File commandDir = new File(carbonHome);
 
             log.info("Starting server ... ");
-            scriptName = commandMap.get("startupScript");
+            if (System.getProperty("startupScript") != null) {
+                scriptName = System.getProperty("startupScript");
+            } else {
+                scriptName = commandMap.get("startupScript");
+            }
             String componentBinPath = commandMap.get("runtimePath");
 
             if (scriptName == null && componentBinPath == null) {
@@ -144,10 +149,10 @@ public class CarbonServerManager {
                 }
             }));
 
-            if (commandMap.get("managementPort") != null) {
+            if (StringUtils.isNotEmpty(commandMap.get("managementPort"))) {
                 managementPort = Integer.parseInt(commandMap.get("managementPort")) + portOffset;
             } else {
-                managementPort = 9763 + portOffset;
+                managementPort = 9154 + portOffset;
             }
 
             waitTill(() -> !isRemotePortInUse("localhost", managementPort), 180, "startup");
