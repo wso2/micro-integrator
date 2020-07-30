@@ -76,13 +76,11 @@ public class RequestCountResource implements MiApiResource {
         if ("count".equalsIgnoreCase(pathParam)) {
             String yearParameter = Utils.getQueryParameter(synCtx, "year");
             String monthParameter = Utils.getQueryParameter(synCtx, "month");
-
             return handleTransactionCountCommand(axis2MessageContext, yearParameter, monthParameter);
 
         } else if ("report".equalsIgnoreCase(pathParam)) {
             String start = Utils.getQueryParameter(synCtx, "start");
             String end = Utils.getQueryParameter(synCtx, "end");
-
             return handleTransactionReportCommand(axis2MessageContext, start, end);
 
         } else {
@@ -206,8 +204,6 @@ public class RequestCountResource implements MiApiResource {
         if (null == transactionStore) {
             response = Utils.createJsonError("Transaction Count Handler component is not initialized", axisCtx,
                                              FORBIDDEN);
-            Utils.setJsonPayLoad(axisCtx, response);
-            return true;
         } else {
             String errorMessage;
             try {

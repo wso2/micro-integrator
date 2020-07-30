@@ -118,7 +118,7 @@ public class TransactionCountHandlerComponent {
             } catch (Throwable e) {
                 LOG.error("Could not persist the transaction count: ", e);
             }
-        }, updateInterval, updateInterval, TimeUnit.MINUTES);
+        }, 0, updateInterval, TimeUnit.MINUTES);
     }
 
     /**

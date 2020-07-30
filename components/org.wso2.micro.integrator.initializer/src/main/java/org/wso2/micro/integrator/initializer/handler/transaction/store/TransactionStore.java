@@ -67,7 +67,6 @@ public class TransactionStore {
      */
     public long getTransactionCountOfMonth(int year, int monthNumber) throws TransactionCounterException {
         return this.rdbmsConnector.getTransactionCountOfMonth(year, monthNumber);
-
     }
 
     /**
