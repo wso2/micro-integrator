@@ -91,7 +91,6 @@ public class CarbonServerManager {
             File commandDir = new File(carbonHome);
 
             log.info("Starting server ... ");
-//            scriptName = commandMap.get("startupScript");
             scriptName = System.getProperty("startupScript");
             String componentBinPath = commandMap.get("runtimePath");
 
