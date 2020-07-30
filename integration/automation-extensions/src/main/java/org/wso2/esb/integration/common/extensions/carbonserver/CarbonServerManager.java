@@ -91,11 +91,7 @@ public class CarbonServerManager {
             File commandDir = new File(carbonHome);
 
             log.info("Starting server ... ");
-            if (System.getProperty("startupScript") != null) {
-                scriptName = System.getProperty("startupScript");
-            } else {
-                scriptName = commandMap.get("startupScript");
-            }
+            scriptName = commandMap.get("startupScript");
             String componentBinPath = commandMap.get("runtimePath");
 
             if (scriptName == null && componentBinPath == null) {
