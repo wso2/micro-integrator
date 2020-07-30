@@ -909,6 +909,16 @@
                 <module>tests-common</module>
                 <module>mediation-tests/tests-platform/tests-coordination</module>
                 <module>mediation-tests/tests-platform/tests-userstore</module>
+                <module>mediation-tests/tests-platform/tests-transaction</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>transaction-tests</id>
+            <modules>
+                <module>samples/product</module>
+                <module>automation-extensions</module>
+                <module>tests-common</module>
+                <module>mediation-tests/tests-platform/tests-transaction</module>
             </modules>
         </profile>
     </profiles>
