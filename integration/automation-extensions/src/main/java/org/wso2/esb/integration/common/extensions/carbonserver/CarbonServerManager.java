@@ -20,6 +20,7 @@ package org.wso2.esb.integration.common.extensions.carbonserver;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.FrameworkConstants;
@@ -144,7 +145,12 @@ public class CarbonServerManager {
                 }
             }));
 
-            managementPort = 9154 + portOffset;
+            if (StringUtils.isNotEmpty(commandMap.get("managementPort"))) {
+                managementPort = Integer.parseInt(commandMap.get("managementPort")) + portOffset;
+            } else {
+                managementPort = 9154 + portOffset;
+            }
+
             waitTill(() -> !isRemotePortInUse("localhost", managementPort), 180, "startup");
 
             if (!isRemotePortInUse("localhost", managementPort)) {
