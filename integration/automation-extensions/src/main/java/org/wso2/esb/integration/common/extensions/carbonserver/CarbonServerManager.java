@@ -91,7 +91,8 @@ public class CarbonServerManager {
             File commandDir = new File(carbonHome);
 
             log.info("Starting server ... ");
-            scriptName = commandMap.get("startupScript");
+//            scriptName = commandMap.get("startupScript");
+            scriptName = System.getProperty("startupScript");
             String componentBinPath = commandMap.get("runtimePath");
 
             if (scriptName == null && componentBinPath == null) {
@@ -145,8 +146,8 @@ public class CarbonServerManager {
                 }
             }));
 
-            if (StringUtils.isNotEmpty(commandMap.get("managementPort"))) {
-                managementPort = Integer.parseInt(commandMap.get("managementPort")) + portOffset;
+            if (StringUtils.isNotEmpty(System.getProperty("managementPort"))) {
+                managementPort = Integer.parseInt(System.getProperty("managementPort")) + portOffset;
             } else {
                 managementPort = 9154 + portOffset;
             }
