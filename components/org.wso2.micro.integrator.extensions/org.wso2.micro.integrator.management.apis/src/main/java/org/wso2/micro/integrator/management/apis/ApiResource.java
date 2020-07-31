@@ -216,7 +216,7 @@ public class ApiResource extends APIResource {
         org.apache.axis2.context.MessageContext axisMsgCtx = ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
         String serverUrl = getServerContext(axisMsgCtx.getConfigurationContext().getAxisConfiguration());
         String versionUrl = "";
-        if (URL_VERSION_TYPE.equals(api.getVersionStrategy().getVersionType()) && !api.getVersion().isEmpty()) {
+        if (URL_VERSION_TYPE.equals(api.getVersionStrategy().getVersionType())) {
             versionUrl = "/" + api.getVersion();
         }
         return serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext() + versionUrl;
