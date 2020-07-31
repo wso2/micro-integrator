@@ -5,7 +5,7 @@ hostname = "localhost"
 [user_store]
 type = "read_only_ldap"
 
-[keystore.tls]
+[keystore.primary]
 file_name = "wso2carbon.jks"
 password = "wso2carbon"
 alias = "wso2carbon"
