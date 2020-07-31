@@ -26,6 +26,7 @@ algorithm = "AES"
 
 # [transport.jms]
 # sender_enable = true
+# listener_enable = true
 
 # [[transport.jms.sender]]
 # name = "myQueueSender"
@@ -34,9 +35,6 @@ algorithm = "AES"
 # parameter.connection_factory_name = "QueueConnectionFactory"
 # parameter.connection_factory_type = "queue"
 # parameter.cache_level = "producer"
-
-# [transport.jms]
-# listener_enable = true
 
 #[[transport.jms.listener]]
 # name = "myQueueConnectionFactory"
@@ -57,6 +55,7 @@ algorithm = "AES"
 
 # [transport.rabbitmq]
 # sender_enable = true
+# listener_enable = true
 
 # [[transport.rabbitmq.sender]]
 # name = "AMQPConnectionFactory"
@@ -64,9 +63,6 @@ algorithm = "AES"
 # parameter.port = 5672
 # parameter.username = "guest"
 # parameter.password = "guest"
-
-# [transport.rabbitmq]
-# listener_enable = true
 
 # [[transport.rabbitmq.listener]]
 # name = "AMQPConnectionFactory"
