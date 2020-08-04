@@ -394,6 +394,7 @@ parameter.from = "demo_user@wso2.com"
 
 [transport.jms]
 listener_enable = true
+sender_enable = true
 
 [[transport.jms.listener]]
 
@@ -436,9 +437,6 @@ parameter.max_jsm_connection = 10
 parameter.max_consumer_error_retrieve_before_delay = 20
 parameter.consume_error_delay = "100"                   # delay in milliseconds
 parameter.consume_error_progression = "2.0"
-
-[transport.jms]
-sender_enable = true
 
 [[transport.jms.sender]]
 
@@ -485,6 +483,7 @@ parameter.vender_class_loader = false       # only for IBM MQ
 
 [transport.blocking.jms]
 listener_enable = true
+sender_enable = true
 
 [[transport.blocking.jms.listener]]     # jms listener for blocking transport
 
@@ -528,8 +527,6 @@ parameter.max_consumer_error_retrieve_before_delay = 20
 parameter.consume_error_delay = "100"                   # delay in milliseconds
 parameter.consume_error_progression = "2.0"
 
-[transport.blocking.jms]
-sender_enable = true
 
 [[transport.blocking.jms.sender]]   # jms sender for blocking transport
 
@@ -589,6 +586,7 @@ MyTopic = "example.MyTopic"
 ###################################     Rabbit MQ configurations        ###################################
 [transport.rabbitmq]
 listener_enable = true
+sender_enable = true
 
 [[transport.rabbitmq.listener]]
 
@@ -626,9 +624,6 @@ parameter.keystore_password = ""
 parameter.truststore_location =""
 parameter.truststore_type = ""
 parameter.truststore_password = ""
-
-[transport.rabbitmq]
-sender_enable = true
 
 [[transport.rabbitmq.sender]]
 
