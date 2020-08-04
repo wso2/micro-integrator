@@ -154,7 +154,7 @@
       "transport.wss.sender.parameter.'ws.outflow.dispatch.sequence'": "outflowDispatchSeq",
       "transport.wss.sender.parameter.'ws.outflow.dispatch.fault.sequence'": "outflowFaultSeq",
       "transport.wss.sender.truststore_location": "$ref{truststore.file_name}",
-      "transport.wss.sender.truststore_password": "$ref{truststore.primary.password}"
+      "transport.wss.sender.truststore_password": "$ref{truststore.password}"
     }
   },
   "transport.http.listener.certificate_revocation_verifier_enable": {
