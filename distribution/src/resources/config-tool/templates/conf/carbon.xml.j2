@@ -346,7 +346,7 @@
         -->
         <KeyStore>
             <!-- Keystore file location-->
-            <Location>${carbon.home}/repository/resources/security/{{keystore.primary.file_name}}</Location>
+            <Location>{{keystore.primary.file_name}}</Location>
             <!-- Keystore type (JKS/PKCS12 etc.)-->
             <Type>{{keystore.primary.type}}</Type>
             <!-- Keystore password-->
@@ -363,15 +363,15 @@
         -->
         <InternalKeyStore>
             <!-- Keystore file location-->
-            <Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
+            <Location>{{keystore.internal.file_name}}</Location>
             <!-- Keystore type (JKS/PKCS12 etc.)-->
-            <Type>JKS</Type>
+            <Type>{{keystore.internal.type}}</Type>
             <!-- Keystore password-->
-            <Password>wso2carbon</Password>
+            <Password>{{keystore.internal.password}}</Password>
             <!-- Private Key alias-->
-            <KeyAlias>wso2carbon</KeyAlias>
+            <KeyAlias>{{keystore.internal.alias}}</KeyAlias>
             <!-- Private Key password-->
-            <KeyPassword>wso2carbon</KeyPassword>
+            <KeyPassword>{{keystore.internal.key_password}}</KeyPassword>
         </InternalKeyStore>
 
         <!--
@@ -380,7 +380,7 @@
         -->
         <TrustStore>
             <!-- trust-store file location -->
-            <Location>${carbon.home}/repository/resources/security/{{truststore.file_name}}</Location>
+            <Location>{{truststore.file_name}}</Location>
             <!-- trust-store type (JKS/PKCS12 etc.) -->
             <Type>{{truststore.type}}</Type>
             <!-- trust-store password -->

@@ -844,14 +844,14 @@ rules = ["HIVE_TASK,HTTP_SCRIPT.*,192.168.1.*", "HIVE_TASK,.*,192.168.2.*"]     
 
 ###################################     Keystore configurations     ###################################
 [keystore.primary]
-file_name = "wso2carbon.jks"        # infered
+file_name = "repository/resources/security/wso2carbon.jks"        # infered
 type = "JKS"                        # infered
 password = "wso2carbon"             # infered
 alias = "wso2carbon"                # infered
 key_password = "wso2carbon"         # infered
 
 [truststore]
-file_name = "client-truststore.jks"        # infered
+file_name = "repository/resources/security/client-truststore.jks"        # infered
 type = "JKS"                        # infered
 password = "wso2carbon"             # infered
 alias = "symmetric.key.value"       # infered

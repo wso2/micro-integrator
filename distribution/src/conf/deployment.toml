@@ -6,13 +6,13 @@ hostname = "localhost"
 type = "read_only_ldap"
 
 [keystore.primary]
-file_name = "wso2carbon.jks"
+file_name = "repository/resources/security/wso2carbon.jks"
 password = "wso2carbon"
 alias = "wso2carbon"
 key_password = "wso2carbon"
 
 [truststore]
-file_name = "client-truststore.jks"
+file_name = "repository/resources/security/client-truststore.jks"
 password = "wso2carbon"
 alias = "symmetric.key.value"
 algorithm = "AES"
@@ -26,7 +26,6 @@ algorithm = "AES"
 
 # [transport.jms]
 # sender_enable = true
-# listener_enable = true
 
 # [[transport.jms.sender]]
 # name = "myQueueSender"
@@ -35,6 +34,9 @@ algorithm = "AES"
 # parameter.connection_factory_name = "QueueConnectionFactory"
 # parameter.connection_factory_type = "queue"
 # parameter.cache_level = "producer"
+
+# [transport.jms]
+# listener_enable = true
 
 #[[transport.jms.listener]]
 # name = "myQueueConnectionFactory"
