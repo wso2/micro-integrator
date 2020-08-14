@@ -254,9 +254,9 @@
     </transportReceiver>
     {% endif %}
     {% if transport.blocking.rabbitmq.listener_enable is defined %}
-        {% if transport.rabbitmq.listener_enable and transport.rabbitmq.listener|length==0 %}
+        {% if transport.blocking.rabbitmq.listener_enable and transport.blocking.rabbitmq.listener|length==0 %}
     <transportReceiver name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener"/>
-        {% elif transport.rabbitmq.listener_enable %}
+        {% elif transport.blocking.rabbitmq.listener_enable %}
     <transportReceiver name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener">
             {% for listener in transport.blocking.rabbitmq.listener %}
         <parameter name="{{listener.name}}" locked="false">
