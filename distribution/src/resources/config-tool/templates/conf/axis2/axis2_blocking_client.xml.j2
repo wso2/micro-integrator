@@ -253,6 +253,31 @@
         {% endfor %}
     </transportReceiver>
     {% endif %}
+    {% if transport.blocking.rabbitmq.listener_enable is defined %}
+        {% if transport.rabbitmq.listener_enable and transport.rabbitmq.listener|length==0 %}
+    <transportReceiver name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener"/>
+        {% elif transport.rabbitmq.listener_enable %}
+    <transportReceiver name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener">
+            {% for listener in transport.blocking.rabbitmq.listener %}
+        <parameter name="{{listener.name}}" locked="false">
+                {% for name,value in listener.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                {% endfor %}
+        </parameter>
+            {% endfor %}
+    </transportReceiver>
+        {% endif %}
+    {% elif transport.blocking.rabbitmq.listener|length>0 %}
+    <transportReceiver name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener">
+        {% for listener in transport.blocking.rabbitmq.listener %}
+        <parameter name="{{listener.name}}" locked="false">
+            {% for name,value in listener.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+            {% endfor %}
+        </parameter>
+        {% endfor %}
+    </transportReceiver>
+    {% endif %}
 	<!--Uncomment if you want to have TCP transport support-->
     <!--transportReceiver name="tcp"
                        class="org.apache.axis2.transport.tcp.TCPServer">
@@ -355,6 +380,31 @@
         {% endfor %}
     </transportSender>
     {% endif %}
+    {% if transport.blocking.rabbitmq.sender_enable is defined %}
+           {% if transport.blocking.rabbitmq.sender_enable and transport.blocking.rabbitmq.sender|length==0 %}
+       <transportSender name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQSender"/>
+           {% elif transport.blocking.rabbitmq.sender_enable %}
+       <transportSender name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQSender">
+               {% for sender in transport.blocking.rabbitmq.sender %}
+           <parameter name="{{sender.name}}" locked="false">
+                   {% for name,value in sender.parameter.items() %}
+               <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                   {% endfor %}
+           </parameter>
+               {% endfor %}
+       </transportSender>
+           {% endif %}
+       {% elif transport.blocking.rabbitmq.sender|length>0 %}
+       <transportSender name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQSender">
+           {% for sender in transport.blocking.rabbitmq.sender %}
+           <parameter name="{{sender.name}}" locked="false">
+               {% for name,value in sender.parameter.items() %}
+               <parameter name="{{name}}" locked="false">{{value}}</parameter>
+               {% endfor %}
+           </parameter>
+           {% endfor %}
+       </transportSender>
+       {% endif %}
     <!-- ================================================= -->
     <!-- Global Modules  -->
     <!-- ================================================= -->

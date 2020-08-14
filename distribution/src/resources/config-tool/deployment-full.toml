@@ -646,6 +646,69 @@ parameter.queue_auto_declare = ""
 parameter.exchange_auto_declare = ""
 parameter.connection_pool_size = 10
 
+[transport.blocking.rabbitmq]     # RabbitMQ blocking transport
+sender_enable = false
+
+[[transport.blocking.rabbitmq.sender]]
+
+name = "AMQPConnectionFactory"
+parameter.hostname = "localhost"
+parameter.port = 5672
+parameter.username = "guest"
+parameter.password = "guest"
+parameter.exchange_name = "amq.direct"
+parameter.routing_key = "MyQueue"
+parameter.reply_to_name = ""
+parameter.queue_delivery_mode = 1 # 1/2
+parameter.exchange_type = ""
+parameter.queue_name = "MyQueue"
+parameter.queue_durable = false
+parameter.queue_exclusive = false
+parameter.queue_auto_delete = false
+parameter.exchange_durable = ""
+parameter.queue_auto_declare = ""
+parameter.exchange_auto_declare = ""
+parameter.connection_pool_size = 10
+
+[transport.blocking.rabbitmq]
+listener_enable = true
+
+[[transport.blocking.rabbitmq.listener]]
+
+name = "AMQPConnectionFactory"
+parameter.hostname = "localhost"
+parameter.port = 5672
+parameter.username = "guest"
+parameter.password = "guest"
+parameter.connection_factory = ""
+parameter.exchange_name = "amq.direct"
+parameter.queue_name = "MyQueue"
+parameter.queue_auto_ack = false
+parameter.consumer_tag = ""
+parameter.channel_consumer_qos = ""
+parameter.durable = ""
+parameter.queue_exclusive = ""
+parameter.queue_auto_delete = ""
+parameter.queue_routing_key = ""
+parameter.queue_auto_declare = ""
+parameter.exchange_auto_declare = ""
+parameter.exchange_type = ""
+parameter.exchange_durable = ""
+parameter.exchange_auto_delete = ""
+parameter.message_content_type = ""
+
+parameter.retry_interval = "10000"        #in case of network failure interval in milliseconds
+parameter.retry_count = 5               #in case of network failure
+parameter.connection_pool_size = 25
+
+parameter.ssl_enable = true
+parameter.ssl_version = "SSL"
+parameter.keystore_location =""
+parameter.keystore_type = ""
+parameter.keystore_password = ""
+parameter.truststore_location =""
+parameter.truststore_type = ""
+
 ################################### Websocket transport configuration ###################################
 [transport.ws]
 
