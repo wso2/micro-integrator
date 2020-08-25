@@ -56,7 +56,8 @@ public class JDBCCaseInsensitiveConstants {
     public static final String UPDATE_USER_PROPERTY_CASE_INSENSITIVE = "UpdateUserPropertySQLCaseInsensitive";
     public static final String DELETE_USER_PROPERTY_CASE_INSENSITIVE = "DeleteUserPropertySQLCaseInsensitive";
     public static final String USER_NAME_UNIQUE_CASE_INSENSITIVE = "UserNameUniqueAcrossTenantsSQLCaseInsensitive";
-    public static final String SELECT_USER_SQL_CASE_INSENSITIVE = "SELECT * FROM UM_USER WHERE LOWER(UM_USER_NAME)" +
+    public static final String SELECT_USER_SQL_CASE_INSENSITIVE = "SELECT UM_ID, UM_USER_NAME, UM_USER_PASSWORD, " +
+            "UM_SALT_VALUE, UM_REQUIRE_CHANGE, UM_CHANGED_TIME, UM_TENANT_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)" +
             "=LOWER(?) AND UM_TENANT_ID=?";
     public static final String GET_USER_FILTER_SQL_CASE_INSENSITIVE = "SELECT UM_USER_NAME FROM UM_USER WHERE LOWER" +
             "(UM_USER_NAME) LIKE LOWER(?) AND UM_TENANT_ID=? ORDER BY UM_USER_NAME";
