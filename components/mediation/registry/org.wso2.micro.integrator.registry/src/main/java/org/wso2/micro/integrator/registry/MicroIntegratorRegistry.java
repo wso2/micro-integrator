@@ -1011,6 +1011,11 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                         strBuilder.append(line);
                         strBuilder.append(NEW_LINE_CHAR);
                     }
+                    // need to remove new_line_charater from the last line, for single line texts
+                    int length = strBuilder.length();
+                    if (length != 0) {
+                        strBuilder.setLength(length - NEW_LINE_CHAR.length());
+                    }
                 }
                 return OMAbstractFactory.getOMFactory().createOMText(strBuilder.toString());
             } else {
