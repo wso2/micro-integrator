@@ -36,6 +36,8 @@ import org.wso2.carbon.inbound.endpoint.protocol.http.management.HTTPEndpointMan
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 
 import static org.wso2.carbon.inbound.endpoint.common.Constants.SUPER_TENANT_DOMAIN_NAME;
@@ -50,6 +52,7 @@ public class InboundHttpSourceHandler extends SourceHandler {
     private final SourceConfiguration sourceConfiguration;
     private int port;
     private WorkerPool workerPool;
+    private Lock lock = new ReentrantLock();
 
     public InboundHttpSourceHandler(int port, SourceConfiguration sourceConfiguration) {
         super(sourceConfiguration);
@@ -82,18 +85,24 @@ public class InboundHttpSourceHandler extends SourceHandler {
 
             // Need to initialize workerPool only once
             if (workerPool == null) {
-                WorkerPoolConfiguration workerPoolConfiguration = HTTPEndpointManager.getInstance()
-                        .getWorkerPoolConfiguration(SUPER_TENANT_DOMAIN_NAME, port);
-                if (workerPoolConfiguration != null) {
-                    workerPool = sourceConfiguration.getWorkerPool(workerPoolConfiguration.getWorkerPoolCoreSize(),
-                            workerPoolConfiguration.getWorkerPoolSizeMax(),
-                            workerPoolConfiguration
-                                    .getWorkerPoolThreadKeepAliveSec(),
-                            workerPoolConfiguration.getWorkerPoolQueuLength(),
-                            workerPoolConfiguration.getThreadGroupID(),
-                            workerPoolConfiguration.getThreadID());
-                } else {
-                    workerPool = sourceConfiguration.getWorkerPool();
+                lock.lock();
+                try {
+                    if (workerPool == null) {
+                        WorkerPoolConfiguration workerPoolConfiguration = HTTPEndpointManager.getInstance()
+                                .getWorkerPoolConfiguration(SUPER_TENANT_DOMAIN_NAME, port);
+                        if (workerPoolConfiguration != null) {
+                            workerPool = sourceConfiguration.getWorkerPool(workerPoolConfiguration.getWorkerPoolCoreSize(),
+                                    workerPoolConfiguration.getWorkerPoolSizeMax(),
+                                    workerPoolConfiguration.getWorkerPoolThreadKeepAliveSec(),
+                                    workerPoolConfiguration.getWorkerPoolQueuLength(),
+                                    workerPoolConfiguration.getThreadGroupID(),
+                                    workerPoolConfiguration.getThreadID());
+                        } else {
+                            workerPool = sourceConfiguration.getWorkerPool();
+                        }
+                    }
+                } finally {
+                    lock.unlock();
                 }
             }
 
