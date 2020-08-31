@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [<img src="https://img.shields.io/badge/Slack-@wso2--ei/microintegrator-blue">](https://wso2-ei.slack.com/messages/microintegrator/)
 
-WSO2 Micro Integrator is the integration runtime of [WSO2 Enterprise Integration
+WSO2 Micro Integrator is the integration runtime of [WSO2 Enterprise Integrator
 (EI)](https://wso2.com/enterprise-integrator/), which is an open-source, hybrid integration platform. Please refer to the [official documentation](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/introduction/) for further information. 
 
 The Micro Integrator runtime is lightweight, fast, scalable, and supports centralized ESB-style integration architectures as well as decentralized microservices architectures. Developers can create integrations graphically by using [WSO2 Integration Studio](https://wso2.com/integration/integration-studio/) and deploy them in the Micro Integrator runtime.
@@ -35,6 +35,8 @@ Please refer the official documentation to get started with the product:
 - [Install and setup](https://ei.docs.wso2.com/en/latest/micro-integrator/setup/installation/install_prerequisites/) the Micro integrator
 - [Quick start guide](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/quick-start-guide/)
 - [Developing your first integration](https://ei.docs.wso2.com/en/latest/micro-integrator/develop/integration-development-kickstart/)
+
+You can also refer to the [tutorials](https://ei.docs.wso2.com/en/7.2.0/micro-integrator/use-cases/learn-overview/#tutorials) and [examples](https://ei.docs.wso2.com/en/7.2.0/micro-integrator/use-cases/learn-overview/#examples) to try out the main integration use cases.
 
 ## Contributing
 
