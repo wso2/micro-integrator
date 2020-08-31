@@ -30,13 +30,12 @@ Refer the [developer guide](https://ei.docs.wso2.com/en/latest/micro-integrator/
 
 ## Getting Started
 
-Please refer the official documentation to get started with the product:
-
+See the following topics to get started with the product:
 - [Install and setup](https://ei.docs.wso2.com/en/latest/micro-integrator/setup/installation/install_prerequisites/) the Micro integrator
 - [Quick start guide](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/quick-start-guide/)
 - [Developing your first integration](https://ei.docs.wso2.com/en/latest/micro-integrator/develop/integration-development-kickstart/)
 
-You can also refer to the [tutorials](https://ei.docs.wso2.com/en/7.2.0/micro-integrator/use-cases/learn-overview/#tutorials) and [examples](https://ei.docs.wso2.com/en/7.2.0/micro-integrator/use-cases/learn-overview/#examples) to try out the main integration use cases.
+See the [Tutorials](https://ei.docs.wso2.com/en/7.2.0/micro-integrator/use-cases/learn-overview/#tutorials) and [Examples](https://ei.docs.wso2.com/en/7.2.0/micro-integrator/use-cases/learn-overview/#examples) to try out the main integration use cases. You can also find more resources in the [WSO2 Library](https://wso2.com/library/integration/).
 
 ## Contributing
 
