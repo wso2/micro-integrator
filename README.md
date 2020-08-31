@@ -35,7 +35,7 @@ See the following topics to get started with the product:
 - [Quick start guide](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/quick-start-guide/)
 - [Developing your first integration](https://ei.docs.wso2.com/en/latest/micro-integrator/develop/integration-development-kickstart/)
 
-See the [Tutorials](https://ei.docs.wso2.com/en/7.2.0/micro-integrator/use-cases/learn-overview/#tutorials) and [Examples](https://ei.docs.wso2.com/en/7.2.0/micro-integrator/use-cases/learn-overview/#examples) to try out the main integration use cases. You can also find more resources in the [WSO2 Library](https://wso2.com/library/integration/).
+See the [Tutorials](https://ei.docs.wso2.com/en/latest/micro-integrator/use-cases/learn-overview/#tutorials) and [Examples](https://ei.docs.wso2.com/en/latest/micro-integrator/use-cases/learn-overview/#examples) to try out the main integration use cases. You can also find more resources in the [WSO2 Library](https://wso2.com/library/integration/).
 
 ## Contributing
 
