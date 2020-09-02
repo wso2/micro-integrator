@@ -4,12 +4,10 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [<img src="https://img.shields.io/badge/Slack-@wso2--ei/microintegrator-blue">](https://wso2-ei.slack.com/messages/microintegrator/)
 
+WSO2 Micro Integrator is the integration runtime of [WSO2 Enterprise Integrator
+(EI)](https://wso2.com/enterprise-integrator/), which is an open-source, hybrid integration platform. Please refer to the [official documentation](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/introduction/) for further information. 
 
-WSO2 Micro integrator is a open-source, lightweight, fast,
-scalable, and distributed microservice integration layer which is the
-cloud-native distribution of [WSO2 Enterprise Integration
-(EI)](https://wso2.com/enterprise-integrator/6.6.0). Please refer to the [official 
-documentation of WSO2 Micro Integrator](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/introduction/) for further information. 
+The Micro Integrator runtime is lightweight, fast, scalable, and supports centralized ESB-style integration architectures as well as decentralized microservices architectures. Developers can create integrations graphically by using [WSO2 Integration Studio](https://wso2.com/integration/integration-studio/) and deploy them in the Micro Integrator runtime.
 
 ## Summary
 
@@ -21,42 +19,23 @@ documentation of WSO2 Micro Integrator](https://ei.docs.wso2.com/en/latest/micro
 
 ## Why Micro Integrator?
 
-WSO2 Micro Integrator is built for developers who would like to
-integrate microservices and cloud native architectures using a
-configuration-driven approach. The Micro Integrator gives developers
-the best possible experience for developing, testing, and deploying
-integrations and tooling.
+The Micro Integrator provides developers with a flawless experience in developing, testing, and deploying integration solutions. The Micro Integrator developer experience is especially tuned for;
+Integration developers who prefer a config-driven approach to integration (centralized or decentralized).
+Integration developers who are looking for a solution to integrate brownfield (i.e.  legacy systems) solutions with new microservices-based solutions.
+Existing WSO2 EI and integration middleware users who want to move into cloud-native or microservices architectures.
 
-The Micro Integrator developer experience is especially tuned for,
-- Integration developers who prefer config driven approach.
-- People who are looking for a solution to make their brownfield (ie.
-  legacy systems) integrated into their new microservices based
-  solutions.
-- Existing WSO2 EI and integration middleware users who want to move
-  into cloud native or Microservices architecture.
+The Micro Integrator offers an enhanced experience for container-based architectures by simplifying Docker/Kubernetes deployments. 
 
-The Micro Integrator also provides an enhanced experience for those
-using a container-based architecture and works natively on the Kubernetes
-ecosystem and it makes deployment with Docker a simple process. Following
-are the main design objectives for developing the Micro Integrator.
-- Lightweight and optimized runtime based on the same integration
-  runtime of EI.
-- Native support for Docker and Kubernetes.
-- Flawless developer experience for developing, testing and deploying
-  integrations and tooling.
-- Integrate natively with cloud native ecosystem projects.
-- Building a runtime suitable for hybrid integration requirements
-  (integration cloud).
-
-### Micro Integrator CI/CD workflow
-
-![Micro Integrator CI/CD workflow](doc/images/micro-Integrator-ci-cd-workflow.png)
+Refer the [developer guide](https://ei.docs.wso2.com/en/latest/micro-integrator/develop/intro-integration-development/) in the documentation for details.
 
 ## Getting Started
 
-Please refer to the instructions on the installation of, and working with, the Micro Integrator by visiting the documentation for
-[Setup and Install](https://ei.docs.wso2.com/en/latest/micro-integrator/setup/installation/install_prerequisites/).
-You can also try out on a simple scenario of forwarding a request to a service by following the documenation on [Getting Started.](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/introduction/)
+See the following topics to get started with the product:
+- [Install and setup](https://ei.docs.wso2.com/en/latest/micro-integrator/setup/installation/install_prerequisites/) the Micro integrator
+- [Quick start guide](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/quick-start-guide/)
+- [Developing your first integration](https://ei.docs.wso2.com/en/latest/micro-integrator/develop/integration-development-kickstart/)
+
+See the [Tutorials](https://ei.docs.wso2.com/en/latest/micro-integrator/use-cases/learn-overview/#tutorials) and [Examples](https://ei.docs.wso2.com/en/latest/micro-integrator/use-cases/learn-overview/#examples) to try out the main integration use cases. You can also find more resources in the [WSO2 Library](https://wso2.com/library/integration/).
 
 ## Contributing
 
@@ -86,5 +65,4 @@ WSO2 Micro Integrator is licensed under the [Apache License](http://www.apache.o
 
 ## Copyright
 
-(c) 2018, [WSO2 Inc.](http://www.wso2.org) All Rights Reserved.
-
+(c) 2020, [WSO2 Inc.](http://www.wso2.org) All Rights Reserved.
