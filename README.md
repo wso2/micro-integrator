@@ -7,7 +7,15 @@
 WSO2 Micro Integrator is the integration runtime of [WSO2 Enterprise Integrator
 (EI)](https://wso2.com/enterprise-integrator/), which is an open-source, hybrid integration platform. Please refer to the [official documentation](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/introduction/) for further information. 
 
-The Micro Integrator runtime is lightweight, fast, scalable, and supports centralized ESB-style integration architectures as well as decentralized microservices architectures. Developers can create integrations graphically by using [WSO2 Integration Studio](https://wso2.com/integration/integration-studio/) and deploy them in the Micro Integrator runtime.
+The Micro Integrator runtime is lightweight, fast, scalable, and supports centralized ESB-style integration architectures as well as decentralized microservices architectures:
+
+-   Centralized integration architecture
+  ![esb integration architecture](doc/images/mi-esb-architecture.png)
+
+-   Decentralized integration architecture
+  ![microservices architecture](doc/images/mi-microservices-architecture.png)
+
+Developers can create integrations graphically by using [WSO2 Integration Studio](https://wso2.com/integration/integration-studio/) and deploy them in the Micro Integrator runtime.
 
 ## Summary
 
@@ -20,9 +28,9 @@ The Micro Integrator runtime is lightweight, fast, scalable, and supports centra
 ## Why Micro Integrator?
 
 The Micro Integrator provides developers with a flawless experience in developing, testing, and deploying integration solutions. The Micro Integrator developer experience is especially tuned for;
-Integration developers who prefer a config-driven approach to integration (centralized or decentralized).
-Integration developers who are looking for a solution to integrate brownfield (i.e.  legacy systems) solutions with new microservices-based solutions.
-Existing WSO2 EI and integration middleware users who want to move into cloud-native or microservices architectures.
+-   Integration developers who prefer a config-driven approach to integration (centralized or decentralized).
+-   Integration developers who are looking for a solution to integrate brownfield (i.e.  legacy systems) solutions with new microservices-based solutions.
+-   Existing WSO2 EI and integration middleware users who want to move into cloud-native or microservices architectures.
 
 The Micro Integrator offers an enhanced experience for container-based architectures by simplifying Docker/Kubernetes deployments. 
 
@@ -44,7 +52,7 @@ the latest development version. The `master` branch holds the latest unreleased 
 
 ### Building from the source
 
-Please follow the steps below to build WSO2 Micro Integrator from source code.
+Please follow the steps below to build WSO2 Micro Integrator from the source code.
 
 1. Clone or download the source code from this repository (https://github.com/wso2/micro-integrator).
 2. Run the maven command `mvn clean install` from the root directory of the repository.
@@ -52,7 +60,7 @@ Please follow the steps below to build WSO2 Micro Integrator from source code.
 
 #### Building the Docker image
 
-You can build the Docker image for Micro Integrator by setting the system property `docker.skip` to `false` when running
+You can build the Docker image for the Micro Integrator by setting the `docker.skip` system property to `false` when running the
 maven build. This builds and pushes the micro-integrator Docker image to the local Docker registry.
 
 ```bash
