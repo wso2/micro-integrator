@@ -16,29 +16,25 @@
  * under the License.
  */
 
-package org.wso2.mi.migration.migrate;
+package org.wso2.mi.migration.migrate.mi;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
+import org.wso2.mi.migration.migrate.MigrationConstants;
 import org.wso2.mi.migration.utils.MigrationIOUtils;
 import org.wso2.micro.integrator.mediation.security.vault.CipherInitializer;
 import org.wso2.securevault.DecryptionProvider;
 import org.wso2.securevault.secret.SecretManager;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-
 
 /**
  * Decrypt passwords in RSA algorithm and decrypts passwords according to provided algorithm and migrate the passwords.
  */
-public class PasswordMigrationClient {
+public class MIPasswordMigrationClient {
 
     private String carbonHome = System.getProperty(MigrationConstants.CARBON_HOME);
     private String SECURE_VAULT_PATH = Paths.get(carbonHome, "registry", "config", "repository",
@@ -50,9 +46,9 @@ public class PasswordMigrationClient {
     // Map for secrets available in the cipher-text.properties file in MI-1.1.0
     private Map<String, String> cipherTextProperties;
 
-    private static final Log log = LogFactory.getLog(PasswordMigrationClient.class);
+    private static final Log log = LogFactory.getLog(MIPasswordMigrationClient.class);
 
-    public PasswordMigrationClient() {
+    public MIPasswordMigrationClient() {
         this.secureVaultProperties = MigrationIOUtils.getProperties(SECURE_VAULT_PATH);
         this.cipherTextProperties = MigrationIOUtils.getProperties(CIPHER_TEXT_PATH);
     }
@@ -66,13 +62,13 @@ public class PasswordMigrationClient {
         // migrate secrets in the secure-vault.properties
         if (secureVaultProperties != null && !secureVaultProperties.isEmpty()) {
             Map<String, String> decryptedSecureVaultPasswords = getSecureVaultDecrypted();
-            writeDecryptedPasswordsFile("secure-vault-decrypted.properties", decryptedSecureVaultPasswords);
+            MigrationIOUtils.writePropertiesFile("secure-vault-decrypted.properties", decryptedSecureVaultPasswords);
         }
 
         // migrate passwords in the cipher-text.properties
         if (cipherTextProperties != null && !cipherTextProperties.isEmpty()) {
             Map<String, String> decryptedCipherTextPasswords = getCipherTextDecrypted();
-            writeDecryptedPasswordsFile("cipher-text-decrypted.properties", decryptedCipherTextPasswords);
+            MigrationIOUtils.writePropertiesFile("cipher-text-decrypted.properties", decryptedCipherTextPasswords);
         }
     }
 
@@ -108,27 +104,5 @@ public class PasswordMigrationClient {
             decryptedPasswords.put(alias, decyptedValue);
         });
         return decryptedPasswords;
-    }
-
-    /**
-     * Write decrypted secret Map to a properties file.
-     *
-     * @param fileName        destination file name
-     * @param decryptedValues Map
-     */
-    private void writeDecryptedPasswordsFile(String fileName, Map<String, String> decryptedValues) {
-
-        String filePath = Paths.get(carbonHome, MigrationConstants.MIGRATION_DIR, fileName).toString();
-        Properties decryptedProperties = new Properties();
-        decryptedValues.forEach((alias, decryptedValue) -> {
-            decryptedProperties.setProperty(alias, decryptedValue);
-        });
-
-        try (OutputStream outputStream = new FileOutputStream(filePath)) {
-            decryptedProperties.store(outputStream, null);
-            log.info("Decrypted secrets were written to " + filePath);
-        } catch (IOException e) {
-            log.error("Error while writing file " + filePath, e);
-        }
     }
 }

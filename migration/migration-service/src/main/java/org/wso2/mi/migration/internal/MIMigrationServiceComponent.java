@@ -24,7 +24,7 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.wso2.mi.migration.migrate.PasswordMigrationClient;
+import org.wso2.mi.migration.migrate.mi.MIPasswordMigrationClient;
 
 @Component(
         name = "org.wso2.mi.migration.client",
@@ -38,7 +38,7 @@ public class MIMigrationServiceComponent {
 
         log.info("WSO2 MI migration bundle is activated");
         // current support is only for mi110 -> mi120
-        if (System.getProperty("migrate.from.product.version").startsWith("110")) {
+        if (System.getProperty("migrate.from.product.version").startsWith("mi110")) {
             migratePasswords();
         } else {
             log.error("Provided product version is invalid");
@@ -57,7 +57,7 @@ public class MIMigrationServiceComponent {
     private void migratePasswords() {
         log.info("Initiating WSO2 MI password migration");
         try {
-            PasswordMigrationClient passwordMigrationClient = new PasswordMigrationClient();
+            MIPasswordMigrationClient passwordMigrationClient = new MIPasswordMigrationClient();
             passwordMigrationClient.migratePasswords();
             log.info("Successfully completed password migration");
         } catch (Throwable e) {

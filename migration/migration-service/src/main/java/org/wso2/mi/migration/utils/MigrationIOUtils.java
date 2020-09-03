@@ -20,12 +20,15 @@ package org.wso2.mi.migration.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.mi.migration.migrate.MigrationClientException;
 import org.wso2.mi.migration.migrate.MigrationConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,5 +76,21 @@ public class MigrationIOUtils {
             map.put(name, properties.getProperty(name));
         }
         return map;
+    }
+
+    public static void writePropertiesFile(String fileName, Map<String, String> propertyMap) {
+
+        String filePath = Paths.get(carbonHome, MigrationConstants.MIGRATION_DIR, fileName).toString();
+        Properties properties = new Properties();
+        propertyMap.forEach((alias, decryptedValue) -> {
+            properties.setProperty(alias, decryptedValue);
+        });
+
+        try (OutputStream outputStream = new FileOutputStream(filePath)) {
+            properties.store(outputStream, null);
+        } catch (IOException e) {
+            log.error("Error while writing file " + filePath, e);
+            throw new MigrationClientException("Error while writing file " + filePath, e);
+        }
     }
 }
