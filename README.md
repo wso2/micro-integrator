@@ -11,11 +11,11 @@ The Micro Integrator runtime is lightweight, fast, scalable, and supports centra
 
 -	Centralized integration architecture
 
-	 ![esb integration architecture](doc/images/mi-esb-architecture.png)
+	![esb integration architecture](doc/images/mi-esb-architecture.png)
 
 -	Decentralized integration architecture
 
-	 ![microservices architecture](doc/images/mi-microservices-architecture.png)
+	![microservices architecture](doc/images/mi-microservices-architecture.png)
 
 Developers can create integrations graphically by using [WSO2 Integration Studio](https://wso2.com/integration/integration-studio/) and deploy them in the Micro Integrator runtime.
 
