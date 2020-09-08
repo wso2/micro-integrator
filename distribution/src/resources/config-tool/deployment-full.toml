@@ -648,6 +648,7 @@ parameter.connection_pool_size = 10
 
 [transport.blocking.rabbitmq]     # RabbitMQ blocking transport
 sender_enable = false
+listener_enable = true
 
 [[transport.blocking.rabbitmq.sender]]
 
@@ -669,9 +670,6 @@ parameter.exchange_durable = ""
 parameter.queue_auto_declare = ""
 parameter.exchange_auto_declare = ""
 parameter.connection_pool_size = 10
-
-[transport.blocking.rabbitmq]
-listener_enable = true
 
 [[transport.blocking.rabbitmq.listener]]
 

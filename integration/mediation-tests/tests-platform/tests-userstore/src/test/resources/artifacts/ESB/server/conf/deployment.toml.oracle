@@ -6,14 +6,14 @@ hot_deployment = "true"
 type = "database"
 read_only = "false"
 
-[keystore.tls]
-file_name = "wso2carbon.jks"
+[keystore.primary]
+file_name = "repository/resources/security/wso2carbon.jks"
 password = "wso2carbon"
 alias = "wso2carbon"
 key_password = "wso2carbon"
 
 [truststore]
-file_name = "client-truststore.jks"
+file_name = "repository/resources/security/client-truststore.jks"
 password = "wso2carbon"
 alias = "symmetric.key.value"
 algorithm = "AES"
