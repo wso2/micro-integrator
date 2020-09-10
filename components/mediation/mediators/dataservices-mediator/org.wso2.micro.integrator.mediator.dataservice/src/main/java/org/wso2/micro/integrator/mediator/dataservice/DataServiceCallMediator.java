@@ -31,6 +31,8 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
+import org.apache.axis2.transport.TransportUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseLog;
 import org.apache.synapse.commons.json.Constants;
@@ -38,6 +40,7 @@ import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.xml.SynapsePath;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
+import org.apache.synapse.mediators.Value;
 import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.util.MessageHelper;
 import org.w3c.dom.Document;
@@ -50,7 +53,10 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -59,12 +65,21 @@ public class DataServiceCallMediator extends AbstractMediator {
 
     private String dsName;
     private Operations operations;
+
     public enum OperationsType {SINGLE_REQ, REQUEST_BOX, BATCH_REQ}
+
+    private String sourceType;
     private String targetType;
-    private String propertyName;
+    private String sourcePropertyName;
+    private String targetPropertyName;
     private OMFactory fac;
     private OMNamespace omNamespace;
     private SynapseLog synLog;
+    /**
+     * The DynamicNameValue of the property if it is dynamic.
+     */
+    private Value sourceDynamicName = null;
+    private Value targetDynamicName = null;
 
 
     public boolean mediate(MessageContext messageContext) {
@@ -94,11 +109,44 @@ public class DataServiceCallMediator extends AbstractMediator {
                 }
                 // Set the axis service into the axis2 message context
                 axis2MessageContext.setAxisService(axisService);
-                OMElement payload = addRootOperation(axis2MessageContext, messageContext);
-                if (axis2MessageContext.getEnvelope().getBody().getFirstElement() != null) {
-                    axis2MessageContext.getEnvelope().getBody().getFirstElement().detach();
+                if (sourceType.equalsIgnoreCase(DataServiceCallMediatorConstants.INLINE_SOURCE)) {
+                    OMElement payload = addRootOperation(axis2MessageContext, messageContext);
+                    if (axis2MessageContext.getEnvelope().getBody().getFirstElement() != null) {
+                        axis2MessageContext.getEnvelope().getBody().getFirstElement().detach();
+                    }
+                    axis2MessageContext.getEnvelope().getBody().addChild(payload);
+                } else if (DataServiceCallMediatorConstants.SOURCE_PROPERTY_TYPE.equals(sourceType)) {
+                    if (sourceDynamicName != null) {
+                        sourcePropertyName = sourceDynamicName.evaluateValue(messageContext);
+                        if (StringUtils.isEmpty(sourcePropertyName)) {
+                            log.warn("Evaluated value for " + sourcePropertyName + " is empty");
+                        }
+                    }
+                    String payload = (String) messageContext.getProperty(sourcePropertyName);
+                    try {
+                        if (!StringUtils.isEmpty(payload)) {
+                            InputStream inputStream = new ByteArrayInputStream(payload.getBytes());
+                            SOAPEnvelope envelope = TransportUtils.createSOAPMessage(
+                                    axis2MessageContext, inputStream, DataServiceCallMediatorConstants.APPLICATION_XML);
+                            String rootOperation = envelope.getBody().getFirstElement().getLocalName();
+                            axis2MessageContext.getAxisMessage().getAxisOperation().setName(new QName(rootOperation));
+                            axis2MessageContext.setEnvelope(envelope);
+                        } else {
+                            handleException("Error occurred while building request. Received payload is empty.", messageContext);
+                        }
+                    } catch (XMLStreamException exception) {
+                        handleException("Error occurred while building message for dataservice request", exception, messageContext);
+                    }
+                } else {
+                    OMElement operationElement = axis2MessageContext.getEnvelope().getBody().getFirstElement();
+                    if (operationElement != null) {
+                        String rootOperation = operationElement.getLocalName();
+                        QName rootOpQName = new QName(rootOperation);
+                        axis2MessageContext.getAxisMessage().getAxisOperation().setName(rootOpQName);
+                    } else {
+                        handleException("Source type is set to body. Received empty payload for request.", messageContext);
+                    }
                 }
-                axis2MessageContext.getEnvelope().getBody().addChild(payload);
                 dispatchToService(axis2MessageContext, messageContext);
             } else {
                 handleException("The data service,  named '" + serviceName + "' does not exist. ", messageContext);
@@ -108,13 +156,13 @@ public class DataServiceCallMediator extends AbstractMediator {
                 synLog.traceOrDebug(axisFault.getMessage());
             }
             synLog.error(axisFault.getMessage());
-            handleException("AxisFault occurred.",axisFault,messageContext);
+            handleException("AxisFault occurred.", axisFault, messageContext);
         }
         return true;
     }
-    
-    private OMElement addRootOperation (org.apache.axis2.context.MessageContext axis2MessageContext,
-                                   MessageContext messageContext) {
+
+    private OMElement addRootOperation(org.apache.axis2.context.MessageContext axis2MessageContext,
+                                       MessageContext messageContext) {
         Operations rootOperations = getOperations();
         String rootOpName;
         switch (rootOperations.getType()) {
@@ -151,16 +199,22 @@ public class DataServiceCallMediator extends AbstractMediator {
             }
             //set the result payload as property according to the target type
             if (DataServiceCallMediatorConstants.TARGET_PROPERTY_TYPE.equals(targetType)) {
-                messageContext.setProperty(propertyName, omElement);
+                if (targetDynamicName != null) {
+                    targetPropertyName = targetDynamicName.evaluateValue(messageContext);
+                    if (StringUtils.isEmpty(targetPropertyName)) {
+                        log.warn("Evaluated value for " + targetPropertyName + " is empty");
+                    }
+                }
+                messageContext.setProperty(targetPropertyName, omElement);
                 if (synLog.isTraceOrDebugEnabled()) {
                     synLog.traceOrDebug("The result property : " + messageContext.
-                            getProperty(propertyName));
+                            getProperty(targetPropertyName));
                 }
             } else if (omElement != null) {
                 //	set the result payload as envelope in to message context according to the target type
-                JsonUtil.removeJsonPayload(((Axis2MessageContext)messageContext).getAxis2MessageContext());
+                JsonUtil.removeJsonPayload(((Axis2MessageContext) messageContext).getAxis2MessageContext());
                 messageContext.getEnvelope().getBody().addChild(omElement);
-                ((Axis2MessageContext)messageContext).getAxis2MessageContext().
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext().
                         removeProperty(PassThroughConstants.NO_ENTITY_BODY);
             } else {
                 org.apache.axis2.context.MessageContext axisMsgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -243,7 +297,7 @@ public class DataServiceCallMediator extends AbstractMediator {
      * Escapes XML special characters
      *
      * @param msgCtx Message Context
-     * @param value XML String which needs to be escaped
+     * @param value  XML String which needs to be escaped
      * @return XML special char escaped string
      */
     private String escapeXMLEnvelope(MessageContext msgCtx, String value) {
@@ -259,7 +313,7 @@ public class DataServiceCallMediator extends AbstractMediator {
             log.error("Error building message envelope document", e);
         }
 
-        if("1.1".equals(xmlVersion)) {
+        if ("1.1".equals(xmlVersion)) {
             return org.apache.commons.text.StringEscapeUtils.escapeXml11(value);
         } else {
             return org.apache.commons.text.StringEscapeUtils.escapeXml10(value);
@@ -272,8 +326,8 @@ public class DataServiceCallMediator extends AbstractMediator {
      * @param msgCtx Message Context
      * @return xmlVersion in XML Declaration
      * @throws ParserConfigurationException failure in building message envelope document
-     * @throws IOException Error reading message envelope
-     * @throws SAXException Error parsing message envelope
+     * @throws IOException                  Error reading message envelope
+     * @throws SAXException                 Error parsing message envelope
      */
     private String checkXMLVersion(MessageContext msgCtx) throws IOException, SAXException,
             ParserConfigurationException {
@@ -315,12 +369,20 @@ public class DataServiceCallMediator extends AbstractMediator {
         this.operations = operations;
     }
 
-    public String getPropertyName() {
-        return propertyName;
+    public String getSourcePropertyName() {
+        return sourcePropertyName;
     }
 
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
+    public void setSourcePropertyName(String sourcePropertyName) {
+        this.sourcePropertyName = sourcePropertyName;
+    }
+
+    public String getTargetPropertyName() {
+        return targetPropertyName;
+    }
+
+    public void setTargetPropertyName(String targetPropertyName) {
+        this.targetPropertyName = targetPropertyName;
     }
 
     public String getTargetType() {
@@ -329,6 +391,50 @@ public class DataServiceCallMediator extends AbstractMediator {
 
     public void setTargetType(String targetType) {
         this.targetType = targetType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    /**
+     * Setter for the value of the target property name attribute when it has a dynamic value.
+     *
+     * @param targetValue Value of target propery dynamic name
+     */
+    public void setTargetDynamicName(Value targetValue) {
+        this.targetDynamicName = targetValue;
+    }
+
+    /**
+     * Method to get the dynamic name of target property.
+     *
+     * @return Value of key.
+     */
+    public Value getTargetDynamicName() {
+        return targetDynamicName;
+    }
+
+    /**
+     * Setter for the value of the source property name attribute when it has a dynamic value.
+     *
+     * @param sourceValue Value of source property dynamic name
+     */
+    public void setSourceDynamicName(Value sourceValue) {
+        this.sourceDynamicName = sourceValue;
+    }
+
+    /**
+     * Method to get the dynamic name of source property.
+     *
+     * @return Value of key.
+     */
+    public Value getSourceDynamicName() {
+        return sourceDynamicName;
     }
 
     public class Operations {
@@ -414,5 +520,4 @@ public class DataServiceCallMediator extends AbstractMediator {
             this.paramExpression = paramExpression;
         }
     }
-
 }
