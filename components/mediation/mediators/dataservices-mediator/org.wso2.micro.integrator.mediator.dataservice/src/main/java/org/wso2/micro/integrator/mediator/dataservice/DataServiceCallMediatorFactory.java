@@ -53,7 +53,7 @@ import java.util.Properties;
  * Configuration syntax:
  * <pre>
  * &lt;dataServicesCall serviceName = ""&gt;
- *      &lt;source  type="inline"|"body"|"property" name="string"/&gt;
+ *      &lt;source  type="inline"|"body"/&gt;
  *      &lt;operations type="single"/&gt;
  *          &lt;operation name=""&gt;
  *                  &lt;param name="string"&gt; &lt;param/&gt;
@@ -114,7 +114,7 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
                         if (mediator.getSourceType().equalsIgnoreCase(DataServiceCallMediatorConstants.INLINE_SOURCE)) {
                             paramList = extractParams(operationEle, mediator);
                         } else {
-                            handleException("Inline parameters can not be configured when source type is 'body/property'");
+                            handleException("Inline parameters can not be configured when source type is 'body'");
                         }
                     }
                     operationsList.add(mediator.new Operation(operationName, paramList));
@@ -207,7 +207,7 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
     /**
      * Method to create the dynamic name value based on the provided OMElement.
      *
-     * @param propertyName string to validate as a name
+     * @param propertyName  string to validate as a name
      * @param targetElement OMElement
      * @return the key value
      */
@@ -230,76 +230,70 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
 
     /**
      * Method to configure the source element.
+     *
      * @param mediator dataServiceCallMediator instance
-     * @param element OMElement
+     * @param element  OMElement
      * @return dataServiceCallMediator with configured source element
      */
     private DataServiceCallMediator configureSourceElement(DataServiceCallMediator mediator, OMElement element) {
         OMElement sourceElement = element.getFirstChildWithName(SOURCE_Q);
         OMElement operationsTypeElement = element.getFirstChildWithName(OPERATIONS_Q);
+        String message;
         if (sourceElement != null) {
             OMAttribute typeAtr = sourceElement.getAttribute(TYPE_Q);
             if (typeAtr != null) {
                 String sourceType = typeAtr.getAttributeValue();
                 mediator.setSourceType(sourceType);
                 if (sourceType.equalsIgnoreCase(DataServiceCallMediatorConstants.INLINE_SOURCE)) {
-                    if (!operationsTypeElement.getLocalName().equals(DataServiceCallMediatorConstants.OPERATIONS)) {
-                        handleException("The 'operations' element in 'dataServicesCall' element  is missing in the configuration.");
-                    }
-                    String operationType = operationsTypeElement.getAttributeValue(new QName(DataServiceCallMediatorConstants.TYPE));
-                    if (operationType == null) {
-                        handleException("The 'type' attribute in 'operations' element  is missing in the configuration.");
-                    }
-                    OperationsType operationsType = OperationsType.valueOf(operationType.toUpperCase());
-                    List operationList = extractOperations(operationsTypeElement, mediator);
-                    if (OperationsType.SINGLE_REQ.equals(operationsType) && operationList.size() > 1) {
-                        handleException("The 'single operation' should contain one operation in the configuration.");
-                    }
-                    Operations operations = mediator.new Operations(operationsType, operationList);
-                    mediator.setOperations(operations);
-                } else if (sourceType.equals(DataServiceCallMediatorConstants.PROPERTY)) {
-                    OMAttribute propertyAtr = sourceElement.getAttribute(NAME_Q);
-                    if (propertyAtr != null) {
-                        if (!propertyAtr.getAttributeValue().isEmpty()) {
-                            String propertyName = propertyAtr.getAttributeValue();
-                            if (isDynamicName(propertyName)) {
-                                Value sourceDynamicName = createDynamicNameValue(propertyName, sourceElement);
-                                mediator.setSourceDynamicName(sourceDynamicName);
-                            } else {
-                                mediator.setSourcePropertyName(propertyName);
-                            }
-                        } else {
-                            handleException("The 'name' attribute in 'source' element is empty. " +
-                                    "Please enter a value.");
-                        }
-                    } else {
-                        handleException("The 'name' attribute in 'source' element  is missing " +
-                                "in the configuration.");
-                    }
+                    return configureInlineSource(mediator, operationsTypeElement);
                 } else {
                     if (operationsTypeElement != null) {
                         handleException("The 'source' type is set to body. Inline configurations " +
                                 "are only applicable for source type 'inline'.");
                     }
+                    mediator.setSourceType(DataServiceCallMediatorConstants.SOURCE_BODY_TYPE);
+                    return mediator;
                 }
             } else {
-                handleException("The 'type' attribute in 'source' element is required for the configuration");
+                message = "The 'type' attribute in 'source' element is missing. The default value will be set to 'body'.";
             }
         } else {
-            log.warn("The 'source' element is missing in the configuration. The default value will be set to 'body'.");
-            if (operationsTypeElement != null) {
-                handleException("The 'source' type is set to body. Inline configurations are " +
-                        "only applicable for source type 'inline'.");
-                mediator.setSourceType(DataServiceCallMediatorConstants.SOURCE_BODY_TYPE);
-            }
+            message = "The 'source' element is missing in the configuration. The default value will be set to 'body'.";
         }
+        return handleFaultySourceConfig(mediator, operationsTypeElement, message);
+    }
+
+    /**
+     * Method to handle inline source configurations.
+     *
+     * @param mediator              dataServiceCallMediator instance
+     * @param operationsTypeElement OMElement of the operations configuration
+     * @return dataServiceCallMediator with inline source configuration
+     */
+    private DataServiceCallMediator configureInlineSource(DataServiceCallMediator mediator, OMElement operationsTypeElement) {
+        if (!operationsTypeElement.getLocalName().equals(DataServiceCallMediatorConstants.OPERATIONS)) {
+            handleException("The 'operations' element in 'dataServicesCall' element  is missing in the configuration.");
+        }
+        String operationType = operationsTypeElement.getAttributeValue(new QName(DataServiceCallMediatorConstants.TYPE));
+        if (operationType == null) {
+            handleException("The 'type' attribute in 'operations' element  is missing in the configuration.");
+        }
+        OperationsType operationsType = OperationsType.valueOf(operationType.toUpperCase());
+        List operationList = extractOperations(operationsTypeElement, mediator);
+        if (OperationsType.SINGLE_REQ.equals(operationsType) && operationList.size() > 1) {
+            handleException("The 'single operation' should contain one operation in the configuration.");
+        }
+        Operations operations = mediator.new Operations(operationsType, operationList);
+        mediator.setOperations(operations);
+
         return mediator;
     }
 
     /**
      * Method to set the target element.
+     *
      * @param mediator dataServiceCallMediator instance
-     * @param element OMElement
+     * @param element  OMElement
      * @return dataServiceCallMediator with configured target element
      */
     private DataServiceCallMediator configureTargetElement(DataServiceCallMediator mediator, OMElement element) {
@@ -330,12 +324,44 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
                     }
                 }
             } else {
-                handleException("The 'type' attribute in 'target' element is required for the configuration");
+                String msg = "The 'type' attribute in 'target' element is required for the configuration";
+                return handleFaultyTargetConfig(mediator, msg);
             }
         } else {
-            mediator.setTargetType(DataServiceCallMediatorConstants.TARGET_BODY_TYPE);
-            log.warn("The 'target' element is missing in the configuration. The default value will be set to 'body'.");
+            String msg = "The 'target' element is missing in the configuration. The default value will be set to 'body'.";
+            return handleFaultyTargetConfig(mediator, msg);
         }
+        return mediator;
+    }
+
+    /**
+     * Method to handle incorrect source configurations.
+     *
+     * @param mediator dataServiceCallMediator instance
+     * @param operationsTypeElement operationsTypeElement
+     * @param message      the message to be printed
+     * @return dataServiceCallMediator with default source type
+     */
+    private DataServiceCallMediator handleFaultySourceConfig(DataServiceCallMediator mediator, OMElement operationsTypeElement, String message) {
+        mediator.setSourceType(DataServiceCallMediatorConstants.SOURCE_BODY_TYPE);
+        log.warn(message);
+        if (operationsTypeElement != null) {
+            handleException("The source type is configured to 'body'. Inline configurations are " +
+                    "permitted when source type is 'inline'");
+        }
+        return mediator;
+    }
+
+    /**
+     * Method to handle incorrect target configurations.
+     *
+     * @param mediator dataServiceCallMediator instance
+     * @param message      the message to be printed
+     * @return dataServiceCallMediator with default target type
+     */
+    private DataServiceCallMediator handleFaultyTargetConfig(DataServiceCallMediator mediator, String message) {
+        mediator.setTargetType(DataServiceCallMediatorConstants.TARGET_BODY_TYPE);
+        log.warn(message);
         return mediator;
     }
 }

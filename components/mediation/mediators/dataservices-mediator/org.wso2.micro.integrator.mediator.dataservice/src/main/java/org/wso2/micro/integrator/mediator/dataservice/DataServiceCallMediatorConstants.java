@@ -24,7 +24,6 @@ public class DataServiceCallMediatorConstants {
 
     public static final String PAYLOAD_NAME_SPACE_URI = "http://ws.wso2.org/dataservice";
     public static final String PAYLOAD_PREFIX = "axis2ns";
-    public static final String SOURCE_PROPERTY_TYPE = "property";
     public static final String TARGET_PROPERTY_TYPE = "property";
     public static final String TARGET_BODY_TYPE = "body";
     public static final String JSON_TYPE = "json";
@@ -47,4 +46,5 @@ public class DataServiceCallMediatorConstants {
     public static final String REQUEST_BOX = "request_box";
     public static final String BATCH_REQ_SUFFIX = "_batch_req";
     public static final String APPLICATION_XML = "application/xml";
+    public static final String JSON_OBJECT = "jsonObject";
 }

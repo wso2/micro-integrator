@@ -62,9 +62,6 @@ public class DataServiceCallMediatorSerializer extends AbstractMediatorSerialize
             dsCallEle.addChild(operationEle);
         }
         sourceEle.addAttribute(DataServiceCallMediatorConstants.TYPE, sourceType, nullNS);
-        if (DataServiceCallMediatorConstants.PROPERTY.equals(sourceType)) {
-            sourceEle.addAttribute(DataServiceCallMediatorConstants.NAME, mediator.getSourcePropertyName(), nullNS);
-        }
         dsCallEle.addChild(sourceEle);
         targetEle.addAttribute(DataServiceCallMediatorConstants.TYPE, targetType, nullNS);
         if (DataServiceCallMediatorConstants.PROPERTY.equals(targetType)) {
