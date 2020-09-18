@@ -32,7 +32,7 @@ public class SecureVaultLookupXPathFunctionProvider implements SynapseXpathFunct
 		return new VaultLookupFunction(messageContext);
 	}
 
-	public QName getResolvingQName() {
-		return new QName(null, VAULT_LOOKUP, NAME_SPACE_PREFIX);
+	public String getResolvingQName() {
+		return NAME_SPACE_PREFIX + VAULT_LOOKUP;
 	}
 }
