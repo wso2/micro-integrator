@@ -45,20 +45,27 @@ public class DataServiceCallMediatorSerializer extends AbstractMediatorSerialize
 
         DataServiceCallMediator mediator = (DataServiceCallMediator) m;
         OMElement dsCallEle = fac.createOMElement(DataServiceCallMediatorConstants.DATA_SERVICES_CALL, synNS);
+        OMElement sourceEle = fac.createOMElement(DataServiceCallMediatorConstants.SOURCE, synNS);
         OMElement targetEle = fac.createOMElement(DataServiceCallMediatorConstants.TARGET, synNS);
         OMAttribute serviceName = fac.createOMAttribute(DataServiceCallMediatorConstants.SERVICE_NAME, nullNS,
                 mediator.getDsName());
         dsCallEle.addAttribute(serviceName);
-        Operations operationsObj = mediator.getOperations();
-        OMElement operationsEle = fac.createOMElement(DataServiceCallMediatorConstants.OPERATIONS, synNS);
-        operationsEle.addAttribute(DataServiceCallMediatorConstants.TYPE, operationsObj.getType().toString().
-                toLowerCase(), nullNS);
-        OMElement operationEle = extractOperations(operationsObj, operationsEle);
-        operationsEle.addChild(operationEle);
-        dsCallEle.addChild(operationEle);
-        targetEle.addAttribute(DataServiceCallMediatorConstants.TYPE, mediator.getTargetType(), nullNS);
-        if (DataServiceCallMediatorConstants.PROPERTY.equals(mediator.getTargetType())) {
-            targetEle.addAttribute(DataServiceCallMediatorConstants.NAME, mediator.getPropertyName(), nullNS);
+        String sourceType = (mediator.getSourceType() == null) ? DataServiceCallMediatorConstants.SOURCE_BODY_TYPE : mediator.getSourceType();
+        String targetType = (mediator.getTargetType() == null) ? DataServiceCallMediatorConstants.TARGET_BODY_TYPE : mediator.getTargetType();
+        if (DataServiceCallMediatorConstants.INLINE_SOURCE.equalsIgnoreCase(sourceType)) {
+            Operations operationsObj = mediator.getOperations();
+            OMElement operationsEle = fac.createOMElement(DataServiceCallMediatorConstants.OPERATIONS, synNS);
+            operationsEle.addAttribute(DataServiceCallMediatorConstants.TYPE, operationsObj.getType().toString().
+                    toLowerCase(), nullNS);
+            OMElement operationEle = extractOperations(operationsObj, operationsEle);
+            operationsEle.addChild(operationEle);
+            dsCallEle.addChild(operationEle);
+        }
+        sourceEle.addAttribute(DataServiceCallMediatorConstants.TYPE, sourceType, nullNS);
+        dsCallEle.addChild(sourceEle);
+        targetEle.addAttribute(DataServiceCallMediatorConstants.TYPE, targetType, nullNS);
+        if (DataServiceCallMediatorConstants.PROPERTY.equals(targetType)) {
+            targetEle.addAttribute(DataServiceCallMediatorConstants.NAME, mediator.getTargetPropertyName(), nullNS);
         }
         dsCallEle.addChild(targetEle);
         saveTracingState(dsCallEle, mediator);
@@ -82,7 +89,7 @@ public class DataServiceCallMediatorSerializer extends AbstractMediatorSerialize
                 OMElement operationsEle = fac.createOMElement(DataServiceCallMediatorConstants.OPERATIONS, synNS);
                 operationsEle.addAttribute(DataServiceCallMediatorConstants.TYPE, operationsObj.getType().toString().
                         toLowerCase(), nullNS);
-                OMElement nestedOperationEle = extractOperations((Operations)operationObj, operationsEle);
+                OMElement nestedOperationEle = extractOperations((Operations) operationObj, operationsEle);
                 operationsEle.addChild(nestedOperationEle);
                 operationEle.addChild(operationsEle);
             }
