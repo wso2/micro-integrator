@@ -273,4 +273,13 @@
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.EI1222JSONSecuredServiceWithXMLCharacterTestCase"/>-->
         </classes>
     </test>
+
+    <test name="DSSCallMediatorTests" preserve-order="true">
+        <classes>
+            <class name="org.wso2.ei.dataservice.integration.test.dssCallMediator.InlineConfigTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.dssCallMediator.SourceTypeBodyTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.dssCallMediator.JsonPayloadTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.dssCallMediator.TargetTypePropertyTestCase"/>
+        </classes>
+    </test>
 </suite>
