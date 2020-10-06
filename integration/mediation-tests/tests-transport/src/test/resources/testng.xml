@@ -127,12 +127,11 @@
         </packages>
     </test>
 
-    <!--disabled since feature management is used to install hl7 feature-->
-    <!--    <test name="HL7-transport-Test" preserve-order="true" verbose="2">
-            <packages>
-                <package name="org.wso2.carbon.esb.hl7.transport.test.*"/>
-            </packages>
-        </test>-->
+    <test name="HL7-transport-Test" preserve-order="true" verbose="2">
+        <classes>
+            <class name="org.wso2.carbon.esb.hl7.transport.test.HL7TransportTests"/>
+        </classes>
+    </test>
 
     <test name="inbound-File Transport-Test" preserve-order="true" verbose="2">
         <classes>
@@ -176,12 +175,6 @@
             <package name="org.wso2.carbon.esb.kafka.inbound.transport.test"/>
         </packages>
     </test-->
-
-    <!--<test name="inbound-HL7 Transport-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.hl7.inbound.transport.test"/>
-        </packages>
-    </test>-->
 
     <test name="MailTo-transport-Test-Receiver" preserve-order="true" verbose="2">
         <packages>

@@ -120,6 +120,18 @@
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-hl7-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/artifacts/ESB/server/dropins
+                            </outputDirectory>
+                            <includeArtifactIds>wso2mi-hl7</includeArtifactIds>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -256,10 +268,6 @@
             <artifactId>service-samples</artifactId>
         </dependency>
         <dependency>
-            <groupId>ca.uhn.hapi.wso2</groupId>
-            <artifactId>hapi</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>automation-extensions</artifactId>
         </dependency>
@@ -328,6 +336,12 @@
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>wso2mi-hl7</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
         </dependency>
     </dependencies>
 </project>
