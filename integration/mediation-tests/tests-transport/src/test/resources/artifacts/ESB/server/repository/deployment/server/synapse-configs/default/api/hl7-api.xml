@@ -28,4 +28,16 @@
             <respond/>
         </inSequence>
     </resource>
+    <resource methods="GET" uri-template="/inbound20003">
+        <inSequence>
+            <property name="REST_URL_POSTFIX" action="remove" scope="axis2"/>
+            <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+            <sequence key="hl7-payload"/>
+            <property name="messageType" scope="axis2" type="STRING" value="application/edi-hl7"/>
+            <call>
+                <endpoint key="hl7Server_InboundEP"/>
+            </call>
+            <drop/>
+        </inSequence>
+    </resource>
 </api>

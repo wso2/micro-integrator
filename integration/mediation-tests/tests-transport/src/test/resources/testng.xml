@@ -127,9 +127,10 @@
         </packages>
     </test>
 
-    <test name="HL7-transport-Test" preserve-order="true" verbose="2">
+    <test name="HL7-Tests" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.hl7.transport.test.HL7TransportTests"/>
+            <class name="org.wso2.carbon.esb.hl7.inbound.transport.test.HL7InboundPreprocessorTest"/>
         </classes>
     </test>
 
