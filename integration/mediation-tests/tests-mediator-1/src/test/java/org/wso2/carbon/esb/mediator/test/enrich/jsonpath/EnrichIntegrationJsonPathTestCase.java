@@ -204,6 +204,31 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
                 "Enriching several inline objects to properties and enrich them to body failed");
     }
 
+    @Test(groups = "wso2.esb", description = "Enrich mediator tests with JSON property type")
+    public void testEnrichToAndFromJSONProperty() throws Exception {
+        String expectedOutput =
+                "{\n" +
+                        "    \"name\": \"John Doe\",\n" +
+                        "    \"address\": null,\n" +
+                        "    \"phone\": [\n" +
+                        "        8770586755,\n" +
+                        "        35352399,\n" +
+                        "        null,\n" +
+                        "        \"Hello World\"\n" +
+                        "    ],\n" +
+                        "    \"email\": \"johndoe@gmail.com\",\n" +
+                        "    \"doctor\": {\n" +
+                        "        \"name\": \"thomas collins\",\n" +
+                        "        \"doctorid\": \"76DA-856\"\n" +
+                        "    },\n" +
+                        "    \"hospital\": \"grand oak community hospital\",\n" +
+                        "    \"appointment_date\": \"2017-04-02\"\n" +
+                        "}";
+
+        executeSequenceAndAssertResponse("testenrich15", expectedOutput,
+                "Enrich mediator test with JSON properties failed");
+    }
+
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
         super.cleanup();
