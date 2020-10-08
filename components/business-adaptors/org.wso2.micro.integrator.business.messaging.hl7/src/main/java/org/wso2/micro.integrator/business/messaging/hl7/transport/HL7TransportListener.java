@@ -28,6 +28,8 @@ import org.wso2.micro.integrator.business.messaging.hl7.common.HL7Constants;
 import org.wso2.micro.integrator.business.messaging.hl7.transport.utils.HL7MessageProcessor;
 import org.wso2.micro.integrator.business.messaging.hl7.transport.utils.WorkerThreadFactory;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -83,8 +85,29 @@ public class HL7TransportListener extends AbstractTransportListenerEx<HL7Endpoin
     protected void stopEndpoint(HL7Endpoint endpoint) {
         SimpleServer server = serverTable.remove(endpoint);
         if (server != null) {
-            server.stop();
+            server.stopAndWait();
         }
-        log.info("Stopped HL7 endpoint on port: " + endpoint.getPort());
+        int port = endpoint.getPort();
+        long maxWaitTime = 5000;
+        long startTime = System.currentTimeMillis();
+        while (!isPortAvailable(port) && (System.currentTimeMillis() - startTime) < maxWaitTime) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(200);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        log.info("Stopped HL7 endpoint on port: " + port);
     }
+
+    private static boolean isPortAvailable(int port) {
+        try {
+            ServerSocket ss = new ServerSocket(port);
+            ss.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
 }
