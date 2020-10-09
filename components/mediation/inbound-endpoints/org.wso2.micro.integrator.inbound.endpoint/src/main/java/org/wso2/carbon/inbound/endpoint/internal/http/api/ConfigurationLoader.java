@@ -68,6 +68,8 @@ public class ConfigurationLoader {
     private static final QName USER_Q = new QName("user");
     private static final QName USERNAME_Q = new QName("username");
     private static final QName PASSWORD_Q = new QName("password");
+    private static final QName STORE_PASSWORD_Q = new QName("Password");
+    private static final QName KEY_PASSWORD_Q = new QName("KeyPassword");
 
     private static final String APIS = "apis";
     private static final String SSL_CONFIG = "sslConfig";
@@ -437,20 +439,34 @@ public class ConfigurationLoader {
 
             OMElement parameter = (OMElement) iterator.next();
             String attributeName = parameter.getAttributeValue(NAME_ATT);
+            OMElement element = parameter.getFirstElement();
 
-            if (parameter.getFirstElement() != null) {
-
-                String value = parameter.getFirstElement().toString();
+            if (element != null) {
 
                 switch (attributeName) {
                 case KEYSTORE_ATT:
-                    keyStore = value;
+                    OMElement keystorePasswordEl = element.getFirstChildWithName(STORE_PASSWORD_Q);
+                    OMElement keyPasswordEl = element.getFirstChildWithName(KEY_PASSWORD_Q);
+                    if (keystorePasswordEl == null) {
+                        handleException("Cannot proceed because Password element is missing in KeyStore");
+                    }
+                    if (keyPasswordEl == null) {
+                        handleException("Cannot proceed because KeyPassword element is missing in KeyStore");
+                    }
+                    keystorePasswordEl.setText(resolveSecret(keystorePasswordEl.getText()));
+                    keyPasswordEl.setText(resolveSecret(keyPasswordEl.getText()));
+                    keyStore = element.toString();
                     break;
                 case TRUSTSTORE_ATT:
-                    trustStore = value;
+                    OMElement truststorePasswordEl = element.getFirstChildWithName(STORE_PASSWORD_Q);
+                    if (truststorePasswordEl == null) {
+                        handleException("Cannot proceed because Password element is missing in TrustStore");
+                    }
+                    truststorePasswordEl.setText(resolveSecret(truststorePasswordEl.getText()));
+                    trustStore = element.toString();
                     break;
                 case CERTIFICATE_REVOCATION_VERIFIER_ATT:
-                    revocationVerifier = value;
+                    revocationVerifier = element.toString();
                     break;
                 default:
                     handleException("Invalid parameter found for internal API ssl configuration");
