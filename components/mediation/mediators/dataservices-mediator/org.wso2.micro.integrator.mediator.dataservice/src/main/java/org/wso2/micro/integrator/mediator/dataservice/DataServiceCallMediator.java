@@ -222,7 +222,8 @@ public class DataServiceCallMediator extends AbstractMediator {
                 if (targetDynamicName != null) {
                     targetPropertyName = targetDynamicName.evaluateValue(messageContext);
                     if (StringUtils.isEmpty(targetPropertyName)) {
-                        log.warn("Evaluated value for " + targetPropertyName + " is empty");
+                        handleException("Target type is set to property. Evaluated value for target " +
+                                "property name is null or empty", messageContext);
                     }
                 }
                 messageContext.setProperty(targetPropertyName, omElement);
