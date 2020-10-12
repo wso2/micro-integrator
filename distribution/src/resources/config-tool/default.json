@@ -26,7 +26,7 @@
   "synapse_properties.'synapse.global_timeout_interval'": "120000",
   "synapse_properties.'synapse.commons.json.preserve.namespace'": false,
   "synapse_properties.'synapse.temp_data.chunk.size'": "3072",
-  "synapse_properties.'synapse.xpath.func.extensions'": "org.wso2.micro.integrator.mediation.security.vault.xpath.SecureVaultLookupXPathFunctionProvider",
+  "synapse_properties.'synapse.xpath.func.extensions'": "org.wso2.micro.integrator.mediation.security.vault.xpath.SecureVaultLookupXPathFunctionProvider,org.wso2.micro.integrator.mediation.security.vault.external.hashicorp.HashiCorpVaultLookupXPathFunctionProvider",
   "synapse_properties.'synapse.debugger.port.command'": "9005",
   "synapse_properties.'synapse.debugger.port.event'": "9006",
   "synapse_properties.'synapse.script.mediator.pool.size'": "15",

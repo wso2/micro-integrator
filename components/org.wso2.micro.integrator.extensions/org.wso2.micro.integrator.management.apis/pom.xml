@@ -52,6 +52,11 @@
             <artifactId>commons-configuration</artifactId>
             <version>${commons.configuration.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.mediation.security</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

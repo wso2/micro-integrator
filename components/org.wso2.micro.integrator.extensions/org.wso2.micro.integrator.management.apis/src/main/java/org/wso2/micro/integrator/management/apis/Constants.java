@@ -37,6 +37,8 @@ public class Constants {
     public static final String PREFIX_TEMPLATES = "/templates";
     public static final String PREFIX_MESSAGE_STORE = "/message-stores";
     public static final String PREFIX_MESSAGE_PROCESSORS = "/message-processors";
+    public static final String PREFIX_EXTERNAL_VAULTS = "/external-vaults";
+    public static final String PATH_PARAM_EXTERNAL_VAULT_NAME = "/" + "{vault}";
     public static final String PREFIX_LOCAL_ENTRIES = "/local-entries";
     public static final String PREFIX_CONNECTORS = "/connectors";
     public static final String PREFIX_LOGIN = "/login";
