@@ -63,7 +63,11 @@ public class CarbonLogReader {
 
     private void init(boolean startReadingFromEndOfFile, String carbonHome) {
         carbonLogTailer = new CarbonLogTailer();
-        carbonLogFile = new File(String.join(File.separator, carbonHome, "repository", "logs", "wso2carbon.log"));
+        String logFile = System.getProperty("logFile");
+        if (logFile == null || logFile.isEmpty()) {
+            logFile = String.join(File.separator, carbonHome, "repository", "logs", "wso2carbon.log");
+        }
+        carbonLogFile = new File(logFile);
         this.startReadingFromEndOfFile = startReadingFromEndOfFile;
     }
 
