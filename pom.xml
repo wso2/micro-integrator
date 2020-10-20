@@ -148,6 +148,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.mediation.security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
                 <artifactId>utsecurity</artifactId>
                 <type>mar</type>
                 <version>${project.version}</version>
@@ -1242,6 +1247,11 @@
                 <artifactId>simpleclient_servlet</artifactId>
                 <version>${prometheus.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.bettercloud</groupId>
+                <artifactId>vault-java-driver</artifactId>
+                <version>${hashicorp.vault.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1341,6 +1351,7 @@
         <carbon.crypto.api.imp.pkg.version.range>[1.1.0,1.2.0)</carbon.crypto.api.imp.pkg.version.range>
         <carbon.data.version>4.5.2</carbon.data.version>
         <securevault.version>1.1.2</securevault.version>
+        <hashicorp.vault.version>5.1.0</hashicorp.vault.version>
         <carbon.identity.oauth.version>6.1.0</carbon.identity.oauth.version>
         <carbon.identity.oauth.imp.pkg.version>[6.1.0, 7.0.0)</carbon.identity.oauth.imp.pkg.version>
 

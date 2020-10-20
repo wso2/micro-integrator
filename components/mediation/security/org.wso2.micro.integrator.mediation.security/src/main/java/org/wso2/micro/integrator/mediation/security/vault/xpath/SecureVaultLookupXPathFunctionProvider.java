@@ -17,8 +17,6 @@
  */
 package org.wso2.micro.integrator.mediation.security.vault.xpath;
 
-import javax.xml.namespace.QName;
-
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.util.xpath.ext.SynapseXpathFunctionContextProvider;
 import org.jaxen.Function;

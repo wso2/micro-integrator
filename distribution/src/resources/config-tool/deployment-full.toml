@@ -931,6 +931,19 @@ keystore_password = "password_3"
 key_password = "password_4"
 truststrore_password = "password_5"
 
+###################################     External Vaults     ######################################
+[[external_vault]]
+name = "hashicorp"
+address = "http://127.0.0.1:8200"
+rootToken = "ROOT_TOKEN"
+cachableDuration = 15000
+engineVersion = 2
+namespace = "NAMESPACE"
+trustStoreFile = "${carbon.home}/repository/resources/security/client-truststore.jks"
+keyStoreFile = "${carbon.home}/repository/resources/security/wso2carbon.jks"
+keyStorePassword = "KEY_STORE_PASSWORD"
+
+
 ##################################### Monitoring configurations #########################################
 [monitoring]
 # carbon.xml

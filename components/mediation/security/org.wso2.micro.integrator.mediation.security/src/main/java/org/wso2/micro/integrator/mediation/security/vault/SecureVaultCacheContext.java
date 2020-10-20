@@ -19,21 +19,21 @@ package org.wso2.micro.integrator.mediation.security.vault;
 
 import java.util.Date;
 
-class SecureVaultCacheContext {
+public class SecureVaultCacheContext {
 	private Date dateTime;
 	private String decryptedValue;
 
-	SecureVaultCacheContext(Date dateTime, String decryptedValue) {
+	public SecureVaultCacheContext(Date dateTime, String decryptedValue) {
 		super();
 		this.dateTime = dateTime;
 		this.decryptedValue = decryptedValue;
 	}
 
-	Date getDateTime() {
+	public Date getDateTime() {
 		return dateTime;
 	}
 
-	String getDecryptedValue() {
+	public String getDecryptedValue() {
 		return decryptedValue;
 	}
 
