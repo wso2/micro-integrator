@@ -28,6 +28,7 @@ import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -51,6 +52,43 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
 
     private String input;
     private JsonParser parser;
+    private String inputJSON = "{\n" +
+            "    \"store\": {\n" +
+            "        \"book\": [\n" +
+            "            {\n" +
+            "                \"category\": \"reference\",\n" +
+            "                \"author\": \"Nigel Rees\",\n" +
+            "                \"title\": \"Sayings of the Century\",\n" +
+            "                \"price\": 8.95\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"category\": \"fiction\",\n" +
+            "                \"author\": \"Evelyn Waugh\",\n" +
+            "                \"title\": \"Sword of Honour\",\n" +
+            "                \"price\": 12.99\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"category\": \"fiction\",\n" +
+            "                \"author\": \"Herman Melville\",\n" +
+            "                \"title\": \"Moby Dick\",\n" +
+            "                \"isbn\": \"0-553-21311-3\",\n" +
+            "                \"price\": 8.99\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"category\": \"fiction\",\n" +
+            "                \"author\": \"J. R. R. Tolkien\",\n" +
+            "                \"title\": \"The Lord of the Rings\",\n" +
+            "                \"isbn\": \"0-395-19395-8\",\n" +
+            "                \"price\": 22.99\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"bicycle\": {\n" +
+            "            \"color\": \"red\",\n" +
+            "            \"price\": 19.95\n" +
+            "        }\n" +
+            "    },\n" +
+            "    \"expensive\": 10\n" +
+            "}";
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
@@ -229,6 +267,69 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
                 "Enrich mediator test with JSON properties failed");
     }
 
+    @Test(groups = "wso2.esb", description = "Testing enrich mediator remove action on body")
+    public void testEnrichRemoveFromBody() throws Exception {
+        String expectedOutput = "{\n" +
+                "    \"store\": {\n" +
+                "        \"book\": [\n" +
+                "            {\n" +
+                "                \"category\": \"fiction\",\n" +
+                "                \"title\": \"Sword of Honour\",\n" +
+                "                \"price\": 12.99\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"category\": \"fiction\",\n" +
+                "                \"title\": \"Moby Dick\",\n" +
+                "                \"isbn\": \"0-553-21311-3\",\n" +
+                "                \"price\": 8.99\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"category\": \"fiction\",\n" +
+                "                \"title\": \"The Lord of the Rings\",\n" +
+                "                \"isbn\": \"0-395-19395-8\",\n" +
+                "                \"price\": 22.99\n" +
+                "            }\n" +
+                "        ],\n" +
+                "        \"bicycle\": {\n" +
+                "            \"color\": \"red\",\n" +
+                "            \"price\": 19.95\n" +
+                "        }\n" +
+                "    },\n" +
+                "    \"expensive\": 10\n" +
+                "}";
+
+        executeSequenceAndAssertResponse("testenrich16", expectedOutput,
+                "Removing content from message body failed", inputJSON);
+    }
+
+    @Test(groups = "wso2.esb", description = "Testing enrich mediator remove action on property")
+    public void testEnrichRemoveFromProperty() throws Exception {
+        String expectedOutput = "{\n" +
+                "    \"store\": {\n" +
+                "        \"book\": [\n" +
+                "            {\n" +
+                "                \"category\": \"reference\",\n" +
+                "                \"title\": \"Sayings of the Century\",\n" +
+                "                \"price\": 8.95\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"category\": \"fiction\",\n" +
+                "                \"title\": \"Moby Dick\",\n" +
+                "                \"isbn\": \"0-553-21311-3\",\n" +
+                "                \"price\": 8.99\n" +
+                "            }\n" +
+                "        ],\n" +
+                "        \"bicycle\": {\n" +
+                "            \"color\": \"red\",\n" +
+                "            \"price\": 19.95\n" +
+                "        }\n" +
+                "    },\n" +
+                "    \"expensive\": 10\n" +
+                "}";
+        executeSequenceAndAssertResponse("testenrich17", expectedOutput,
+                "Removing content from property failed", inputJSON);
+    }
+
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
         super.cleanup();
@@ -236,13 +337,23 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
 
     private void executeSequenceAndAssertResponse(String apiName, String expectedOutput, String errorMessage)
             throws Exception {
+        executeSequenceAndAssertResponse(apiName, expectedOutput, errorMessage, null);
+    }
+
+    private void executeSequenceAndAssertResponse(String apiName, String expectedOutput, String errorMessage,
+                                                  String inputPayload) throws Exception {
+
         URL endpoint = new URL(getApiInvocationURL(apiName));
 
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "application/json");
 
-        HttpResponse httpResponse = HttpRequestUtil.doPost(endpoint, input, header);
-
+        HttpResponse httpResponse;
+        if (StringUtils.isEmpty(inputPayload)) {
+            httpResponse = HttpRequestUtil.doPost(endpoint, input, header);
+        } else {
+            httpResponse = HttpRequestUtil.doPost(endpoint, inputPayload, header);
+        }
         assertEqualJsonObjects(httpResponse.getData(), expectedOutput, errorMessage);
     }
 
