@@ -23,7 +23,7 @@
     <description/>
     <target>
         <inSequence>
-            <dataServicesCall serviceName="DSSCallMediatorTest">
+            <dataServiceCall serviceName="DSSCallMediatorTest">
                 <source type="inline"/>
                 <operations type="request_box">
                     <operation name="addEmployee">
@@ -38,7 +38,7 @@
                     </operation>
                 </operations>
                 <target type="body"/>
-            </dataServicesCall>
+            </dataServiceCall>
             <respond/>
         </inSequence>
     </target>

@@ -69,7 +69,7 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
     private static final Log log = LogFactory.getLog(DataServiceCallMediatorFactory.class);
 
     private static final QName DSSCALL_Q =
-            new QName(SynapseConstants.SYNAPSE_NAMESPACE, DataServiceCallMediatorConstants.DATA_SERVICES_CALL);
+            new QName(SynapseConstants.SYNAPSE_NAMESPACE, DataServiceCallMediatorConstants.DATA_SERVICE_CALL);
     private static final QName SOURCE_Q = new QName(
             XMLConfigConstants.SYNAPSE_NAMESPACE, DataServiceCallMediatorConstants.SOURCE);
     private static final QName TARGET_Q = new QName(

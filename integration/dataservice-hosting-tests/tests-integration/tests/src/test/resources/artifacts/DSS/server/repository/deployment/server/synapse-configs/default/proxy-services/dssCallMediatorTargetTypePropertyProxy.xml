@@ -23,7 +23,7 @@
     <description/>
     <target>
         <inSequence>
-            <dataServicesCall serviceName="DSSCallMediatorTest">
+            <dataServiceCall serviceName="DSSCallMediatorTest">
                 <source type="inline"/>
                 <operations type="single_req">
                     <operation name="addEmployee">
@@ -35,7 +35,7 @@
                     </operation>
                 </operations>
                 <target type="property" name="responseProperty"/>
-            </dataServicesCall>
+            </dataServiceCall>
             <log level="custom">
                 <property name="responsePayload" expression="$ctx:responseProperty"/>
             </log>
