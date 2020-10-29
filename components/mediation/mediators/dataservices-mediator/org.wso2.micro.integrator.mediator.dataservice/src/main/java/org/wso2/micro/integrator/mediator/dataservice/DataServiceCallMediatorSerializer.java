@@ -44,7 +44,7 @@ public class DataServiceCallMediatorSerializer extends AbstractMediatorSerialize
         }
 
         DataServiceCallMediator mediator = (DataServiceCallMediator) m;
-        OMElement dsCallEle = fac.createOMElement(DataServiceCallMediatorConstants.DATA_SERVICES_CALL, synNS);
+        OMElement dsCallEle = fac.createOMElement(DataServiceCallMediatorConstants.DATA_SERVICE_CALL, synNS);
         OMElement sourceEle = fac.createOMElement(DataServiceCallMediatorConstants.SOURCE, synNS);
         OMElement targetEle = fac.createOMElement(DataServiceCallMediatorConstants.TARGET, synNS);
         OMAttribute serviceName = fac.createOMAttribute(DataServiceCallMediatorConstants.SERVICE_NAME, nullNS,

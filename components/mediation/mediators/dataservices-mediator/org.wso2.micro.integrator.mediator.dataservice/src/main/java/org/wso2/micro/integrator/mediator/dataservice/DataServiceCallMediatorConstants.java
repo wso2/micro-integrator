@@ -28,7 +28,7 @@ public class DataServiceCallMediatorConstants {
     public static final String TARGET_BODY_TYPE = "body";
     public static final String JSON_TYPE = "json";
     public static final String XML_TYPE = "xml";
-    public static final String DATA_SERVICES_CALL = "dataServicesCall";
+    public static final String DATA_SERVICE_CALL = "dataServiceCall";
     public static final String SERVICE_NAME = "serviceName";
     public static final String OPERATIONS = "operations";
     public static final String OPERATION = "operation";

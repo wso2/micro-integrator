@@ -23,10 +23,10 @@
     <description/>
     <target>
         <inSequence>
-            <dataServicesCall serviceName="DSSCallMediatorTest">
+            <dataServiceCall serviceName="DSSCallMediatorTest">
                 <source type="body"/>
                 <target type="body"/>
-            </dataServicesCall>
+            </dataServiceCall>
             <respond/>
         </inSequence>
     </target>
