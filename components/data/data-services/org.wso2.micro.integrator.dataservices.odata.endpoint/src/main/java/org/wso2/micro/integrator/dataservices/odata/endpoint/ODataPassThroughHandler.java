@@ -103,7 +103,7 @@ public class ODataPassThroughHandler extends AbstractSynapseHandler {
             OMElement omXML = AXIOMUtil.stringToOM(content);
             SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
             SOAPEnvelope envelope = fac.getDefaultEnvelope();
-            envelope.getBody().addChild(omXML.getFirstElement());
+            envelope.getBody().addChild(omXML);
             axis2MessageContext.setEnvelope(envelope);
         } else if (response.getContentType() != null && response.getContentType().contains(TEXT_CONTENT_TYPE)) {
             axis2MessageContext.setProperty(Constants.Configuration.MESSAGE_TYPE, response.getContentType());
