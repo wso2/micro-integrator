@@ -121,8 +121,7 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
                 }
             } else if (DataServiceCallMediatorConstants.OPERATIONS.equals(operationEle.getLocalName())) {
                 String operationType = operationEle.getAttributeValue(new QName(DataServiceCallMediatorConstants.TYPE));
-                OperationsType operationsType = OperationsType.valueOf(operationType.toUpperCase());
-                operationsList.add(mediator.new Operations(operationsType, extractOperations(operationEle, mediator)));
+                operationsList.add(mediator.new Operations(operationType, extractOperations(operationEle, mediator)));
             } else {
                 handleException("The 'operation' element is missing in the configuration.");
             }
@@ -141,12 +140,11 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
                 if (nameAtr != null) {
                     String paramName = nameAtr.getAttributeValue();
                     String paramValue = paramElement.getAttributeValue(new QName(DataServiceCallMediatorConstants.VALUE));
-                    String paramType = paramElement.getAttributeValue(new QName(DataServiceCallMediatorConstants.TYPE));
                     String evaluator = paramElement.getAttributeValue(new QName(DataServiceCallMediatorConstants.
                             EVALUATOR));
                     String paramExpression = paramElement.getAttributeValue(new QName(DataServiceCallMediatorConstants.
                             EXPRESSION));
-                    Param param = mediator.new Param(paramName, paramType);
+                    Param param = mediator.new Param(paramName);
                     param.setParamValue(paramValue);
                     param.setEvaluator(evaluator);
                     try {
@@ -278,12 +276,11 @@ public class DataServiceCallMediatorFactory extends AbstractMediatorFactory {
         if (operationType == null) {
             handleException("The 'type' attribute in 'operations' element  is missing in the configuration.");
         }
-        OperationsType operationsType = OperationsType.valueOf(operationType.toUpperCase());
         List operationList = extractOperations(operationsTypeElement, mediator);
-        if (OperationsType.SINGLE_REQ.equals(operationsType) && operationList.size() > 1) {
+        if (OperationsType.SINGLE.equals(operationType) && operationList.size() > 1) {
             handleException("The 'single operation' should contain one operation in the configuration.");
         }
-        Operations operations = mediator.new Operations(operationsType, operationList);
+        Operations operations = mediator.new Operations(operationType, operationList);
         mediator.setOperations(operations);
 
         return mediator;

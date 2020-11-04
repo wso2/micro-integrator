@@ -62,7 +62,6 @@ public class DataServiceCallMediator extends AbstractMediator {
 
     private String dsName;
     private Operations operations;
-    public enum OperationsType {SINGLE_REQ, REQUEST_BOX, BATCH_REQ}
     private String sourceType;
     private String targetType;
     private String targetPropertyName;
@@ -185,17 +184,17 @@ public class DataServiceCallMediator extends AbstractMediator {
                                        MessageContext messageContext) {
         Operations rootOperations = getOperations();
         String rootOpName;
-        switch (rootOperations.getType()) {
-            case REQUEST_BOX: {
+        switch (rootOperations.getType().toString()) {
+            case OperationsType.REQUEST_BOX: {
                 rootOpName = DataServiceCallMediatorConstants.REQUEST_BOX;
                 break;
             }
-            case BATCH_REQ: {
+            case OperationsType.BATCH: {
                 Operation firstOp = (Operation) rootOperations.getOperations().get(0);
                 rootOpName = firstOp.getOperationName() + DataServiceCallMediatorConstants.BATCH_REQ_SUFFIX;
                 break;
             }
-            case SINGLE_REQ:
+            case OperationsType.SINGLE:
             default: {
                 Operation singleOp = (Operation) rootOperations.getOperations().get(0);
                 rootOpName = singleOp.getOperationName();
@@ -276,7 +275,7 @@ public class DataServiceCallMediator extends AbstractMediator {
             } else if (operationObj instanceof Operations) {
                 Operations rootOperations = (Operations) operationObj;
                 String rootOpName;
-                if (rootOperations.getType() == OperationsType.SINGLE_REQ) {
+                if (rootOperations.getType().toString() == OperationsType.SINGLE) {
                     Operation singleOp = (Operation) rootOperations.getOperations().get(0);
                     rootOpName = singleOp.getOperationName();
                 } else {
@@ -296,7 +295,7 @@ public class DataServiceCallMediator extends AbstractMediator {
             paramValue = param.getParamValue();
         } else if (param.getParamExpression() != null) {
             paramValue = param.getParamExpression().stringValueOf(msgCtx);
-            if (DataServiceCallMediatorConstants.XML_TYPE.equals(param.getParamType()) &&
+            if (DataServiceCallMediatorConstants.XML_TYPE.equals(param.getEvaluator()) &&
                     !isJson(paramValue.trim(), param.getParamExpression())) {
                 paramValue = escapeXMLEnvelope(msgCtx, paramValue);
             }
@@ -434,15 +433,15 @@ public class DataServiceCallMediator extends AbstractMediator {
 
     public class Operations {
 
-        private OperationsType type;
+        private String type;
         private List operations;
 
-        Operations(OperationsType type, List operations) {
+        Operations(String type, List operations) {
             this.type = type;
             this.operations = operations;
         }
 
-        public OperationsType getType() {
+        public String getType() {
             return type;
         }
 
@@ -474,13 +473,11 @@ public class DataServiceCallMediator extends AbstractMediator {
 
         private String paramName;
         private String paramValue;
-        private String paramType;
         private String evaluator;
         private SynapsePath paramExpression;
 
-        Param(String name, String type) {
+        Param(String name) {
             this.paramName = name;
-            this.paramType = type;
         }
 
         public String getParamName() {
@@ -489,10 +486,6 @@ public class DataServiceCallMediator extends AbstractMediator {
 
         public String getParamValue() {
             return paramValue;
-        }
-
-        public String getParamType() {
-            return paramType;
         }
 
         public void setParamValue(String paramValue) {
@@ -514,5 +507,13 @@ public class DataServiceCallMediator extends AbstractMediator {
         public void setParamExpression(SynapsePath paramExpression) {
             this.paramExpression = paramExpression;
         }
+    }
+
+    public class OperationsType {
+
+        public static final String SINGLE = "single";
+        public static final String BATCH = "batch";
+        public static final String REQUEST_BOX = "request-box";
+
     }
 }
