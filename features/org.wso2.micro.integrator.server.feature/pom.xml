@@ -202,6 +202,8 @@
                                 <bundleDef>org.ops4j.pax.logging:pax-logging-api:${pax.logging.api.version}</bundleDef>
                                 <bundleDef>org.ops4j.pax.logging:pax-logging-log4j2:${pax.logging.log4j2.version}
                                 </bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.log4j2.plugins:${project.version}
+                                </bundleDef>
 <!--                                <bundleDef>-->
 <!--                                    org.wso2.carbon:org.wso2.carbon.pax-logging-log4j2-plugins:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->

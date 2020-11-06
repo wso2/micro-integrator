@@ -73,6 +73,11 @@
                 <version>${version.equinox.p2.metadata}</version>
             </dependency>
             <dependency>
+                <groupId>org.eclipse.platform</groupId>
+                <artifactId>org.eclipse.osgi</artifactId>
+                <version>${version.equinox.platform}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2</artifactId>
                 <version>${axis2.wso2.version}</version>
@@ -449,6 +454,11 @@
                 <groupId>org.ops4j.pax.logging</groupId>
                 <artifactId>pax-logging-api</artifactId>
                 <version>${pax.logging.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.logging</groupId>
+                <artifactId>pax-logging-log4j2</artifactId>
+                <version>${pax.logging.log4j2.version}</version>
             </dependency>
 
             <!--TODO Temporary dependencies. Must clean later-->
@@ -1662,6 +1672,7 @@
         <snakeyaml.version>1.25</snakeyaml.version>
         <!-- Prometheus Library versions-->
         <prometheus.version>0.8.1</prometheus.version>
+        <version.equinox.platform>3.14.0</version.equinox.platform>
     </properties>
 
     <repositories>
