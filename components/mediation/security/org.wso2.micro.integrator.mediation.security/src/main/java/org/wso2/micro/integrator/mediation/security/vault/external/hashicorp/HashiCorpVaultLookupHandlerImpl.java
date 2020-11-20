@@ -298,6 +298,11 @@ public class HashiCorpVaultLookupHandlerImpl implements ExternalVaultLookupHandl
             isAppRolePullAuthentication = false;
         }
 
+        // provide the vaultNamespace parameter for the vault config if it is not null
+        if (vaultNamespace != null) {
+            config = config.nameSpace(vaultNamespace);
+        }
+
         return config.build();
     }
 
