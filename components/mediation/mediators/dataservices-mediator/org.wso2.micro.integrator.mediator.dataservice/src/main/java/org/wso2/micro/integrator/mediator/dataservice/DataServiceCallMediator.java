@@ -185,16 +185,16 @@ public class DataServiceCallMediator extends AbstractMediator {
         Operations rootOperations = getOperations();
         String rootOpName;
         switch (rootOperations.getType().toString()) {
-            case OperationsType.REQUEST_BOX: {
+            case DataServiceCallMediatorConstants.OperationsType.REQUEST_BOX: {
                 rootOpName = DataServiceCallMediatorConstants.REQUEST_BOX;
                 break;
             }
-            case OperationsType.BATCH: {
+            case DataServiceCallMediatorConstants.OperationsType.BATCH: {
                 Operation firstOp = (Operation) rootOperations.getOperations().get(0);
                 rootOpName = firstOp.getOperationName() + DataServiceCallMediatorConstants.BATCH_REQ_SUFFIX;
                 break;
             }
-            case OperationsType.SINGLE:
+            case DataServiceCallMediatorConstants.OperationsType.SINGLE:
             default: {
                 Operation singleOp = (Operation) rootOperations.getOperations().get(0);
                 rootOpName = singleOp.getOperationName();
@@ -275,7 +275,7 @@ public class DataServiceCallMediator extends AbstractMediator {
             } else if (operationObj instanceof Operations) {
                 Operations rootOperations = (Operations) operationObj;
                 String rootOpName;
-                if (rootOperations.getType().toString() == OperationsType.SINGLE) {
+                if (rootOperations.getType().toString() == DataServiceCallMediatorConstants.OperationsType.SINGLE) {
                     Operation singleOp = (Operation) rootOperations.getOperations().get(0);
                     rootOpName = singleOp.getOperationName();
                 } else {
@@ -507,13 +507,5 @@ public class DataServiceCallMediator extends AbstractMediator {
         public void setParamExpression(SynapsePath paramExpression) {
             this.paramExpression = paramExpression;
         }
-    }
-
-    public class OperationsType {
-
-        public static final String SINGLE = "single";
-        public static final String BATCH = "batch";
-        public static final String REQUEST_BOX = "request-box";
-
     }
 }

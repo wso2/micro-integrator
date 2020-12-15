@@ -36,7 +36,7 @@ import org.apache.synapse.mediators.Value;
 import org.apache.synapse.util.xpath.SynapseJsonPath;
 import org.apache.synapse.util.xpath.SynapseXPath;
 import org.jaxen.JaxenException;
-import org.wso2.micro.integrator.mediator.dataservice.DataServiceCallMediator.OperationsType;
+import org.wso2.micro.integrator.mediator.dataservice.DataServiceCallMediatorConstants.OperationsType;
 import org.wso2.micro.integrator.mediator.dataservice.DataServiceCallMediator.Operations;
 import org.wso2.micro.integrator.mediator.dataservice.DataServiceCallMediator.Param;
 
