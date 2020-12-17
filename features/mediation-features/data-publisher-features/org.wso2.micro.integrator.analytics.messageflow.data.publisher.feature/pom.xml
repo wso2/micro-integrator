@@ -22,7 +22,7 @@
     <parent>
         <artifactId>data-publisher-features</artifactId>
         <groupId>org.wso2.ei</groupId>
-        <version>1.3.0-SNAPSHOT</version>
+        <version>4.0.0-m2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
