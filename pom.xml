@@ -1423,7 +1423,7 @@
         <orbit.version.commons.httpclient>3.1.0.wso2v6</orbit.version.commons.httpclient>
         <orbit.version.commons.io>2.4.0.wso2v1</orbit.version.commons.io>
         <orbit.version.commons.collection>3.2.2.wso2v1</orbit.version.commons.collection>
-        <orbit.version.httpcore>4.3.3.wso2v1</orbit.version.httpcore>
+        <orbit.version.httpcore>4.4.14.wso2v1</orbit.version.httpcore>
         <version.compass>2.0.1.wso2v2</version.compass>
         <orbit.version.commons.lang>2.6.0.wso2v1</orbit.version.commons.lang>
         <version.geronimo.saaj.spec>1.0.1.wso2v2</version.geronimo.saaj.spec>
