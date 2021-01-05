@@ -42,6 +42,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wso2.micro.application.deployer.AppDeployerUtils.createRegistryPath;
+
 /**
  * Carbon application deployer to deploy registry artifacts to file based registry
  */
@@ -52,11 +54,7 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
     public static final Log log = LogFactory.getLog(FileRegistryResourceDeployer.class);
 
     private static final String REGISTRY_RESOURCE_TYPE = "registry/resource";
-    private static final String GOV_REGISTRY_PATH = "/_system/governance";
-    private static final String GOV_REGISTRY_PREFIX = "gov:";
-    private static final String CONFIG_REGISTRY_PATH = "/_system/config";
-    private static final String CONFIG_REGISTRY_PREFIX = "conf:";
-
+    
     public FileRegistryResourceDeployer(Registry lightweightRegistry) {
         this.lightweightRegistry = lightweightRegistry;
     }
@@ -236,17 +234,7 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
      */
     private String createRegistryKey(RegistryConfig.Resourse resourse) {
 
-        String key = resourse.getPath();
-        if (key.startsWith(GOV_REGISTRY_PATH)) {
-            key = GOV_REGISTRY_PREFIX + key.substring(19);
-        } else if (key.startsWith(CONFIG_REGISTRY_PATH)) {
-            key = CONFIG_REGISTRY_PREFIX + key.substring(15);
-        } else {
-            //Consider default as governance registry
-            key = GOV_REGISTRY_PREFIX + key;
-        }
-        return key;
-
+        return createRegistryPath(resourse.getPath());
     }
 
     /**

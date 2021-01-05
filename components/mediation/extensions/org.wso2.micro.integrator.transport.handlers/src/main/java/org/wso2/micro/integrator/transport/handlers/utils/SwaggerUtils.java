@@ -61,6 +61,7 @@ import org.wso2.carbon.mediation.commons.rest.api.swagger.GenericApiObjectDefini
 import org.wso2.carbon.mediation.commons.rest.api.swagger.SwaggerConstants;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.MIServerConfig;
+import static org.wso2.micro.application.deployer.AppDeployerUtils.createRegistryPath;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -306,7 +307,7 @@ public final class SwaggerUtils {
         SynapseConfiguration synapseConfig =
                 SynapseConfigUtils.getSynapseConfiguration(Constants.SUPER_TENANT_DOMAIN_NAME);
         Registry registry = synapseConfig.getRegistry();
-        OMNode regContent = registry.lookup(resourcePath);
+        OMNode regContent = registry.lookup(createRegistryPath(resourcePath));
 
         if (regContent instanceof OMText) {
             defString = ((OMText) regContent).getText();

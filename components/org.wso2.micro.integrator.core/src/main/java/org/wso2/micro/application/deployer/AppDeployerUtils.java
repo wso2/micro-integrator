@@ -66,6 +66,11 @@ public final class AppDeployerUtils {
 	private static String APP_UNZIP_DIR;
 	private static final String INTERNAL_ARTIFACTS_DIR = "internal-artifacts";
 	private static volatile boolean isAppDirCreated = false;
+
+	private static final String GOV_REGISTRY_PATH = "/_system/governance";
+	private static final String GOV_REGISTRY_PREFIX = "gov:";
+	private static final String CONFIG_REGISTRY_PATH = "/_system/config";
+	private static final String CONFIG_REGISTRY_PREFIX = "conf:";
 	
 	private AppDeployerUtils() {
 		// hide utility class
@@ -713,6 +718,26 @@ public final class AppDeployerUtils {
         // access the deployment engine through axis config
         DeploymentEngine deploymentEngine = (DeploymentEngine) axisConfig.getConfigurator();
         return deploymentEngine.getDeployer(directory, extension);
+    }
+
+    /**
+     * Function to create registry key from registry path
+     *
+     * @param path key of the resource
+     * @return
+     */
+    public static String createRegistryPath(String path) {
+        String updatedPath;
+        if (path.startsWith(GOV_REGISTRY_PATH)) {
+            updatedPath = GOV_REGISTRY_PREFIX + path.substring(19);
+        } else if (path.startsWith(CONFIG_REGISTRY_PATH)) {
+            updatedPath = CONFIG_REGISTRY_PREFIX + path.substring(15);
+        } else {
+            //Consider default as governance registry
+            updatedPath = GOV_REGISTRY_PREFIX + path;
+        }
+        return updatedPath;
+
     }
 
 }
