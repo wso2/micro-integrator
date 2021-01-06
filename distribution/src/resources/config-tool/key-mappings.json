@@ -108,6 +108,8 @@
   "opentracing.jaeger.reporter.log_spans": "synapse_properties.'jaeger.reporter.log.spans'",
   "opentracing.jaeger.reporter.max_queue_size": "synapse_properties.'jaeger.reporter.max.queue.size'",
   "opentracing.jaeger.reporter.flush_interval": "synapse_properties.'jaeger.reporter.flush.interval'",
+  "opentracing.zipkin.enable": "synapse_properties.'opentracing.zipkin.enable'",
+  "opentracing.zipkin.backend.url": "synapse_properties.'opentracing.zipkin.backend.url'",
 
   "transport.http.socket_timeout": "passthru_properties.'http.socket.timeout'",
   "transport.http.connection_timeout": "passthru_properties.'http.connection.timeout'",
