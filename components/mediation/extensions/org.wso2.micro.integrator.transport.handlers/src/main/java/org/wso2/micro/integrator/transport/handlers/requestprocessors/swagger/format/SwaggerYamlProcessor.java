@@ -19,7 +19,7 @@ package org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.f
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.synapse.rest.API;
+import org.apache.synapse.api.API;
 import org.wso2.carbon.mediation.commons.rest.api.swagger.SwaggerConstants;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
