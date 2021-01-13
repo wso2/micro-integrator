@@ -55,6 +55,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
+import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.core.SynapseEnvironment;
+import org.apache.synapse.util.resolver.SecureVaultResolver;
 import org.apache.ws.commons.schema.utils.NamespaceMap;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.DBSFields;
@@ -1210,15 +1213,26 @@ public class DBDeployer extends AbstractDeployer {
 
     @SuppressWarnings("unchecked")
 	private void secureVaultResolve(OMElement dbsElement) {
+		SynapseEnvironment synapseEnvironment = null;
     	String secretAliasAttr = dbsElement.getAttributeValue(
 			    new QName(DataSourceConstants.SECURE_VAULT_NS, DataSourceConstants.SECRET_ALIAS_ATTR_NAME));
     	if (secretAliasAttr != null) {
     		dbsElement.setText(DBUtils.loadFromSecureVault(secretAliasAttr));
     	}
+
     	Iterator<OMElement> childEls = (Iterator<OMElement>) dbsElement.getChildElements();
     	while (childEls.hasNext()) {
     		this.secureVaultResolve(childEls.next());
     	}
+		// check for existence of the vault-lookup function
+		String elementText = dbsElement.toString();
+		if (SecureVaultResolver.checkVaultLookupPattersExists(elementText)) {
+			Parameter synapseEnv = axisConfig.getParameter(SynapseConstants.SYNAPSE_ENV);
+			if (synapseEnv != null) {
+				synapseEnvironment = (SynapseEnvironment) synapseEnv.getValue();
+			}
+			dbsElement.setText(SecureVaultResolver.resolve(synapseEnvironment, elementText));
+		}
     }
 
 	private void removeODataHandler(String tenantDomain, String dataServiceName) throws DataServiceFault {
