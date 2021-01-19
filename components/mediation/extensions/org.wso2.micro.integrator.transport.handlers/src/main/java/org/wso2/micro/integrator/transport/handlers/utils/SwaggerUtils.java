@@ -20,25 +20,27 @@ package org.wso2.micro.integrator.transport.handlers.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.JsonParser;
-import io.swagger.models.Info;
-import io.swagger.models.ModelImpl;
-import io.swagger.models.Operation;
-import io.swagger.models.Path;
-import io.swagger.models.Response;
-import io.swagger.models.Scheme;
-import io.swagger.models.Swagger;
-import io.swagger.models.parameters.BodyParameter;
-import io.swagger.models.parameters.PathParameter;
-import io.swagger.models.parameters.QueryParameter;
-import io.swagger.models.properties.BooleanProperty;
-import io.swagger.models.properties.DoubleProperty;
-import io.swagger.models.properties.IntegerProperty;
-import io.swagger.models.properties.ObjectProperty;
-import io.swagger.models.properties.Property;
-import io.swagger.models.properties.StringProperty;
-import io.swagger.util.Json;
-import io.swagger.util.Yaml;
-import net.minidev.json.JSONObject;
+import io.swagger.v3.core.util.Json;
+import io.swagger.v3.core.util.Yaml;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.Paths;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.BooleanSchema;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.IntegerSchema;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.media.NumberSchema;
+import io.swagger.v3.oas.models.media.ObjectSchema;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
+import io.swagger.v3.oas.models.parameters.PathParameter;
+import io.swagger.v3.oas.models.parameters.QueryParameter;
+import io.swagger.v3.oas.models.parameters.RequestBody;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
+import io.swagger.v3.oas.models.servers.Server;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.AxisFault;
@@ -56,12 +58,13 @@ import org.apache.synapse.api.version.DefaultStrategy;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.registry.Registry;
-import org.wso2.carbon.integrator.core.json.utils.GSONUtils;
-import org.wso2.carbon.mediation.commons.rest.api.swagger.GenericApiObjectDefinition;
+import org.wso2.carbon.mediation.commons.rest.api.swagger.OpenAPIProcessor;
 import org.wso2.carbon.mediation.commons.rest.api.swagger.SwaggerConstants;
 import org.wso2.micro.core.Constants;
+import org.wso2.micro.integrator.core.json.utils.GSONUtils;
 import org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.MIServerConfig;
 
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -131,109 +134,86 @@ public final class SwaggerUtils {
                                                       boolean isJSON)
             throws AxisFault {
 
-        Swagger swaggerDoc = new Swagger();
-        addSwaggerInfoSection(dataServiceName, transports, serverConfig, swaggerDoc);
+        OpenAPI openAPI = new OpenAPI();
 
-        Map<String, Path> paths = new HashMap<>();
+        Info info = new Info();
+        info.title(dataServiceName);
+        info.setVersion("1.0");
+        info.description("API Definition of dataservice : " + dataServiceName);
+        openAPI.setInfo(info);
+
+        addServersSection(dataServiceName, transports, serverConfig, openAPI);
+
+        Paths paths = new Paths();
 
         for (Map.Entry<String, AxisResource> entry : axisResourceMap.getResources().entrySet()) {
-            Path path = new Path();
+            PathItem pathItem = new PathItem();
             for (String method : entry.getValue().getMethods()) {
                 Operation operation = new Operation();
                 List<AxisResourceParameter> parameterList = entry.getValue().getResourceParameterList(method);
-                generatePathAndQueryParameters(method, operation, parameterList);
-                // Adding a sample request payload for methods except GET.
-                generateSampleRequestPayload(method, operation, parameterList);
-                Response response = new Response();
-                response.description("this is the default response");
-                operation.addResponse("default", response);
-                switch (method) {
-                    case "GET":
-                        path.get(operation);
-                        break;
-                    case "POST":
-                        path.post(operation);
-                        break;
-                    case "DELETE":
-                        path.delete(operation);
-                        break;
-                    case "PUT":
-                        path.put(operation);
-                        break;
-                    default:
-                        throw new AxisFault("Invalid method \"" + method + "\" detected in the data-service");
-                }
+                addPathAndQueryParameters(method, operation, parameterList);
+                // Adding a sample request payload for methods except GET and DELETE ( OAS3 onwards )
+                addSampleRequestBody(method, operation, parameterList);
+                addDefaultResponseAndPathItem(pathItem, method, operation);
             }
-            String contextPath = entry.getKey().startsWith("/") ? entry.getKey() : "/" + entry.getKey();
-            paths.put(contextPath, path);
+            // adding the resource. all the paths should starts with "/"
+            paths.put(entry.getKey().startsWith("/") ? entry.getKey() : "/" + entry.getKey(), pathItem);
         }
-        swaggerDoc.setPaths(paths);
-        if (isJSON) return Json.pretty(swaggerDoc);
+        openAPI.setPaths(paths);
         try {
-            return Yaml.pretty().writeValueAsString(swaggerDoc);
+            if (isJSON) return Json.mapper().writeValueAsString(openAPI);
+            return Yaml.mapper().writeValueAsString(openAPI);
         } catch (JsonProcessingException e) {
             logger.error("Error occurred while creating the YAML configuration", e);
             return null;
         }
     }
 
-    /**
-     * This method will generate a sample request body for the request.
-     *
-     * @param method        Rest resource method.
-     * @param operation     Swagger operation object.
-     * @param parameterList list of parameters.
-     */
-    private static void generateSampleRequestPayload(String method, Operation operation,
-                                                     List<AxisResourceParameter> parameterList) {
-        // GET method does not have a body
-        if (!"GET".equals(method)) {
-            BodyParameter bodyParameter = new BodyParameter();
-            bodyParameter.description("Sample Payload");
-            bodyParameter.name("payload");
-            bodyParameter.setRequired(false);
+    // Add request body schema for methods except GET and DELETE.
+    private static void addSampleRequestBody(String method, Operation operation,
+                                             List<AxisResourceParameter> parameterList) {
 
-            ModelImpl modelschema = new ModelImpl();
-            modelschema.setType("object");
-            Map<String, Property> propertyMap = new HashMap<>(1);
-            ObjectProperty objectProperty = new ObjectProperty();
-            objectProperty.name("payload");
+        if (!method.equals("GET") && !method.equals("DELETE")) {
+            RequestBody requestBody = new RequestBody();
+            requestBody.description("Sample Payload");
+            requestBody.setRequired(false);
 
-            Map<String, Property> payloadProperties = new HashMap<>();
+            MediaType mediaType = new MediaType();
+            Schema bodySchema = new Schema();
+            bodySchema.setType("object");
+
+            Map<String, Schema> inputProperties = new HashMap<>();
+            ObjectSchema objectSchema = new ObjectSchema();
+            Map<String, Schema> payloadProperties = new HashMap<>();
             for (AxisResourceParameter resourceParameter : parameterList) {
                 switch (resourceParameter.getParameterDataType()) {
                     case SwaggerProcessorConstants.INTEGER:
-                        payloadProperties.put(resourceParameter.getParameterName(), new IntegerProperty());
+                        payloadProperties.put(resourceParameter.getParameterName(), new IntegerSchema());
                         break;
                     case SwaggerProcessorConstants.NUMBER:
-                        payloadProperties.put(resourceParameter.getParameterName(), new DoubleProperty());
+                        payloadProperties.put(resourceParameter.getParameterName(), new NumberSchema());
                         break;
                     case SwaggerProcessorConstants.BOOLEAN:
-                        payloadProperties.put(resourceParameter.getParameterName(), new BooleanProperty());
+                        payloadProperties.put(resourceParameter.getParameterName(), new BooleanSchema());
                         break;
                     default:
-                        payloadProperties.put(resourceParameter.getParameterName(), new StringProperty());
-                        break;
+                        payloadProperties.put(resourceParameter.getParameterName(), new StringSchema());
                 }
             }
-
-            objectProperty.setProperties(payloadProperties);
-            propertyMap.put("payload", objectProperty);
-            modelschema.setProperties(propertyMap);
-            bodyParameter.setSchema(modelschema);
-            operation.addParameter(bodyParameter);
+            objectSchema.setProperties(payloadProperties);
+            bodySchema.setProperties(inputProperties);
+            inputProperties.put("payload", objectSchema);
+            mediaType.setSchema(bodySchema);
+            Content content = new Content();
+            content.addMediaType("application/json", mediaType);
+            requestBody.setContent(content);
+            operation.setRequestBody(requestBody);
         }
     }
 
-    /**
-     * This method will generate path and query parameters in the swagger document.
-     *
-     * @param method        method of API resource.
-     * @param operation     swagger operation object.
-     * @param parameterList list of parameters.
-     */
-    private static void generatePathAndQueryParameters(String method, Operation operation,
-                                                       List<AxisResourceParameter> parameterList) {
+    // Add path parameters and query parameters to the operation.
+    private static void addPathAndQueryParameters(String method, Operation operation,
+                                                  List<AxisResourceParameter> parameterList) {
 
         if (!parameterList.isEmpty()) {
             for (AxisResourceParameter resourceParameter : parameterList) {
@@ -242,56 +222,91 @@ public final class SwaggerUtils {
                 if (resourceParameterType.equals(AxisResourceParameter.ParameterType.URL_PARAMETER)) {
                     PathParameter pathParameter = new PathParameter();
                     pathParameter.setName(resourceParameter.getParameterName());
-                    pathParameter.setType(resourceParameter.getParameterDataType());
+                    switch (resourceParameter.getParameterDataType()) {
+                        case "integer":
+                            pathParameter.setSchema(new IntegerSchema());
+                            break;
+                        case "number":
+                            pathParameter.setSchema(new NumberSchema());
+                            break;
+                        case "boolean":
+                            pathParameter.setSchema(new BooleanSchema());
+                            break;
+                        default:
+                            pathParameter.setSchema(new StringSchema());
+                            break;
+                    }
                     pathParameter.required(true);
-                    operation.addParameter(pathParameter);
+                    operation.addParametersItem(pathParameter);
                 } else if (resourceParameterType
-                        .equals(AxisResourceParameter.ParameterType.QUERY_PARAMETER) && "GET".equals(method)) {
+                        .equals(AxisResourceParameter.ParameterType.QUERY_PARAMETER) && method.equals("GET")) {
                     //  Currently handling query parameter only for GET requests.
                     QueryParameter queryParameter = new QueryParameter();
                     queryParameter.setName(resourceParameter.getParameterName());
-                    queryParameter.setType(resourceParameter.getParameterDataType());
+                    switch (resourceParameter.getParameterDataType()) {
+                        case "integer":
+                            queryParameter.setSchema(new IntegerSchema());
+                            break;
+                        case "number":
+                            queryParameter.setSchema(new NumberSchema());
+                            break;
+                        case "boolean":
+                            queryParameter.setSchema(new BooleanSchema());
+                            break;
+                        default:
+                            queryParameter.setSchema(new StringSchema());
+                            break;
+                    }
                     queryParameter.required(true);
-                    operation.addParameter(queryParameter);
+                    operation.addParametersItem(queryParameter);
                 }
             }
         }
     }
 
-    /**
-     * This method will create the info section of the swagger document.
-     *
-     * @param dataServiceName name of the data-service.
-     * @param transports      enabled transports.
-     * @param serverConfig    Server config object.
-     * @param swaggerDoc      Swagger document object.
-     * @throws AxisFault Exception occured while getting the host address from transports.
-     */
-    private static void addSwaggerInfoSection(String dataServiceName, List<String> transports,
-                                              MIServerConfig serverConfig, Swagger swaggerDoc) throws AxisFault {
+    // Add the default response ( since we cannot define it ) and pathItems to path map
+    private static void addDefaultResponseAndPathItem(PathItem pathItem, String method, Operation operation) {
 
-        swaggerDoc.basePath("/" + SwaggerProcessorConstants.SERVICES_PREFIX + "/" + dataServiceName);
+        ApiResponses apiResponses = new ApiResponses();
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setDescription("Default response");
+        apiResponses.addApiResponse("default", apiResponse);
+        operation.setResponses(apiResponses);
 
-        if (transports.contains("https")) {
-            swaggerDoc.addScheme(Scheme.HTTPS);
-            swaggerDoc.addScheme(Scheme.HTTP);
-            swaggerDoc.setHost(serverConfig.getHost("https"));
-        } else {
-            swaggerDoc.addScheme(Scheme.HTTP);
-            swaggerDoc.setHost(serverConfig.getHost("http"));
+        switch (method) {
+            case "GET":
+                pathItem.setGet(operation);
+                break;
+            case "POST":
+                pathItem.setPost(operation);
+                break;
+            case "DELETE":
+                pathItem.setDelete(operation);
+                break;
+            case "PUT":
+                pathItem.setPut(operation);
+                break;
         }
+    }
 
-        Info info = new Info();
-        info.title(dataServiceName);
-        info.setVersion("1.0");
-        info.description("API Definition of dataservice : " + dataServiceName);
-        swaggerDoc.setInfo(info);
+    // Add servers section to the OpenApi definition.
+    private static void addServersSection(String dataServiceName, List<String> transports, MIServerConfig serverConfig,
+                                          OpenAPI openAPI) throws AxisFault {
 
-        swaggerDoc.addConsumes("application/json");
-        swaggerDoc.addConsumes("application/xml");
+        String scheme;
+        String host;
+        if (transports.contains("https")) {
+            scheme = "https";
+            host = serverConfig.getHost("https");
+        } else {
+            scheme = "http";
+            host = serverConfig.getHost("http");
+        }
+        String basePath = "/" + SwaggerProcessorConstants.SERVICES_PREFIX + "/" + dataServiceName;
 
-        swaggerDoc.addProduces("application/json");
-        swaggerDoc.addProduces("application/xml");
+        Server server = new Server();
+        server.setUrl(scheme + "://" + host + basePath);
+        openAPI.setServers(Arrays.asList(server));
     }
 
     /**
@@ -318,9 +333,10 @@ public final class SwaggerUtils {
 
     /**
      * Get the swagger definition for a given API.
-     * @param api   API object.
-     * @param isJSON    response needed in JSON / JAML.
-     * @return  Swagger as String.
+     *
+     * @param api    API object.
+     * @param isJSON response needed in JSON / JAML.
+     * @return Swagger as String.
      * @throws AxisFault Error occurred while fetching the host name for API.
      */
     public static String getAPISwagger(API api, boolean isJSON) throws AxisFault {
@@ -340,14 +356,8 @@ public final class SwaggerUtils {
             if (logger.isDebugEnabled()) {
                 logger.debug("Generating swagger definition for: " + api.getName());
             }
-            GenericApiObjectDefinition objectDefinition = new GenericApiObjectDefinition(api, serverConfig);
-            Map<String, Object> definitionMap = objectDefinition.getDefinitionMap();
-            if (isJSON) {
-                JSONObject jsonDefinition = new JSONObject(definitionMap);
-                responseString = jsonDefinition.toString();
-            } else {
-                responseString = yamlDefinition.dumpAsMap(definitionMap);
-            }
+            OpenAPIProcessor openAPIProcessor = new OpenAPIProcessor(api, serverConfig);
+            responseString = openAPIProcessor.getOpenAPISpecification(isJSON);
         }
         return responseString;
     }
