@@ -19,9 +19,9 @@ package org.wso2.carbon.inbound.endpoint.internal.http.api;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
+import org.apache.synapse.api.dispatch.DispatcherHelper;
+import org.apache.synapse.api.dispatch.URITemplateHelper;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
-import org.apache.synapse.rest.dispatch.DispatcherHelper;
-import org.apache.synapse.rest.dispatch.URITemplateHelper;
 import org.apache.synapse.transport.passthru.util.RelayUtils;
 
 import java.util.Set;

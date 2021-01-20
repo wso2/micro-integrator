@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.inbound.endpoint.internal.http.api;
 
-import org.apache.synapse.rest.cors.CORSConfiguration;
+import org.apache.synapse.api.cors.CORSConfiguration;
 
 import java.util.Arrays;
 import java.util.HashSet;
