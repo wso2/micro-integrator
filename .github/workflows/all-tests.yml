@@ -10,9 +10,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up JDK 1.8
-        uses: joschi/setup-jdk@v1
+        uses: joschi/setup-jdk@v2
         with:
           java-version: openjdk8
       - name: Build with Maven
@@ -24,9 +24,9 @@ jobs:
     steps:
       - name: Support longpaths
         run: git config --system core.longpaths true
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up JDK 1.8
-        uses: joschi/setup-jdk@v1
+        uses: joschi/setup-jdk@v2
         with:
           java-version: openjdk8
       - name: Build with Maven
