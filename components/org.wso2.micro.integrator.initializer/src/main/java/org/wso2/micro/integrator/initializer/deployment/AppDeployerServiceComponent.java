@@ -37,9 +37,13 @@ import org.wso2.micro.integrator.initializer.StartupFinalizer;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
+import org.wso2.micro.integrator.initializer.serviceCatalogue.ServiceCatalogueExecutor;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component(name = "org.wso2.micro.integrator.initializer.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
@@ -193,6 +197,12 @@ public class AppDeployerServiceComponent {
         AxisConfigurator axisConfigurator = configCtx.getAxisConfiguration().getConfigurator();
         if (axisConfigurator instanceof CarbonAxisConfigurator) {
             ((CarbonAxisConfigurator) axisConfigurator).deployServices();
+            // TODO: check publishing to service catalog is enabled
+            String repoLocation = ((CarbonAxisConfigurator) axisConfigurator).getRepoLocation();
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(new ServiceCatalogueExecutor(repoLocation));
+            // we are not interested in the result of this thread execution
+            executorService.shutdown();
         }
     }
 }
