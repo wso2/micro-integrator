@@ -275,12 +275,20 @@
                                 <bundleDef>org.eclipse.platform:org.eclipse.equinox.cm:${version.eclipse.equinox.cm}</bundleDef>
                                 <bundleDef>commons-configuration:commons-configuration:${commons.configuration.version}</bundleDef>
                                 <!-- bundles needed to swagger for DSS feature -->
-                                <bundleDef>io.swagger:swagger-models:${io.swagger.models.version}</bundleDef>
-                                <bundleDef>io.swagger:swagger-core:${io.swagger.core.version}</bundleDef>
-                                <bundleDef>io.swagger:swagger-annotations:${io.swagger.annotation.version}</bundleDef>
-                                <bundleDef>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson.dataformat.yaml.version}</bundleDef>
+                                <bundleDef>io.swagger.core.v3:swagger-models:${swagger.core.version}</bundleDef>
+                                <bundleDef>io.swagger.core.v3:swagger-core:${swagger.core.version}</bundleDef>
+                                <bundleDef>io.swagger.core.v3:swagger-annotations:${swagger.core.version}</bundleDef>
+                                <bundleDef>
+                                    org.wso2.orbit.io.swagger.parser.v3:swagger-parser-v3:${swagger.parser.orbit.version}
+                                </bundleDef>
                                 <bundleDef>javax.validation:validation-api:${javax.validation.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.core:jackson-annotations:${jackson.core.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.core:jackson-core:${jackson.core.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.core:jackson-databind:${jackson.core.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson.core.version}</bundleDef>
                                 <bundleDef>org.yaml:snakeyaml:${snakeyaml.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jackson.core.version}</bundleDef>
+                                <bundleDef>org.wso2.orbit.org.apache.commons:commons-lang3:${commons.lang3.version}</bundleDef>
                             </bundles>
 
                             <importFeatures>

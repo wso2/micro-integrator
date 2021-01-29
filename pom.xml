@@ -1184,36 +1184,53 @@
                 <artifactId>sap-adapter</artifactId>
                 <version>${sap-adapter.feature.version}</version>
             </dependency>
+            <!--OAS 3 feature dependencies-->
             <dependency>
-                <groupId>io.swagger</groupId>
+                <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-models</artifactId>
-                <version>${io.swagger.models.version}</version>
+                <version>${swagger.core.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.swagger</groupId>
+                <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-core</artifactId>
-                <version>${io.swagger.core.version}</version>
+                <version>${swagger.core.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.swagger</groupId>
+                <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>${io.swagger.annotation.version}</version>
+                <version>${swagger.core.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${jackson.dataformat.yaml.version}</version>
+                <version>${jackson.core.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>${javax.validation.version}</version>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.core.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>${snakeyaml.version}</version>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.core.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.io.swagger.parser.v3</groupId>
+                <artifactId>swagger-parser-v3</artifactId>
+                <version>${swagger.parser.orbit.version}</version>
+            </dependency>
+            <!-- End of OAS 3 feature dependencies-->
             <dependency>
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-module-junit4</artifactId>
@@ -1356,7 +1373,7 @@
         <version.jaxb.api>2.4.0-b180830.0359</version.jaxb.api>
 
         <synapse.version>2.1.7-wso2v199</synapse.version>
-        <carbon.mediation.version>4.7.74</carbon.mediation.version>
+        <carbon.mediation.version>4.7.75</carbon.mediation.version>
         <carbon.crypto.version>1.1.3</carbon.crypto.version>
         <carbon.crypto.api.imp.pkg.version.range>[1.1.0,1.2.0)</carbon.crypto.api.imp.pkg.version.range>
         <carbon.data.version>4.5.2</carbon.data.version>
@@ -1460,7 +1477,7 @@
         <version.org.wso2.orbit.javax.activation>1.1.1.wso2v3</version.org.wso2.orbit.javax.activation>
         <verion.javax.annotation.annotation-api>1.3.2</verion.javax.annotation.annotation-api>
         <version.org.wso2.orbit.javax.jta>1.1.0.wso2v2</version.org.wso2.orbit.javax.jta>
-        <version.org.wso2.orbit.javax.xml.bind.jaxb-api>2.3.1.wso2v1</version.org.wso2.orbit.javax.xml.bind.jaxb-api>
+        <version.org.wso2.orbit.javax.xml.bind.jaxb-api>2.3.1.wso2v2</version.org.wso2.orbit.javax.xml.bind.jaxb-api>
         <org.wso2.orbit.sun.xml.ws.version>2.3.2.wso2v1</org.wso2.orbit.sun.xml.ws.version>
         <apache.felix.scr.ds.annotations.version>1.2.4</apache.felix.scr.ds.annotations.version>
         <org.wso2.carbon.caching.core.version>4.2.0</org.wso2.carbon.caching.core.version>
@@ -1478,7 +1495,7 @@
         <stax2.version>3.1.4</stax2.version>
         <version.woodstox.core.asl>4.4.1</version.woodstox.core.asl>
         <javax.jsr311.api.version>1.1.1</javax.jsr311.api.version>
-        <org.wso2.orbit.javax.xml.bind.version>2.3.1.wso2v1</org.wso2.orbit.javax.xml.bind.version>
+        <org.wso2.orbit.javax.xml.bind.version>2.3.1.wso2v2</org.wso2.orbit.javax.xml.bind.version>
 
         <config.mapper.version>1.0.12</config.mapper.version>
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
@@ -1607,7 +1624,7 @@
 
         <metrics.core.version>3.2.5</metrics.core.version>
 <!--        <netty.version>4.0.39.Final</netty.version>-->
-        <commons.lang3.version>3.4.0.wso2v1</commons.lang3.version>
+        <commons.lang3.version>3.11.0.wso2v1</commons.lang3.version>
         <xml.apis.version>1.4.01</xml.apis.version>
 
         <carbon-commons.version>4.6.65</carbon-commons.version>
@@ -1663,16 +1680,15 @@
         <nimbus-jose.orbit.version>5.8.0.wso2v1</nimbus-jose.orbit.version>
         <grpc.version>1.21.0</grpc.version>
         <axis2-java2wsdl.version>1.6.2</axis2-java2wsdl.version>
-        <!-- swagger feature versions -->
-        <io.swagger.models.version>1.5.23</io.swagger.models.version>
-        <io.swagger.core.version>1.5.23</io.swagger.core.version>
-        <io.swagger.annotation.version>1.5.23</io.swagger.annotation.version>
-        <jackson.dataformat.yaml.version>2.10.3</jackson.dataformat.yaml.version>
-        <javax.validation.version>1.1.0.Final</javax.validation.version>
-        <snakeyaml.version>1.25</snakeyaml.version>
         <!-- Prometheus Library versions-->
         <prometheus.version>0.8.1</prometheus.version>
         <version.equinox.platform>3.14.0</version.equinox.platform>
+        <!-- OAS3 Versions -->
+        <swagger.core.version>2.1.6</swagger.core.version>
+        <swagger.parser.orbit.version>2.0.24.wso2v1</swagger.parser.orbit.version>
+        <snakeyaml.version>1.27</snakeyaml.version>
+        <jackson.core.version>2.12.1</jackson.core.version>
+        <javax.validation.version>1.1.0.Final</javax.validation.version>
     </properties>
 
     <repositories>

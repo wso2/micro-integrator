@@ -17,6 +17,9 @@
  */
 package org.wso2.ei.dataservice.integration.test.swagger;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -26,6 +29,7 @@ import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,33 +40,7 @@ import static org.testng.Assert.assertTrue;
  * This class will test the Swagger generation feature for data-services.
  */
 public class SwaggerGenerationTestCase extends DSSIntegrationTest {
-
-    private static final String SWAGGER_RESPONSE = "{\"/getProductWithCode/{productCode}/andName\":{\"get" +
-            "\":{\"responses\":{\"default\":{\"description\":\"this is the default response\"}},\"parameters\":" +
-            "[{\"in\":\"path\",\"name\":\"productCode\",\"type\":\"string\",\"required\":true},{\"in\":\"query\"," +
-            "\"name\":\"productName\",\"type\":\"string\",\"required\":true}]}},\"/product\":{\"post\":{\"responses\"" +
-            ":{\"default\":{\"description\":\"this is the default response\"}},\"parameters\":[{\"schema\":" +
-            "{\"type\":\"object\",\"properties\":{\"payload\":{\"type\":\"object\",\"properties\":{\"productLine\":" +
-            "{\"type\":\"string\"},\"quantityInStock\":{\"format\":\"int32\",\"type\":\"integer\"},\"buyPrice\":" +
-            "{\"format\":\"double\",\"type\":\"number\"},\"productCode\":{\"type\":\"string\"},\"productName\":" +
-            "{\"type\":\"string\"}}}}},\"in\":\"body\",\"name\":\"payload\",\"description\":\"Sample Payload\"," +
-            "\"required\":false}]},\"put\":{\"responses\":{\"default\":{\"description\":\"this is the default " +
-            "response\"}},\"parameters\":[{\"schema\":{\"type\":\"object\",\"properties\":{\"payload\":{\"type\"" +
-            ":\"object\",\"properties\":{\"productLine\":{\"type\":\"string\"},\"quantityInStock\":{\"format\":" +
-            "\"int32\",\"type\":\"integer\"},\"buyPrice\":{\"format\":\"double\",\"type\":\"number\"},\"productCode\"" +
-            ":{\"type\":\"string\"},\"productName\":{\"type\":\"string\"}}}}},\"in\":\"body\",\"name\":\"payload\"," +
-            "\"description\":\"Sample Payload\",\"required\":false}]}},\"/product/{productCode}\":{\"get\"" +
-            ":{\"responses\":{\"default\":{\"description\":\"this is the default response\"}},\"parameters\":" +
-            "[{\"in\":\"path\",\"name\":\"productCode\",\"type\":\"string\",\"required\":true}]},\"delete\":" +
-            "{\"responses\":{\"default\":{\"description\":\"this is the default response\"}},\"parameters\":" +
-            "[{\"in\":\"path\",\"name\":\"productCode\",\"type\":\"string\",\"required\":true},{\"schema\":" +
-            "{\"type\":\"object\",\"properties\":{\"payload\":{\"type\":\"object\",\"properties\":{\"productCode\":" +
-            "{\"type\":\"string\"}}}}},\"in\":\"body\",\"name\":\"payload\",\"description\":\"Sample Payload\"," +
-            "\"required\":false}]}},\"/getProductWithCode/{productCode}/andName/{productName}\":{\"get\":" +
-            "{\"responses\":{\"default\":{\"description\":\"this is the default response\"}},\"parameters\":" +
-            "[{\"in\":\"path\",\"name\":\"productCode\",\"type\":\"string\",\"required\":true},{\"in\":\"path\"," +
-            "\"name\":\"productName\",\"type\":\"string\",\"required\":true}]}},\"/products\":{\"get\":{\"responses\":" +
-            "{\"default\":{\"description\":\"this is the default response\"}},\"parameters\":[]}}}";
+    ClassLoader classLoader = getClass().getClassLoader();
 
     private Map<String, String> requestHeader = new HashMap<>();
 
@@ -88,7 +66,11 @@ public class SwaggerGenerationTestCase extends DSSIntegrationTest {
         assertNotNull(result, "Response is null");
         assertTrue(result.has("paths"), "Swagger information should be available on all paths");
         String pathDetails = result.get("paths").toString();
-        Assert.assertEquals(pathDetails, SWAGGER_RESPONSE, "Response mismatch");
+        JsonParser jsonParser = new JsonParser();
+        JsonElement output = jsonParser.parse(pathDetails);
+        InputStream inputStream = classLoader.getResourceAsStream("Swagger/JSONResponse.json");
+        JsonElement expected = jsonParser.parse(IOUtils.toString(inputStream));
+        Assert.assertEquals(output.toString(), expected.toString(), "Response mismatch");
     }
 
     @Test(groups = {"wso2.dss"}, description = "Check swagger generation for dataservice without resources")
@@ -103,5 +85,16 @@ public class SwaggerGenerationTestCase extends DSSIntegrationTest {
         assertTrue(result.has("paths"), "Path section of the swagger definition is missing");
         String pathDetails = result.get("paths").toString();
         Assert.assertEquals(pathDetails, "{}", "Should not contain resource path details");
+    }
+
+    @Test(groups = {"wso2.dss"}, description = "Get OpenApi definition in YAML format")
+    public void swaggerDataServiceYamlTestCase() throws Exception {
+        String serviceEndPoint = "http://localhost:8480/services/ResourcesServiceTest?swagger.yaml";
+        HttpResponse response = HttpRequestUtil.doGet(serviceEndPoint, requestHeader);
+        String responseString = response.getData();
+        assertNotNull(responseString, "Failed to get the yaml response.");
+        InputStream inputStream = classLoader.getResourceAsStream("Swagger/YAMLResponse.yaml");
+        String expected = IOUtils.toString(inputStream);
+        Assert.assertEquals(responseString, expected, "Response mismatch");
     }
 }
