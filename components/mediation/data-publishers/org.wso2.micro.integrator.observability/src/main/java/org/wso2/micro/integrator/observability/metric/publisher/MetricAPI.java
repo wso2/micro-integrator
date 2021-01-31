@@ -17,9 +17,10 @@
  */
 package org.wso2.micro.integrator.observability.metric.publisher;
 
-import org.apache.synapse.rest.cors.CORSConfiguration;
 
 import java.util.List;
+
+import org.apache.synapse.api.cors.CORSConfiguration;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;

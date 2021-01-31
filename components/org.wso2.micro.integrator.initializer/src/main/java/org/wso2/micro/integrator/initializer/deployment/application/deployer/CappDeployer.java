@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.rest.APIFactory;
-import org.apache.synapse.rest.API;
+import org.apache.synapse.api.API;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.ApplicationConfiguration;
@@ -192,8 +192,7 @@ public class CappDeployer extends AbstractDeployer {
         String tempExtractedDirPath = AppDeployerUtils.extractCarbonApp(targetCAppPath);
 
         // Build the app configuration by providing the artifacts.xml path
-        ApplicationConfiguration appConfig = new ApplicationConfiguration(tempExtractedDirPath +
-                                                                                  ApplicationConfiguration.ARTIFACTS_XML);
+        ApplicationConfiguration appConfig = new ApplicationConfiguration(tempExtractedDirPath);
 
         // If we don't have features (artifacts) for this server, ignore
         if (appConfig.getApplicationArtifact().getDependencies().isEmpty()) {

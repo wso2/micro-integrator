@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * This will hold the registry resources config file declarations. This can include resources,
@@ -69,12 +70,13 @@ public class RegistryConfig {
     /**
      * Add a resource which belongs to the artifact represented by this component.
      *
-     * @param path    - path at which this resource should be stored
-     * @param content - name of the file to store as a resource
-     * @param regType - type of registry to store the resource (local, config or governance)
-     * @param mediaType - mediaType of the registry resource
+     * @param path       - path at which this resource should be stored
+     * @param content    - name of the file to store as a resource
+     * @param regType    - type of registry to store the resource (local, config or governance)
+     * @param mediaType  - mediaType of the registry resource
+     * @param properties - properties to be added to the registry resource (item)
      */
-    public void addResource(String path, String content, String regType, String mediaType) {
+    public void addResource(String path, String content, String regType, String mediaType, Properties properties) {
         if (path == null || path.length() == 0) {
             log.error("Resource path not found");
             return;
@@ -83,7 +85,7 @@ public class RegistryConfig {
             log.error("Content name of the resource not found");
             return;
         }
-        resources.add(new Resourse(path, content, regType, mediaType));
+        resources.add(new Resourse(path, content, regType, mediaType, properties));
     }
 
     public List<Collection> getCollections() {
@@ -110,14 +112,14 @@ public class RegistryConfig {
     }
 
     /**
-     * Add a directory and all it's contents which belongs to the artifact represented by
-     * this component.
+     * Add a directory and all it's contents which belongs to the artifact represented by this component.
      *
-     * @param path      - path at which this collection should be stored
-     * @param directory - name of the root directory to store as a resource
-     * @param regType   - type of registry to store the resource (local, config or governance)
+     * @param path       - path at which this collection should be stored
+     * @param directory  - name of the root directory to store as a resource
+     * @param regType    - type of registry to store the resource (local, config or governance)
+     * @param properties - properties to be added to the registry resource (collection)
      */
-    public void addCollection(String path, String directory, String regType) {
+    public void addCollection(String path, String directory, String regType, Properties properties) {
         if (path == null || path.length() == 0) {
             log.error("Collection path not found");
             return;
@@ -126,7 +128,7 @@ public class RegistryConfig {
             log.error("Directory name not found");
             return;
         }
-        collections.add(new Collection(path, directory, regType));
+        collections.add(new Collection(path, directory, regType, properties));
     }
 
     public List<Association> getAssociations() {
@@ -206,12 +208,14 @@ public class RegistryConfig {
         private String fileName;
         private String registryType;
         private String mediaType;
+        private Properties properties;
 
-        public Resourse(String path, String fileName, String regType, String mediaType) {
+        public Resourse(String path, String fileName, String regType, String mediaType, Properties properties) {
             this.path = path;
             this.fileName = fileName;
             this.registryType = regType;
             this.mediaType = mediaType;
+            this.properties = properties;
         }
 
         public String getPath() {
@@ -233,6 +237,10 @@ public class RegistryConfig {
 		public String getMediaType() {
 			return mediaType;
 		}
+
+        public Properties getProperties() {
+            return properties;
+        }
     }
 
     /**
@@ -269,11 +277,13 @@ public class RegistryConfig {
         private String path;
         private String directory;
         private String registryType;
+        private Properties properties;
 
-        public Collection(String path, String directory, String regType) {
+        public Collection(String path, String directory, String regType, Properties properties) {
             this.path = path;
             this.directory = directory;
             this.registryType = regType;
+            this.properties = properties;
         }
 
         public String getPath() {
@@ -286,6 +296,10 @@ public class RegistryConfig {
 
         public String getRegistryType() {
             return registryType;
+        }
+
+        public Properties getProperties() {
+            return properties;
         }
     }
 

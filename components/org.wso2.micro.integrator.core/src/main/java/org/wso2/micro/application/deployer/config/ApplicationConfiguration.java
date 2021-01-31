@@ -43,6 +43,7 @@ public class ApplicationConfiguration {
     private static final Log log = LogFactory.getLog(ApplicationConfiguration.class);
 
     public static final String ARTIFACTS_XML = "artifacts.xml";
+    public static final String METADATA_XML = "metadata.xml";
     public static final String FEATURE_POSTFIX = ".feature.group";
 
     // TODO - define a correct ns
@@ -60,9 +61,14 @@ public class ApplicationConfiguration {
      * @throws CarbonException - error while reading artifacts.xml
      */
     public ApplicationConfiguration(String appXmlPath) throws CarbonException {
-        File f = new File(appXmlPath);
+        // First check for metadata.xml file ( New CAPP format )
+        File f = new File(appXmlPath + ApplicationConfiguration.METADATA_XML);
         if (!f.exists()) {
-            throw new CarbonException("artifacts.xml file not found at : " + appXmlPath);
+            // If metadata not exists use the artifacts.xml file ( Old CAPP format )
+            f = new File(appXmlPath + ApplicationConfiguration.ARTIFACTS_XML);
+            if (!f.exists()) {
+                throw new CarbonException("artifacts.xml file not found at : " + appXmlPath);
+            }
         }
         InputStream xmlInputStream = null;
         try {

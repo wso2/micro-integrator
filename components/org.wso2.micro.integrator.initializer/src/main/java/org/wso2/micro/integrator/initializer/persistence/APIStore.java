@@ -19,10 +19,10 @@
 package org.wso2.micro.integrator.initializer.persistence;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.synapse.api.API;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.MultiXMLConfigurationBuilder;
 import org.apache.synapse.config.xml.rest.APISerializer;
-import org.apache.synapse.rest.API;
 
 import java.io.File;
 

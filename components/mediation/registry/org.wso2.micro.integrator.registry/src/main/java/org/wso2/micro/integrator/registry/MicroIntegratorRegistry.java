@@ -573,6 +573,26 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     public void newNonEmptyResource(String path, boolean isDirectory, String mediaType, String content,
                                     String propertyName) {
 
+        Properties properties = null;
+        if (StringUtils.isNotEmpty(propertyName)) {
+            properties = new Properties();
+            properties.setProperty(propertyName, content);
+            content = "";
+        }
+        addNewNonEmptyResource(path, isDirectory, mediaType, content, properties);
+    }
+
+    /**
+     * Add new resource element to the registry.
+     *
+     * @param path             registry resource path
+     * @param isDirectory      whether the resource is directory or not
+     * @param mediaType        media type of the registry resource
+     * @param content          content of the registry resource
+     * @param properties       properties defined in the registry resource
+     */
+    public void addNewNonEmptyResource(String path, boolean isDirectory, String mediaType, String content,
+                                        Properties properties) {
         if (registryType == MicroIntegratorRegistryConstants.LOCAL_HOST_REGISTRY) {
             String targetPath = resolveRegistryURI(path);
 
@@ -581,26 +601,23 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             }
             String parent = getParentPath(targetPath, isDirectory);
             try {
+                File parentFile = new File(new URI(parent));
                 if (isDirectory) {
-                    File parentFile = new File(parent);
-                    if (!parentFile.exists() && !parentFile.mkdirs()) {
-                        handleException("Unable to create directory: " + parent);
+                    File collection = new File(new URI(targetPath));
+                    if (!collection.exists() && !collection.mkdirs()) {
+                        handleException("Unable to create collection: " + collection.getPath());
                     }
-                    if (StringUtils.isNotEmpty(propertyName)) {
-                        writeToFile(new URI(parent), PROPERTY_EXTENTION, propertyName + "=" + content, null);
+                    if (properties != null && !properties.isEmpty()) {
+                        writeProperties(parentFile, getResourceName(targetPath), properties);
                     }
                 } else {
                     String fileName = getResourceName(targetPath);
-                    if (StringUtils.isEmpty(propertyName)) {
-                        Properties metadata = new Properties();
-                        if (mediaType != null) {
-                            metadata.setProperty(METADATA_KEY_MEDIA_TYPE, mediaType);
-                        }
-                        writeToFile(new URI(parent), fileName, content, metadata);
-                    } else {
-                        writeToFile(new URI(parent), fileName, "", null);
-                        writeToFile(new URI(parent), fileName + PROPERTY_EXTENTION, propertyName + "=" + content, null);
+                    Properties metadata = null;
+                    if (mediaType != null) {
+                        metadata = new Properties();
+                        metadata.setProperty(METADATA_KEY_MEDIA_TYPE, mediaType);
                     }
+                    writeToFile(parentFile, fileName, content, metadata, properties);
                 }
             } catch (Exception e) {
                 handleException("Error when adding a new resource", e);
@@ -609,7 +626,6 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             log.warn("Creating new resource in remote registry is NOT SUPPORTED. Unable to create: " + path);
         }
     }
-
 
     /**
      * Updates the registry resource pointed by the given key.
@@ -795,7 +811,6 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             return correctedPath.substring(correctedPath.lastIndexOf(URL_SEPARATOR) + 1, correctedPath.length());
         }
         return "";
-
     }
 
     /**
@@ -832,19 +847,20 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     }
 
     /**
-     * Function to write to file, create if not exists including directory structure
+     * Function to write to file, create if not exists including directory structure.
      *
-     * @param parentName
-     * @param newFileName
-     * @throws Exception
+     * @param parent             parent file
+     * @param newFileName        new file name to be created
+     * @param content            content to be included in the new file
+     * @param metadata           meta data of the new file
+     * @param resourceProperties resource properties to be added to the new resource
      */
-    private void writeToFile(URI parentName, String newFileName, String content, Properties metadata) throws Exception {
+    private void writeToFile(File parent, String newFileName, String content, Properties metadata, Properties resourceProperties) {
         /*
             search for parent. if found, create the new FILE in it
         */
-        File parent = new File(parentName);
         if (!parent.exists() && !parent.mkdirs()) {
-            handleException("Unable to create parent directory: " + parentName);
+            handleException("Unable to create parent directory: " + parent.getPath());
         }
         File newFile = new File(parent, newFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(newFile))) {
@@ -853,11 +869,14 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             if (metadata != null) {
                 writeMetadata(parent, newFileName, metadata);
             }
+            if (resourceProperties != null) {
+                writeProperties(parent, newFileName, resourceProperties);
+            }
             if (log.isDebugEnabled()) {
-                log.debug("Successfully content written to file : " + parentName + URL_SEPARATOR + newFileName);
+                log.debug("Successfully content written to file : " + parent.getPath() + URL_SEPARATOR + newFileName);
             }
         } catch (IOException e) {
-            handleException("Couldn't write to registry resource: " + parentName + URL_SEPARATOR + newFileName, e);
+            handleException("Couldn't write to registry resource: " + parent.getPath() + URL_SEPARATOR + newFileName, e);
         }
     }
 
@@ -882,6 +901,27 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             }
         } catch (IOException e) {
             handleException("Couldn't write to metadata file: " + newMetadataFile.getPath(), e);
+        }
+    }
+
+    /**
+     * Create a new properties file for the registry resource.
+     *
+     * @param parent            destination location of the properties file
+     * @param resourceFileName  name of the registry resource
+     * @param properties        list of properties
+     */
+    private void writeProperties(File parent, String resourceFileName, Properties properties) {
+
+        File resourcePropertiesFile = new File(parent, resourceFileName + PROPERTY_EXTENTION);
+
+        try (BufferedWriter propertiesWriter = new BufferedWriter(new FileWriter(resourcePropertiesFile))) {
+            properties.store(propertiesWriter, null);
+            if (log.isDebugEnabled()) {
+                log.debug("Successfully written resource properties to file: " + resourcePropertiesFile.getPath());
+            }
+        } catch (IOException e) {
+            handleException("Couldn't write to resource properties file: " + resourcePropertiesFile.getPath(), e);
         }
     }
 
