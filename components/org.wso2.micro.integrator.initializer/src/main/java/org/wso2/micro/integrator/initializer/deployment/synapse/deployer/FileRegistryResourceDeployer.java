@@ -198,7 +198,7 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
                 log.error("Specified file to be written as a resource is " + "not found at : " + filePath);
                 continue;
             }
-            String resourcePath = AppDeployerUtils.computeResourcePath(createRegistryKey(resource.getPath()),resource.getFileName());
+            String resourcePath = AppDeployerUtils.computeResourcePath(createRegistryKey(resource),resource.getFileName());
             String mediaType = resource.getMediaType();
             ((MicroIntegratorRegistry)lightweightRegistry).addNewNonEmptyResource(resourcePath, false, mediaType,
                                                                                   readResourceContent(file),
@@ -218,7 +218,7 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
                 continue;
             }
             ((MicroIntegratorRegistry)lightweightRegistry).addNewNonEmptyResource(
-                    createRegistryKey(collection.getPath()), true, "", "",
+                    createRegistryPath(collection.getPath()), true, "", "",
                     collection.getProperties());
         }
     }
@@ -241,7 +241,7 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
                 // the file is already deleted.
                 continue;
             }
-            String resourcePath = AppDeployerUtils.computeResourcePath(createRegistryKey(resource.getPath()),
+            String resourcePath = AppDeployerUtils.computeResourcePath(createRegistryPath(resource.getPath()),
                                                                        resource.getFileName());
             lightweightRegistry.delete(resourcePath);
         }
@@ -250,7 +250,6 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
     /**
      * Function to create registry key from registry path
      *
-     * @param key key of the resource
      * @return
      */
     private String createRegistryKey(RegistryConfig.Resourse resourse) {
