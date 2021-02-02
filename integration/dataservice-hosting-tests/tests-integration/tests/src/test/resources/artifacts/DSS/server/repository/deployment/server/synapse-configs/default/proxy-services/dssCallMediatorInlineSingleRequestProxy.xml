@@ -25,13 +25,13 @@
         <inSequence>
             <dataServiceCall serviceName="DSSCallMediatorTest">
                 <source type="inline"/>
-                <operations type="single_req">
+                <operations type="single">
                     <operation name="addEmployee">
-                        <param name="employeeNumber" type="int" value="111"/>
-                        <param name="firstname" type="string" value="Peter"/>
-                        <param name="lastName" type="string" value="Parker"/>
-                        <param name="email" type="string" value="peter@wso2.com"/>
-                        <param name="salary" type="int" value="1000"/>
+                        <param name="employeeNumber" value="111"/>
+                        <param name="firstname" value="Peter"/>
+                        <param name="lastName" value="Parker"/>
+                        <param name="email" value="peter@wso2.com"/>
+                        <param name="salary" value="1000"/>
                     </operation>
                 </operations>
                 <target type="body"/>

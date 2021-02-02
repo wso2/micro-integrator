@@ -47,4 +47,12 @@ public class DataServiceCallMediatorConstants {
     public static final String BATCH_REQ_SUFFIX = "_batch_req";
     public static final String APPLICATION_XML = "application/xml";
     public static final String JSON_OBJECT = "jsonObject";
+
+    public class OperationsType {
+
+        public static final String SINGLE = "single";
+        public static final String BATCH = "batch";
+        public static final String REQUEST_BOX = "request-box";
+
+    }
 }
