@@ -122,7 +122,7 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
 
         for (ConnectionData connectionData : listener.getConnectionData().values()) {
             System.out.print(connectionData.getOutputText().toString());
-            if (connectionData.getOutputText().toString().contains("HTTP/1.1 202 OK")) {
+            if (connectionData.getOutputText().toString().contains("HTTP/1.1 202 Accepted")) {
                 return true;
             }
         }

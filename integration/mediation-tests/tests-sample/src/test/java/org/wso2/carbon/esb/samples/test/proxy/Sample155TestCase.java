@@ -55,7 +55,7 @@ public class Sample155TestCase extends ESBSampleIntegrationTest {
         boolean foundHTTP202Accepted = false;
         boolean getQuoteResponseNotFound = false;
         for (ConnectionData connection : listener1.getConnectionData().values()) {
-            foundHTTP202Accepted = connection.getOutputText().toString().contains("HTTP/1.1 202 OK");
+            foundHTTP202Accepted = connection.getOutputText().toString().contains("HTTP/1.1 202 Accepted");
             getQuoteResponseNotFound = !connection.getOutputText().toString().contains("getQuoteResponse");
         }
         Assert.assertTrue(getQuoteResponseNotFound, "getQuoteResponse found");
@@ -63,7 +63,7 @@ public class Sample155TestCase extends ESBSampleIntegrationTest {
         boolean foundHTTP202OK = false;
         getQuoteResponseNotFound = false;
         for (ConnectionData connection : listener2.getConnectionData().values()) {
-            foundHTTP202OK = connection.getOutputText().toString().contains("HTTP/1.1 202 OK");
+            foundHTTP202OK = connection.getOutputText().toString().contains("HTTP/1.1 202 Accepted");
             getQuoteResponseNotFound = !connection.getOutputText().toString().contains("getQuoteResponse");
         }
 
