@@ -87,6 +87,8 @@
   "mediation.synapse.build_valid_nc_name": "synapse_properties.'synapse.commons.json.buildValidNCNames'",
   "mediation.synapse.enable_auto_primitive": "synapse_properties.'synapse.commons.json.output.autoPrimitive'",
   "mediation.synapse.json_out_auto_array": "synapse_properties.'synapse.commons.json.output.jsonoutAutoArray'",
+  "mediation.synapse.maximum_failover_retries":"synapse_properties.'maximum.failover.retries'",
+  "mediation.synapse.suspend_duration_on_maximum_failover":"synapse_properties.'suspend.duration.on.maximum.failover'",
 
   "mediation.flow.statistics.enable": "synapse_properties.'mediation.flow.statistics.enable'",
   "mediation.flow.statistics.capture_all": "synapse_properties.'mediation.flow.statistics.collect.all'",
