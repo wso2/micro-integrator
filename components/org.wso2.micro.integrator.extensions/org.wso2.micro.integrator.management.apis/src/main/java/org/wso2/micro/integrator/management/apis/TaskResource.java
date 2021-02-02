@@ -99,17 +99,17 @@ public class TaskResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         Startup task = configuration.getStartup(taskName);
-        SynapseEnvironment synapseEnvironment =
-                getSynapseEnvironment(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
-        TaskDescription description =
-                synapseEnvironment.getTaskManager().getTaskDescriptionRepository().getTaskDescription(task.getName());
-        JSONObject jsonBody = getTaskAsJson(description);
 
-
-        if (Objects.nonNull(jsonBody)) {
+        if (Objects.nonNull(task)) {
+            SynapseEnvironment synapseEnvironment =
+                    getSynapseEnvironment(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
+            TaskDescription description =
+                    synapseEnvironment.getTaskManager().getTaskDescriptionRepository().getTaskDescription(task.getName());
+            JSONObject jsonBody = getTaskAsJson(description);
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
-            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
+            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonError("Specified task " + taskName + " not found",
+                    axis2MessageContext, Constants.NOT_FOUND));
         }
     }
 
