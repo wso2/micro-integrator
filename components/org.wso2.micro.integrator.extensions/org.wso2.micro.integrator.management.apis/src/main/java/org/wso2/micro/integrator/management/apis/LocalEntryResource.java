@@ -153,7 +153,8 @@ public class LocalEntryResource implements MiApiResource {
             Utils.setJsonPayLoad(axis2MessageContext, getLocalEntryAsJson(localEntry));
         } else {
             LOG.warn("Reference for local entry " + entryKey + " could not be resolved.");
-            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Reference for " + entryKey + "could not be resolved"));
+            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonError("Reference for " + entryKey + " could not" +
+                    " be resolved", axis2MessageContext, Constants.NOT_FOUND));
         }
     }
 

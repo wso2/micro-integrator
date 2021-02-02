@@ -55,8 +55,6 @@ public class DataServiceCallMediatorSerializer extends AbstractMediatorSerialize
         if (DataServiceCallMediatorConstants.INLINE_SOURCE.equalsIgnoreCase(sourceType)) {
             Operations operationsObj = mediator.getOperations();
             OMElement operationsEle = fac.createOMElement(DataServiceCallMediatorConstants.OPERATIONS, synNS);
-            operationsEle.addAttribute(DataServiceCallMediatorConstants.TYPE, operationsObj.getType().toString().
-                    toLowerCase(), nullNS);
             OMElement operationEle = extractOperations(operationsObj, operationsEle);
             operationsEle.addChild(operationEle);
             dsCallEle.addChild(operationEle);
@@ -100,9 +98,6 @@ public class DataServiceCallMediatorSerializer extends AbstractMediatorSerialize
     private OMElement extractParams(Param param) {
         OMElement paramEle = fac.createOMElement(DataServiceCallMediatorConstants.PARAM, synNS);
         paramEle.addAttribute(DataServiceCallMediatorConstants.NAME, param.getParamName(), nullNS);
-        if (param.getParamType() != null) {
-            paramEle.addAttribute(DataServiceCallMediatorConstants.TYPE, param.getParamType(), nullNS);
-        }
         if (param.getParamValue() != null) {
             paramEle.addAttribute(DataServiceCallMediatorConstants.VALUE, param.getParamValue(), nullNS);
         }

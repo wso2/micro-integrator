@@ -205,12 +205,22 @@ public class TemplateResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
         SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
+        JSONObject templateObject = null;
         if (ENDPOINT_TEMPLATE_TYPE.equalsIgnoreCase(templateType)) {
             Template endpointTemplate = synapseConfiguration.getEndpointTemplate(templateName);
-            Utils.setJsonPayLoad(axis2MessageContext, getEndpointTemplateAsJson(endpointTemplate));
+            if (Objects.nonNull(endpointTemplate)) {
+                templateObject = getEndpointTemplateAsJson(endpointTemplate);
+            }
         } else if (SEQUENCE_TEMPLATE_TYPE.equalsIgnoreCase(templateType)) {
             TemplateMediator sequenceTemplate = synapseConfiguration.getSequenceTemplate(templateName);
-            Utils.setJsonPayLoad(axis2MessageContext, getSequenceTemplateAsJson(sequenceTemplate));
+            if (Objects.nonNull(sequenceTemplate)) {
+                templateObject = getSequenceTemplateAsJson(sequenceTemplate);
+            }
+        }
+        if (Objects.nonNull(templateObject)) {
+            Utils.setJsonPayLoad(axis2MessageContext, templateObject);
+        } else {
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }
     }
 

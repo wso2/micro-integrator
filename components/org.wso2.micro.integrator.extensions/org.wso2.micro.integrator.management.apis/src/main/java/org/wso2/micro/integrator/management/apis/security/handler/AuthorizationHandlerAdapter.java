@@ -47,7 +47,12 @@ public abstract class AuthorizationHandlerAdapter extends SecurityHandlerAdapter
     public Boolean handle(MessageContext messageContext) {
         String userName = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
         if (Objects.nonNull(userName)) {
-            return authorize(userName);
+            if (authorize(userName)) {
+                return true;
+            } else {
+                SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_FORBIDDEN);
+                return false;
+            }
         } else {
             LOG.error("The user has not been authenticated. Consider adding an AuthenticationHandler prior to the "
                       + "AuthorizationHandler");
