@@ -155,7 +155,7 @@ public class DefaultAppDeployer implements AppDeploymentHandler {
                         "be deployed. But " + files.size() + " files found.");
                 continue;
             }
-            artifact.setDeploymentStatus(org.wso2.micro.application.deployer.AppDeployerConstants.DEPLOYMENT_STATUS_PENDING);
+            
             String fileName = artifact.getFiles().get(0).getName();
             String artifactPath = artifact.getExtractedPath() + File.separator + fileName;
 
@@ -163,6 +163,8 @@ public class DefaultAppDeployer implements AppDeploymentHandler {
             Deployer deployer = getDeployer(axisConfig, artifact.getType());
             if (deployer != null) {
                 try {
+                    artifact.setDeploymentStatus(
+                            org.wso2.micro.application.deployer.AppDeployerConstants.DEPLOYMENT_STATUS_PENDING);
                     // Call the deploy method of the deployer
                     deployer.deploy(new DeploymentFileData(new File(artifactPath), deployer));
                     artifact.setDeploymentStatus(org.wso2.micro.application.deployer.AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);

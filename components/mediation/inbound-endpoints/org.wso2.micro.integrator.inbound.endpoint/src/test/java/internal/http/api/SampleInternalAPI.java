@@ -17,7 +17,7 @@
  */
 package internal.http.api;
 
-import org.apache.synapse.rest.cors.CORSConfiguration;
+import org.apache.synapse.api.cors.CORSConfiguration;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;

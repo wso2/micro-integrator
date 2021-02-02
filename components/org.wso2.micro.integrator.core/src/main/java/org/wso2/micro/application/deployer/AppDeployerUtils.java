@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.xml.namespace.QName;
@@ -320,7 +321,8 @@ public final class AppDeployerUtils {
             regConfig.addResource(readChildText(itemElement, RegistryConfig.PATH),
                     readChildText(itemElement, RegistryConfig.FILE),
                     readChildText(itemElement, RegistryConfig.REGISTRY_TYPE),
-                    readChildText(itemElement, RegistryConfig.MEDIA_TYPE));
+                    readChildText(itemElement, RegistryConfig.MEDIA_TYPE),
+                    readProperties(itemElement));
         }
 
         // read Item elements under Resources
@@ -338,7 +340,8 @@ public final class AppDeployerUtils {
             OMElement collElement = (OMElement) collectionItr.next();
             regConfig.addCollection(readChildText(collElement, RegistryConfig.PATH),
                     readChildText(collElement, RegistryConfig.DIRECTORY),
-                    readChildText(collElement, RegistryConfig.REGISTRY_TYPE));
+                    readChildText(collElement, RegistryConfig.REGISTRY_TYPE),
+                    readProperties(collElement));
         }
 
         // read Association elements under Resources
@@ -738,6 +741,32 @@ public final class AppDeployerUtils {
         }
         return updatedPath;
 
+    }
+
+    /**
+     * Read the property elements inside the given properties element.
+     *
+     * @param artifactEle properties OM element
+     * @return property elements inside properties element if defined any. Otherwise null
+     */
+    private static Properties readProperties(OMElement artifactEle) {
+        // read the properties
+        Properties props = new Properties();
+        OMElement properties = artifactEle.getFirstChildWithName(new QName("properties"));
+        if (properties == null) {
+            return null;
+        }
+        Iterator itr = properties.getChildrenWithLocalName("property");
+        while (itr.hasNext()) {
+            OMElement depElement = (OMElement) itr.next();
+            String key = depElement.getAttribute(new QName("key")).getAttributeValue();
+            String value = depElement.getAttribute(new QName("value")).getAttributeValue();
+            props.setProperty(key, value);
+        }
+        if (props.isEmpty()) {
+            return null;
+        }
+        return props;
     }
 
 }
