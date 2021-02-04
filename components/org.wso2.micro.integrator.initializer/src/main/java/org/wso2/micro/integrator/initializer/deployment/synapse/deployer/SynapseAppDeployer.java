@@ -17,6 +17,7 @@
  */
 package org.wso2.micro.integrator.initializer.deployment.synapse.deployer;
 
+import com.google.gson.JsonObject;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -75,6 +76,7 @@ import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusUtils;
+import org.wso2.micro.integrator.initializer.dashboard.ArtifactDeploymentListener;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.LocalEntryUtil;
@@ -301,6 +303,8 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                     }
 
                     artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_PENDING);
+                    JsonObject undeployedArtifact = createUpdatedArtifactInfoObject(artifact);
+                    ArtifactDeploymentListener.addToUndeployedArtifactsQueue(undeployedArtifact);
                     File artifactFile = new File(artifactPath);
                     if (artifactFile.exists() && !artifactFile.delete()) {
                         log.warn("Couldn't delete App artifact file : " + artifactPath);
@@ -1105,6 +1109,8 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                         setCustomLogContent(deployer, carbonApp);
                         deployer.deploy(new DeploymentFileData(new File(artifactPath), deployer));
                         artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
+                        JsonObject deployedArtifact = createUpdatedArtifactInfoObject(artifact);
+                        ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedArtifact);
                     } catch (DeploymentException e) {
                         artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_FAILED);
                         throw e;
@@ -1274,6 +1280,20 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
             }
             deploymentEngine.addDeployer(deployer, artifactDir, ServiceBusConstants.ARTIFACT_EXTENSION);
         }
+    }
+
+    private JsonObject createUpdatedArtifactInfoObject(Artifact artifact) {
+        JsonObject artifactInfo = new JsonObject();
+        String type = getArtifactDirName(artifact.getType());
+        if (type.equals("api")) {
+            type = "apis";
+        } else if (type.equals("synapse-libs")) {
+            type = "connectors";
+        }
+        artifactInfo.addProperty("type", type);
+        artifactInfo.addProperty("name", artifact.getName());
+        artifactInfo.addProperty("version", artifact.getVersion());
+        return artifactInfo;
     }
 }
 

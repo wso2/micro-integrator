@@ -34,12 +34,15 @@ import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.integrator.dataservices.core.DBDeployer;
 import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.micro.integrator.initializer.StartupFinalizer;
+import org.wso2.micro.integrator.initializer.dashboard.HeartBeatComponent;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
+
+import java.io.IOException;
 
 @Component(name = "org.wso2.micro.integrator.initializer.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
@@ -67,6 +70,11 @@ public class AppDeployerServiceComponent {
 
         // Invoke all registered deployers to deploy services
         invokeRegisteredDeployers();
+
+        if(HeartBeatComponent.isDashboardConfigured()) {
+            log.info("Dashboard is configured. Initiating heartbeat executor service.");
+            HeartBeatComponent.invokeHeartbeatExecutorService();
+        }
 
         // Finalize server startup
         startupFinalizer = new StartupFinalizer(configCtx, ctxt.getBundleContext());
