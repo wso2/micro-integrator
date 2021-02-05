@@ -86,7 +86,7 @@ public class TResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getColumnLabel(int i) throws SQLException {
-        return getColumn(i).getName();
+        return getColumn(i).getAliasName() != null ? getColumn(i).getAliasName() : getColumn(i).getName();
     }
 
     @Override

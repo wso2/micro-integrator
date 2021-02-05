@@ -147,7 +147,15 @@ public class Parser {
             if (Constants.COMMA.equalsIgnoreCase(tokens.peek())) {
                 tokens.poll();
                 processSelectedColumns(tokens, processed);
+            } else if(Constants.AS.equalsIgnoreCase(tokens.peek())){
+                tokens.poll();
+                processed.add(Constants.AS);
+                processed.add(tokens.poll());
+                processSelectedColumns(tokens, processed);
             }
+        } else if (Constants.COMMA.equalsIgnoreCase(tokens.peek())) {
+            tokens.poll();
+            processSelectedColumns(tokens, processed);
         }
     }
 

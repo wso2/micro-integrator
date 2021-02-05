@@ -31,6 +31,17 @@ public class ColumnInfo {
 
     private Object value;
 
+    // This is used to change column names later when "AS" keyword is used.
+    private String aliasName;
+
+    public String getAliasName() {
+        return aliasName;
+    }
+
+    public void setAliasName(String aliasName) {
+        this.aliasName = aliasName;
+    }
+
     public ColumnInfo(String name, String tableName, int sqlType) {
         this.name = name;
         this.tableName = tableName;
