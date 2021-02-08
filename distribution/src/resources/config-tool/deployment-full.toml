@@ -1095,3 +1095,10 @@ enable = false
 enable = true
 data_source = "WSO2_COORDINATION_DB"
 update_interval = 2
+
+#################### Service Catalog ############################
+[[service_catalog]]
+apimHost = "https://127.0.0.1:9443"
+enable = true
+userName = "admin"
+password = "admin"
