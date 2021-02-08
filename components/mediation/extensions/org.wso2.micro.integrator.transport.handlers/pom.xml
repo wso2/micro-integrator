@@ -96,12 +96,8 @@
             <artifactId>org.wso2.carbon.mediation.commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-models</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-core</artifactId>
+            <groupId>org.wso2.orbit.io.swagger.v3</groupId>
+            <artifactId>swagger-parser</artifactId>
         </dependency>
     </dependencies>
 </project>
