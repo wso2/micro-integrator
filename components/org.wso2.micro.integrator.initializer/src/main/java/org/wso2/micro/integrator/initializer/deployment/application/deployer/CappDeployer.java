@@ -18,6 +18,7 @@
 package org.wso2.micro.integrator.initializer.deployment.application.deployer;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.AbstractDeployer;
@@ -386,7 +387,7 @@ public class CappDeployer extends AbstractDeployer {
                 // If artifact is an API, add apiMapping to the synapse configuration.
                 if (artifact.getType().equals(API_TYPE)) {
                     String apiXmlPath = directoryPath + File.separator + artifact.getFiles().get(0).getName();
-                    String apiName = getApiNameFromFile(new FileInputStream(new File(apiXmlPath)));
+                    String apiName = getApiNameFromFile(new FileInputStream(apiXmlPath));
                     if (!StringUtils.isEmpty(apiName)) {
                         // Re-constructing swagger table with API name since artifact name is not unique
                         apiArtifactMap.put(artifact.getName(),apiName);
@@ -604,17 +605,18 @@ public class CappDeployer extends AbstractDeployer {
      *
      * @param apiXmlStream input stream of the API file.
      * @return name of the API.
-     * @throws CarbonException error occurred while reading the API xml file.
      */
-    private String getApiNameFromFile(InputStream apiXmlStream) throws CarbonException {
+    private String getApiNameFromFile(InputStream apiXmlStream) {
 
         try {
             OMElement apiElement = new StAXOMBuilder(apiXmlStream).getDocumentElement();
             API api = APIFactory.createAPI(apiElement);
             return api.getName();
-        } catch (XMLStreamException e) {
-            handleException("Error while parsing the api XML file ", e);
+        } catch (XMLStreamException | OMException e) {
+            // Cannot find the API file or API is faulty.
+            // This error is properly handled later in the deployers and CAPP will go faulty.
+            // Hence the exception is not propagated from here.
+            return null;
         }
-        return null;
     }
 }
