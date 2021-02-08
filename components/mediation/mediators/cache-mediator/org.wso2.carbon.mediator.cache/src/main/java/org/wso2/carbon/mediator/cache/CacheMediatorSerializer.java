@@ -114,17 +114,34 @@ public class CacheMediatorSerializer extends AbstractMediatorSerializer {
                         protocolElem.addChild(methodElem);
                     }
 
-                    String[] headers = cacheMediator.getHeadersToExcludeInHash();
-                    if (!(headers.length == 0 && headers[0].isEmpty())) {
+                    // Add exclude headers to the OM element
+                    String[] excludeHeaders = cacheMediator.getHeadersToExcludeInHash();
+                    if (!(excludeHeaders.length == 0 && excludeHeaders[0].isEmpty())) {
                         StringBuilder header = new StringBuilder();
-                        for (int i = 0; i < headers.length; i++) {
-                            if (i != headers.length - 1) {
-                                header.append(headers[i]).append(", ");
+                        for (int i = 0; i < excludeHeaders.length; i++) {
+                            if (i != excludeHeaders.length - 1) {
+                                header.append(excludeHeaders[i]).append(", ");
                             } else {
-                                header.append(headers[i]);
+                                header.append(excludeHeaders[i]);
                             }
                         }
                         OMElement headerElem = fac.createOMElement(CachingConstants.HEADERS_TO_EXCLUDE_STRING, synNS);
+                        headerElem.setText(header.toString());
+                        protocolElem.addChild(headerElem);
+                    }
+
+                    // Add include headers to the OM element
+                    String[] includeHeaders = cacheMediator.getHeadersToIncludeInHash();
+                    if (!(includeHeaders.length == 0 && includeHeaders[0].isEmpty())) {
+                        StringBuilder header = new StringBuilder();
+                        for (int i = 0; i < includeHeaders.length; i++) {
+                            if (i != includeHeaders.length - 1) {
+                                header.append(includeHeaders[i]).append(", ");
+                            } else {
+                                header.append(includeHeaders[i]);
+                            }
+                        }
+                        OMElement headerElem = fac.createOMElement(CachingConstants.HEADERS_TO_INCLUDE_STRING, synNS);
                         headerElem.setText(header.toString());
                         protocolElem.addChild(headerElem);
                     }

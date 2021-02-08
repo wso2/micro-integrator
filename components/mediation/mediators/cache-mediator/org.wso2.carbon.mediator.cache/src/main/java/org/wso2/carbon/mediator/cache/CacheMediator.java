@@ -111,6 +111,11 @@ public class CacheMediator extends AbstractMediator implements ManagedLifecycle,
     private String[] headersToExcludeInHash = {""};
 
     /**
+     * The headers to include when caching.
+     */
+    private String[] headersToIncludeInHash = {""};
+
+    /**
      * This is used to define the logic used by the mediator to evaluate the hash values of incoming messages.
      */
     private DigestGenerator digestGenerator = CachingConstants.DEFAULT_HASH_GENERATOR;
@@ -708,6 +713,25 @@ public class CacheMediator extends AbstractMediator implements ManagedLifecycle,
     public void setHeadersToExcludeInHash(String... headersToExcludeInHash) {
         this.headersToExcludeInHash = headersToExcludeInHash;
     }
+
+    /**
+     * This method gives array of headers that would be included when hashing.
+     *
+     * @return array of headers to included in hashing
+     */
+    public String[] getHeadersToIncludeInHash() {
+        return headersToIncludeInHash;
+    }
+
+    /**
+     * This method sets the array of headers that would be included when hashing.
+     *
+     * @param headersToIncludeInHash array of headers to include in hashing.
+     */
+    public void setHeadersToIncludeInHash(String... headersToIncludeInHash) {
+        this.headersToIncludeInHash = headersToIncludeInHash;
+    }
+
 
     /**
      * This method gives SequenceMediator to be executed.

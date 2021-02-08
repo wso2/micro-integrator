@@ -38,6 +38,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -69,84 +70,57 @@ public class HttpRequestHashGenerator implements DigestGenerator {
 
     String[] permanentlyExcludedHeaders = {};
 
+    boolean isIncludeHeadersMode = true;
+
     /**
      * {@inheritDoc}
      */
     public String getDigest(MessageContext msgContext) throws CachingException {
-        boolean excludeAllHeaders = EXCLUDE_ALL_VAL.equals(headers[0]);
+        boolean allHeaders = EXCLUDE_ALL_VAL.equals(headers[0]);
         String method = (String) msgContext.getProperty(Constants.Configuration.HTTP_METHOD);
         boolean isGet = msgContext.isDoingREST() && (PassThroughConstants.HTTP_GET.equals(method) ||
                 PassThroughConstants.HTTP_DELETE.equals(method) ||
                 PassThroughConstants.HTTP_HEAD.equals(method));
-        //If some or all headers need to be included in the hash
-        if (!excludeAllHeaders) {
-            //cloning transport headers from message context and making them case insensitive
-            Map<String, String> transportHeaders =
-                    new TreeMap<String, String>(new Comparator<String>() {
-                        public int compare(String o1, String o2) {
-                            return o1.compareToIgnoreCase(o2);
-                        }
-                    });
-            transportHeaders.putAll((Map<String, String>)msgContext.getProperty(MessageContext.TRANSPORT_HEADERS));
-            for (String header : headers) {
-                transportHeaders.remove(header);
+        if (isIncludeHeadersMode) {
+            // This is header inclusion mode
+            Map<String, String> transportHeaders = getTransportHeaders(msgContext);
+            if (!allHeaders) {
+                // remove headers except the provided ones
+                Map<String, String> tmpHeaders = new HashMap<>();
+                for (String header: headers) {
+                    tmpHeaders.put(header, transportHeaders.get(header));
+                }
+                transportHeaders.clear();
+                transportHeaders.putAll(tmpHeaders);
             }
-
-            //remove permanently excluded headers from hashing methods
-            for (String header : permanentlyExcludedHeaders) {
-                transportHeaders.remove(header);
-            }
-
-            //If the HTTP method is GET do not hash the payload. Hash only url and headers.
             if (isGet) {
-                if (msgContext.getTo() == null) {
-                    return null;
-                }
-                String toAddress = msgContext.getTo().getAddress();
-                byte[] digest = getDigest(toAddress, transportHeaders, MD5_DIGEST_ALGORITHM);
-                return digest != null ? getStringRepresentation(digest) : null;
-            } else { //If the HTTP method is POST hash the payload along with the url and the headers
-                OMNode body = msgContext.getEnvelope().getBody();
-                String toAddress = null;
-                if (msgContext.getTo() != null) {
-                    toAddress = msgContext.getTo().getAddress();
-                }
-                if (body != null) {
-                    byte[] digest;
-                    if (toAddress != null) {
-                        digest = getDigest(body, toAddress, transportHeaders, MD5_DIGEST_ALGORITHM);
-                    } else {
-                        digest = getDigest(body, MD5_DIGEST_ALGORITHM);
-                    }
-                    return digest != null ? getStringRepresentation(digest) : null;
-                } else {
-                    return null;
-                }
-            }
-        } else { //Do not hash the headers
-            if (isGet) {
-                if (msgContext.getTo() == null) {
-                    return null;
-                }
-                String toAddress = msgContext.getTo().getAddress();
-                byte[] digest = getDigest(toAddress, MD5_DIGEST_ALGORITHM);
-                return digest != null ? getStringRepresentation(digest) : null;
+                //If the HTTP method is GET do not hash the payload. Hash only url and headers.
+                return handleGetWithHeaders(msgContext, transportHeaders);
             } else {
-                OMNode body = msgContext.getEnvelope().getBody();
-                String toAddress = null;
-                if (msgContext.getTo() != null) {
-                    toAddress = msgContext.getTo().getAddress();
+                //If the HTTP method is POST hash the payload along with the url and the headers
+                return handlePostWithHeaders(msgContext, transportHeaders);
+            }
+        } else {
+            // This is header exclusion mode
+            if (!allHeaders) {
+                // Exclude only some headers
+                Map<String, String> transportHeaders = getTransportHeaders(msgContext);
+                for (String header : headers) {
+                    transportHeaders.remove(header);
                 }
-                if (body != null) {
-                    byte[] digest;
-                    if (toAddress != null) {
-                        digest = getDigest(body, toAddress, null, MD5_DIGEST_ALGORITHM);
-                    } else {
-                        digest = getDigest(body, MD5_DIGEST_ALGORITHM);
-                    }
-                    return digest != null ? getStringRepresentation(digest) : null;
+                if (isGet) {
+                    //If the HTTP method is GET do not hash the payload. Hash only url and headers.
+                    return handleGetWithHeaders(msgContext, transportHeaders);
                 } else {
-                    return null;
+                    //If the HTTP method is POST hash the payload along with the url and the headers
+                    return handlePostWithHeaders(msgContext, transportHeaders);
+                }
+            } else {
+                //Do not hash the headers (exclude all headers)
+                if (isGet) {
+                    return handleGetWithoutHeaders(msgContext);
+                } else {
+                    return handlePostWithoutHeaders(msgContext);
                 }
             }
         }
@@ -550,7 +524,88 @@ public class HttpRequestHashGenerator implements DigestGenerator {
 
     @Override
     public void init(Map<String, Object> properties) {
-        headers = (String[]) properties.get("headers-to-exclude");
+        headers = (String[]) properties.get(CachingConstants.INCLUDED_HEADERS_PROPERTY);
+        if (headers[0].isEmpty()) {
+            // if include headers have not been explicitly defined
+            // mode becomes exclude header
+            isIncludeHeadersMode = false;
+            headers = (String[]) properties.get(CachingConstants.EXCLUDED_HEADERS_PROPERTY);
+        }
         permanentlyExcludedHeaders = (String[]) properties.get(CachingConstants.PERMANENTLY_EXCLUDED_HEADERS_STRING);
+    }
+
+    private String handleGetWithHeaders(MessageContext msgContext, Map transportHeaders) {
+
+        if (msgContext.getTo() == null) {
+            return null;
+        }
+        String toAddress = msgContext.getTo().getAddress();
+        byte[] digest = getDigest(toAddress, transportHeaders, MD5_DIGEST_ALGORITHM);
+        return digest != null ? getStringRepresentation(digest) : null;
+    }
+
+    private String handlePostWithHeaders(MessageContext msgContext, Map transportHeaders) {
+        OMNode body = msgContext.getEnvelope().getBody();
+        String toAddress = null;
+        if (msgContext.getTo() != null) {
+            toAddress = msgContext.getTo().getAddress();
+        }
+        if (body != null) {
+            byte[] digest;
+            if (toAddress != null) {
+                digest = getDigest(body, toAddress, transportHeaders, MD5_DIGEST_ALGORITHM);
+            } else {
+                digest = getDigest(body, MD5_DIGEST_ALGORITHM);
+            }
+            return digest != null ? getStringRepresentation(digest) : null;
+        } else {
+            return null;
+        }
+    }
+
+    private String handleGetWithoutHeaders(MessageContext msgContext) {
+        if (msgContext.getTo() == null) {
+            return null;
+        }
+        String toAddress = msgContext.getTo().getAddress();
+        byte[] digest = getDigest(toAddress, MD5_DIGEST_ALGORITHM);
+        return digest != null ? getStringRepresentation(digest) : null;
+    }
+
+    private String handlePostWithoutHeaders(MessageContext msgContext) {
+        OMNode body = msgContext.getEnvelope().getBody();
+        String toAddress = null;
+        if (msgContext.getTo() != null) {
+            toAddress = msgContext.getTo().getAddress();
+        }
+        if (body != null) {
+            byte[] digest;
+            if (toAddress != null) {
+                digest = getDigest(body, toAddress, null, MD5_DIGEST_ALGORITHM);
+            } else {
+                digest = getDigest(body, MD5_DIGEST_ALGORITHM);
+            }
+            return digest != null ? getStringRepresentation(digest) : null;
+        } else {
+            return null;
+        }
+    }
+
+    private Map<String, String> getTransportHeaders(MessageContext msgContext) {
+        //cloning transport headers from message context and making them case insensitive
+        Map<String, String> transportHeaders =
+                new TreeMap<String, String>(new Comparator<String>() {
+                    public int compare(String o1, String o2) {
+
+                        return o1.compareToIgnoreCase(o2);
+                    }
+                });
+        transportHeaders.putAll((Map<String, String>) msgContext.
+                getProperty(MessageContext.TRANSPORT_HEADERS));
+        //remove permanently excluded headers from hashing methods
+        for (String header : permanentlyExcludedHeaders) {
+            transportHeaders.remove(header);
+        }
+        return transportHeaders;
     }
 }
