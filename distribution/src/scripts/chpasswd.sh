@@ -97,6 +97,11 @@ do
   CARBON_CLASSPATH=$CARBON_CLASSPATH:$h
 done
 
+for i in "$CARBON_HOME"/bin/*.jar
+do
+  CARBON_CLASSPATH=$CARBON_CLASSPATH:$i
+done
+
 CARBON_CLASSPATH=$CARBON_CLASSPATH:$CLASSPATH
 
 # For Cygwin, switch paths to Windows format before running java
@@ -112,5 +117,5 @@ cd "$CARBON_HOME"
 
 CARBON_CLASSPATH="$CARBON_HOME/lib/patches":"$CARBON_HOME/conf":$CARBON_CLASSPATH
 
-$JAVA_HOME/bin/java -cp "$CARBON_CLASSPATH" org.wso2.carbon.core.util.PasswordUpdater $*
+$JAVA_HOME/bin/java -Dcarbon.config.dir.path="$CARBON_HOME/conf" -cp "$CARBON_CLASSPATH" org.wso2.carbon.core.util.PasswordUpdater $*
 
