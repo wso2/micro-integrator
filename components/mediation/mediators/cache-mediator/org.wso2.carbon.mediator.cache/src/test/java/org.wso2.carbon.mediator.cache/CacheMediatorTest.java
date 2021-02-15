@@ -64,7 +64,7 @@ public class CacheMediatorTest extends XMLTestCase {
                     "            <protocol type=\"HTTP\">\n" +
                     "               <methods>POST, GET</methods>\n" +
                     "               <headersToExcludeInHash>ab, abc</headersToExcludeInHash>\n" +
-                    "               <responseCodes>2|5[0-9][0-9]</responseCodes>\n" +
+                    "               <headersToIncludeInHash>xy, xyz</headersToIncludeInHash>\n" +                    "               <responseCodes>2|5[0-9][0-9]</responseCodes>\n" +
                     "               <enableCacheControl>true</enableCacheControl>\n" +
                     "               <includeAgeHeader>true</includeAgeHeader>\n" +
                     "               <hashGenerator>org.wso2.carbon.mediator.cache.digest" +
@@ -93,6 +93,7 @@ public class CacheMediatorTest extends XMLTestCase {
         assertTrue("Incorrect value for the httpMethodsToCache",
                 Arrays.equals(mediator.getHTTPMethodsToCache(), new String[]{"POST", "GET"}));
         assertTrue("Incorrect value for the headersToExcludeInHash",Arrays.equals(mediator.getHeadersToExcludeInHash(), new String[]{"ab", "abc"}));
+        assertTrue("Incorrect value for the headersToIncludeInHash",Arrays.equals(mediator.getHeadersToIncludeInHash(), new String[]{"xy", "xyz"}));
         assertEquals("Incorrect value for the for the responsecodes",mediator.getResponseCodes(), "2|5[0-9][0-9]");
         assertEquals("Incorrect value for the hashGenerator",mediator.getDigestGenerator().getClass().getName(),
                 "org.wso2.carbon.mediator.cache.digest.HttpRequestHashGenerator");
