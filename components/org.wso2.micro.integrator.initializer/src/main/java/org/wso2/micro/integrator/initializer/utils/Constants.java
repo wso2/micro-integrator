@@ -37,7 +37,7 @@ public class Constants {
     public static final String USER_NAME = "userName";
     public static final String PASSWORD = "password";
 
-    public static final String SERVICE_CATALOG_ENDPOINT = "api/am/service-catalog/services/import?overwrite" +
+    public static final String SERVICE_CATALOG_ENDPOINT = "api/am/service-catalog/v0/services/import?overwrite" +
             "=true";
 
     // creating the payload.zip related constants
