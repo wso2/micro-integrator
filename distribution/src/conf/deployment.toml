@@ -99,3 +99,9 @@ algorithm = "AES"
 
 # [secrets]
 # secret_key = "[secret value]"
+
+# [[service_catalog]]
+# apimHost = "https://localhost:9443"
+# enable = true
+# userName = "admin"
+# password = "admin"
