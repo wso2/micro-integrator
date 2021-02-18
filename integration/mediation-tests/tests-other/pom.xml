@@ -247,6 +247,11 @@
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.core</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
