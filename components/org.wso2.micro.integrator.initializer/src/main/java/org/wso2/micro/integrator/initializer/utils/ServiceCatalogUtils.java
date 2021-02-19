@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.commons.resolvers.ResolverException;
 import org.apache.synapse.commons.resolvers.SystemResolver;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
@@ -49,7 +50,6 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -68,8 +68,9 @@ public class ServiceCatalogUtils {
      *
      * @param currentUrl current url.
      * @return updated url.
+     * @throws ResolverException environment variables are not set correctly.
      */
-    private static String updateServiceUrl(String currentUrl) {
+    private static String updateServiceUrl(String currentUrl) throws ResolverException {
         /*
             Supported formats
             https://{host}:{port}/api1
@@ -91,48 +92,13 @@ public class ServiceCatalogUtils {
     }
 
     /**
-     * Create the zip file by wrapping all the metadata files.
-     *
-     * @param zos                 ZipOutputStream of the output ZIP file.
-     * @param fileToZip           File to be added to the ZIP file.
-     * @param parentDirectoryName Name of the parent directory.
-     * @throws IOException Error occurred while creating the ZIP file.
-     */
-    public static void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parentDirectoryName)
-            throws IOException {
-        if (fileToZip == null || !fileToZip.exists()) {
-            return;
-        }
-
-        String zipEntryName = fileToZip.getName();
-        if (parentDirectoryName != null && !parentDirectoryName.isEmpty()) {
-            zipEntryName = parentDirectoryName + File.separator + fileToZip.getName();
-        }
-
-        if (fileToZip.isDirectory()) {
-            for (File file : Objects.requireNonNull(fileToZip.listFiles())) {
-                addDirToZipArchive(zos, file, zipEntryName);
-            }
-        } else {
-            byte[] buffer = new byte[1024];
-            FileInputStream fis = new FileInputStream(fileToZip);
-            zos.putNextEntry(new ZipEntry(zipEntryName));
-            int length;
-            while ((length = fis.read(buffer)) > 0) {
-                zos.write(buffer, 0, length);
-            }
-            zos.closeEntry();
-            fis.close();
-        }
-    }
-
-    /**
      * Update the serviceUrl of the given metadata file.
      *
      * @param yamlFile metadata yaml file.
-     * @throws IOException Error occurred while updating the metadata file.
+     * @throws IOException       Error occurred while updating the metadata file.
+     * @throws ResolverException Error occurred while reading env variables.
      */
-    public static void updateMetadataWithServiceUrl(File yamlFile) throws IOException {
+    public static void updateMetadataWithServiceUrl(File yamlFile) throws IOException, ResolverException {
         Yaml yaml = new Yaml();
         Map<String, Object> obj =
                 (Map<String, Object>) yaml.load(new FileInputStream(yamlFile));
@@ -298,9 +264,11 @@ public class ServiceCatalogUtils {
      * @param tempDir            temporary directory to put metadata.
      * @param metadataFolder     metadata folder inside CAPP.
      * @param metadataYamlFolder YAML folder inside CAPP.
-     * @throws IOException error occurred while moving files.
+     * @throws IOException       error occurred while moving files.
+     * @throws ResolverException Error occurred while updating the metadata file.
      */
-    public static void processMetadata(File tempDir, File metadataFolder, File metadataYamlFolder) throws IOException {
+    public static void processMetadata(File tempDir, File metadataFolder, File metadataYamlFolder) throws IOException
+            , ResolverException {
         String metaFileName = metadataYamlFolder.getName();
         String APIName = metaFileName.substring(0, metaFileName.indexOf(METADATA_FOLDER_STRING));
         String APIVersion =
@@ -329,41 +297,66 @@ public class ServiceCatalogUtils {
     /**
      * Create the final ZIP file wrapping all the metadata files.
      *
-     * @param tempDir      temporary directory where metadata files are copied.
-     * @param cappUnzipDir location where the CAPPs are unzipped.
-     * @return result of zip creation process. ( successful / failed )
+     * @param destArchiveName location of the ZIP file.
+     * @param sourceDir       location of the metadata folder.
+     * @return result of zip creation process. ( successful / failed ).
      */
-    public static boolean createZipFile(File tempDir, String cappUnzipDir) {
-        String zipPath = cappUnzipDir + File.separator + ZIP_FOLDER_NAME;
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream(zipPath);
-        } catch (FileNotFoundException e) {
-            log.error("Invalid target ZIP file location", e);
-            return false;
+    public static boolean archiveDir(String destArchiveName, String sourceDir) {
+        File zipDir = new File(sourceDir);
+        if (!zipDir.isDirectory()) {
+            log.error(sourceDir + " is not a directory");
         }
-        ZipOutputStream zos = new ZipOutputStream(fos);
-        File[] metadataFiles = tempDir.listFiles();
-        if (metadataFiles != null && metadataFiles.length > 0) {
-            try {
-                for (File metaFile : Objects.requireNonNull(tempDir.listFiles())) {
-                    addDirToZipArchive(zos, metaFile, null);
-                }
-                zos.flush();
-                fos.flush();
-                zos.close();
-                fos.close();
-            } catch (IOException ex) {
-                log.error("Error occurred while archiving the metadata files", ex);
-                return false;
-            }
-        } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Didn't find any meta-information in CAPPs");
-            }
+        try {
+            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(destArchiveName));
+            zipDir(zipDir, zos, sourceDir);
+            zos.close();
+        } catch (Exception ex) {
+            log.error("Error occurred while creating the archive", ex);
             return false;
         }
         return true;
+    }
+
+    private static void zipDir(File zipDir, ZipOutputStream zos, String archiveSourceDir) throws IOException {
+        //get a listing of the directory content
+        String[] dirList = zipDir.list();
+        byte[] readBuffer = new byte[40960];
+        int bytesIn;
+        //loop through dirList, and zip the files
+        for (String s : dirList) {
+            File f = new File(zipDir, s);
+            //place the zip entry in the ZipOutputStream object
+            zos.putNextEntry(new ZipEntry(getZipEntryPath(f, archiveSourceDir)));
+            if (f.isDirectory()) {
+                //if the File object is a directory, call this
+                //function again to add its content recursively
+                zipDir(f, zos, archiveSourceDir);
+                //loop again
+                continue;
+            }
+            //if we reached here, the File object f was not a directory
+            //create a FileInputStream on top of f
+            FileInputStream fis = new FileInputStream(f);
+
+            //now write the content of the file to the ZipOutputStream
+            while ((bytesIn = fis.read(readBuffer)) != -1) {
+                zos.write(readBuffer, 0, bytesIn);
+            }
+            //close the Stream
+            fis.close();
+        }
+    }
+
+    private static String getZipEntryPath(File f, String archiveSourceDir) {
+        String entryPath = f.getPath();
+        entryPath = entryPath.substring(archiveSourceDir.length() + 1);
+        if (File.separatorChar == '\\') {
+            entryPath = entryPath.replace(File.separatorChar, '/');
+        }
+        if (f.isDirectory()) {
+            entryPath += "/";
+        }
+        return entryPath;
     }
 
     /**
@@ -400,8 +393,11 @@ public class ServiceCatalogUtils {
         Collection APITable =
                 SynapseConfigUtils.getSynapseConfiguration(
                         org.wso2.micro.core.Constants.SUPER_TENANT_DOMAIN_NAME).getAPIs();
-        log.info("Cannot find APIs - aborting the service-catalog uploader");
-        return !APITable.isEmpty();
+        if (APITable.isEmpty()) {
+            log.info("Cannot find APIs - aborting the service-catalog uploader");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -409,8 +405,9 @@ public class ServiceCatalogUtils {
      *
      * @param targetDir    temporary folder location.
      * @param repoLocation location of the deployment folder of MI.
+     * @return extracted successfully.
      */
-    public static void extractMetadataFromCAPPs(File targetDir, String repoLocation) {
+    public static boolean extractMetadataFromCAPPs(File targetDir, String repoLocation) {
         FilenameFilter cappFilter = (f, name) -> name.endsWith(".car");
         FilenameFilter metaFilter = (f, name) -> name.contains(METADATA_FOLDER_STRING);
 
@@ -427,7 +424,7 @@ public class ServiceCatalogUtils {
 
         File cappFolder = new File(repoLocation, CAPP_FOLDER_NAME);
         File[] files = cappFolder.listFiles(cappFilter);
-        assert files != null;
+        if (files == null) return false; // should not reach here. Checked in checkPreConditions() method
         for (File file : files) {
             try {
                 // Extract the CAPP and get extracted location.
@@ -436,16 +433,23 @@ public class ServiceCatalogUtils {
                 // does not have a metadata folder -> old CAPP format.
                 if (metadataFolder.exists()) {
                     File[] metadataFolders = metadataFolder.listFiles(metaFilter);
-                    assert metadataFolders != null;
-                    for (File metadataYamlFolder : metadataFolders) {
-                        processMetadata(targetDir, metadataFolder, metadataYamlFolder);
+                    if (metadataFolders != null) {
+                        for (File metadataYamlFolder : metadataFolders) {
+                            processMetadata(targetDir, metadataFolder, metadataYamlFolder);
+                        }
                     }
                 }
             } catch (IOException e) {
                 log.error("Error occurred while processing the metadata files", e);
+                return false;
             } catch (CarbonException e) {
                 log.error("Error occurred when extracting the carbon application", e);
+                return false;
+            } catch (ResolverException e) {
+                log.error("Environment variables are not configured correctly", e);
+                return false;
             }
         }
+        return true;
     }
 }
