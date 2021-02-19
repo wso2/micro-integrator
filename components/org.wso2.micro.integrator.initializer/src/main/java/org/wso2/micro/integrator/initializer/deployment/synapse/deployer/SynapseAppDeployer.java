@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.Deployer;
@@ -83,6 +84,7 @@ import org.wso2.micro.integrator.initializer.utils.LocalEntryUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -303,7 +305,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                     }
 
                     artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_PENDING);
-                    JsonObject undeployedArtifact = createUpdatedArtifactInfoObject(artifact);
+                    JsonObject undeployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath);
                     ArtifactDeploymentListener.addToUndeployedArtifactsQueue(undeployedArtifact);
                     File artifactFile = new File(artifactPath);
                     if (artifactFile.exists() && !artifactFile.delete()) {
@@ -1109,7 +1111,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                         setCustomLogContent(deployer, carbonApp);
                         deployer.deploy(new DeploymentFileData(new File(artifactPath), deployer));
                         artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
-                        JsonObject deployedArtifact = createUpdatedArtifactInfoObject(artifact);
+                        JsonObject deployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath);
                         ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedArtifact);
                     } catch (DeploymentException e) {
                         artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_FAILED);
@@ -1282,18 +1284,43 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
         }
     }
 
-    private JsonObject createUpdatedArtifactInfoObject(Artifact artifact) {
+    private JsonObject createUpdatedArtifactInfoObject(Artifact artifact, String artifactPath) {
         JsonObject artifactInfo = new JsonObject();
         String type = getArtifactDirName(artifact.getType());
-        if (type.equals("api")) {
+        if ("api".equals(type)) {
             type = "apis";
-        } else if (type.equals("synapse-libs")) {
+        } else if ("synapse-libs".equals(type)) {
             type = "connectors";
         }
         artifactInfo.addProperty("type", type);
-        artifactInfo.addProperty("name", artifact.getName());
+        String name = artifact.getName();
+        if ("templates".equals(type)) {
+            name = getTemplateName(artifactPath, name);
+        }
+        artifactInfo.addProperty("name", name);
         artifactInfo.addProperty("version", artifact.getVersion());
         return artifactInfo;
+    }
+
+    private String getTemplateName(String artifactPath, String name) {
+        try {
+            FileInputStream in = FileUtils.openInputStream(new File(artifactPath));
+            OMElement artifactConfig = (new StAXOMBuilder(StAXUtils.createXMLStreamReader(in))).getDocumentElement();
+            OMElement element = artifactConfig.getFirstChildWithName
+                    (new QName("http://ws.apache.org/ns/synapse", "endpoint"));
+            if (null != element) {
+                return "endpoint_".concat(name);
+            } else {
+                element = artifactConfig.getFirstChildWithName
+                        (new QName("http://ws.apache.org/ns/synapse", "sequence"));
+                if (null != element) {
+                    return "sequence".concat(name);
+                }
+            }
+        } catch (IOException | XMLStreamException e) {
+            log.error("Error occurred while creating name of template located at "+ artifactPath, e);
+        }
+        return name;
     }
 }
 
