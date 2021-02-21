@@ -18,7 +18,6 @@
 package org.wso2.micro.integrator.initializer.dashboard;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
@@ -32,13 +31,24 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.ConfigurationLoader;
 import org.wso2.config.mapper.ConfigParser;
+import org.wso2.micro.core.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_GROUP_ID;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_HEARTBEAT_INTERVAL;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_NODE_ID;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_URL;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.DEFAULT_GROUP_ID;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.HEADER_VALUE_APPLICATION_JSON;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.NODE_ID_SYSTEM_PROPERTY;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.PRODUCT_MI;
 
 /**
  * Manages heartbeats from micro integrator to dashboard.
@@ -51,32 +61,35 @@ public class HeartBeatComponent {
 
     private static final Log log = LogFactory.getLog(HeartBeatComponent.class);
     private static Map<String, Object> configs = ConfigParser.getParsedConfigs();
+
+    private static final String CHANGE_NOTIFICATION = "changeNotification";
+    private static final String DEPLOYED_ARTIFACTS = "deployedArtifacts";
+    private static final String UNDEPLOYED_ARTIFACTS = "undeployedArtifacts";
     public static void invokeHeartbeatExecutorService() {
 
-        String heartbeatApiUrl = configs.get("dashboard_config.dashboard_url") + File.separator + "heartbeat";
-        String groupId = configs.get("dashboard_config.group_id").toString();
-        String nodeId = configs.get("dashboard_config.node_id").toString();
-        long interval = Integer.parseInt(configs.get("dashboard_config.heartbeat_interval").toString());
+        String heartbeatApiUrl = configs.get(DASHBOARD_CONFIG_URL) + File.separator + "heartbeat";
+        String groupId = getGroupId();
+        String nodeId = getNodeId();
+        long interval = Integer.parseInt(configs.get(DASHBOARD_CONFIG_HEARTBEAT_INTERVAL).toString());
         String carbonLocalIp = System.getProperty("carbon.local.ip");
         int internalHttpApiPort = ConfigurationLoader.getInternalInboundHttpsPort();
         String mgtApiUrl = "https://" + carbonLocalIp + ":" + internalHttpApiPort + "/management/";
         final HttpPost httpPost = new HttpPost(heartbeatApiUrl);
-        final String productName = "mi";
 
         JsonObject heartbeatPayload = new JsonObject();
-        heartbeatPayload.addProperty("product", productName);
+        heartbeatPayload.addProperty("product", PRODUCT_MI);
         heartbeatPayload.addProperty("groupId", groupId);
         heartbeatPayload.addProperty("nodeId", nodeId);
         heartbeatPayload.addProperty("interval", interval);
         heartbeatPayload.addProperty("mgtApiUrl", mgtApiUrl);
 
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader("Content-type", "application/json");
+        httpPost.setHeader("Accept", HEADER_VALUE_APPLICATION_JSON);
+        httpPost.setHeader("Content-type", HEADER_VALUE_APPLICATION_JSON);
 
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         Runnable runnableTask = () -> {
             JsonObject changeNotification = createChangeNotification();
-            heartbeatPayload.add("changeNotification",changeNotification);
+            heartbeatPayload.add(CHANGE_NOTIFICATION, changeNotification);
 
             final CloseableHttpClient client = HttpClients.createDefault();
             try {
@@ -85,10 +98,10 @@ public class HeartBeatComponent {
                 CloseableHttpResponse response = client.execute(httpPost);
                 JsonObject jsonResponse = getJsonResponse(response);
                 if (jsonResponse.get("status").getAsString().equals("success")) {
-                    int deployedArtifactsCount = heartbeatPayload.get("changeNotification").getAsJsonObject()
-                                                                    .get("deployedArtifacts").getAsJsonArray().size();
-                    int undeployedArtifactsCount = heartbeatPayload.get("changeNotification").getAsJsonObject()
-                                                                    .get("undeployedArtifacts").getAsJsonArray().size();
+                    int deployedArtifactsCount = heartbeatPayload.get(CHANGE_NOTIFICATION).getAsJsonObject()
+                                                                    .get(DEPLOYED_ARTIFACTS).getAsJsonArray().size();
+                    int undeployedArtifactsCount = heartbeatPayload.get(CHANGE_NOTIFICATION).getAsJsonObject()
+                                                                    .get(UNDEPLOYED_ARTIFACTS).getAsJsonArray().size();
                     ArtifactDeploymentListener.removeFromUndeployedArtifactsQueue(undeployedArtifactsCount);
                     ArtifactDeploymentListener.removeFromDeployedArtifactsQueue(deployedArtifactsCount);
                 }
@@ -105,17 +118,45 @@ public class HeartBeatComponent {
         scheduledExecutorService.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
     }
 
+    private static String getGroupId() {
+        String groupId;
+        Object id = configs.get(DASHBOARD_CONFIG_GROUP_ID);
+        if (null != id) {
+            groupId = id.toString();
+        } else {
+            groupId = DEFAULT_GROUP_ID;
+        }
+        return groupId;
+    }
+
+    private static String getNodeId() {
+        String nodeId = System.getProperty(NODE_ID_SYSTEM_PROPERTY);
+        if (StringUtils.isEmpty(nodeId)) {
+            Object id = configs.get(DASHBOARD_CONFIG_NODE_ID);
+            if (null != id) {
+                nodeId = id.toString();
+            } else {
+                nodeId = generateRandomId();
+            }
+        }
+        return nodeId;
+    }
+
+    private static String generateRandomId() {
+        return UUID.randomUUID().toString();
+    }
+
     private static JsonObject createChangeNotification() {
         JsonObject changeNotification = new JsonObject();
         JsonArray deployedArtifacts = ArtifactDeploymentListener.getDeployedArtifacts();
         JsonArray undeployedArtifacts = ArtifactDeploymentListener.getUndeployedArtifacts();
-        changeNotification.add("deployedArtifacts", deployedArtifacts);
-        changeNotification.add("undeployedArtifacts", undeployedArtifacts);
+        changeNotification.add(DEPLOYED_ARTIFACTS, deployedArtifacts);
+        changeNotification.add(UNDEPLOYED_ARTIFACTS, undeployedArtifacts);
         return changeNotification;
     }
 
     public static boolean isDashboardConfigured() {
-        return configs.get("dashboard_config.dashboard_url") != null;
+        return configs.get(DASHBOARD_CONFIG_URL) != null;
     }
 
     public static JsonObject getJsonResponse(CloseableHttpResponse response) {
