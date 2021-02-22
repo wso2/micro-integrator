@@ -17,6 +17,12 @@
  */
 package org.wso2.micro.integrator.initializer.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.MalformedJsonException;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -42,13 +48,17 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -62,6 +72,7 @@ public class ServiceCatalogUtils {
 
     private static final Log log = LogFactory.getLog(ServiceCatalogUtils.class);
     private static SecretResolver secretResolver;
+    private static List<Map<String, String>> md5List = new ArrayList<>();
 
     /**
      * Update the service url by injecting env variables.
@@ -92,13 +103,14 @@ public class ServiceCatalogUtils {
     }
 
     /**
-     * Update the serviceUrl of the given metadata file.
+     * Update the serviceUrl of the given metadata file (if required) and return its key value.
      *
      * @param yamlFile metadata yaml file.
+     * @return key value of the metadata file.
      * @throws IOException       Error occurred while updating the metadata file.
      * @throws ResolverException Error occurred while reading env variables.
      */
-    public static void updateMetadataWithServiceUrl(File yamlFile) throws IOException, ResolverException {
+    public static String updateMetadataWithServiceUrl(File yamlFile) throws IOException, ResolverException {
         Yaml yaml = new Yaml();
         Map<String, Object> obj =
                 (Map<String, Object>) yaml.load(new FileInputStream(yamlFile));
@@ -117,17 +129,16 @@ public class ServiceCatalogUtils {
         DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(yamlFile, false));
         outputStream.write(updatedYaml.getBytes());
         outputStream.close();
+        return (String) obj.get(METADATA_KEY);
     }
 
     /**
      * Publish a given ZIP file to APIM service catalog endpoint. Retry if failed.
      *
-     * @param secretCallbackHandlerService secret callback handler reference.
-     * @param attachmentFilePath           path of the ZIP file to be updated.
+     * @param apimConfigs        Map containing deployment.toml configuration
+     * @param attachmentFilePath path of the ZIP file to be updated.
      */
-    public static void publishToAPIM(SecretCallbackHandlerService secretCallbackHandlerService,
-                                     String attachmentFilePath) {
-        Map<String, String> apimConfigs = readConfiguration(secretCallbackHandlerService);
+    public static void publishToAPIM(Map<String, String> apimConfigs, String attachmentFilePath) {
         int responseCode = uploadZip(apimConfigs, attachmentFilePath);
         if (responseCode == -1) return; // error occurred while uploading to service catalog
         switch (responseCode) {
@@ -165,6 +176,71 @@ public class ServiceCatalogUtils {
     }
 
     /**
+     * Call service catalog and fetch details of all the services.
+     *
+     * @param apimConfigs Map containing APIM configuration.
+     * @return Map of APIs and their current MD5 sum values, null if error occurred.
+     */
+    public static Map<String, String> getAllServices(Map<String, String> apimConfigs) {
+
+        Map<String, String> md5Map = new HashMap<>();
+        String APIMHost = apimConfigs.get(APIM_HOST);
+        String credentials =
+                Base64.getEncoder().encodeToString(
+                        (apimConfigs.get(USER_NAME) + ":" + apimConfigs.get(PASSWORD)).getBytes());
+
+        // create get all services url
+        if (APIMHost.endsWith("/")) {
+            APIMHost = APIMHost + SERVICE_CATALOG_GET_SERVICES_ENDPOINT;
+        } else {
+            APIMHost = APIMHost + "/" + SERVICE_CATALOG_GET_SERVICES_ENDPOINT;
+        }
+
+        try {
+            HttpsURLConnection connection = (HttpsURLConnection) new URL(APIMHost).openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("GET");
+            connection.addRequestProperty("Accept", "application/json");
+            connection.addRequestProperty("Authorization", "Basic " + credentials);
+            connection.setHostnameVerifier(getHostnameVerifier());
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        connection.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                JsonParser parser = new JsonParser();
+                JsonObject rootObject = parser.parse(response.toString()).getAsJsonObject();
+                JsonArray serviceList = rootObject.getAsJsonArray(LIST_STRING);
+                for (JsonElement service : serviceList) {
+                    String serviceKey = ((JsonObject) service).get(SERVICE_KEY).getAsString();
+                    String md5 = ((JsonObject) service).get(MD5).getAsString();
+                    md5Map.put(serviceKey, md5);
+                }
+                return md5Map;
+            } else {
+                log.error("Error occurred while fetching services from the service catalog");
+            }
+        } catch (MalformedURLException e) {
+            log.error("Service catalog url " + APIMHost + " is malformed. Please check the configuration", e);
+        } catch (MalformedJsonException e) {
+            log.error("Invalid JSON response received from service catalog", e);
+        } catch (ProtocolException e) {
+            log.error("Error occurred while creating the connection with APIM", e);
+        } catch (IOException e) {
+            log.error("Error occurred while reading the response from service catalog", e);
+        }
+        return null;
+    }
+
+    /**
      * Upload the given ZIP file to the APIM service catalog endpoint.
      *
      * @param apimConfigs        map containing APIM configurations.
@@ -174,6 +250,14 @@ public class ServiceCatalogUtils {
     private static int uploadZip(Map<String, String> apimConfigs, String attachmentFilePath) {
         try {
             String APIMHost = apimConfigs.get(APIM_HOST);
+
+            // create POST URL
+            if (APIMHost.endsWith("/")) {
+                APIMHost = APIMHost + SERVICE_CATALOG_PUBLISH_ENDPOINT;
+            } else {
+                APIMHost = APIMHost + "/" + SERVICE_CATALOG_PUBLISH_ENDPOINT;
+            }
+
             String encodeBytes =
                     Base64.getEncoder().encodeToString(
                             (apimConfigs.get(USER_NAME) + ":" + apimConfigs.get(PASSWORD)).getBytes());
@@ -203,9 +287,27 @@ public class ServiceCatalogUtils {
             Files.copy(binaryFile.toPath(), output);
             output.flush();
 
+            // Add verifier
+            String verifier = new Gson().toJson(md5List);
+            writer.append("--").append(boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"" + VERIFIER + "\"").append(CRLF);
+            writer.append(CRLF);
+            writer.append(verifier).append(CRLF);
+
             // End of multipart/form-data.
             writer.append(CRLF).append("--").append(boundary).append("--").flush();
 
+            // Read the response if debug enabled.
+            if (log.isDebugEnabled()) {
+                StringBuilder response = new StringBuilder();
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String strCurrentLine;
+                while ((strCurrentLine = br.readLine()) != null) {
+                    response.append(strCurrentLine);
+                }
+                br.close();
+                log.debug("Response from APIM : " + response);
+            }
             return connection.getResponseCode();
         } catch (MalformedURLException e) {
             log.error("Service catalog url is malformed, please check the configured APIM host", e);
@@ -221,19 +323,13 @@ public class ServiceCatalogUtils {
      * @param secretCallbackHandlerService secret callback handler reference.
      * @return map of resolved values.
      */
-    private static Map<String, String> readConfiguration(SecretCallbackHandlerService secretCallbackHandlerService) {
+    public static Map<String, String> readConfiguration(SecretCallbackHandlerService secretCallbackHandlerService) {
         Map<String, String> configMap = new HashMap<>();
         Map<String, String> catalogProperties =
                 (Map<String, String>) ((ArrayList) ConfigParser.getParsedConfigs().get(
                         SERVICE_CATALOG_CONFIG)).get(0);
 
         String apimHost = catalogProperties.get(APIM_HOST);
-        String endpoint;
-        if (apimHost.endsWith("/")) {
-            endpoint = apimHost + SERVICE_CATALOG_ENDPOINT;
-        } else {
-            endpoint = apimHost + "/" + SERVICE_CATALOG_ENDPOINT;
-        }
 
         String userName = catalogProperties.get(USER_NAME);
         String password = catalogProperties.get(PASSWORD);
@@ -252,7 +348,7 @@ public class ServiceCatalogUtils {
             password = secretResolver.resolve(alias);
         }
 
-        configMap.put(APIM_HOST, endpoint);
+        configMap.put(APIM_HOST, apimHost);
         configMap.put(USER_NAME, userName);
         configMap.put(PASSWORD, password);
         return configMap;
@@ -264,11 +360,15 @@ public class ServiceCatalogUtils {
      * @param tempDir            temporary directory to put metadata.
      * @param metadataFolder     metadata folder inside CAPP.
      * @param metadataYamlFolder YAML folder inside CAPP.
-     * @throws IOException       error occurred while moving files.
-     * @throws ResolverException Error occurred while updating the metadata file.
+     * @param md5MapOfAllService map containing md5 values of all services.
+     * @return metadata processed successfully
+     * @throws IOException              error occurred while moving files.
+     * @throws ResolverException        error occurred while updating the metadata file.
+     * @throws NoSuchAlgorithmException could not find the MD% algorithm.
      */
-    public static void processMetadata(File tempDir, File metadataFolder, File metadataYamlFolder) throws IOException
-            , ResolverException {
+    private static boolean processMetadata(File tempDir, File metadataFolder, File metadataYamlFolder,
+                                           Map<String, String> md5MapOfAllService) throws IOException
+            , ResolverException, NoSuchAlgorithmException {
         String metaFileName = metadataYamlFolder.getName();
         String APIName = metaFileName.substring(0, metaFileName.indexOf(METADATA_FOLDER_STRING));
         String APIVersion =
@@ -276,22 +376,49 @@ public class ServiceCatalogUtils {
                         METADATA_FOLDER_STRING.length());
         // Create new folder in temp directory for this API
         File newMetaFile = new File(tempDir, APIName + "_v" + APIVersion);
-        newMetaFile.mkdir();
+
         File newYamlFile = new File(newMetaFile, METADATA_FILE_NAME);
         File metadataYamlFile =
                 new File(metadataYamlFolder, APIName + METADATA_FILE_STRING + APIVersion + YAML_FILE_EXTENSION);
-        // Copy metadata yaml file to the temp location.
-        FileUtils.copyFile(metadataYamlFile, newYamlFile);
-
-        // Edit metadata yaml and add host details
-        updateMetadataWithServiceUrl(newYamlFile);
 
         File swaggerFolder = new File(metadataFolder, APIName + SWAGGER_FOLDER_STRING + APIVersion);
         File swaggerFile =
                 new File(swaggerFolder, APIName + SWAGGER_FILE_STRING + APIVersion + YAML_FILE_EXTENSION);
         File newSwaggerFile = new File(newMetaFile, SWAGGER_FILE_NAME);
-        // Copy swagger yaml file to the temp location.
-        FileUtils.copyFile(swaggerFile, newSwaggerFile);
+
+
+        // Edit metadata yaml and add host details
+        String key = updateMetadataWithServiceUrl(metadataYamlFile);
+        String md5FromServer = md5MapOfAllService.get(key);
+
+        // generate md5 values for verifier
+        String md5SumOfMetadata = getFileChecksum(metadataYamlFile);
+        String md5SumOfSwagger = getFileChecksum(swaggerFile);
+        String newMD5String = md5SumOfSwagger + md5SumOfMetadata;
+
+        // if API is not registered yet or, API is modified (md5 changed), add metadata files to temp folder
+        if (StringUtils.isEmpty(md5FromServer) || !newMD5String.equals(md5FromServer)) {
+            if (!newMetaFile.mkdir()) {
+                log.error("Could not create temporary files");
+                return false;
+            }
+            // Copy metadata yaml file to the temp location.
+            FileUtils.copyFile(metadataYamlFile, newYamlFile);
+            // Copy swagger yaml file to the temp location.
+            FileUtils.copyFile(swaggerFile, newSwaggerFile);
+
+            // Add to map to be included in filter formdata field.
+            Map<String, String> md5Map = new HashMap<>();
+            md5Map.put(METADATA_KEY, key);
+            // if API is changed add the previous MD5 sum, if new API add the new MD5 sum.
+            md5Map.put(MD5, StringUtils.isEmpty(md5FromServer) ? newMD5String : md5FromServer);
+            md5List.add(md5Map);
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug(APIName + " is already updated in the service catalog");
+            }
+        }
+        return true;
     }
 
     /**
@@ -303,14 +430,14 @@ public class ServiceCatalogUtils {
      */
     public static boolean archiveDir(String destArchiveName, String sourceDir) {
         File zipDir = new File(sourceDir);
-        if (zipDir.list().length == 0) {
+        if (zipDir.exists() && zipDir.list().length == 0) {
             log.info("Could not find metadata to upload, aborting the service-catalog uploader");
             return false;
         }
-        try {
-            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(destArchiveName));
+
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(destArchiveName))) {
             zipDir(zipDir, zos, sourceDir);
-            zos.close();
+
         } catch (Exception ex) {
             log.error("Error occurred while creating the archive", ex);
             return false;
@@ -404,11 +531,13 @@ public class ServiceCatalogUtils {
     /**
      * Extract CAPPs and put metadata files in the temporary folder.
      *
-     * @param targetDir    temporary folder location.
-     * @param repoLocation location of the deployment folder of MI.
+     * @param targetDir          temporary folder location.
+     * @param repoLocation       location of the deployment folder of MI.
+     * @param md5MapOfAllService map containing md5 values of all services.
      * @return extracted successfully.
      */
-    public static boolean extractMetadataFromCAPPs(File targetDir, String repoLocation) {
+    public static boolean extractMetadataFromCAPPs(File targetDir, String repoLocation,
+                                                   Map<String, String> md5MapOfAllService) {
         FilenameFilter cappFilter = (f, name) -> name.endsWith(".car");
         FilenameFilter metaFilter = (f, name) -> name.contains(METADATA_FOLDER_STRING);
 
@@ -436,7 +565,9 @@ public class ServiceCatalogUtils {
                     File[] metadataFolders = metadataFolder.listFiles(metaFilter);
                     if (metadataFolders != null) {
                         for (File metadataYamlFolder : metadataFolders) {
-                            processMetadata(targetDir, metadataFolder, metadataYamlFolder);
+                            if (!processMetadata(targetDir, metadataFolder, metadataYamlFolder, md5MapOfAllService)) {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -448,6 +579,9 @@ public class ServiceCatalogUtils {
                 return false;
             } catch (ResolverException e) {
                 log.error("Environment variables are not configured correctly", e);
+                return false;
+            } catch (NoSuchAlgorithmException e) {
+                log.error("Could not generate the MD5 sum", e);
                 return false;
             }
         }
@@ -480,5 +614,34 @@ public class ServiceCatalogUtils {
             log.error("Could not create temporary directories required for service catalog");
         }
         return created;
+    }
+
+    /**
+     * Generate MD5 sum of a given file.
+     *
+     * @param file input file.
+     * @return MD5 sum of the given file.
+     * @throws IOException              error occurred while processing the file.
+     * @throws NoSuchAlgorithmException Could not find the MD5 sum algo.
+     */
+    private static String getFileChecksum(File file) throws NoSuchAlgorithmException, IOException {
+        MessageDigest md5Digest = MessageDigest.getInstance("MD5");
+        FileInputStream fis = new FileInputStream(file);
+
+        byte[] byteArray = new byte[1024];
+        int bytesCount;
+
+        while ((bytesCount = fis.read(byteArray)) != -1) {
+            md5Digest.update(byteArray, 0, bytesCount);
+        }
+        fis.close();
+
+        byte[] bytes = md5Digest.digest();
+
+        StringBuilder sb = new StringBuilder();
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
     }
 }
