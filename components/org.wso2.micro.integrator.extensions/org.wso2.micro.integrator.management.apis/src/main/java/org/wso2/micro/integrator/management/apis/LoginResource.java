@@ -32,9 +32,13 @@ import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenCleanu
 import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenGenerator;
 import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenInfoDTO;
 import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenStore;
+import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -79,10 +83,14 @@ public class LoginResource implements MiApiResource {
         //UUID used as unique token
         UUID uuid = UUID.randomUUID();
         String randomUUIDString = uuid.toString();
-
-        JWTTokenInfoDTO newToken = new JWTTokenInfoDTO(messageContext.getProperty(USERNAME_PROPERTY).toString());
+        String username = messageContext.getProperty(USERNAME_PROPERTY).toString();
+        JWTTokenInfoDTO newToken = new JWTTokenInfoDTO(username);
         newToken.setToken(randomUUIDString);
-        newToken.setScope(AuthConstants.JWT_TOKEN_DEFAULT_SCOPE);
+        if (isAdmin(username)) {
+            newToken.setScope(AuthConstants.JWT_TOKEN_ADMIN_SCOPE);
+        } else {
+            newToken.setScope(AuthConstants.JWT_TOKEN_DEFAULT_SCOPE);
+        }
         newToken.setIssuer((String) axis2MessageContext.getProperty(NhttpConstants.SERVICE_PREFIX));
         long time = System.currentTimeMillis();
         String expiryConfig = JWTConfig.getInstance().getJwtConfigDto().getExpiry();
@@ -117,6 +125,18 @@ public class LoginResource implements MiApiResource {
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         JWTTokenCleanupTask.startCleanupTask();
         return true;
+    }
+
+    private boolean isAdmin(String username) {
+        boolean isAdmin = false;
+        try {
+            String[] usersArray = MicroIntegratorSecurityUtils.getUserStoreManager().getRoleListOfUser(username);
+            List<String> users = Arrays.asList(usersArray);
+            isAdmin = users.contains(username);
+        } catch (UserStoreException e) {
+            LOG.error("Error occurred while retrieving UserStoreManager of the server.", e);
+        }
+        return isAdmin;
     }
 
     /**

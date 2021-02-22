@@ -37,7 +37,8 @@ public class AuthConstants {
     public static final String BASIC_AUTH_HEADER_TOKEN_TYPE = "Basic";
     public static final String BEARER_AUTH_HEADER_TOKEN_TYPE = "Bearer";
     public static final String RESPONSE_JSON_TOKEN_FIELD = "AccessToken";
-    public static final String JWT_TOKEN_DEFAULT_SCOPE = "Default";
+    public static final String JWT_TOKEN_DEFAULT_SCOPE = "default";
+    public static final String JWT_TOKEN_ADMIN_SCOPE = "admin";
     public static final String DEFAULT_ISSUER_NAME = "Admin";
     public static final int JWT_TOKEN_DEFAULT_SIZE = 2048;
     public static final long DEFAULT_EXPIRY_DURATION = 60;

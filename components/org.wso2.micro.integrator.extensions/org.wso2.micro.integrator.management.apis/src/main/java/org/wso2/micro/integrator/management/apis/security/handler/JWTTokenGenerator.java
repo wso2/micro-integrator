@@ -115,6 +115,7 @@ public class JWTTokenGenerator {
                 .subject(jwtTokenDTO.getUsername())
                 .issuer(jwtTokenDTO.getIssuer())
                 .expirationTime(new Date(jwtTokenDTO.getExpiry()))
+                .claim("scope", jwtTokenDTO.getScope())
                 .build();
         //Add additional claims if needed
         return new SignedJWT(
