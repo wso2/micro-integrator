@@ -25,9 +25,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.ConfigurationLoader;
 import org.wso2.config.mapper.ConfigParser;
@@ -35,6 +40,9 @@ import org.wso2.micro.core.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -91,8 +99,11 @@ public class HeartBeatComponent {
             JsonObject changeNotification = createChangeNotification();
             heartbeatPayload.add(CHANGE_NOTIFICATION, changeNotification);
 
-            final CloseableHttpClient client = HttpClients.createDefault();
-            try {
+            try (CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(
+                    new SSLConnectionSocketFactory(
+                            SSLContexts.custom().loadTrustMaterial(null,
+                                    (TrustStrategy) new TrustSelfSignedStrategy()).build(),
+                            NoopHostnameVerifier.INSTANCE)).build()) {
                 final StringEntity entity = new StringEntity(heartbeatPayload.toString());
                 httpPost.setEntity(entity);
                 CloseableHttpResponse response = client.execute(httpPost);
@@ -105,15 +116,9 @@ public class HeartBeatComponent {
                     ArtifactDeploymentListener.removeFromUndeployedArtifactsQueue(undeployedArtifactsCount);
                     ArtifactDeploymentListener.removeFromDeployedArtifactsQueue(deployedArtifactsCount);
                 }
-            } catch (IOException e) {
+            } catch (IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
                 log.error("Error occurred while sending heartbeat request to dashboard.");
-            } finally {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    log.error("Error occurred while closing the connection.", e);
-                }
-            }
+            } 
         };
         scheduledExecutorService.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
     }
