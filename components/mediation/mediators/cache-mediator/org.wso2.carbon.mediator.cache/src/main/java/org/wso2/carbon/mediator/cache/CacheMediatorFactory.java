@@ -85,6 +85,13 @@ public class CacheMediatorFactory extends AbstractMediatorFactory {
      */
     private static final QName HEADERS_TO_EXCLUDE_IN_HASH_Q = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE,
                                                                         CachingConstants.HEADERS_TO_EXCLUDE_STRING);
+
+    /**
+     * QName of the headersToIncludeInHash.
+     */
+    private static final QName HEADERS_TO_INCLUDE_IN_HASH_Q = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE,
+                                                                        CachingConstants.HEADERS_TO_INCLUDE_STRING);
+
     /**
      * QName of the response codes to include when hashing.
      */
@@ -230,6 +237,18 @@ public class CacheMediatorFactory extends AbstractMediatorFactory {
                                 cache.setHTTPMethodsToCache(CachingConstants.ALL);
                             }
 
+                            OMElement headersToIncludeInHash = protocolElem.getFirstChildWithName(
+                                    HEADERS_TO_INCLUDE_IN_HASH_Q);
+                            if (headersToIncludeInHash != null) {
+                                String[] headers = headersToIncludeInHash.getText().split(",");
+                                for (int i = 0; i < headers.length; i++) {
+                                    headers[i] = headers[i].trim();
+                                }
+                                cache.setHeadersToIncludeInHash(headers);
+                            } else {
+                                cache.setHeadersToIncludeInHash("");
+                            }
+
                             OMElement headersToExcludeInHash = protocolElem.getFirstChildWithName(
                                     HEADERS_TO_EXCLUDE_IN_HASH_Q);
                             if (headersToExcludeInHash != null) {
@@ -274,7 +293,8 @@ public class CacheMediatorFactory extends AbstractMediatorFactory {
                                 cache.setCacheControlEnabled(CachingConstants.DEFAULT_ADD_AGE_HEADER);
                             }
 
-                            props.put("headers-to-exclude", cache.getHeadersToExcludeInHash());
+                            props.put(CachingConstants.INCLUDED_HEADERS_PROPERTY, cache.getHeadersToIncludeInHash());
+                            props.put(CachingConstants.EXCLUDED_HEADERS_PROPERTY, cache.getHeadersToExcludeInHash());
                         }
                     } else {
                         cache.setProtocolType(CachingConstants.HTTP_PROTOCOL_TYPE);

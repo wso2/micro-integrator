@@ -219,7 +219,7 @@
                                     org.wso2.orbit.javax.transaction:jta:${version.org.wso2.orbit.javax.jta}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.orbit.javax.xml.bind:jaxb-api:${version.org.wso2.orbit.javax.xml.bind.jaxb-api}
+                                    org.wso2.orbit.javax.xml.bind:jaxb-api:${org.wso2.orbit.javax.xml.bind.version}
                                 </bundleDef>
 
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.securevault:${carbon.kernel.version}
@@ -275,17 +275,15 @@
                                 <bundleDef>org.eclipse.platform:org.eclipse.equinox.cm:${version.eclipse.equinox.cm}</bundleDef>
                                 <bundleDef>commons-configuration:commons-configuration:${commons.configuration.version}</bundleDef>
                                 <!-- bundles needed to swagger for DSS feature -->
-                                <bundleDef>io.swagger.core.v3:swagger-models:${swagger.core.version}</bundleDef>
-                                <bundleDef>io.swagger.core.v3:swagger-core:${swagger.core.version}</bundleDef>
-                                <bundleDef>io.swagger.core.v3:swagger-annotations:${swagger.core.version}</bundleDef>
-                                <bundleDef>
-                                    org.wso2.orbit.io.swagger.parser.v3:swagger-parser-v3:${swagger.parser.orbit.version}
-                                </bundleDef>
-                                <bundleDef>javax.validation:validation-api:${javax.validation.version}</bundleDef>
-                                <bundleDef>com.fasterxml.jackson.core:jackson-annotations:${jackson.core.version}</bundleDef>
+                                <bundleDef>org.wso2.orbit.io.swagger.v3:swagger-parser:${swagger.parser.orbit.version}</bundleDef>
+                                <bundleDef>io.swagger:swagger-core:${swagger.core.v2.version}</bundleDef>
+                                <bundleDef>io.swagger:swagger-models:${swagger.core.v2.version}</bundleDef>
+                                <bundleDef>io.swagger:swagger-annotations:${swagger.core.v2.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson.core.version}</bundleDef>
                                 <bundleDef>com.fasterxml.jackson.core:jackson-core:${jackson.core.version}</bundleDef>
                                 <bundleDef>com.fasterxml.jackson.core:jackson-databind:${jackson.core.version}</bundleDef>
-                                <bundleDef>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson.core.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.core:jackson-annotations:${jackson.core.version}</bundleDef>
+                                <bundleDef>javax.validation:validation-api:${javax.validation.version}</bundleDef>
                                 <bundleDef>org.yaml:snakeyaml:${snakeyaml.version}</bundleDef>
                                 <bundleDef>com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jackson.core.version}</bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.commons:commons-lang3:${commons.lang3.version}</bundleDef>

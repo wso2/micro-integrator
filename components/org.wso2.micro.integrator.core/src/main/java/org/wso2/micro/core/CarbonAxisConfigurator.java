@@ -103,6 +103,10 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
         this.carbonContextRoot = carbonContextRoot;
     }
 
+    public String getRepoLocation() {
+        return repoLocation;
+    }
+
     /**
      * Load an AxisConfiguration from the repository directory specified
      *

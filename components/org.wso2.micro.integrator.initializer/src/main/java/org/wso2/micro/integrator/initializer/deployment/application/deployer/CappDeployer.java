@@ -18,6 +18,7 @@
 package org.wso2.micro.integrator.initializer.deployment.application.deployer;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.AbstractDeployer;
@@ -25,8 +26,13 @@ import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.config.SynapseConfigUtils;
+import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.config.xml.rest.APIFactory;
+import org.apache.synapse.api.API;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.ApplicationConfiguration;
@@ -40,10 +46,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.xml.stream.XMLStreamException;
+
+import static org.wso2.micro.core.Constants.SUPER_TENANT_DOMAIN_NAME;
+import static org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployerConstants.API_TYPE;
 
 public class CappDeployer extends AbstractDeployer {
 
@@ -55,7 +69,9 @@ public class CappDeployer extends AbstractDeployer {
     private static ArrayList<CarbonApplication> cAppMap = new ArrayList<>();
     private static ArrayList<String> faultyCapps = new ArrayList<>();
     private final Object lock = new Object();
-
+    private static final String SWAGGER_SUBSTRING = "_swagger";
+    private static final String METADATA_FOLDER_NAME = "metadata";
+    private static final String ARTIFACT_FILE = "artifact.xml";
     /**
      * Carbon application repository directory.
      */
@@ -146,6 +162,8 @@ public class CappDeployer extends AbstractDeployer {
                                       targetCAppPath);
 
                     deleteExtractedCApp(currentApp.getExtractedPath());
+                    // Validate synapse config to remove half added swagger definitions in the case of a faulty CAPP.
+                    SynapseConfigUtils.getSynapseConfiguration(SUPER_TENANT_DOMAIN_NAME).validateSwaggerTable();
                     return;
                 }
 
@@ -175,8 +193,7 @@ public class CappDeployer extends AbstractDeployer {
         String tempExtractedDirPath = AppDeployerUtils.extractCarbonApp(targetCAppPath);
 
         // Build the app configuration by providing the artifacts.xml path
-        ApplicationConfiguration appConfig = new ApplicationConfiguration(tempExtractedDirPath +
-                                                                                  ApplicationConfiguration.ARTIFACTS_XML);
+        ApplicationConfiguration appConfig = new ApplicationConfiguration(tempExtractedDirPath);
 
         // If we don't have features (artifacts) for this server, ignore
         if (appConfig.getApplicationArtifact().getDependencies().isEmpty()) {
@@ -301,6 +318,11 @@ public class CappDeployer extends AbstractDeployer {
      * @throws org.wso2.micro.core.util.CarbonException - on error
      */
     private void searchArtifacts(String rootDirPath, CarbonApplication parentApp) throws CarbonException {
+        SynapseConfiguration synapseConfiguration =
+                SynapseConfigUtils.getSynapseConfiguration(SUPER_TENANT_DOMAIN_NAME);
+        // For each CAPP initiate again.
+        Map<String, String> swaggerTable = new HashMap<String, String>();
+        Map<String, String> apiArtifactMap = new HashMap<String, String>();
         File extractedDir = new File(rootDirPath);
         File[] allFiles = extractedDir.listFiles();
         if (allFiles == null) {
@@ -322,6 +344,38 @@ public class CappDeployer extends AbstractDeployer {
             File f = new File(artifactXmlPath);
             // if the artifact.xml not found, ignore this dir
             if (!f.exists()) {
+                // Add swagger files to the synapse configuration context.
+                if (directoryPath.endsWith(METADATA_FOLDER_NAME)) {
+                    File[] metadataFiles = new File(directoryPath).listFiles();
+                    for (File metaFile : metadataFiles) {
+                        if (metaFile.isDirectory()) {
+                            try {
+                                InputStream xmlInputStream =
+                                        new FileInputStream(new File(metaFile, ARTIFACT_FILE));
+                                Artifact artifact = this.buildAppArtifact(parentApp, xmlInputStream);
+                                Artifact parentArtifact = parentApp.getAppConfig().getApplicationArtifact();
+                                // Removing metadata dependencies from the CAPP parent artifact
+                                boolean removed =
+                                        parentArtifact.getDependencies()
+                                                .removeIf(c -> c.getName().equals(artifact.getName()));
+                                if (removed)
+                                    parentArtifact.unresolvedDepCount--;
+
+                                if (metaFile.getName().contains(SWAGGER_SUBSTRING)) {
+                                    File swaggerFile = new File(metaFile, artifact.getFiles().get(0).getName());
+                                    byte[] bytes = Files.readAllBytes(Paths.get(swaggerFile.getPath()));
+                                    String artifactName = artifact.getName()
+                                            .substring(0, artifact.getName().indexOf(SWAGGER_SUBSTRING));
+                                    swaggerTable.put(artifactName, new String(bytes));
+                                }
+                            } catch (FileNotFoundException e) {
+                                log.error("Could not find the Artifact.xml file for the metadata", e);
+                            } catch (IOException e) {
+                                log.error("Error occurred while reading the swagger file from metadata", e);
+                            }
+                        }
+                    }
+                }
                 continue;
             }
 
@@ -330,6 +384,15 @@ public class CappDeployer extends AbstractDeployer {
             try {
                 xmlInputStream = new FileInputStream(f);
                 artifact = this.buildAppArtifact(parentApp, xmlInputStream);
+                // If artifact is an API, add apiMapping to the synapse configuration.
+                if (artifact.getType().equals(API_TYPE)) {
+                    String apiXmlPath = directoryPath + File.separator + artifact.getFiles().get(0).getName();
+                    String apiName = getApiNameFromFile(new FileInputStream(apiXmlPath));
+                    if (!StringUtils.isEmpty(apiName)) {
+                        // Re-constructing swagger table with API name since artifact name is not unique
+                        apiArtifactMap.put(artifact.getName(),apiName);
+                    }
+                }
             } catch (FileNotFoundException e) {
                 handleException("artifacts.xml File cannot be loaded from " + artifactXmlPath, e);
             } finally {
@@ -350,6 +413,12 @@ public class CappDeployer extends AbstractDeployer {
         }
         Artifact appArtifact = parentApp.getAppConfig().getApplicationArtifact();
         buildDependencyTree(appArtifact, allArtifacts);
+        for (String artifactName : swaggerTable.keySet()) {
+            String apiname = apiArtifactMap.get(artifactName);
+            if (!StringUtils.isEmpty(apiname)) {
+                synapseConfiguration.addSwaggerDefinition(apiname, swaggerTable.get(artifactName));
+            }
+        }
     }
 
     /**
@@ -529,5 +598,25 @@ public class CappDeployer extends AbstractDeployer {
         //cleanup the capp list during the unload
         cAppMap.clear();
         faultyCapps.clear();
+    }
+
+    /**
+     * Building the API to get the API name
+     *
+     * @param apiXmlStream input stream of the API file.
+     * @return name of the API.
+     */
+    private String getApiNameFromFile(InputStream apiXmlStream) {
+
+        try {
+            OMElement apiElement = new StAXOMBuilder(apiXmlStream).getDocumentElement();
+            API api = APIFactory.createAPI(apiElement);
+            return api.getName();
+        } catch (XMLStreamException | OMException e) {
+            // Cannot find the API file or API is faulty.
+            // This error is properly handled later in the deployers and CAPP will go faulty.
+            // Hence the exception is not propagated from here.
+            return null;
+        }
     }
 }

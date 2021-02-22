@@ -43,6 +43,7 @@ import org.apache.synapse.config.xml.EntryFactory;
 import org.apache.synapse.config.xml.SynapseImportFactory;
 import org.apache.synapse.config.xml.SynapseImportSerializer;
 import org.apache.synapse.config.xml.XMLConfigConstants;
+import org.apache.synapse.config.xml.rest.APIFactory;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.apache.synapse.deployers.APIDeployer;
 import org.apache.synapse.deployers.AbstractSynapseArtifactDeployer;
@@ -301,6 +302,14 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                         }
                     } else {
                         // use reflection to avoid having synapse as a dependency
+
+                        // If API we are using the API name instead of artifact name to support API versioning.
+                        if (artifact.getType().equals("synapse/api")) {
+                            OMElement apiElement =
+                                    new StAXOMBuilder(new FileInputStream(new File(artifactPath))).getDocumentElement();
+                            API api = APIFactory.createAPI(apiElement);
+                            artifactName = api.getName();
+                        }
 
                         Class[] paramString = new Class[1];
                         paramString[0] = String.class;

@@ -112,6 +112,7 @@ public class CachingConstants {
     public static final String PROTOCOL_STRING = "protocol";
     public static final String METHODS_STRING = "methods";
     public static final String HEADERS_TO_EXCLUDE_STRING = "headersToExcludeInHash";
+    public static final String HEADERS_TO_INCLUDE_STRING = "headersToIncludeInHash";
     public static final String TYPE_STRING = "type";
     public static final String RESPONSE_CODES_STRING = "responseCodes";
     public static final String HASH_GENERATOR_STRING = "hashGenerator";
@@ -127,4 +128,6 @@ public class CachingConstants {
     public static final String ID_STRING = "id";
     public static final String SCOPE_STRING = "scope";
     public static final String PERMANENTLY_EXCLUDED_HEADERS_STRING = "permanently-excluded-headers";
+    public static final String EXCLUDED_HEADERS_PROPERTY = "headers-to-exclude";
+    public static final String INCLUDED_HEADERS_PROPERTY = "headers-to-include";
 }

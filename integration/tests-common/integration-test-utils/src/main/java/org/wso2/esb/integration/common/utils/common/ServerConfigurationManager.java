@@ -461,6 +461,28 @@ public class ServerConfigurationManager {
     }
 
     /**
+     * Copy a given CarbonApplication to the server.
+     * @param CAPP  Carbon Application.
+     * @throws IOException  Error occurred while copying the CAPP.
+     */
+    public void copyToCarbonapps(File CAPP) throws IOException {
+        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
+        String path = Paths.get(carbonHome, "repository","deployment","server","carbonapps").toString();
+        FileManager.copyJarFile(CAPP, path);
+    }
+
+    /**
+     * @param fileName file name
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    public void removeFromCarbonapps(String fileName) throws IOException, URISyntaxException {
+        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
+        String filePath = Paths.get(carbonHome, "repository","deployment","server","carbonapps", fileName).toString();
+        FileManager.deleteFile(filePath);
+    }
+
+    /**
      * @param fileName file name
      * @throws IOException
      * @throws URISyntaxException

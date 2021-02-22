@@ -154,7 +154,13 @@ public abstract class SelectQuery extends ConditionalQuery {
         if (!ParserUtil.isStringLiteral(tokens.peek())) {
             throw new SQLException("Syntax Error : String literal is expected");
         }
-        columns.add(new ColumnInfo(tokens.poll(), count));
+        ColumnInfo columnInfo = new ColumnInfo(tokens.poll(), count);
+        if (Constants.AS.equals(tokens.peek())) {
+            tokens.poll();
+            // Set the new column name given by "AS" keyword.
+            columnInfo.setAliasName(tokens.poll());
+        }
+        columns.add(columnInfo);
         if (Constants.COLUMN.equals(tokens.peek())) {
             processTargetColumns(tokens, count + 1, columns);
         }

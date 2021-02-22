@@ -19,7 +19,10 @@
 package org.wso2.micro.integrator.transport.handlers.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -61,15 +64,17 @@ import org.apache.synapse.registry.Registry;
 import org.wso2.carbon.mediation.commons.rest.api.swagger.OpenAPIProcessor;
 import org.wso2.carbon.mediation.commons.rest.api.swagger.SwaggerConstants;
 import org.wso2.micro.core.Constants;
-import org.wso2.micro.integrator.core.json.utils.GSONUtils;
 import org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.MIServerConfig;
 import static org.wso2.micro.application.deployer.AppDeployerUtils.createRegistryPath;
 
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.wso2.micro.core.Constants.SUPER_TENANT_DOMAIN_NAME;
 
 /**
  * Util class with methods to generate swagger definition and fetch them from the registry.
@@ -335,30 +340,42 @@ public final class SwaggerUtils {
     /**
      * Get the swagger definition for a given API.
      *
-     * @param api    API object.
-     * @param isJSON response needed in JSON / JAML.
+     * @param api             API object.
+     * @param isJSONRequested response needed in JSON / JAML.
      * @return Swagger as String.
      * @throws AxisFault Error occurred while fetching the host name for API.
      */
-    public static String getAPISwagger(API api, boolean isJSON) throws AxisFault {
-
-        MIServerConfig serverConfig = new MIServerConfig();
-        String responseString;
-
-        responseString = retrieveAPISwaggerFromRegistry(api);
+    public static String getAPISwagger(API api, boolean isJSONRequested) throws AxisFault {
         org.yaml.snakeyaml.Yaml yamlDefinition = new org.yaml.snakeyaml.Yaml();
+        MIServerConfig serverConfig = new MIServerConfig();
+        String responseString = retrieveAPISwaggerFromRegistry(api);
+        // check the swagger in synapse configuration context if not found in registry.
+        if (StringUtils.isEmpty(responseString)) {
+            responseString = retrieveSwaggerSynapseConfiguration(api);
+        }
         if (StringUtils.isNotEmpty(responseString)) {
-            if (!isJSON) {
-                JsonParser jsonParser = new JsonParser();
-                responseString =
-                        yamlDefinition.dumpAsMap(GSONUtils.gsonJsonObjectToMap(jsonParser.parse(responseString)));
+            boolean isJson = false;
+            try {
+                new JsonParser().parse(responseString);
+                isJson = true;
+            } catch (JsonSyntaxException ex) {
+                // neglect the error, content is in YAML format
+            }
+            if (isJSONRequested && !isJson) {
+                final Object loadedYaml = yamlDefinition.load(responseString);
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                responseString = gson.toJson(loadedYaml, LinkedHashMap.class);
+            } else if (!isJSONRequested && isJson) {
+                Gson gson = new Gson();
+                Map map = gson.fromJson(responseString, Map.class);
+                responseString = yamlDefinition.dumpAsMap(map);
             }
         } else {
             if (logger.isDebugEnabled()) {
                 logger.debug("Generating swagger definition for: " + api.getName());
             }
             OpenAPIProcessor openAPIProcessor = new OpenAPIProcessor(api, serverConfig);
-            responseString = openAPIProcessor.getOpenAPISpecification(isJSON);
+            responseString = openAPIProcessor.getOpenAPISpecification(isJSONRequested);
         }
         return responseString;
     }
@@ -387,5 +404,18 @@ public final class SwaggerUtils {
         }
 
         return SwaggerUtils.fetchSwaggerFromRegistry(resourcePath);
+    }
+
+    /**
+     * Function to retrieve swagger from the synapse configuration.
+     *
+     * @param api Api object.
+     * @return swagger definition as string or null if not exists.
+     */
+    private static String retrieveSwaggerSynapseConfiguration(API api) {
+
+        SynapseConfiguration synapseConfiguration =
+                SynapseConfigUtils.getSynapseConfiguration(SUPER_TENANT_DOMAIN_NAME);
+        return synapseConfiguration.getSwaggerOfTheAPI(api.getName());
     }
 }
