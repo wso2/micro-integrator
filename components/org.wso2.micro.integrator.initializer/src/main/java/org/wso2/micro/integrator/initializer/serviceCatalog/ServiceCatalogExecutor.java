@@ -53,16 +53,15 @@ public class ServiceCatalogExecutor implements Runnable {
         if (!checkPreConditions()) return;
 
         // create temporary directory to hold metadata.
+        if(!createTemporaryFolders(CAPP_UNZIP_DIR)) return;
+
         File tempDir = new File(CAPP_UNZIP_DIR, TEMP_FOLDER_NAME);
-        if (tempDir.exists()) {
-            tempDir.delete();
-        }
-        tempDir.mkdir();
 
         // extract CAPPs and copy metadata to temp directory.
-        if(!extractMetadataFromCAPPs(tempDir, repoLocation)) return;
+        if (!extractMetadataFromCAPPs(tempDir, repoLocation)) return;
 
-        boolean zipCreated = archiveDir(CAPP_UNZIP_DIR + File.separator + ZIP_FOLDER_NAME,tempDir.getPath());
+        boolean zipCreated = archiveDir(CAPP_UNZIP_DIR + File.separator + ZIP_FOLDER_NAME, tempDir.getPath());
+
         if (zipCreated) {
             publishToAPIM(secretCallbackHandlerService, CAPP_UNZIP_DIR + File.separator + ZIP_FOLDER_NAME);
         }

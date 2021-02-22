@@ -303,8 +303,9 @@ public class ServiceCatalogUtils {
      */
     public static boolean archiveDir(String destArchiveName, String sourceDir) {
         File zipDir = new File(sourceDir);
-        if (!zipDir.isDirectory()) {
-            log.error(sourceDir + " is not a directory");
+        if (zipDir.list().length == 0) {
+            log.info("Could not find metadata to upload, aborting the service-catalog uploader");
+            return false;
         }
         try {
             ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(destArchiveName));
@@ -451,5 +452,33 @@ public class ServiceCatalogUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * Create temporary folder structure.
+     *
+     * @param folderPath path to the temp directory.
+     * @return folder creation result.
+     */
+    public static boolean createTemporaryFolders(String folderPath) {
+        File serviceCatalogFolder = new File(folderPath);
+        if (serviceCatalogFolder.exists()) {
+            serviceCatalogFolder.delete();
+        }
+        boolean created = serviceCatalogFolder.mkdir();
+        if (!created) {
+            log.error("Could not create temporary directories required for service catalog");
+            return false;
+        }
+
+        File tempDir = new File(folderPath, TEMP_FOLDER_NAME);
+        if (tempDir.exists()) {
+            tempDir.delete();
+        }
+        created = tempDir.mkdir();
+        if (!created) {
+            log.error("Could not create temporary directories required for service catalog");
+        }
+        return created;
     }
 }
