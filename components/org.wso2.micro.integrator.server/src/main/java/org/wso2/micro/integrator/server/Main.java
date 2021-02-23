@@ -62,6 +62,8 @@ public class Main {
     protected static final String P2_DATA_AREA = "eclipse.p2.data.area";
     protected static final String ENABLE_EXTENSIONS = "wso2.enableExtensions";
     protected static final String DEPLOYMENT_CONFIG_FILE_PATH = "deployment.config.file.path";
+    protected static final String AVOID_CONFIGURATION_UPDATE = "avoidConfigUpdate";
+    protected static final String ONLY_PARSE_CONFIGURATION = "configParseOnly";
 
     static File platformDirectory;
     private static Log logger = LogFactory.getLog(Main.class);
@@ -357,7 +359,13 @@ public class Main {
             configFilePath = Paths.get(System.getProperty(LauncherConstants.CARBON_CONFIG_DIR_PATH),
                                        ConfigParser.UX_FILE_PATH).toString();
         }
-
+        // As deployment.toml is mandatory, set avoidConfigUpdate to false and configParseOnly to true
+        if (Boolean.getBoolean(AVOID_CONFIGURATION_UPDATE)) {
+            logger.warn("System property 'configParseOnly' will be set to true instead of " +
+                    "'avoidConfigUpdate' as deployment.toml configuration is mandatory.");
+            System.setProperty(AVOID_CONFIGURATION_UPDATE, "false");
+            System.setProperty(ONLY_PARSE_CONFIGURATION, "true");
+        }
         String outputDir = System.getProperty(LauncherConstants.CARBON_HOME);
         try {
             ConfigParser.parse(configFilePath, resourcesDir, outputDir);
