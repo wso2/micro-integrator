@@ -47,6 +47,7 @@ public class RDBMSConstantUtils {
     public static final String LOCAL_GROUP_ID = "localGroupId";
     public static final String SCHEDULED_PERIOD = "scheduledPeriod";
     public static final String NODE_ID = "nodeId";
+    public static final String NODE_ID_SYSTEM_PROPERTY = "node.id";
     public static final String CLUSTER_CONFIG = "cluster_config";
     public static final String NODE_ID_CONFIG_NAME = "node_id";
 

@@ -17,9 +17,11 @@
  */
 package org.wso2.micro.integrator.initializer.deployment.synapse.deployer;
 
+import com.google.gson.JsonObject;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.Deployer;
@@ -73,9 +75,11 @@ import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
+import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusUtils;
+import org.wso2.micro.integrator.initializer.dashboard.ArtifactDeploymentListener;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.LocalEntryUtil;
@@ -264,12 +268,16 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 artifactDir = getArtifactDirPath(axisConfig, artifactDirName);
             }
 
+            String fileName = artifact.getFiles().get(0).getName();
+            String artifactPath = null;
+            if (!StringUtils.isEmpty(fileName)) {
+                artifactPath = artifact.getExtractedPath() + File.separator + fileName;
+            }
+
             if (deployer != null && AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED.
                                             equals(artifact.getDeploymentStatus())) {
 
-                String fileName = artifact.getFiles().get(0).getName();
                 String artifactName = artifact.getName();
-                String artifactPath = artifact.getExtractedPath() + File.separator + fileName;
                 File artifactInRepo = new File(artifactDir + File.separator + fileName);
 
                 try {
@@ -279,7 +287,6 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                             ((AbstractSynapseArtifactDeployer) deployer).setCustomLog(carbonApplication.getAppName(),
                                     AppDeployerUtils.getTenantIdLogString(AppDeployerUtils.getTenantId()));
                         }
-
                         deployer.undeploy(artifactPath);
                     } else if (SynapseAppDeployerConstants.SYNAPSE_LIBRARY_TYPE.equals(artifact.getType())){
                         String libQName = getArtifactName(artifactPath, axisConfig);
@@ -320,6 +327,10 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                     log.error("Error occured while trying to un deploy : "+ artifactName);
                 }
             }
+
+            JsonObject undeployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath);
+            ArtifactDeploymentListener.addToUndeployedArtifactsQueue(undeployedArtifact);
+
         }
     }
 
@@ -1098,9 +1109,13 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
 
             artifact.setRuntimeObjectName(artifact.getName());
 
+            String fileName = artifact.getFiles().get(0).getName();
+            String artifactPath = null;
+            if (!StringUtils.isEmpty(fileName)) {
+                artifactPath = artifact.getExtractedPath() + File.separator + fileName;
+            }
+
             if (deployer != null) {
-                String fileName = artifact.getFiles().get(0).getName();
-                String artifactPath = artifact.getExtractedPath() + File.separator + fileName;
                 File artifactInRepo = new File(artifactDir + File.separator + fileName);
 
                 if (SynapseAppDeployerConstants.SEQUENCE_TYPE.equals(artifact.getType()) &&
@@ -1132,6 +1147,10 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                     }
                 }
             }
+
+            JsonObject deployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath);
+            ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedArtifact);
+
         }
     }
 
@@ -1284,6 +1303,50 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
             }
             deploymentEngine.addDeployer(deployer, artifactDir, ServiceBusConstants.ARTIFACT_EXTENSION);
         }
+    }
+
+    private JsonObject createUpdatedArtifactInfoObject(Artifact artifact, String artifactPath) {
+        JsonObject artifactInfo = new JsonObject();
+        String type = getArtifactDirName(artifact.getType());
+        String name = artifact.getName();
+        if ("api".equals(type)) {
+            type = "apis";
+        } else if ("synapse-libs".equals(type)) {
+            type = "connectors";
+            name = getConnectorName(name);
+        }
+        if ("templates".equals(type)) {
+            name = getTemplateName(artifactPath, name);
+        }
+        artifactInfo.addProperty("type", type);
+        artifactInfo.addProperty("name", name);
+        artifactInfo.addProperty("version", artifact.getVersion());
+        return artifactInfo;
+    }
+
+    private String getConnectorName(String artifactName) {
+        return artifactName.substring(0, artifactName.lastIndexOf("-connector"));
+    }
+
+    private String getTemplateName(String artifactPath, String name) {
+        try {
+            FileInputStream in = FileUtils.openInputStream(new File(artifactPath));
+            OMElement artifactConfig = (new StAXOMBuilder(StAXUtils.createXMLStreamReader(in))).getDocumentElement();
+            OMElement element = artifactConfig.getFirstChildWithName
+                    (new QName("http://ws.apache.org/ns/synapse", "endpoint"));
+            if (null != element) {
+                return "endpoint_".concat(name);
+            } else {
+                element = artifactConfig.getFirstChildWithName
+                        (new QName("http://ws.apache.org/ns/synapse", "sequence"));
+                if (null != element) {
+                    return "sequence".concat(name);
+                }
+            }
+        } catch (IOException | XMLStreamException e) {
+            log.error("Error occurred while creating name of template located at "+ artifactPath, e);
+        }
+        return name;
     }
 }
 

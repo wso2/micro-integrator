@@ -38,6 +38,7 @@ import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.Synapse
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.ITEM_TYPE_IMPORT;
@@ -74,8 +75,13 @@ public class ConnectorResource implements MiApiResource {
                           org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
 
+        String connectorName = Utils.getQueryParameter(messageContext, "connectorName");
         if (messageContext.isDoingGET()) {
-            populateConnectorList(axis2MessageContext, synapseConfiguration);
+            if (Objects.nonNull(connectorName)) {
+                populateConnectorData(axis2MessageContext, synapseConfiguration, connectorName);
+            } else {
+                populateConnectorList(axis2MessageContext, synapseConfiguration);
+            }
             axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         } else {
 
@@ -99,6 +105,30 @@ public class ConnectorResource implements MiApiResource {
             }
         }
         return true;
+    }
+
+    private void populateConnectorData(org.apache.axis2.context.MessageContext axis2MessageContext,
+                                       SynapseConfiguration synapseConfiguration, String connectorName) {
+
+        Map<String, Library> libraries = synapseConfiguration.getSynapseLibraries();
+
+        for (Map.Entry<String, Library> entry : libraries.entrySet()) {
+            if(((SynapseLibrary)entry.getValue()).getName().equals(connectorName)) {
+                SynapseLibrary connector = (SynapseLibrary)entry.getValue();
+                if (Objects.nonNull(connector)) {
+                    Utils.setJsonPayLoad(axis2MessageContext, getConnectorAsJson(connector));
+                }
+            }
+        }
+    }
+
+    private Object getConnectorAsJson(SynapseLibrary connector) {
+        JSONObject connectorObject  = new JSONObject();
+        connectorObject.put(NAME_ATTRIBUTE, connector.getName());
+        connectorObject.put(PACKAGE_ATTRIBUTE, connector.getPackage());
+        connectorObject.put(DESCRIPTION_ATTRIBUTE, connector.getDescription());
+        connectorObject.put(STATUS_ATTRIBUTE, getConnectorState(connector.getLibStatus()));
+        return connectorObject;
     }
 
     /**

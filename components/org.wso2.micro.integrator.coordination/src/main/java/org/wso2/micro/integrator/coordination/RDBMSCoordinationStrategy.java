@@ -41,6 +41,7 @@ import javax.sql.DataSource;
 import static org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils.CLUSTER_CONFIG;
 import static org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils.NODE_ID;
 import static org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils.NODE_ID_CONFIG_NAME;
+import static org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils.NODE_ID_SYSTEM_PROPERTY;
 
 /**
  * This class controls the overall process of RDBMS coordination.
@@ -279,6 +280,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                 }
             }
         }
+        System.setProperty(NODE_ID_SYSTEM_PROPERTY, nodeId);
         return nodeId;
     }
 

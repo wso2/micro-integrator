@@ -35,6 +35,7 @@ import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.integrator.dataservices.core.DBDeployer;
 import org.wso2.micro.integrator.initializer.StartupFinalizer;
+import org.wso2.micro.integrator.initializer.dashboard.HeartBeatComponent;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
@@ -79,6 +80,11 @@ public class AppDeployerServiceComponent {
 
         // Invoke all registered deployers to deploy services
         invokeRegisteredDeployers();
+
+        if(HeartBeatComponent.isDashboardConfigured()) {
+            log.info("Dashboard is configured. Initiating heartbeat executor service.");
+            HeartBeatComponent.invokeHeartbeatExecutorService();
+        }
 
         // Finalize server startup
         startupFinalizer = new StartupFinalizer(configCtx, ctxt.getBundleContext());
