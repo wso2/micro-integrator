@@ -29,6 +29,11 @@ public class Constants {
     public static final String PORT = "{port}";
     public static final String URL = "{url}";
     public static final String SERVICE_URL = "serviceUrl";
+    public static final String SERVICE_KEY = "serviceKey";
+    public static final String METADATA_KEY = "key";
+    public static final String MD5 = "md5";
+    public static final String VERIFIER = "verifier";
+    public static final String LIST_STRING = "list";
 
     // deployment.toml related constants
     public static final String SERVICE_CATALOG_CONFIG = "service_catalog";
@@ -37,8 +42,9 @@ public class Constants {
     public static final String USER_NAME = "userName";
     public static final String PASSWORD = "password";
 
-    public static final String SERVICE_CATALOG_ENDPOINT = "api/am/service-catalog/v0/services/import?overwrite" +
+    public static final String SERVICE_CATALOG_PUBLISH_ENDPOINT = "api/am/service-catalog/v0/services/import?overwrite" +
             "=true";
+    public static final String SERVICE_CATALOG_GET_SERVICES_ENDPOINT = "api/am/service-catalog/v0/services";
 
     // creating the payload.zip related constants
     public static final String SERVICE_CATALOG = "ServiceCatalog";
