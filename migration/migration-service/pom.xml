@@ -56,6 +56,16 @@
             <artifactId>org.wso2.micro.integrator.mediation.security</artifactId>
             <version>${migration.from.mi.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.properties</artifactId>
+            <version>${carbon.registry.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.mediation</groupId>
+            <artifactId>org.wso2.carbon.mediation.security</artifactId>
+            <version>4.7.33</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -64,6 +74,7 @@
         <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
         <migration.from.mi.version>1.1.0</migration.from.mi.version>
         <org.osgi.version>1.3.0</org.osgi.version>
+        <carbon.registry.version>4.7.24</carbon.registry.version>
     </properties>
 
     <build>
@@ -98,8 +109,9 @@
                             org.wso2.mi.migration.internal
                         </Private-Package>
                         <Import-Package>
+                            org.wso2.carbon.mediation.security.vault; resolution:=optional,
                             org.wso2.securevault,
-                            org.wso2.micro.integrator.mediation.security.vault; version="${migration.from.mi.version}",
+                            org.wso2.micro.integrator.mediation.security.vault; version="${migration.from.mi.version}"; resolution:=optional,
                             org.apache.commons.logging; version="${commons.logging.version}",
                             org.apache.commons.lang; version="${commons-lang.wso2.osgi.version.range}",
                         </Import-Package>

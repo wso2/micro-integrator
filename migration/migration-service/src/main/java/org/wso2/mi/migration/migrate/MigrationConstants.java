@@ -28,4 +28,8 @@ public class MigrationConstants {
     public static final String MIGRATION_CONF = "migration-conf.properties";
     public static final String KEYSTORE_PASSWORD = "keystore.identity.key.password";
     public static final String KEYSTORE_LOCATION = "keystore.identity.location";
+    public static final String SECURE_VAULT_PATH = "/_system/config/repository/components/secure-vault";
+    public static final String ADMIN_USERNAME = "admin.user.name";
+    public static final String RSA = "RSA";
+    public static final String CIPHER_TRANSFORMATION_SYSTEM_PROPERTY = "org.wso2.CipherTransformation";
 }
