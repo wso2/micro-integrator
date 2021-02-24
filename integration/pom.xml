@@ -888,7 +888,8 @@
                 <module>automation-extensions</module>
                 <module>tests-common</module>
                 <module>mediation-tests</module>
-                <module>cli-tests</module>
+<!--                Commenting out since micli is no longer usable with MI. Need to use apictl instead-->
+<!--                <module>cli-tests</module>-->
                 <module>dataservice-hosting-tests</module>
             </modules>
         </profile>
