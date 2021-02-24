@@ -117,7 +117,7 @@ public class HeartBeatComponent {
                     ArtifactDeploymentListener.removeFromDeployedArtifactsQueue(deployedArtifactsCount);
                 }
             } catch (IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-                log.error("Error occurred while sending heartbeat request to dashboard.");
+                log.debug("Error occurred while sending heartbeat request to dashboard.");
             } 
         };
         scheduledExecutorService.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
