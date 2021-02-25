@@ -75,7 +75,7 @@ public class HeartBeatComponent {
     private static final String UNDEPLOYED_ARTIFACTS = "undeployedArtifacts";
     public static void invokeHeartbeatExecutorService() {
 
-        String heartbeatApiUrl = configs.get(DASHBOARD_CONFIG_URL) + File.separator + "heartbeat";
+        String heartbeatApiUrl = configs.get(DASHBOARD_CONFIG_URL)  + "/heartbeat";
         String groupId = getGroupId();
         String nodeId = getNodeId();
         long interval = Integer.parseInt(configs.get(DASHBOARD_CONFIG_HEARTBEAT_INTERVAL).toString());
