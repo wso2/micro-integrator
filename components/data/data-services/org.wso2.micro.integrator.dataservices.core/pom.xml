@@ -232,7 +232,7 @@
                 <inherited>true</inherited>
                 <configuration>
                     <forkMode>pertest</forkMode>
-                    <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m</argLine>
+                    <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m @{argLine}</argLine>
                     <testFailureIgnore>false</testFailureIgnore>
                     <includes>
                         <include>**/*TestSuite.java</include>
@@ -254,27 +254,17 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>default-instrument</id>
+                        <id>coverage-initialize</id>
                         <goals>
-                            <goal>instrument</goal>
+                            <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>default-restore-instrumented-classes</id>
-                        <goals>
-                            <goal>restore-instrumented-classes</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>default-report</id>
-                        <phase>prepare-package</phase>
+                        <id>coverage-report</id>
+                        <phase>post-integration-test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <dataFile>target/coverage-reports/jacoco-unit-dataservice-core.exec</dataFile>
-                            <outputDirectory>target/coverage-reports/site</outputDirectory>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
