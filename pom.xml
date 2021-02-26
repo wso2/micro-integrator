@@ -1883,6 +1883,50 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.maven.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>default-prepare-agent-by-coverage-enforcer</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <propertyName>argLine</propertyName>
+                                <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-report-by-coverage-enforcer</id>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                            <configuration>
+                                <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-check-by-coverage-enforcer</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                                <rules>
+                                    <!-- implementation is needed only for Maven 2 -->
+                                    <rule implementation="org.jacoco.maven.RuleConfiguration">
+                                        <element>BUNDLE</element>
+                                        <limits>
+                                            <!-- implementation is needed only for Maven 2 -->
+                                            <limit implementation="org.jacoco.report.check.Limit">
+                                                <counter>LINE</counter>
+                                                <value>COVEREDRATIO</value>
+                                                <minimum>0.0</minimum>
+                                            </limit>
+                                        </limits>
+                                    </rule>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
