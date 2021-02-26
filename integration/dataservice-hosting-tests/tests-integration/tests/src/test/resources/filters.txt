@@ -15,3 +15,7 @@
 -*transports*
 -org.wso2.carbon.mediation.statistics*
 -*startup*
+-com/google/
+-io/grpc/
+-io/prometheus/
+-io/opencensus/

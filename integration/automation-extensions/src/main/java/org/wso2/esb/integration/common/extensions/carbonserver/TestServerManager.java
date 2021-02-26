@@ -142,7 +142,7 @@ public class TestServerManager {
      * @throws AutomationFrameworkException If an error occurs while shutting down the server
      */
     public void stopServer() throws AutomationFrameworkException {
-        carbonServer.serverShutdown(portOffset, true);
+        carbonServer.serverShutdown(portOffset, false);
     }
 
     void restartServer() throws AutomationFrameworkException {

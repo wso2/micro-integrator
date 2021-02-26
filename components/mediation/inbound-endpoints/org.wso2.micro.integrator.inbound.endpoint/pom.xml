@@ -231,7 +231,7 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <dataFile>target/coverage-reports/jacoco-unit-commons.exec</dataFile>
+                            <dataFile>target/coverage-reports/jacoco-unit-inbound-endpoint.exec</dataFile>
                             <outputDirectory>target/coverage-reports/site</outputDirectory>
                         </configuration>
                     </execution>
