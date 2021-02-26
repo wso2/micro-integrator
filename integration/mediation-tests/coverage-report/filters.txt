@@ -14,3 +14,7 @@
 -org/apache/synapse/metrics/
 -org.apache.synapse.debug*
 -org/apache/synapse/debug/
+-com/google/
+-io/grpc/
+-io/prometheus/
+-io/opencensus/
