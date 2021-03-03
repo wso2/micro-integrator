@@ -39,7 +39,7 @@ public class Constants {
     public static final String SERVICE_CATALOG_CONFIG = "service_catalog";
     public static final String APIM_HOST = "apimHost";
     public static final String ENABLE = "enable";
-    public static final String USER_NAME = "userName";
+    public static final String USER_NAME = "username";
     public static final String PASSWORD = "password";
 
     public static final String SERVICE_CATALOG_PUBLISH_ENDPOINT = "api/am/service-catalog/v0/services/import?overwrite" +

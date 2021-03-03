@@ -1100,5 +1100,5 @@ update_interval = 2
 [[service_catalog]]
 apimHost = "https://127.0.0.1:9443"
 enable = true
-userName = "admin"
+username = "admin"
 password = "admin"
