@@ -17,6 +17,7 @@
  */
 package org.wso2.micro.integrator.initializer.deployment.application.deployer;
 
+import com.google.gson.JsonObject;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -40,6 +41,7 @@ import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.core.util.FileManipulator;
+import org.wso2.micro.integrator.initializer.dashboard.ArtifactDeploymentListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -172,6 +174,8 @@ public class CappDeployer extends AbstractDeployer {
                 this.addCarbonApp(currentApp);
                 log.info("Successfully Deployed Carbon Application : " + currentApp.getAppNameWithVersion() +
                                  AppDeployerUtils.getTenantIdLogString(AppDeployerUtils.getTenantId()));
+                JsonObject deployedCarbonApp = createUpdatedArtifactInfoObject(currentApp);
+                ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedCarbonApp);
             }
         } catch (DeploymentException e) {
             faultyCapps.add(cAppName);
@@ -558,9 +562,21 @@ public class CappDeployer extends AbstractDeployer {
             FileManipulator.deleteDir(carbonApp.getExtractedPath());
             log.info("Successfully undeployed Carbon Application : " + carbonApp.getAppNameWithVersion()
                              + AppDeployerUtils.getTenantIdLogString(AppDeployerUtils.getTenantId()));
+
+            JsonObject undeployedCarbonApp = createUpdatedArtifactInfoObject(carbonApp);
+            ArtifactDeploymentListener.addToUndeployedArtifactsQueue(undeployedCarbonApp);
         } catch (Exception e) {
             log.error("Error occurred while trying to unDeploy  : " + carbonApp.getAppNameWithVersion(), e);
         }
+    }
+
+    private JsonObject createUpdatedArtifactInfoObject(CarbonApplication capp) {
+        JsonObject artifactInfo = new JsonObject();
+        String type = "applications";
+        artifactInfo.addProperty("type", type);
+        artifactInfo.addProperty("name", capp.getAppName());
+        artifactInfo.addProperty("version", capp.getAppVersion());
+        return artifactInfo;
     }
 
     /**
