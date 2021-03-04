@@ -111,7 +111,8 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
     private static String FAULT_XML="<sequence xmlns=\"http://ws.apache.org/ns/synapse\" name=\"fault\"/>";
     private static String MAIN_SEQ_REGEX = "main-\\d+\\.\\d+\\.\\d+\\.xml";
     private static String FAULT_SEQ_REGEX = "fault-\\d+\\.\\d+\\.\\d+\\.xml";
-
+    private static final String UNDEPLOY_UPDATE_TYPE = "undeploy";
+    private static final String DEPLOY_UPDATE_TYPE = "deploy";
 
     private HashMap<String, Deployer> synapseDeployers = new HashMap<>();
 
@@ -328,9 +329,8 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 }
             }
 
-            JsonObject undeployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath);
+            JsonObject undeployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath, UNDEPLOY_UPDATE_TYPE);
             ArtifactDeploymentListener.addToUndeployedArtifactsQueue(undeployedArtifact);
-
         }
     }
 
@@ -1148,7 +1148,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 }
             }
 
-            JsonObject deployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath);
+            JsonObject deployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath, DEPLOY_UPDATE_TYPE);
             ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedArtifact);
 
         }
@@ -1305,7 +1305,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
         }
     }
 
-    private JsonObject createUpdatedArtifactInfoObject(Artifact artifact, String artifactPath) {
+    private JsonObject createUpdatedArtifactInfoObject(Artifact artifact, String artifactPath, String updateType) {
         JsonObject artifactInfo = new JsonObject();
         String type = getArtifactDirName(artifact.getType());
         String name = artifact.getName();
@@ -1315,7 +1315,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
             type = "connectors";
             name = getConnectorName(name);
         }
-        if ("templates".equals(type)) {
+        if (updateType.equals(DEPLOY_UPDATE_TYPE) && "templates".equals(type)) {
             name = getTemplateName(artifactPath, name);
         }
         artifactInfo.addProperty("type", type);
@@ -1340,7 +1340,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 element = artifactConfig.getFirstChildWithName
                         (new QName("http://ws.apache.org/ns/synapse", "sequence"));
                 if (null != element) {
-                    return "sequence".concat(name);
+                    return "sequence_".concat(name);
                 }
             }
         } catch (IOException | XMLStreamException e) {
