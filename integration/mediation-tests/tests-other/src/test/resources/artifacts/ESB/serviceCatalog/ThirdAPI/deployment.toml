@@ -101,7 +101,7 @@ algorithm = "AES"
 # secret_key = "[secret value]"
 
 [[service_catalog]]
-apimHost = "https://localhost:9654"
+apimHost = "https://localhost:9654/third"
 enable = true
 username = "admin"
 password = "admin"

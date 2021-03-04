@@ -168,11 +168,11 @@
         </classes>
     </test>
 
-    <!--    <test name="Service Catalog tests" preserve-order="true" verbose="2">
+    <test name="Service Catalog tests" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.serviceCatalog.test"/>
         </packages>
-    </test>-->
+    </test>
 
 </suite>
 
