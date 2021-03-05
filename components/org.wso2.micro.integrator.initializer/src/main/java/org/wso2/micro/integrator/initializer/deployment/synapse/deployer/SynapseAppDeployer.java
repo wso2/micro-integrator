@@ -111,8 +111,6 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
     private static String FAULT_XML="<sequence xmlns=\"http://ws.apache.org/ns/synapse\" name=\"fault\"/>";
     private static String MAIN_SEQ_REGEX = "main-\\d+\\.\\d+\\.\\d+\\.xml";
     private static String FAULT_SEQ_REGEX = "fault-\\d+\\.\\d+\\.\\d+\\.xml";
-    private static final String UNDEPLOY_UPDATE_TYPE = "undeploy";
-    private static final String DEPLOY_UPDATE_TYPE = "deploy";
 
     private HashMap<String, Deployer> synapseDeployers = new HashMap<>();
 
@@ -329,7 +327,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 }
             }
 
-            JsonObject undeployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath, UNDEPLOY_UPDATE_TYPE);
+            JsonObject undeployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath, false);
             ArtifactDeploymentListener.addToUndeployedArtifactsQueue(undeployedArtifact);
         }
     }
@@ -1148,7 +1146,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 }
             }
 
-            JsonObject deployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath, DEPLOY_UPDATE_TYPE);
+            JsonObject deployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath, true);
             ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedArtifact);
 
         }
@@ -1305,7 +1303,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
         }
     }
 
-    private JsonObject createUpdatedArtifactInfoObject(Artifact artifact, String artifactPath, String updateType) {
+    private JsonObject createUpdatedArtifactInfoObject(Artifact artifact, String artifactPath, boolean isDeploy) {
         JsonObject artifactInfo = new JsonObject();
         String type = getArtifactDirName(artifact.getType());
         String name = artifact.getName();
@@ -1315,7 +1313,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
             type = "connectors";
             name = getConnectorName(name);
         }
-        if (updateType.equals(DEPLOY_UPDATE_TYPE) && "templates".equals(type)) {
+        if (isDeploy && "templates".equals(type)) {
             name = getTemplateName(artifactPath, name);
         }
         artifactInfo.addProperty("type", type);
