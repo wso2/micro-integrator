@@ -14,6 +14,7 @@ public class Constants {
     public static final String DASHBOARD_CONFIG_HEARTBEAT_INTERVAL = "dashboard_config.heartbeat_interval";
 
     public static final String DEFAULT_GROUP_ID = "default";
+    public static final long DEFAULT_HEARTBEAT_INTERVAL = 5;
 
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
 }

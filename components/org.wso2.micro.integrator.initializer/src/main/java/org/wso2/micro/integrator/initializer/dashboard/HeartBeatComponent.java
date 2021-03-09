@@ -68,7 +68,7 @@ public class HeartBeatComponent {
     }
 
     private static final Log log = LogFactory.getLog(HeartBeatComponent.class);
-    private static Map<String, Object> configs = ConfigParser.getParsedConfigs();
+    private static final Map<String, Object> configs = ConfigParser.getParsedConfigs();
 
     private static final String CHANGE_NOTIFICATION = "changeNotification";
     private static final String DEPLOYED_ARTIFACTS = "deployedArtifacts";
@@ -78,7 +78,7 @@ public class HeartBeatComponent {
         String heartbeatApiUrl = configs.get(DASHBOARD_CONFIG_URL)  + "/heartbeat";
         String groupId = getGroupId();
         String nodeId = getNodeId();
-        long interval = Integer.parseInt(configs.get(DASHBOARD_CONFIG_HEARTBEAT_INTERVAL).toString());
+        long interval = getInterval();
         String carbonLocalIp = System.getProperty("carbon.local.ip");
         int internalHttpApiPort = ConfigurationLoader.getInternalInboundHttpsPort();
         String mgtApiUrl = "https://" + carbonLocalIp + ":" + internalHttpApiPort + "/management/";
@@ -145,6 +145,15 @@ public class HeartBeatComponent {
             }
         }
         return nodeId;
+    }
+
+    private static long getInterval() {
+        long interval = Constants.DEFAULT_HEARTBEAT_INTERVAL;
+        Object configuredInterval = configs.get(DASHBOARD_CONFIG_HEARTBEAT_INTERVAL);
+        if (null != configuredInterval) {
+            interval = Integer.parseInt(configuredInterval.toString());
+        }
+        return interval;
     }
 
     private static String generateRandomId() {

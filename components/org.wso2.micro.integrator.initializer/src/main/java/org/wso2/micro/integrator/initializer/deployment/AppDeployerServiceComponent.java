@@ -81,8 +81,8 @@ public class AppDeployerServiceComponent {
         // Invoke all registered deployers to deploy services
         invokeRegisteredDeployers();
 
-        if(HeartBeatComponent.isDashboardConfigured()) {
-            log.info("Dashboard is configured. Initiating heartbeat executor service.");
+        if (HeartBeatComponent.isDashboardConfigured()) {
+            log.info("Dashboard is configured. Initiating heartbeat component.");
             HeartBeatComponent.invokeHeartbeatExecutorService();
         }
 
