@@ -73,6 +73,7 @@ public class ServiceCatalogUtils {
     private static final Log log = LogFactory.getLog(ServiceCatalogUtils.class);
     private static SecretResolver secretResolver;
     private static List<Map<String, String>> md5List = new ArrayList<>();
+    private static Boolean alreadyUploaded = false;
 
     /**
      * Update the service url by injecting env variables.
@@ -414,6 +415,7 @@ public class ServiceCatalogUtils {
             md5Map.put(MD5, StringUtils.isEmpty(md5FromServer) ? newMD5String : md5FromServer);
             md5List.add(md5Map);
         } else {
+            alreadyUploaded = true;
             if (log.isDebugEnabled()) {
                 log.debug(APIName + " is already updated in the service catalog");
             }
@@ -431,7 +433,11 @@ public class ServiceCatalogUtils {
     public static boolean archiveDir(String destArchiveName, String sourceDir) {
         File zipDir = new File(sourceDir);
         if (zipDir.exists() && zipDir.list().length == 0) {
-            log.info("Could not find metadata to upload, aborting the service-catalog uploader");
+            if (alreadyUploaded) {
+                log.info("Service catalog already contains the latest configs, aborting the service-catalog uploader");
+            } else {
+                log.info("Could not find metadata to upload, aborting the service-catalog uploader");
+            }
             return false;
         }
 
