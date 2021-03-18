@@ -1098,7 +1098,7 @@ update_interval = 2
 
 #################### Service Catalog ############################
 [[service_catalog]]
-apimHost = "https://127.0.0.1:9443"
+apim_host = "https://127.0.0.1:9443"
 enable = true
 username = "admin"
 password = "admin"
