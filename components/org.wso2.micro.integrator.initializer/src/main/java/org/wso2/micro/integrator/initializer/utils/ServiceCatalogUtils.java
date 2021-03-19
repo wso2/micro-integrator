@@ -113,8 +113,8 @@ public class ServiceCatalogUtils {
      */
     public static String updateMetadataWithServiceUrl(File yamlFile) throws IOException, ResolverException {
         Yaml yaml = new Yaml();
-        Map<String, Object> obj =
-                (Map<String, Object>) yaml.load(new FileInputStream(yamlFile));
+        InputStream yamlStream = new FileInputStream(yamlFile);
+        Map<String, Object> obj = (Map<String, Object>) yaml.load(yamlStream);
         String currentServiceUrl = (String) obj.get(SERVICE_URL);
         obj.put(SERVICE_URL, updateServiceUrl(currentServiceUrl));
 
@@ -130,6 +130,7 @@ public class ServiceCatalogUtils {
         DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(yamlFile, false));
         outputStream.write(updatedYaml.getBytes());
         outputStream.close();
+        yamlStream.close();
         return (String) obj.get(METADATA_KEY);
     }
 
@@ -603,7 +604,11 @@ public class ServiceCatalogUtils {
     public static boolean createTemporaryFolders(String folderPath) {
         File serviceCatalogFolder = new File(folderPath);
         if (serviceCatalogFolder.exists()) {
-            serviceCatalogFolder.delete();
+            try {
+                FileUtils.forceDelete(serviceCatalogFolder);
+            } catch (IOException e) {
+                log.error("Error occurred while removing temporary directories", e);
+            }
         }
         boolean created = serviceCatalogFolder.mkdir();
         if (!created) {
