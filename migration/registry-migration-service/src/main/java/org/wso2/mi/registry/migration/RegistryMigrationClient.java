@@ -20,8 +20,8 @@ package org.wso2.mi.registry.migration;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.wso2.carbon.registry.properties.stub.beans.xsd.PropertiesBean;
 import org.wso2.carbon.registry.resource.stub.beans.xsd.MetadataBean;
-import org.wso2.carbon.registry.resource.stub.beans.xsd.PropertiesBean;
 import org.wso2.carbon.registry.resource.stub.beans.xsd.ResourceTreeEntryBean;
 import org.wso2.mi.registry.migration.exception.RegistryMigrationException;
 import org.wso2.mi.registry.migration.utils.MigrationClientUtils;
@@ -81,20 +81,23 @@ public class RegistryMigrationClient {
             }
 
             ResourceAdminServiceClient resourceAdminServiceClient = new ResourceAdminServiceClient(backEndUrl, session);
+            PropertiesAdminServiceClient propertiesAdminServiceClient = new PropertiesAdminServiceClient(backEndUrl,
+                                                                                                         session);
             List<String> ignorableRegistryResourcesList = new ArrayList<>(
                     Arrays.asList(MigrationClientUtils.IGNORED_REGISTRY_RESOURCES));
 
             // Fetch all the registry resources that are specified under the given resource path
             String parent = targetRegistryResourcePath.substring(0, targetRegistryResourcePath.lastIndexOf('/'));
-            traverseRegistryTree(resourceAdminServiceClient, targetRegistryResourcePath, parent,
-                                 ignorableRegistryResourcesList);
+            traverseRegistryTree(resourceAdminServiceClient, propertiesAdminServiceClient, targetRegistryResourcePath,
+                                 parent, ignorableRegistryResourcesList);
             loginAdminServiceClient.logOut();
 
             // Export the registry resources either as a Registry Resource Project or as a Carbon Application
             if (!registryResources.isEmpty()) {
                 registryExporter.exportRegistry(registryResources);
             } else {
-                LOGGER.error("Error in retrieving data from the server or there is no data for the given registry path");
+                LOGGER.error(
+                        "Error in retrieving data from the server or there is no data for the given registry path");
             }
 
         } catch (RegistryMigrationException e) {
@@ -309,7 +312,8 @@ public class RegistryMigrationClient {
      * @param parentPath                     path of the registry resource's parent node
      * @param ignorableRegistryResourcesList predefined list of the registry resource that should be neglected
      */
-    private static void traverseRegistryTree(ResourceAdminServiceClient resourceAdminServiceClient, String path,
+    private static void traverseRegistryTree(ResourceAdminServiceClient resourceAdminServiceClient,
+                                             PropertiesAdminServiceClient propertiesAdminServiceClient, String path,
                                              String parentPath, List<String> ignorableRegistryResourcesList) {
         try {
             // Fetch resource tree entry bean information using getResourceTreeEntry() admin operation.
@@ -325,7 +329,7 @@ public class RegistryMigrationClient {
                     String resourceName = resourcePathArray[resourcePathArray.length - 1];
                     collection.setResourceName(resourceName);
 
-                    PropertiesBean properties = resourceAdminServiceClient.getProperties(path);
+                    PropertiesBean properties = propertiesAdminServiceClient.getProperties(path);
                     if (properties.getProperties() != null) {
                         // If properties are defined in this collection, then mark it as an exportable resource element.
                         collection.setProperties(properties.getProperties());
@@ -348,7 +352,8 @@ public class RegistryMigrationClient {
                             continue;
                         }
                         // Recursively call the traverseRegistryTree function.
-                        traverseRegistryTree(resourceAdminServiceClient, child, path, ignorableRegistryResourcesList);
+                        traverseRegistryTree(resourceAdminServiceClient, propertiesAdminServiceClient, child, path,
+                                             ignorableRegistryResourcesList);
                     }
                 }
             } else {
@@ -359,7 +364,7 @@ public class RegistryMigrationClient {
                 // Fetch resource text content using getTextContent() admin operation.
                 String resourceContent = resourceAdminServiceClient.getTextContent(path);
                 // Fetch properties associated to a resource using getProperties() admin operation.
-                PropertiesBean properties = resourceAdminServiceClient.getProperties(path);
+                PropertiesBean properties = propertiesAdminServiceClient.getProperties(path);
 
                 registryItem.setResourceContent(resourceContent);
                 registryItem.setProperties(properties.getProperties());
