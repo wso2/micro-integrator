@@ -137,8 +137,18 @@ public class HTTPEndpointManager extends AbstractInboundEndpointManager {
 
         String epName = dataStore.getListeningEndpointName(port, SUPER_TENANT_DOMAIN_NAME);
 
-        if (PassThroughInboundEndpointHandler.isEndpointRunning(port)) {
-            if (epName != null && epName.equalsIgnoreCase(name)) {
+        if (epName == null) {
+            dataStore.registerListeningEndpoint(port, SUPER_TENANT_DOMAIN_NAME, InboundHttpConstants.HTTPS, name,
+                    params);
+            boolean start = startSSLListener(port, name, sslConfiguration, params);
+            if (start) {
+                applyConfiguration(config, SUPER_TENANT_DOMAIN_NAME, port);
+            } else {
+                dataStore.unregisterListeningEndpoint(port, SUPER_TENANT_DOMAIN_NAME);
+                return false;
+            }
+        } else if (PassThroughInboundEndpointHandler.isEndpointRunning(port)) {
+            if (epName.equalsIgnoreCase(name)) {
                 applyConfiguration(config, SUPER_TENANT_DOMAIN_NAME, port);
                 log.info(epName + " Endpoint is already started in port : " + port);
             } else {
