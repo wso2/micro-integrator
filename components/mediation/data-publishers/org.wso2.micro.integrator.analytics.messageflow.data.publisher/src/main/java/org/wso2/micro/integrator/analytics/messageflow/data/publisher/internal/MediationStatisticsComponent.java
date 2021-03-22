@@ -42,7 +42,9 @@ import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,7 +60,7 @@ public class MediationStatisticsComponent {
 
     private Map<Integer, MessageFlowObserverStore> stores = new HashMap<Integer, MessageFlowObserverStore>();
 
-    private Map<Integer, MessageFlowReporterThread> reporterThreads = new HashMap<Integer, MessageFlowReporterThread>();
+    private Map<Integer, List<MessageFlowReporterThread>> reporterThreads = new HashMap<>();
 
     private Map<Integer, MediationConfigReporterThread> configReporterThreads = new HashMap<Integer, MediationConfigReporterThread>();
 
@@ -129,13 +131,15 @@ public class MediationStatisticsComponent {
                 workerCount = AnalyticsDataPublisherConstants.FLOW_STATISTIC_WORKER_COUNT_DEFAULT;
             }
         }
+        List<MessageFlowReporterThread> messageFlowReporterThreadList = new ArrayList<>();
         for (int i = 0; i < workerCount; i++) {
             reporterThread = new MessageFlowReporterThread(synEnvService, observerStore);
             reporterThread.setName("message-flow-reporter-" + i + "-tenant-" + tenantId);
             reporterThread.setDelay(delay);
             reporterThread.start();
-            reporterThreads.put(tenantId, reporterThread);
+            messageFlowReporterThreadList.add(reporterThread);
         }
+        reporterThreads.put(tenantId, messageFlowReporterThreadList);
         String disableJmxStr = serverConf
                 .getFirstProperty(AnalyticsDataPublisherConstants.FLOW_STATISTIC_JMX_PUBLISHING);
         boolean enableJmxPublishing = !Boolean.parseBoolean(disableJmxStr);
@@ -191,24 +195,26 @@ public class MediationStatisticsComponent {
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
 
-        Set<Map.Entry<Integer, MessageFlowReporterThread>> threadEntries = reporterThreads.entrySet();
-        for (Map.Entry<Integer, MessageFlowReporterThread> threadEntry : threadEntries) {
-            MessageFlowReporterThread reporterThread = threadEntry.getValue();
-            if (reporterThread != null && reporterThread.isAlive()) {
-                reporterThread.shutdown();
-                // This should wake up the thread if it is asleep
-                reporterThread.interrupt();
-                // Otherwise some of the collected data may not be sent to the observers
-                for (int i = 0; i < 50; i++) {
-                    if (!reporterThread.isAlive()) {
-                        break;
-                    }
-                    if (log.isDebugEnabled()) {
-                        log.debug("Waiting for the mediation tracer reporter thread to terminate");
-                    }
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ignore) {
+        Set<Map.Entry<Integer, List<MessageFlowReporterThread>>> threadEntriesSet = reporterThreads.entrySet();
+        for (Map.Entry<Integer, List<MessageFlowReporterThread>> threadEntryList : threadEntriesSet) {
+            List<MessageFlowReporterThread> reporterThreadsList = threadEntryList.getValue();
+            for (MessageFlowReporterThread reporterThread: reporterThreadsList) {
+                if (reporterThread != null && reporterThread.isAlive()) {
+                    reporterThread.shutdown();
+                    // This should wake up the thread if it is asleep
+                    reporterThread.interrupt();
+                    // Otherwise some of the collected data may not be sent to the observers
+                    for (int i = 0; i < 50; i++) {
+                        if (!reporterThread.isAlive()) {
+                            break;
+                        }
+                        if (log.isDebugEnabled()) {
+                            log.debug("Waiting for the mediation tracer reporter thread to terminate");
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ignore) {
+                        }
                     }
                 }
             }
@@ -282,24 +288,54 @@ public class MediationStatisticsComponent {
 
         try {
             int tenantId = registrationsService.getTenantId();
-            MessageFlowReporterThread reporterThread = reporterThreads.get(tenantId);
-            if (reporterThread != null && reporterThread.isAlive()) {
-                reporterThread.shutdown();
-                // This should wake up the thread if it is asleep
-                reporterThread.interrupt();
-                // Otherwise some of the collected data may not be sent to the observers
-                while (reporterThread.isAlive()) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Waiting for the trace reporter thread to terminate");
-                    }
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ignore) {
+            shutdownMessageFlowReporterThreads(tenantId);
+            shutdownMediationConfigReporterThread(tenantId);
+
+        } catch (Throwable t) {
+            log.error("Fatal error occurred at the osgi service method", t);
+        }
+    }
+
+    private void shutdownMediationConfigReporterThread(int tenantId) {
+
+        MediationConfigReporterThread mediationConfigReporterThread = configReporterThreads.get(tenantId);
+        if (mediationConfigReporterThread != null && mediationConfigReporterThread.isAlive()) {
+            mediationConfigReporterThread.shutdown();
+            mediationConfigReporterThread.interrupt();
+
+            while (mediationConfigReporterThread.isAlive()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Waiting for the mediation config reporter thread to terminate");
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignore) {
+                }
+            }
+        }
+    }
+
+    private void shutdownMessageFlowReporterThreads(int tenantId) {
+
+        List<MessageFlowReporterThread> reporterThreadList = reporterThreads.get(tenantId);
+        if (reporterThreadList != null) {
+            for (MessageFlowReporterThread reporterThread: reporterThreadList) {
+                if (reporterThread != null && reporterThread.isAlive()) {
+                    reporterThread.shutdown();
+                    // This should wake up the thread if it is asleep
+                    reporterThread.interrupt();
+                    // Otherwise some of the collected data may not be sent to the observers
+                    while (reporterThread.isAlive()) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Waiting for the trace reporter thread to terminate");
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ignore) {
+                        }
                     }
                 }
             }
-        } catch (Throwable t) {
-            log.error("Fatal error occurred at the osgi service method", t);
         }
     }
 
