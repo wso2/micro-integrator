@@ -21,6 +21,7 @@
 
 package org.wso2.micro.integrator.initializer.utils;
 
+import org.apache.synapse.config.SynapseConfiguration;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -45,7 +46,9 @@ public class ConfigurationHolder {
     private ConfigurationAdmin configAdminService;
 
     private Map<Integer, ServiceRegistration> synapseRegistrations =
-            new HashMap<Integer, ServiceRegistration>(); 
+            new HashMap<Integer, ServiceRegistration>();
+
+    private Map<Integer, SynapseConfiguration> synapseConfigurationHashMap = new HashMap<>();
 
     public static ConfigurationHolder getInstance() {
         return ourInstance;
@@ -108,6 +111,14 @@ public class ConfigurationHolder {
 
     public void setSynapseRegistrationsService(SynapseRegistrationsService synapseRegistrationsService) {
         this.synapseRegistrationsService = synapseRegistrationsService;
+    }
+
+    public SynapseConfiguration getSynapseConfiguration(int tenantId) {
+        return synapseConfigurationHashMap.get(tenantId);
+    }
+
+    public void addSynapseConfiguration(int tenanId, SynapseConfiguration synapseConfiguration) {
+        synapseConfigurationHashMap.put(tenanId, synapseConfiguration);
     }
 
     public void setConfigAdminService(ConfigurationAdmin configAdminService) {
