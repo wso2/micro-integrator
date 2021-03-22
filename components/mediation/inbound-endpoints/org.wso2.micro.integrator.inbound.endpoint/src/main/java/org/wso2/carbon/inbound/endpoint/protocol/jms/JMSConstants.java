@@ -218,6 +218,10 @@ public class JMSConstants {
      * A MessageContext property or client Option indicating the JMS timestamp (Long specified as String)
      */
     public static final String JMS_TIMESTAMP = "JMS_TIMESTAMP";
+    /**
+     * A MessageContext property or client Option indicating the JMS message redelivered (boolean specified as String)
+     */
+    public static final String JMS_REDELIVERED = "JMS_REDELIVERED";
 
     /**
      * Does the JMS broker support hyphen in JMS message property names.
