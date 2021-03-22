@@ -33,6 +33,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import io.netty.util.AttributeKey;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPEnvelope;
@@ -102,6 +103,7 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
     private int portOffset;
 
     private InboundApiHandler inboundApiHandler = new InboundApiHandler();
+    private static final AttributeKey<Map<String, Object>> WSO2_PROPERTIES = AttributeKey.valueOf("WSO2_PROPERTIES");
 
     static {
         contentTypes.add("application/xml");
@@ -151,7 +153,7 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
         }
         WebsocketSubscriberPathManager.getInstance()
                 .addChannelContext(endpointName, subscriberPath.getPath(), wrappedContext);
-        MessageContext synCtx = getSynapseMessageContext(tenantDomain);
+        MessageContext synCtx = getSynapseMessageContext(tenantDomain, ctx);
         InboundEndpoint endpoint = synCtx.getConfiguration().getInboundEndpoint(endpointName);
         synCtx.setProperty(InboundWebsocketConstants.CONNECTION_TERMINATE, new Boolean(true));
         ((Axis2MessageContext) synCtx).getAxis2MessageContext()
@@ -198,7 +200,7 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
 
         WebsocketSubscriberPathManager.getInstance()
                 .addChannelContext(endpointName, subscriberPath.getPath(), wrappedContext);
-        MessageContext synCtx = getSynapseMessageContext(tenantDomain);
+        MessageContext synCtx = getSynapseMessageContext(tenantDomain, ctx);
         InboundEndpoint endpoint = synCtx.getConfiguration().getInboundEndpoint(endpointName);
         defaultContentType = endpoint.getParametersMap().get(InboundWebsocketConstants.INBOUND_DEFAULT_CONTENT_TYPE);
         if (endpoint == null) {
@@ -259,7 +261,7 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
             if (handshakeFuture.isSuccess()) {
 
                 String endpointName = WebsocketEndpointManager.getInstance().getEndpointName(port, tenantDomain);
-                MessageContext synCtx = getSynapseMessageContext(tenantDomain);
+                MessageContext synCtx = getSynapseMessageContext(tenantDomain, ctx);
                 InboundEndpoint endpoint = synCtx.getConfiguration().getInboundEndpoint(endpointName);
                 ((Axis2MessageContext) synCtx).getAxis2MessageContext()
                         .setProperty(InboundWebsocketConstants.CLIENT_ID, ctx.channel().hashCode());
@@ -476,6 +478,22 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
 
     public String getTenantDomain() {
         return tenantDomain;
+    }
+
+    private MessageContext getSynapseMessageContext(String tenantDomain, ChannelHandlerContext ctx) throws AxisFault {
+
+        MessageContext synCtx = getSynapseMessageContext(tenantDomain);
+        Object prop = ctx.channel().attr(WSO2_PROPERTIES).get();
+        if (prop != null) {
+            Map<String, Object> properties = (Map<String, Object>) prop;
+            for (Map.Entry entry : properties.entrySet()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Setting synapse property key: " + " value: " + entry.getValue());
+                }
+                synCtx.setProperty(entry.getKey().toString(), entry.getValue());
+            }
+        }
+        return synCtx;
     }
 
     public org.apache.synapse.MessageContext getSynapseMessageContext(String tenantDomain) throws AxisFault {
