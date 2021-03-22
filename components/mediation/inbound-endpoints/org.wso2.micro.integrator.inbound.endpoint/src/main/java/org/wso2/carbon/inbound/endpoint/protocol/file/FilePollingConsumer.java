@@ -75,6 +75,7 @@ public class FilePollingConsumer {
     private boolean distributedLock;
     private Long distributedLockTimeout;
     private FileSystemOptions fso;
+    private boolean isClosed;
 
     public FilePollingConsumer(Properties vfsProperties, String name, SynapseEnvironment synapseEnvironment,
                                long scanInterval) {
@@ -605,6 +606,9 @@ public class FilePollingConsumer {
         fileObject = null;
         while (wasError) {
             try {
+                if (isClosed) {
+                    return false;
+                }
                 retryCount++;
                 fileObject = fsManager.resolveFile(fileURI, fso);
                 if (fileObject == null) {
@@ -626,6 +630,7 @@ public class FilePollingConsumer {
                 try {
                     Thread.sleep(reconnectionTimeout);
                 } catch (InterruptedException e2) {
+                    Thread.currentThread().interrupt();
                     log.error("Thread was interrupted while waiting to reconnect.", e2);
                 }
             }
@@ -894,5 +899,6 @@ public class FilePollingConsumer {
 
     void destroy() {
         fsManager.close();
+        isClosed = true;
     }
 }

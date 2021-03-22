@@ -58,6 +58,7 @@ public class WebsocketLogUtil {
         if (msg.headers() == null || msg.headers().isEmpty()) {
             log.debug(logStatement + "empty");
         } else {
+            log.debug("Inbound WebSocket request url: " + msg.getUri());
             for (Map.Entry<String, String> entry : msg.headers().entries()) {
                 log.debug(logStatement + entry.getKey() + ":" + entry.getValue());
             }

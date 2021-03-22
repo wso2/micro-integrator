@@ -62,12 +62,11 @@ public class InboundEndpointsDataStore {
      */
     public void registerListeningEndpoint(int port, String tenantDomain, String protocol, String name,
                                           InboundProcessorParams params) {
-
+        port = port - PersistenceUtils.getPortOffset(params.getProperties());
         List<InboundEndpointInfoDTO> tenantList = endpointListeningInfo.get(port);
         if (tenantList == null) {
             // If there is no existing listeners in the port, create a new list
             tenantList = new ArrayList<>();
-            port = port - PersistenceUtils.getPortOffset(params.getProperties());
             endpointListeningInfo.put(port, tenantList);
         }
         tenantList.add(new InboundEndpointInfoDTO(tenantDomain, protocol, name, params));
@@ -101,6 +100,7 @@ public class InboundEndpointsDataStore {
     public void registerSSLListeningEndpoint(int port, String tenantDomain, String protocol, String name,
                                              SSLConfiguration sslConfiguration, InboundProcessorParams params) {
 
+        port = port - PersistenceUtils.getPortOffset(params.getProperties());
         List<InboundEndpointInfoDTO> tenantList = endpointListeningInfo.computeIfAbsent(port, k -> new ArrayList<>());
         // If there is no existing listeners in the port, create a new list
         InboundEndpointInfoDTO inboundEndpointInfoDTO = new InboundEndpointInfoDTO(tenantDomain, protocol, name,

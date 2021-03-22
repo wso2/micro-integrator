@@ -73,6 +73,9 @@ public class WebsocketTransportSender extends AbstractTransportSender {
         String messageType = null;
         Map<String, Object> customHeaders = new HashMap<>();
 
+        if (log.isDebugEnabled()) {
+            log.debug("Endpoint url: " + targetEPR);
+        }
         InboundResponseSender responseSender = null;
         if (msgCtx.getProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER) != null) {
             responseSender = (InboundResponseSender) msgCtx

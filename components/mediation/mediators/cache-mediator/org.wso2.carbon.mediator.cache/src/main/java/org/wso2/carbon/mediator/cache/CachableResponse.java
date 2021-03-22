@@ -21,7 +21,6 @@ import org.apache.axiom.soap.SOAPEnvelope;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -59,7 +58,7 @@ public class CachableResponse implements Serializable {
     /**
      * This holds the HTTP Header Properties of the response.
      */
-    private ConcurrentHashMap<String, Object> headerProperties;
+    private Map<String, Object> headerProperties;
 
     /**
      * The HTTP status code number of the response
@@ -207,7 +206,7 @@ public class CachableResponse implements Serializable {
      * @param headerProperties HTTP Header Properties to be stored in to cache as a map
      */
     public void setHeaderProperties(Map<String, Object> headerProperties) {
-        this.headerProperties = (ConcurrentHashMap) headerProperties;
+        this.headerProperties = headerProperties;
     }
 
     /**
