@@ -436,7 +436,7 @@ public class DataServiceCallMediator extends AbstractMediator {
         private String type;
         private List operations;
 
-        Operations(String type, List operations) {
+        public Operations(String type, List operations) {
             this.type = type;
             this.operations = operations;
         }
@@ -455,7 +455,7 @@ public class DataServiceCallMediator extends AbstractMediator {
         private String operationName;
         private List<Param> params;
 
-        Operation(String name, List<Param> params) {
+        public Operation(String name, List<Param> params) {
             this.operationName = name;
             this.params = params;
         }
@@ -476,7 +476,7 @@ public class DataServiceCallMediator extends AbstractMediator {
         private String evaluator;
         private SynapsePath paramExpression;
 
-        Param(String name) {
+        public Param(String name) {
             this.paramName = name;
         }
 
