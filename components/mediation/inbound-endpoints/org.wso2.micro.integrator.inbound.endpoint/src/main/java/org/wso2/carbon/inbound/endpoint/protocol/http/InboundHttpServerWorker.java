@@ -48,7 +48,6 @@ import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.transport.passthru.ServerWorker;
 import org.apache.synapse.transport.passthru.SourceRequest;
 import org.apache.synapse.transport.passthru.config.SourceConfiguration;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.inbound.endpoint.protocol.http.management.HTTPEndpointManager;
 
 import java.io.OutputStream;
@@ -89,8 +88,6 @@ public class InboundHttpServerWorker extends ServerWorker {
     public void run() {
         if (request != null) {
             try {
-                PrivilegedCarbonContext.startTenantFlow();
-                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
                 //get already created axis2 context from ServerWorker
                 MessageContext axis2MsgContext = getRequestContext();
 
@@ -211,8 +208,6 @@ public class InboundHttpServerWorker extends ServerWorker {
                 sendAck(axis2MsgContext);
             } catch (Exception e) {
                 log.error("Exception occurred when running " + InboundHttpServerWorker.class.getName(), e);
-            } finally {
-                PrivilegedCarbonContext.endTenantFlow();
             }
         } else {
             log.error("InboundSourceRequest cannot be null");
