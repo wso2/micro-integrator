@@ -700,16 +700,6 @@
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.esotericsoftware</groupId>
                 <artifactId>kryo-shaded</artifactId>
                 <version>${esotericsoftware.kryo.version}</version>
@@ -871,11 +861,6 @@
                 <groupId>org.wso2.orbit.org.jongo.wso2</groupId>
                 <artifactId>jongo</artifactId>
                 <version>${jongo.orbit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.undercouch</groupId>
@@ -1212,7 +1197,7 @@
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
+                <artifactId>jackson-core</artifactId>
                 <version>${jackson.core.version}</version>
             </dependency>
             <dependency>
