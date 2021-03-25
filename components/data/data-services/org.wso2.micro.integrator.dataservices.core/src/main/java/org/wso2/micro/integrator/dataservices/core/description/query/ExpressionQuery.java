@@ -312,7 +312,7 @@ public abstract class ExpressionQuery extends Query {
      */
     protected Object[] processDynamicQuery(String query, InternalParamCollection params) {
         Integer[] paramIndices = this.extractQueryParamIndices(query);
-        Map<Integer, QueryParam> tempParams = new HashMap<>();
+        Map<String, QueryParam> tempParams = new HashMap<>();
         int currentOrdinalDiff = 0;
         int currentParamIndexDiff = 0;
         InternalParam tmpParam;
@@ -320,32 +320,35 @@ public abstract class ExpressionQuery extends Query {
         String tmpValue;
         int resultParamCount = paramCount;
         for (QueryParam queryParam : this.getQueryParams()) {
-            tempParams.put(queryParam.getOrdinal(), queryParam);
+            tempParams.put(queryParam.getName(), queryParam);
         }
-        for (int i = 1; i <= paramCount; i++) {
-            tmpParam = params.getParam(i);
+        for (int ordinal = 1; ordinal <= paramCount; ordinal++) {
+            tmpParam = params.getParam(ordinal);
             if (tmpParam == null && !(((SQLQuery)this).getSqlQueryType() == SQLQuery.QueryType.UPDATE)) {
-                throw new RuntimeException("Parameters are not Defined Correctly, missing parameter ordinal - " + i);
+                throw new RuntimeException("Parameters are not Defined Correctly, missing parameter ordinal - "
+                        + ordinal);
             }
-            if (tmpParam == null && !(tempParams.get(i).isOptional())) {
-                throw new RuntimeException("Parameters are not Defined Correctly, missing parameter ordinal - " + i);
+            if (tmpParam == null && !(tempParams.get(namedParamNames.get(ordinal - 1)).isOptional())) {
+                throw new RuntimeException("Parameters are not Defined Correctly, missing parameter ordinal - "
+                        + ordinal);
             }
-            if (tmpParam != null && !(tempParams.get(i).isOptional()) && DBConstants.DataTypes.QUERY_STRING.equals(tmpParam.getSqlType())) {
-                paramIndex = paramIndices[i - 1] + currentParamIndexDiff;
-                tmpValue = params.getParam(i).getValue().getScalarValue();
+            if (tmpParam != null && !(tempParams.get(tmpParam.getName()).isOptional()) &&
+                    DBConstants.DataTypes.QUERY_STRING.equals(tmpParam.getSqlType())) {
+                paramIndex = paramIndices[ordinal - 1] + currentParamIndexDiff;
+                tmpValue = params.getParam(ordinal).getValue().getScalarValue();
                 currentParamIndexDiff += tmpValue.length() - 1;
                 if (paramIndex + 1 < query.length()) {
                     query = query.substring(0, paramIndex) + tmpValue + query.substring(paramIndex + 1);
                 } else {
                     query = query.substring(0, paramIndex) + tmpValue;
                 }
-                params.remove(i);
+                params.remove(ordinal);
                 currentOrdinalDiff++;
                 resultParamCount--;
             } else {
-                if (params.getParam(i) != null) {
-                    params.remove(i);
-                    tmpParam.setOrdinal(i - currentOrdinalDiff);
+                if (params.getParam(ordinal) != null) {
+                    params.remove(ordinal);
+                    tmpParam.setOrdinal(ordinal - currentOrdinalDiff);
                     params.addParam(tmpParam);
                 }
             }
