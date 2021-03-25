@@ -561,7 +561,8 @@ public class CappDeployer extends AbstractDeployer {
         log.info("Undeploying Carbon Application : " + carbonApp.getAppNameWithVersion() + "...");
         // Call the undeployer handler chain
         try {
-            for (AppDeploymentHandler handler : appDeploymentHandlers) {
+            for (int handlerIndex = appDeploymentHandlers.size() - 1; handlerIndex >= 0; handlerIndex--) {
+                AppDeploymentHandler handler = appDeploymentHandlers.get(handlerIndex);
                 handler.undeployArtifacts(carbonApp, axisConfig);
             }
             // Remove the app from cAppMap list
