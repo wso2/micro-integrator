@@ -1591,9 +1591,10 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
             if (columnsInQuery.contains(param.getName() + "=?")) {
                 if (containsRefrenceName) {
                     //adding update columns to the update string
-                    updateFeilds.append(" ").append(referenceName).append(".").append(param.getName()).append(" =? ,");
+                    updateFeilds.append(" ").append(referenceName).append(".").
+                            append(columnsInQuery.get(param.getOrdinal() - 1)).append(" ,");
                 } else {
-                    updateFeilds.append(" ").append(param.getName()).append(" =? ,");
+                    updateFeilds.append(" ").append(columnsInQuery.get(param.getOrdinal() - 1)).append(" ,");
                 }
             }
         }
