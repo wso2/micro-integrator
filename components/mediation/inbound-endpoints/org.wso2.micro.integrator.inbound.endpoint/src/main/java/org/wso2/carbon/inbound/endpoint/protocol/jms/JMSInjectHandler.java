@@ -124,13 +124,19 @@ public class JMSInjectHandler {
             //setting transport headers
             Map<String, Object> transportHeaders = JMSUtils.getTransportHeaders(msg, axis2MsgCtx);
             transportHeaders.put(JMSConstants.JMS_TIMESTAMP, msg.getJMSTimestamp());
-            transportHeaders.put(JMSConstants.JMS_MESSAGE_ID, msg.getJMSMessageID());
             transportHeaders.put(JMSConstants.JMS_PRIORITY, msg.getJMSPriority());
             transportHeaders.put(JMSConstants.JMS_EXPIRATION, msg.getJMSExpiration());
             transportHeaders.put(JMSConstants.JMS_DELIVERY_MODE, msg.getJMSDeliveryMode());
             transportHeaders.put(JMSConstants.JMS_REDELIVERED, msg.getJMSRedelivered());
-            transportHeaders.put(JMSConstants.JMS_MESSAGE_TYPE, msg.getJMSType());
-            transportHeaders.put(JMSConstants.JMS_COORELATION_ID, msg.getJMSCorrelationID());
+            if (msg.getJMSMessageID() != null) {
+                transportHeaders.put(JMSConstants.JMS_MESSAGE_ID, msg.getJMSMessageID());
+            }
+            if (msg.getJMSType() != null) {
+                transportHeaders.put(JMSConstants.JMS_MESSAGE_TYPE, msg.getJMSType());
+            }
+            if (msg.getJMSCorrelationID() != null) {
+                transportHeaders.put(JMSConstants.JMS_COORELATION_ID, msg.getJMSCorrelationID());
+            }
             axis2MsgCtx.setProperty(MessageContext.TRANSPORT_HEADERS, transportHeaders);
 
             // set transaction property
