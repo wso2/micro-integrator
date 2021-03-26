@@ -38,4 +38,19 @@
    <resource method="GET" path="/select">
       <call-query href="select_all_PersonNullTest_query"/>
    </resource>
+   <query id="select_duplicate" useConfig="default">
+      <sql>SELECT PersonID, LastName, City, Weight FROM PersonNullTest where LastName=:name OR LastName=:name</sql>
+      <result element="PersonNullTestCollection" rowName="PersonNullTest">
+          <element column="PersonID" name="PersonID" xsdType="xs:integer"/>
+          <element column="LastName" name="LastName" xsdType="xs:string"/>
+          <element column="City" name="City" xsdType="xs:integer"/>
+          <element column="Weight" name="Weight" xsdType="xs:double"/>
+      </result>
+      <param name="name" sqlType="STRING"/>
+   </query>
+   <resource method="GET" path="/test">
+      <call-query href="select_duplicate">
+         <with-param name="name" query-param="name"/>
+      </call-query>
+  </resource>
 </data>
