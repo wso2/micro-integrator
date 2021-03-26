@@ -44,7 +44,7 @@ public class PropertyIntegrationGetFilePropertyTestCase extends ESBIntegrationTe
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test retrieving a property from file.properties config file")
-    public void testRESPONSETEnabledTrue() throws IOException, InterruptedException {
+   public void testFileProperty() throws IOException, InterruptedException {
         carbonLogReader.clearLogs();
         SimpleHttpClient simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doGet(getProxyServiceURLHttp("propertyMediatorFilePropertyTestProxy"), null);
