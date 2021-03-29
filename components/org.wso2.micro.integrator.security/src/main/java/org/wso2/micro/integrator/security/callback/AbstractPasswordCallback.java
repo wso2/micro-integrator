@@ -21,6 +21,8 @@ package org.wso2.micro.integrator.security.callback;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ws.security.WSPasswordCallback;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.core.util.KeyStoreManager;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.internal.DataHolder;
 import org.wso2.micro.integrator.security.internal.ServiceComponent;
@@ -29,6 +31,7 @@ import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
 import java.io.IOException;
+import java.security.KeyStore;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -72,7 +75,15 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
                     switch (passwordCallback.getUsage()) {
 
                         // TODO - Handle SIGNATURE, DECRYPT AND KERBEROS_TOKEN password callback usages
-
+                        case WSPasswordCallback.SIGNATURE:
+                        case WSPasswordCallback.DECRYPT:
+                            String password = getPrivateKeyPassword(username);
+                            if (password == null) {
+                                throw new UnsupportedCallbackException(callback,
+                                        "User not available " + "in a trusted store");
+                            }
+                            passwordCallback.setPassword(password);
+                            break;
                         case WSPasswordCallback.USERNAME_TOKEN_UNKNOWN:
 
                             receivedPasswd = passwordCallback.getPassword();
@@ -182,5 +193,15 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
 
     public void setRealmConfig(RealmConfiguration realmConfig) {
         this.realmConfig = realmConfig;
+    }
+
+    private String getPrivateKeyPassword(String username) throws IOException, Exception {
+        String password = null;
+        KeyStoreManager keyMan = KeyStoreManager.getInstance(Constants.SUPER_TENANT_ID);
+        KeyStore store = keyMan.getPrimaryKeyStore();
+        if (store.containsAlias(username)) {
+            password = keyMan.getPrimaryPrivateKeyPasssword();
+        }
+        return password;
     }
 }
