@@ -25,6 +25,7 @@ import org.apache.synapse.inbound.InboundEndpoint;
 import org.apache.synapse.inbound.InboundProcessorParams;
 import org.apache.synapse.inbound.InboundRequestProcessor;
 import org.apache.synapse.transport.passthru.api.PassThroughInboundEndpointHandler;
+import org.wso2.carbon.inbound.endpoint.persistence.PersistenceUtils;
 import org.wso2.carbon.inbound.endpoint.protocol.http.management.HTTPEndpointManager;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class InboundHttpListener implements InboundRequestProcessor {
         String portParam = params.getProperties()
                 .getProperty(InboundHttpConstants.INBOUND_ENDPOINT_PARAMETER_HTTP_PORT);
         try {
-            port = Integer.parseInt(portParam);
+            port = Integer.parseInt(portParam) + PersistenceUtils.getPortOffset();
         } catch (NumberFormatException e) {
             handleException("Please provide port number as integer  instead of  port  " + portParam, e);
         }
