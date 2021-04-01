@@ -57,7 +57,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
                 + File.separator + "http.inbound.transport" + File.separator + "inbound2.xml")));
         Utils.deploySynapseConfiguration(inbound2, "inbound2", "inbound-endpoints", true);
 
-        urlContext = "http://" + getHostname() + ":" + "9090" + "/";
+        urlContext = "http://" + getHostname() + ":" + "9290" + "/";
         carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
 
@@ -92,7 +92,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch")
     public void inboundHttpSuperDefaultMainTest() throws Exception {
-        HttpRequestUtil.doPost(new URL("http://" + getHostname() + ":9091/"), REQUEST_PAYLOAD, new HashMap<>());
+        HttpRequestUtil.doPost(new URL("http://" + getHostname() + ":9291/"), REQUEST_PAYLOAD, new HashMap<>());
         Assert.assertTrue(carbonLogReader.checkForLog("main sequence executed for call to non-existent = /", DEFAULT_TIMEOUT));
         carbonLogReader.clearLogs();
     }
