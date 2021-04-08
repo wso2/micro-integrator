@@ -18,7 +18,7 @@ Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
 package org.wso2.mi.registry.migration;
 
-import org.wso2.carbon.registry.resource.stub.beans.xsd.Property;
+import org.wso2.carbon.registry.properties.stub.utils.xsd.Property;
 import org.wso2.mi.registry.migration.utils.resources.ResourceProperty;
 
 import java.util.ArrayList;

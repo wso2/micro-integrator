@@ -72,7 +72,9 @@ public final class AppDeployerUtils {
 	private static final String GOV_REGISTRY_PREFIX = "gov:";
 	private static final String CONFIG_REGISTRY_PATH = "/_system/config";
 	private static final String CONFIG_REGISTRY_PREFIX = "conf:";
-	
+	private static final String LOCAL_REGISTRY_PATH = "/_system/local";
+	private static final String LOCAL_REGISTRY_PREFIX = "local:";
+
 	private AppDeployerUtils() {
 		// hide utility class
 		
@@ -735,6 +737,8 @@ public final class AppDeployerUtils {
             updatedPath = GOV_REGISTRY_PREFIX + path.substring(19);
         } else if (path.startsWith(CONFIG_REGISTRY_PATH)) {
             updatedPath = CONFIG_REGISTRY_PREFIX + path.substring(15);
+        } else if (path.startsWith(LOCAL_REGISTRY_PATH)) {
+            updatedPath = LOCAL_REGISTRY_PREFIX + path.substring(14);
         } else {
             //Consider default as governance registry
             updatedPath = GOV_REGISTRY_PREFIX + path;
