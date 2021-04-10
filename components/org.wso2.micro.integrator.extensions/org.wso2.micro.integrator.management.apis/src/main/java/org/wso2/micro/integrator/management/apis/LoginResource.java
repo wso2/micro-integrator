@@ -94,7 +94,7 @@ public class LoginResource implements MiApiResource {
                 newToken.setScope(AuthConstants.JWT_TOKEN_DEFAULT_SCOPE);
             }
         } catch (UserStoreException e) {
-            final String errorMessage = "Error occurred authenticating user. ";
+            final String errorMessage = "Error occurred authenticating user.";
             LOG.error(errorMessage, e);
             handleServerError(axis2MessageContext, errorMessage);
             return true;
