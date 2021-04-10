@@ -185,6 +185,7 @@
                 <exclude>build.xml</exclude>
                 <exclude>version.txt</exclude>
                 <exclude>README.txt</exclude>
+                <exclude>tomcat-juli-**</exclude>
             </excludes>
         </fileSet>
 

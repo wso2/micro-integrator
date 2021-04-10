@@ -294,7 +294,6 @@ do
     $JAVA_VER_BASED_OPTS \
     -Dcarbon.home="$CARBON_HOME" \
     -Dlogger.server.name="micro-integrator" \
-    -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager \
     -Dcarbon.config.dir.path="$CARBON_HOME/conf" \
     -Dcarbon.repository.dir.path="$CARBON_HOME/repository" \
     -Dcarbon.components.dir.path="$CARBON_HOME/wso2/components" \
