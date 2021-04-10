@@ -1391,11 +1391,11 @@
         <rampart.wso2.version>1.6.1-wso2v39</rampart.wso2.version>
         <siddhi.version>3.2.3</siddhi.version>
         <opensaml.orbit.version>2.6.6.wso2v3</opensaml.orbit.version>
-        <bouncycastle.orbit.version>1.60.0.wso2v1</bouncycastle.orbit.version>
+        <bouncycastle.orbit.version>1.68.0.wso2v1</bouncycastle.orbit.version>
         <orbit.version.poi.ooxml>3.17.0.wso2v1</orbit.version.poi.ooxml>
         <org.wso2.json.version>3.0.0.wso2v1</org.wso2.json.version>
         <version.equinox.http.servlet>1.1.400.v20130418-1354</version.equinox.http.servlet>
-        <version.tomcat>9.0.31</version.tomcat>
+        <version.tomcat>9.0.45</version.tomcat>
         <orbit.version.tomcat.jsp.api>${version.tomcat}.wso2v1</orbit.version.tomcat.jsp.api>
         <orbit.version.tomcat.el.api>${version.tomcat}.wso2v1</orbit.version.tomcat.el.api>
         <orbit.version.tomcat.servlet.api>${version.tomcat}.wso2v1</orbit.version.tomcat.servlet.api>
@@ -1481,7 +1481,7 @@
         <javax.jsr311.api.version>1.1.1</javax.jsr311.api.version>
         <org.wso2.orbit.javax.xml.bind.version>2.3.1.wso2v2</org.wso2.orbit.javax.xml.bind.version>
 
-        <config.mapper.version>1.0.12</config.mapper.version>
+        <config.mapper.version>1.0.18</config.mapper.version>
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <import.package.version.commons.logging>[1.2.0,2.0.0)</import.package.version.commons.logging>
