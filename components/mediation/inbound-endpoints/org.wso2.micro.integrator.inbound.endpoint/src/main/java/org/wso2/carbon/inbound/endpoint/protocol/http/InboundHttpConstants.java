@@ -38,6 +38,7 @@ public class InboundHttpConstants {
     public static final String CLIENT_REVOCATION = "CertificateRevocationVerifier";
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
+    public static final String ENABLE_PORT_OFFSET_FOR_INBOUND_ENDPOINT = "inbound.port.offset.enable";
     /**
      * Defines the core size (number of threads) of the worker thread pool.
      */
