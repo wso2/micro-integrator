@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
 /**
@@ -86,10 +87,17 @@ public class LoginResource implements MiApiResource {
         String username = messageContext.getProperty(USERNAME_PROPERTY).toString();
         JWTTokenInfoDTO newToken = new JWTTokenInfoDTO(username);
         newToken.setToken(randomUUIDString);
-        if (isAdmin(username)) {
-            newToken.setScope(AuthConstants.JWT_TOKEN_ADMIN_SCOPE);
-        } else {
-            newToken.setScope(AuthConstants.JWT_TOKEN_DEFAULT_SCOPE);
+        try {
+            if (MicroIntegratorSecurityUtils.isAdmin(username)) {
+                newToken.setScope(AuthConstants.JWT_TOKEN_ADMIN_SCOPE);
+            } else {
+                newToken.setScope(AuthConstants.JWT_TOKEN_DEFAULT_SCOPE);
+            }
+        } catch (UserStoreException e) {
+            final String errorMessage = "Error occurred authenticating user.";
+            LOG.error(errorMessage, e);
+            handleServerError(axis2MessageContext, errorMessage);
+            return true;
         }
         newToken.setIssuer((String) axis2MessageContext.getProperty(NhttpConstants.SERVICE_PREFIX));
         long time = System.currentTimeMillis();
@@ -125,18 +133,6 @@ public class LoginResource implements MiApiResource {
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         JWTTokenCleanupTask.startCleanupTask();
         return true;
-    }
-
-    private boolean isAdmin(String username) {
-        boolean isAdmin = false;
-        try {
-            String[] usersArray = MicroIntegratorSecurityUtils.getUserStoreManager().getRoleListOfUser(username);
-            List<String> users = Arrays.asList(usersArray);
-            isAdmin = users.contains(username);
-        } catch (UserStoreException e) {
-            LOG.error("Error occurred while retrieving UserStoreManager of the server.", e);
-        }
-        return isAdmin;
     }
 
     /**

@@ -121,8 +121,8 @@ public class UserResource implements MiApiResource {
         }
         JSONObject userObject = new JSONObject();
         userObject.put(USER_ID, user);
+        userObject.put(IS_ADMIN, MicroIntegratorSecurityUtils.isAdmin(user));
         String[] roles = getUserStore().getRoleListOfUser(user);
-        userObject.put(IS_ADMIN, isAdmin(roles));
         JSONArray list = new JSONArray(roles);
         userObject.put(ROLES, list);
         return userObject;
@@ -175,17 +175,6 @@ public class UserResource implements MiApiResource {
             }
         }
         throw new ResourceNotFoundException("User: " + userId + " cannot be found.");
-    }
-
-    /**
-     * Method to assert if the admin role is contained within a list of users
-     *
-     * @param rolesList the list of roles assigned to a user
-     * @return true if the admin role is present in the list of roles provided
-     * @throws UserStoreException if any error occurs while reading the realm configuration
-     */
-    private boolean isAdmin(String[] rolesList) throws UserStoreException {
-        return Arrays.asList(rolesList).contains(getRealmConfiguration().getAdminRoleName());
     }
 
     protected void setInvalidUserStoreResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {
