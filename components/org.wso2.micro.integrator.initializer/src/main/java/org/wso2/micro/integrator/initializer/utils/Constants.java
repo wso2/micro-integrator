@@ -25,9 +25,9 @@ public class Constants {
     public static final String MI_HOST = "MI_HOST";
     public static final String MI_PORT = "MI_PORT";
     public static final String MI_URL = "MI_URL";
-    public static final String HOST = "{host}";
-    public static final String PORT = "{port}";
-    public static final String URL = "{url}";
+    public static final String HOST = "{MI_HOST}";
+    public static final String PORT = "{MI_PORT}";
+    public static final String URL = "{MI_URL}";
     public static final String SERVICE_URL = "serviceUrl";
     public static final String SERVICE_KEY = "serviceKey";
     public static final String METADATA_KEY = "key";
