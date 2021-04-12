@@ -95,7 +95,7 @@
             <h2>What's new in this release</h2>
             <p>WSO2 MI @product.version@ is shipped with the following new features:</p>
             <ul>
-                <li>New Data Service Call Mediator for data service operations</li>
+                <li>Data Service Call Mediator to invoke data services directly via JVM</li>
                 <li>Micro Integrator Dashboard for monitoring and managing multiple MI instances</li>
                 <li>OAuth support for HTTP Endpoints</li>
                 <li>Integrate with Hashicorp Secure Vault</li>
