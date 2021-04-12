@@ -252,6 +252,7 @@ public class JDBCUserStoreConstants {
                 .GET_TENANT_ID_FROM_USERNAME_SQL_CASE_INSENSITIVE, "");
 
         setAdvancedProperty(JDBCRealmConstants.ADD_USER, "Add User SQL", JDBCRealmConstants.ADD_USER_SQL, "");
+        setAdvancedProperty(JDBCRealmConstants.ADD_USER_WITH_ID, "Add User With ID SQL", JDBCRealmConstants.ADD_USER_WITH_ID_SQL, "");
         setAdvancedProperty(JDBCRealmConstants.ADD_USER_TO_ROLE, "Add User To Role SQL", JDBCRealmConstants.ADD_USER_TO_ROLE_SQL, "");
         setAdvancedProperty(JDBCCaseInsensitiveConstants.ADD_USER_TO_ROLE_CASE_INSENSITIVE, "Add User To Role " +
                 "SQL With Case Insensitive Username", JDBCCaseInsensitiveConstants

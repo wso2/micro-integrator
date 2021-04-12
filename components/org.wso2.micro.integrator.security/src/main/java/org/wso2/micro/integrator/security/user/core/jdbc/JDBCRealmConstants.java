@@ -52,6 +52,7 @@ public final class JDBCRealmConstants {
     public static final String GET_TENANT_ID_FROM_USERNAME = "GetTenantIDFromUserNameSQL";
     public static final String ADD_SHARED_ROLE = "AddSharedRoleSQL";
     public static final String ADD_USER = "AddUserSQL";
+    public static final String ADD_USER_WITH_ID = "AddUserWithIdSql";
     public static final String ADD_USER_TO_ROLE = "AddUserToRoleSQL";
     public static final String ADD_USER_PERMISSION = "AddUserPermissionSQL";
     public static final String ADD_ROLE = "AddRoleSQL";
@@ -155,6 +156,7 @@ public final class JDBCRealmConstants {
     public static final String GET_USERNAME_FROM_TENANT_ID_SQL = "SELECT UM_USER_NAME FROM UM_USER WHERE UM_TENANT_ID=?";
     public static final String GET_TENANT_ID_FROM_USERNAME_SQL = "SELECT UM_TENANT_ID FROM UM_USER WHERE UM_USER_NAME=?";
     public static final String ADD_USER_SQL = "INSERT INTO UM_USER (UM_USER_NAME, UM_USER_PASSWORD, UM_SALT_VALUE, UM_REQUIRE_CHANGE, UM_CHANGED_TIME, UM_TENANT_ID) VALUES (?, ?, ?, ?, ?, ?)";
+    public static final String ADD_USER_WITH_ID_SQL = "INSERT INTO UM_USER (UM_USER_ID, UM_USER_NAME, UM_USER_PASSWORD, UM_SALT_VALUE, UM_REQUIRE_CHANGE, UM_CHANGED_TIME, UM_TENANT_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
     public static final String ADD_USER_TO_ROLE_SQL = "INSERT INTO UM_USER_ROLE (UM_USER_ID, UM_ROLE_ID, UM_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?), ?)";
     public static final String ADD_USER_PERMISSION_SQL = "AddUserPermission";
     public static final String ADD_ROLE_SQL = "INSERT INTO UM_ROLE (UM_ROLE_NAME, UM_TENANT_ID) VALUES (?, ?)";

@@ -74,6 +74,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 import javax.sql.DataSource;
 
 import static org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants.ErrorMessages.ERROR_CODE_DUPLICATE_WHILE_ADDING_A_USER;
@@ -1275,15 +1276,17 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
                           Map<String, String> claims, String profileName, boolean requirePasswordChange)
             throws UserStoreException {
 
+        String userID = UUID.randomUUID().toString();
+
         // persist the user info. in the database.
-        persistUser(userName, credential, roleList, claims, profileName, requirePasswordChange);
+        persistUser(userID, userName, credential, roleList, claims, profileName, requirePasswordChange);
 
     }
 
     /*
      * This method persists the user information in the database.
      */
-    protected void persistUser(String userName, Object credential, String[] roleList,
+    protected void persistUser(String userID, String userName, Object credential, String[] roleList,
                                Map<String, String> claims, String profileName, boolean requirePasswordChange)
             throws UserStoreException {
 
@@ -1306,7 +1309,7 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
         }
 
         try {
-            String sqlStmt1 = realmConfig.getUserStoreProperty(JDBCRealmConstants.ADD_USER);
+            String sqlStmt1 = realmConfig.getUserStoreProperty(JDBCRealmConstants.ADD_USER_WITH_ID);
 
             String saltValue = null;
 
@@ -1319,18 +1322,18 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
 
             // do all 4 possibilities
             if (sqlStmt1.contains(UserCoreConstants.UM_TENANT_COLUMN) && (saltValue == null)) {
-                this.updateStringValuesToDatabase(dbConnection, sqlStmt1, userName, password, "",
+                this.updateStringValuesToDatabase(dbConnection, sqlStmt1, userID, userName, password, "",
                         requirePasswordChange, new Date(), tenantId);
             } else if (sqlStmt1.contains(UserCoreConstants.UM_TENANT_COLUMN) && (saltValue != null)) {
-                this.updateStringValuesToDatabase(dbConnection, sqlStmt1, userName, password,
+                this.updateStringValuesToDatabase(dbConnection, sqlStmt1, userID, userName, password,
                         saltValue, requirePasswordChange, new Date(),
                         tenantId);
             } else if (!sqlStmt1.contains(UserCoreConstants.UM_TENANT_COLUMN) &&
                     (saltValue == null)) {
-                this.updateStringValuesToDatabase(dbConnection, sqlStmt1, userName, password, "",
+                this.updateStringValuesToDatabase(dbConnection, sqlStmt1, userID, userName, password, "",
                         requirePasswordChange, new Date());
             } else {
-                this.updateStringValuesToDatabase(dbConnection, sqlStmt1, userName, password, saltValue,
+                this.updateStringValuesToDatabase(dbConnection, sqlStmt1, userID, userName, password, saltValue,
                         requirePasswordChange, new Date());
             }
 
