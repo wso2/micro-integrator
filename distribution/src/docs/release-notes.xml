@@ -100,7 +100,7 @@
                 <li>OAuth support for HTTP Endpoints</li>
                 <li>Support to Integrate with Hashicorp Secure Vault</li>
                 <li>Support for OpenAPI 3.0 swagger definition</li>
-                <li>Improving json-eval function to evaluate against a property</li>
+                <li>Improved json-eval function to evaluate against a property</li>
                 <li>Improvements to Call mediator</li>
                 <li>FreeMarker support for PayloadFactory mediator</li>
                 <li>Service Catalog to make integration services discoverable to the API Management Layer</li>
