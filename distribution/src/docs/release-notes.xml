@@ -23,7 +23,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
-        <title>WSO2 MI v@product.version@ Released - July 2020</title>
+        <title>WSO2 MI v@product.version@ Released - April 2021</title>
     </head>
     <body>
         <div id="header">
@@ -93,20 +93,20 @@
             </ul>
 
             <h2>What's new in this release</h2>
-            <p>WSO2 MI @product.version@ is a minor release that is shipped with the following new features:</p>
+            <p>WSO2 MI @product.version@ is shipped with the following new features:</p>
             <ul>
-                <li>Task coordination in distributed environments</li>
-                <li>Readiness probe for health checking</li>
-                <li>Enhanced experience for handling security</li>
-                <li>Support for hot deployment</li>
-                <li>Swagger generation for data services</li>
-                <li>User management with external user stores</li>
-                <li>View and configure logs without accessing the file system</li>
-                <li>Transaction counter for services</li>
-                <li>Easy XML to JSON transformations with 'JSON Transform mediator'</li>
+                <li>Data Service Call Mediator to invoke data services directly via JVM</li>
+                <li>Enhanced Micro Integrator Dashboard for monitoring and managing multiple MI instances</li>
+                <li>OAuth support for HTTP Endpoints</li>
+                <li>Support to Integrate with Hashicorp Secure Vault</li>
+                <li>Support for OpenAPI 3.0 swagger definition</li>
+                <li>Improved json-eval function to evaluate against a property</li>
+                <li>Improvements to Call mediator</li>
+                <li>FreeMarker support for PayloadFactory mediator</li>
+                <li>Service Catalog to make integration services discoverable to the API Management Layer</li>
             </ul>
 
-            <p>View the full list of bug fixes and improvements <a href="https://github.com/wso2/micro-integrator/issues?q=is%3Aissue+closed%3A2019-10-08..2020-07-20+">here</a></p>
+            <p>View the full list of bug fixes and improvements <a href="https://github.com/wso2/micro-integrator/issues?q=is%3Aissue+closed%3A2020-07-20..2021-04-12+">here</a></p>
 
             <h2>Known Issues</h2>
             <p>
@@ -123,26 +123,15 @@
                 Discussion Forums
             </h3>
             <p>
-                Join our mailing lists and correspond with the developers directly. We also encourage you to take part
-                in discussions related to the product in the architecture mailing list. If you have any questions
-                regarding the product you can use our StackOverflow forum and Slack Channel.
+                Join our Slack Channel and correspond with the developers directly. Also, if you have any questions
+                regarding the product you can use our StackOverflow forum.
             </p>
             <ul>
                 <li>
-                    Developer List : <a href="mailto:dev@wso2.org">dev@wso2.org</a>
-                    | <a href="mailto:dev-request@wso2.org?subject=subscribe">Subscribe</a>
-                    | <a href="http://mail.wso2.org/mailarchive/dev/">Mail Archive</a>
-                </li>
-                <li>
-                    Architecture List : <a href="mailto:architecture@wso2.org">architecture@wso2.org</a>
-                    | <a href="mailto:architecture-request@wso2.org?subject=subscribe">Subscribe</a>
-                    | <a href="http://mail.wso2.org/mailarchive/architecture/">Mail Archive</a>
+                    User Forum: <a href="https://ei-slack.wso2.com/">Slack Channel</a>
                 </li>
                 <li>
                     User Forum: <a href="https://stackoverflow.com/questions/tagged/wso2mi">StackOverflow</a>
-                </li>
-                <li>
-                    User Forum: <a href="https://ei-slack.wso2.com/">Slack Channel</a>
                 </li>
             </ul>
             <h3>
