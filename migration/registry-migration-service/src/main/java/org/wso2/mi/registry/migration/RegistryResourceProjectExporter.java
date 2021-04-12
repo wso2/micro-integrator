@@ -232,6 +232,9 @@ public class RegistryResourceProjectExporter extends RegistryExporter {
             throws ProjectCreationException {
         List<ResourceProjectArtifact> artifacts = new ArrayList<>();
         for (RegistryResource registryResource : registryResources) {
+            if (!registryResource.canExport()) {
+                continue;
+            }
             if (registryResource instanceof RegistryCollection) {
                 addRegistryCollection((RegistryCollection) registryResource, registryResourceModulePath, artifacts);
             } else {
@@ -297,22 +300,20 @@ public class RegistryResourceProjectExporter extends RegistryExporter {
         }
 
         //update the artifact.xml file
-        if (registryCollection.canExport()) {
-            String resourceFQN = registryCollection.getFullQualifiedResourceName();
-            List<ResourceProperty> resourcePropertyList = registryCollection.getProperties();
+        String resourceFQN = registryCollection.getFullQualifiedResourceName();
+        List<ResourceProperty> resourcePropertyList = registryCollection.getProperties();
 
-            ResourceProperties resourceProperties = new ResourceProperties(resourcePropertyList);
-            Collection resourceCollection = new Collection(directory, resourcePath, resourceProperties);
-            ResourceProjectArtifact artifact = new ResourceProjectArtifact(resourceFQN, groupId, version,
-                                                                           resourceCollection);
-            artifacts.add(artifact);
+        ResourceProperties resourceProperties = new ResourceProperties(resourcePropertyList);
+        Collection resourceCollection = new Collection(directory, resourcePath, resourceProperties);
+        ResourceProjectArtifact artifact = new ResourceProjectArtifact(resourceFQN, groupId, version,
+                                                                       resourceCollection);
+        artifacts.add(artifact);
 
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Successfully created the registry resource at {}", collection.getAbsolutePath());
-            }
-            // Update the summary report and return the next index
-            summaryTable.add(new String[]{resourcePath, MigrationClientUtils.EXPORT_SUCCESS_MESSAGE, "-"});
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Successfully created the registry resource at {}", collection.getAbsolutePath());
         }
+        // Update the summary report and return the next index
+        summaryTable.add(new String[]{resourcePath, MigrationClientUtils.EXPORT_SUCCESS_MESSAGE, "-"});
     }
 
     /**

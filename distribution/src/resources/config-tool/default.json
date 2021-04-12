@@ -41,6 +41,7 @@
   "synapse_properties.'statistics.clean.interval'": "1000",
   "synapse_properties.'inbound.threads.core'": "20",
   "synapse_properties.'inbound.threads.max'": "100",
+  "synapse_properties.'inbound.port.offset.enable'": false,
 
   "synapse_properties.'opentracing.enable'": false,
   "synapse_properties.'jaeger.sampler.manager.host'": "localhost",

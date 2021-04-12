@@ -26,7 +26,6 @@ import org.apache.logging.log4j.Logger;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
 import org.wso2.carbon.registry.resource.stub.beans.xsd.MetadataBean;
-import org.wso2.carbon.registry.resource.stub.beans.xsd.PropertiesBean;
 import org.wso2.carbon.registry.resource.stub.beans.xsd.ResourceTreeEntryBean;
 import org.wso2.mi.registry.migration.exception.RegistryMigrationException;
 import org.wso2.mi.registry.migration.utils.MigrationClientUtils;
@@ -75,14 +74,6 @@ public class ResourceAdminServiceClient {
     String getTextContent(String path) throws RegistryMigrationException {
         try {
             return resourceAdminServiceStub.getTextContent(path);
-        } catch (RemoteException | ResourceAdminServiceExceptionException e) {
-            throw new RegistryMigrationException("Error when getting the text content from " + path, e);
-        }
-    }
-
-    PropertiesBean getProperties(String path) throws RegistryMigrationException {
-        try {
-            return resourceAdminServiceStub.getProperties(path);
         } catch (RemoteException | ResourceAdminServiceExceptionException e) {
             throw new RegistryMigrationException("Error when getting the text content from " + path, e);
         }

@@ -43,7 +43,7 @@ public class HttpsInboundTransportTestCase extends ESBIntegrationTest {
         CarbonLogReader reader = new CarbonLogReader();
         reader.start();
         Utils.deploySynapseConfiguration(getArtifactConfig(), INBOUND_NAME, Utils.ArtifactType.INBOUND_ENDPOINT, false);
-        Assert.assertTrue(reader.checkForLog("Pass-through HttpsListenerEP Listener started on 0.0.0.0:8287", 60));
+        Assert.assertTrue(reader.checkForLog("Pass-through HttpsListenerEP Listener started on 0.0.0.0:8087", 60));
         reader.stop();
     }
 
@@ -52,7 +52,7 @@ public class HttpsInboundTransportTestCase extends ESBIntegrationTest {
     public void testSecureProxyEndPointThruUri() throws Exception {
 
         OMElement response = secureAxisServiceClient.
-                sendSecuredStockQuoteRequest(userInfo, "https://localhost:8287/", "WSO2", false);
+                sendSecuredStockQuoteRequest(userInfo, "https://localhost:8087/", "WSO2", false);
         Assert.assertNotNull(response);
         Assert.assertEquals("getQuoteResponse", response.getLocalName());
         Utils.undeploySynapseConfiguration(INBOUND_NAME, Utils.ArtifactType.INBOUND_ENDPOINT, false);

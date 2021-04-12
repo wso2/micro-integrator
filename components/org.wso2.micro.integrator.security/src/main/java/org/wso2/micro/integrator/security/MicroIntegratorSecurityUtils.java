@@ -30,6 +30,7 @@ import org.wso2.micro.integrator.security.user.core.claim.ClaimManager;
 import org.wso2.micro.integrator.security.user.core.profile.ProfileConfigurationManager;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -176,5 +177,29 @@ public class MicroIntegratorSecurityUtils {
             ServiceComponent.initSecurityParams();
         }
         return dataHolder.getUserStoreManager();
+    }
+
+    /**
+     * Method to assert if a user is an admin
+     *
+     * @param user the user to be validated as an admin
+     * @return true if the admin role is assigned to the user
+     * @throws UserStoreException if any error occurs while retrieving the user store manager or reading the user realm
+     *                            configuration
+     */
+    public static boolean isAdmin(String user) throws UserStoreException {
+        String[] roles = getUserStoreManager().getRoleListOfUser(user);
+        return containsAdminRole(roles);
+    }
+
+    /**
+     * Method to assert if the admin role is contained within a list of roles
+     *
+     * @param rolesList the list of roles assigned to a user
+     * @return true if the admin role is present in the list of roles provided
+     * @throws UserStoreException if any error occurs while reading the realm configuration
+     */
+    public static boolean containsAdminRole(String[] rolesList) throws UserStoreException {
+        return Arrays.asList(rolesList).contains(getRealmConfiguration().getAdminRoleName());
     }
 }
