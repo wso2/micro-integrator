@@ -98,6 +98,7 @@
   "mediation.statistics.clean_interval" : "synapse_properties.'statistics.clean.interval'",
   "mediation.inbound.core_threads": "synapse_properties.'inbound.threads.core'",
   "mediation.inbound.max_threads": "synapse_properties.'inbound.threads.max'",
+  "mediation.inbound.port_offset_enable": "synapse_properties.'inbound.port.offset.enable'",
   "mediation.internal_http_api_enable": "synapse_properties.'internal.http.api.enabled'",
   "mediation.internal_http_api_port": "synapse_properties.'internal.http.api.port'",
   "mediation.internal_https_api_port": "synapse_properties.'internal.https.api.port'",

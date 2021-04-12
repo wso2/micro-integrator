@@ -864,6 +864,7 @@ stat.tracer.collect_mediation_properties=false
 
 inbound.core_threads = 20
 inbound.max_threads = 100
+inbound.port_offset_enable = false
 
 internal_http_api_enable = true     # inferred  true by default
 internal_http_api_port = 9191       # inferred 9191 by default

@@ -21,6 +21,7 @@ package org.wso2.carbon.inbound.endpoint.protocol.http;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
+import org.apache.synapse.config.SynapsePropertiesLoader;
 import org.apache.synapse.inbound.InboundEndpoint;
 import org.apache.synapse.inbound.InboundProcessorParams;
 import org.apache.synapse.inbound.InboundRequestProcessor;
@@ -46,10 +47,13 @@ public class InboundHttpListener implements InboundRequestProcessor {
 
     public InboundHttpListener(InboundProcessorParams params) {
         processorParams = params;
+        boolean enableInboundPortOffset = SynapsePropertiesLoader.
+                getBooleanProperty(InboundHttpConstants.ENABLE_PORT_OFFSET_FOR_INBOUND_ENDPOINT, false);
         String portParam = params.getProperties()
                 .getProperty(InboundHttpConstants.INBOUND_ENDPOINT_PARAMETER_HTTP_PORT);
         try {
-            port = Integer.parseInt(portParam) + PersistenceUtils.getPortOffset();
+            port = enableInboundPortOffset ? Integer.parseInt(portParam) +
+                    PersistenceUtils.getPortOffset() : Integer.parseInt(portParam);
         } catch (NumberFormatException e) {
             handleException("Please provide port number as integer  instead of  port  " + portParam, e);
         }
