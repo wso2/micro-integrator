@@ -14,7 +14,7 @@ Key features of WSO2 MI @product.version@
 ==================================
 
 See the online WSO2 MI documentation for more information on product features:
-https://ei.docs.wso2.com/en/7.1.0/micro-integrator/overview/introduction/
+https://apim.docs.wso2.com/en/latest/integrate/integration-overview/
 
 
 Installation & Running
