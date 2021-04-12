@@ -93,7 +93,7 @@
             </ul>
 
             <h2>What's new in this release</h2>
-            <p>WSO2 MI @product.version@ is a minor release that is shipped with the following new features:</p>
+            <p>WSO2 MI @product.version@ is shipped with the following new features:</p>
             <ul>
                 <li>New Data Service Call Mediator for data service operations</li>
                 <li>Micro Integrator Dashboard for monitoring and managing multiple MI instances</li>
