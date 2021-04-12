@@ -149,6 +149,9 @@ public class JDBCRealmUtil {
         if (!properties.containsKey(JDBCRealmConstants.ADD_USER)) {
             properties.put(JDBCRealmConstants.ADD_USER, JDBCRealmConstants.ADD_USER_SQL);
         }
+        if (!properties.containsKey(JDBCRealmConstants.ADD_USER_WITH_ID)) {
+            properties.put(JDBCRealmConstants.ADD_USER_WITH_ID, JDBCRealmConstants.ADD_USER_WITH_ID_SQL);
+        }
         if (!properties.containsKey(JDBCRealmConstants.ADD_USER_TO_ROLE)) {
             properties.put(JDBCRealmConstants.ADD_USER_TO_ROLE,
                     JDBCRealmConstants.ADD_USER_TO_ROLE_SQL);
