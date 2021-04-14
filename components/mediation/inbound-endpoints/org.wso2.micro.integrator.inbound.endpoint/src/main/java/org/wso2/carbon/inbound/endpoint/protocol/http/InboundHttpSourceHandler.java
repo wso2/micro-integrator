@@ -64,8 +64,8 @@ public class InboundHttpSourceHandler extends SourceHandler {
     public void requestReceived(NHttpServerConnection conn) {
         try {
 
+            setCorrelationId(conn);
             if (sourceConfiguration.isCorrelationLoggingEnabled()) {
-                setCorrelationId(conn);
                 SourceContext sourceContext = (SourceContext) conn.getContext()
                         .getAttribute(TargetContext.CONNECTION_INFORMATION);
                 sourceContext.updateLastStateUpdatedTime();
@@ -107,7 +107,7 @@ public class InboundHttpSourceHandler extends SourceHandler {
             }
 
             Object correlationId = conn.getContext().getAttribute(CorrelationConstants.CORRELATION_ID);
-            if (correlationId != null) {
+            if (sourceConfiguration.isCorrelationLoggingEnabled()) {
                 workerPool.execute(
                         new InboundCorrelationEnabledHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request,
                                                                       sourceConfiguration, os,
