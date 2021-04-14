@@ -16,6 +16,8 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
+      - name: Start MySQL database
+        run: sudo /etc/init.d/mysql start
       - uses: actions/checkout@v1
       - name: Set up JDK 8
         uses: actions/setup-java@v1
