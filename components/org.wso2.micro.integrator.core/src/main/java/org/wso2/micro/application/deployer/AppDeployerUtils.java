@@ -732,6 +732,12 @@ public final class AppDeployerUtils {
      * @return
      */
     public static String createRegistryPath(String path) {
+        if (path.startsWith(GOV_REGISTRY_PREFIX) ||
+                path.startsWith(CONFIG_REGISTRY_PREFIX) ||
+                path.startsWith(LOCAL_REGISTRY_PREFIX)) {
+            return path;
+        }
+
         String updatedPath;
         if (path.startsWith(GOV_REGISTRY_PATH)) {
             updatedPath = GOV_REGISTRY_PREFIX + path.substring(19);
@@ -744,7 +750,6 @@ public final class AppDeployerUtils {
             updatedPath = GOV_REGISTRY_PREFIX + path;
         }
         return updatedPath;
-
     }
 
     /**
