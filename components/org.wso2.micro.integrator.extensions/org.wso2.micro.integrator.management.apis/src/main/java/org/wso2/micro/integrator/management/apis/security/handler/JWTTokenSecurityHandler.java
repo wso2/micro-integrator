@@ -43,7 +43,6 @@ public class JWTTokenSecurityHandler extends AuthenticationHandlerAdapter {
     @Override
     public Boolean invoke(MessageContext messageContext) {
 
-        this.messageContext = messageContext;
         return super.invoke(messageContext);
     }
 
@@ -60,20 +59,20 @@ public class JWTTokenSecurityHandler extends AuthenticationHandlerAdapter {
     }
 
     @Override
-    protected Boolean authenticate(String authHeaderToken) {
+    protected Boolean authenticate(MessageContext messageContext, String authHeaderToken) {
 
         if ((Constants.REST_API_CONTEXT + Constants.PREFIX_LOGIN).contentEquals(messageContext.getTo().getAddress())) {
             //Login request is basic auth
             if (useCarbonUserStore) {
                 //Uses carbon user store
                 try {
-                    return processAuthRequestWithCarbonUserStore(authHeaderToken);
+                    return processAuthRequestWithCarbonUserStore(messageContext, authHeaderToken);
                 } catch (UserStoreException e) {
                     LOG.error("Error while authenticating with carbon user store", e);
                 }
             } else {
                 //Uses in memory user store
-                return processAuthRequestWithFileBasedUserStore(authHeaderToken);
+                return processAuthRequestWithFileBasedUserStore(messageContext, authHeaderToken);
             }
         } else {
             //Other resources apart from /login should be authenticated from JWT based auth

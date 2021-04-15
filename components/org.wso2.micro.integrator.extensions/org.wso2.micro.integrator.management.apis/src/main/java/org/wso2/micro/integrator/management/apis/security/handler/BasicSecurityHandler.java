@@ -55,23 +55,22 @@ public class BasicSecurityHandler extends AuthenticationHandlerAdapter {
 
     @Override
     public Boolean invoke(MessageContext messageContext) {
-        this.messageContext = messageContext;
         return super.invoke(messageContext);
     }
 
     @Override
-    protected Boolean authenticate(String authHeaderToken) {
+    protected Boolean authenticate(MessageContext messageContext, String authHeaderToken) {
 
         LOG.debug("Handling authentication with BasicSecurityHandler");
         if (useCarbonUserStore) {
             try {
-                return processAuthRequestWithCarbonUserStore(authHeaderToken);
+                return processAuthRequestWithCarbonUserStore(messageContext, authHeaderToken);
             } catch (UserStoreException e) {
                 LOG.error("Error while authenticating with carbon user store", e);
                 return false;
             }
         } else {
-            return processAuthRequestWithFileBasedUserStore(authHeaderToken);
+            return processAuthRequestWithFileBasedUserStore(messageContext, authHeaderToken);
         }
     }
 

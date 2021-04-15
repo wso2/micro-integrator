@@ -53,7 +53,6 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
      */
     protected List<String> defaultResources;
     protected String context;
-    protected MessageContext messageContext;
 
     private static final Log LOG = LogFactory.getLog(SecurityHandlerAdapter.class);
 
@@ -88,7 +87,7 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
         }
     }
 
-    protected boolean needsHandling() {
+    protected boolean needsHandling(MessageContext messageContext) {
 
         String resourcePath = messageContext.getTo().getAddress();
         if (Constants.REST_API_CONTEXT.equals(resourcePath)) {
@@ -127,7 +126,7 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
 
     @Override
     public Boolean invoke(MessageContext messageContext) {
-        if (needsHandling()) {
+        if (needsHandling(messageContext)) {
             return handle(messageContext);
         } else {
             return true;

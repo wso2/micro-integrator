@@ -55,7 +55,6 @@ public class AuthorizationHandler extends AuthorizationHandlerAdapter {
     @Override
     public Boolean invoke(MessageContext messageContext) {
 
-        this.messageContext = messageContext;
         return super.invoke(messageContext);
     }
 

@@ -21,6 +21,7 @@ package org.wso2.micro.integrator.management.apis.security.handler;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.MessageContext;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
@@ -57,7 +58,7 @@ public class LDAPBasedSecurityHandler extends AuthenticationHandlerAdapter {
     }
 
     @Override
-    protected Boolean authenticate(String authHeaderToken) {
+    protected Boolean authenticate(MessageContext messageContext, String authHeaderToken) {
         String decodedCredentials = new String(new Base64().decode(authHeaderToken.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
         // Avoid possible array index out of bound errors

@@ -71,7 +71,7 @@ public abstract class AuthenticationHandlerAdapter extends SecurityHandlerAdapte
                     SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
                     return false;
                 }
-                if (authenticate(authHeaderToken)) {
+                if (authenticate(messageContext, authHeaderToken)) {
                     return true;
                 } else {
                     clearHeaders(headers);
@@ -92,18 +92,20 @@ public abstract class AuthenticationHandlerAdapter extends SecurityHandlerAdapte
     /**
      * Executes the authentication logic relevant to the handler.
      *
+     * @param messageContext synapse message context
      * @param authHeaderToken encoded authorization token
      * @return Boolean authenticated
      */
-    protected abstract Boolean authenticate(String authHeaderToken);
+    protected abstract Boolean authenticate(MessageContext messageContext, String authHeaderToken);
 
     /**
      * Processes authentication request with basic auth and carbon user store.
      *
+     * @param messageContext synapse message context
      * @param token extracted basic auth token
      * @return if successfully authenticated
      */
-    boolean processAuthRequestWithCarbonUserStore(String token) throws UserStoreException {
+    boolean processAuthRequestWithCarbonUserStore(MessageContext messageContext, String token) throws UserStoreException {
 
         String[] userDetails = extractDetails(token);
         if (userDetails.length == 0) {
@@ -122,10 +124,11 @@ public abstract class AuthenticationHandlerAdapter extends SecurityHandlerAdapte
     /**
      * Processes authentication request with basic auth and in memory user store
      *
+     * @param messageContext synapse message context
      * @param token extracted basic auth token
      * @return boolean if successfully authenticated
      */
-    boolean processAuthRequestWithFileBasedUserStore(String token) {
+    boolean processAuthRequestWithFileBasedUserStore(MessageContext messageContext, String token) {
 
         String[] userDetails = extractDetails(token);
         if (userDetails.length == 0) {
