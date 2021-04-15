@@ -43,7 +43,11 @@ public class HttpsInboundTransportTestCase extends ESBIntegrationTest {
         CarbonLogReader reader = new CarbonLogReader();
         reader.start();
         Utils.deploySynapseConfiguration(getArtifactConfig(), INBOUND_NAME, Utils.ArtifactType.INBOUND_ENDPOINT, false);
-        Assert.assertTrue(reader.checkForLog("Pass-through HttpsListenerEP Listener started on 0.0.0.0:8087", 60));
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            Assert.assertTrue(reader.checkForLog("Pass-through HttpsListenerEP Listener started on 0:0:0:0:0:0:0:0:8087", 60));
+        } else {
+            Assert.assertTrue(reader.checkForLog("Pass-through HttpsListenerEP Listener started on 0.0.0.0:8087", 60));
+        }
         reader.stop();
     }
 
