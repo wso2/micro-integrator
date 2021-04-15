@@ -50,7 +50,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         pushMessageToQue(addEndpoint());
 
         assertTrue(Utils.checkForLog(carbonLogReader, "Suspending polling as the pollingSuspensionLimit of 2 "
-                           + "reached. Polling will be re-started after 3000 milliseconds", 60),
+                           + "reached. Polling will be re-started after 3000 milliseconds", DEFAULT_TIMEOUT),
                    "JMS Polling suspension is not enabled.");
         Utils.undeploySynapseConfiguration(ENDPOINT_NAME, Utils.ArtifactType.INBOUND_ENDPOINT.getDirName(), false);
     }
@@ -61,7 +61,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
 
         pushMessageToQue(addEndpointWithSuspensionLimitZero());
 
-        assertTrue(Utils.checkForLog(carbonLogReader, "Polling is suspended permanently", 10),
+        assertTrue(Utils.checkForLog(carbonLogReader, "Polling is suspended permanently", DEFAULT_TIMEOUT),
                    "JMS Polling is not permanently suspended though the suspension limit is 0.");
         Utils.undeploySynapseConfiguration(ENDPOINT_NAME, Utils.ArtifactType.INBOUND_ENDPOINT.getDirName(), false);
     }
@@ -78,8 +78,11 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         String queueName = "JMSMS";
 
         try {
+            carbonLogReader.clearLogs();
             Utils.deploySynapseConfiguration(inBoundEndpoint, ENDPOINT_NAME,
                                              Utils.ArtifactType.INBOUND_ENDPOINT.getDirName(), false);
+            String deploymentLog = "Initializing Inbound Endpoint: " + ENDPOINT_NAME;
+            assertTrue(carbonLogReader.checkForLog(deploymentLog, DEFAULT_TIMEOUT), "Deployment failed.");
             carbonLogReader.clearLogs();
             sender.connect(queueName);
             sender.pushMessage("<?xml version='1.0' encoding='UTF-8'?>"
