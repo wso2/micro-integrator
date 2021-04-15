@@ -31,8 +31,7 @@ public class TestSecurityHandler extends SecurityHandlerAdapter {
 
     @Override
     public Boolean invoke(MessageContext messageContext) {
-        this.messageContext = messageContext;
-        this.isHandled = needsHandling();
+        this.isHandled = needsHandling(messageContext);
         return true;
     }
 
