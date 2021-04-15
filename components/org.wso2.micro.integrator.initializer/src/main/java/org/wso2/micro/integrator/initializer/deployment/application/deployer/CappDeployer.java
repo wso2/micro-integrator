@@ -620,7 +620,8 @@ public class CappDeployer extends AbstractDeployer {
      */
     void removeFaultyCarbonApp(String appFilePath) {
         synchronized (lock) {
-            faultyCapps.remove(appFilePath);
+            String cAppName = appFilePath.substring(appFilePath.lastIndexOf(File.separator) + 1);
+            faultyCapps.remove(cAppName);
         }
     }
 

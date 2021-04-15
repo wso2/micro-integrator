@@ -53,20 +53,7 @@ public class ReadienssProbeTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb" },
-            description = "Test Readiness probe with a faulty CAPP and hot deployment enabled.")
-    public void testReadinessWithHotDeployment() throws Exception {
-
-        HttpResponse response = client.doGet(READINESS_URL, headers);
-        String responsePayload = client.getResponsePayload(response);
-
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
-                            "Readiness should give 200 with faulty capp since hot deployment is enabled by default.");
-        Assert.assertFalse(responsePayload.isEmpty(), "Readiness response should not be empty");
-    }
-
-    @Test(groups = { "wso2.esb" },
-            description = "Test Readiness probe with faulty CAPPs with hot deployment disabled",
-            dependsOnMethods = { "testReadinessWithHotDeployment" })
+            description = "Test Readiness probe with faulty CAPPs with hot deployment disabled")
     public void testReadinessWitFaultyCappsAndHotDeploymentDisabled() throws Exception {
 
         // disable hot deployment

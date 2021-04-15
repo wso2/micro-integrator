@@ -42,9 +42,8 @@ public class ReadinessResource extends APIResource {
     private static Log log = LogFactory.getLog(ReadinessResource.class);
     private static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     private static final String HTTP_SC = "HTTP_SC";
-    private String cachedResponse = "";
-    private int cachedResponseCode;
-    private boolean isHotDeploymentEnabled;
+
+    private int responseCode;
 
     /**
      * Constructor for creating an API Resource.
@@ -53,7 +52,6 @@ public class ReadinessResource extends APIResource {
      */
     public ReadinessResource(String urlTemplate) {
         super(urlTemplate);
-        isHotDeploymentEnabled = MicroIntegratorBaseUtils.getCarbonAxisConfigurator().isHotDeploymentEnabled();
     }
 
     @Override
@@ -70,6 +68,7 @@ public class ReadinessResource extends APIResource {
      */
     @Override
     public boolean invoke(MessageContext synCtx) {
+
         org.apache.axis2.context.MessageContext axisCtx = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
         axisCtx.setProperty(Constants.Configuration.MESSAGE_TYPE, "application/json");
         axisCtx.setProperty(Constants.Configuration.CONTENT_TYPE, "application/json");
@@ -78,33 +77,25 @@ public class ReadinessResource extends APIResource {
 
         String response = "";
 
-        if (cachedResponse.isEmpty()) {
-            // appending MI server version number to the response
-            CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
-            String miVersion = serverConfig.getServerVersion();
-            response = "{\"version\":\"" + miVersion + "\",";
+        // appending MI server version number to the response
+        CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
+        String miVersion = serverConfig.getServerVersion();
+        response = "{\"version\":\"" + miVersion + "\",";
 
-            if (!isHotDeploymentEnabled) {
-                ArrayList<String> faultyCapps = new ArrayList<>(CappDeployer.getFaultyCapps());
-                if (!faultyCapps.isEmpty()) {
-                    String faultyList = String.join("\",\"", faultyCapps);
-                    response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList
-                            + "\"]}";
-                    cachedResponseCode = 500;
-                } else {
-                    response += "\"status\" : \"ready\"}";
-                    cachedResponseCode = 200;
-                }
-            } else {
-                response += "\"status\" : \"ready\"}";
-                cachedResponseCode = 200;
-            }
-            // update cached response
-            cachedResponse = response;
+        ArrayList<String> faultyCapps = new ArrayList<>(CappDeployer.getFaultyCapps());
+        if (!faultyCapps.isEmpty()) {
+            String faultyList = String.join("\",\"", faultyCapps);
+            response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList
+                    + "\"]}";
+            responseCode = 500;
+        } else {
+            response += "\"status\" : \"ready\"}";
+            responseCode = 200;
         }
+
         try {
-            JsonUtil.getNewJsonPayload(axisCtx, cachedResponse, true, true);
-            axisCtx.setProperty(HTTP_SC, cachedResponseCode);
+            JsonUtil.getNewJsonPayload(axisCtx, response, true, true);
+            axisCtx.setProperty(HTTP_SC, responseCode);
         } catch (AxisFault axisFault) {
             log.error("Error occurred while generating health-check response", axisFault);
             // sending 500 without a response payload
