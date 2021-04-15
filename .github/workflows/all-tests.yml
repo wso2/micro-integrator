@@ -16,7 +16,7 @@ jobs:
         with:
           java-version: openjdk8
       - name: Build with Maven
-        run: mvn -B clean install --file pom.xml -fae
+        run: mvn -B clean install '-Djacoco.skip=true' --file pom.xml -fae
   windows:
 
     runs-on: windows-latest
@@ -30,4 +30,4 @@ jobs:
         with:
           java-version: openjdk8
       - name: Build with Maven
-        run: mvn -B clean install --file pom.xml -fae
+        run: mvn -B clean install '-Djacoco.skip=true' --file pom.xml -fae
