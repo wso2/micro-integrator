@@ -279,6 +279,7 @@ public class Utils {
                 + File.separator + artifactType + File.separator + artifactName + ".xml";
         Path path = FileSystems.getDefault().getPath(pathString);
         try {
+            log.info("Un deploying artifact named ('" + artifactName + "') of type ('" + artifactType + "')");
             Files.deleteIfExists(path);
         } catch (IOException e) {
             log.error("Error while deleting the file", e);
