@@ -549,6 +549,14 @@
         <RegistryPersistence>enabled</RegistryPersistence>
     </MediationConfig>
 
+    {% for serverConf in server_conf %}
+    <{{serverConf.title}}>
+        {% for serverVal in serverConf.param %}
+        <{{ serverVal.key}}>{{serverVal.value}}</{{ serverVal.key}}>
+        {% endfor %}
+    </{{serverConf.title}}>
+    {% endfor %}
+
     <!--
     Server intializing code, specified as implementation classes of org.wso2.carbon.core.ServerInitializer.
     This code will be run when the Carbon server is initialized
