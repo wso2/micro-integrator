@@ -201,8 +201,6 @@ public class CarbonAppResource extends APIResource {
         Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
     }
 
-
-
     private void populateCarbonAppList(MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
