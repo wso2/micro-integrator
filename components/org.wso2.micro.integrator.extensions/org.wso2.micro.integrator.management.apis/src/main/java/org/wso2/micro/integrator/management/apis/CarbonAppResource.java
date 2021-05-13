@@ -119,8 +119,8 @@ public class CarbonAppResource extends APIResource {
         JSONObject jsonResponse = new JSONObject();
         String contentType = axisMsgCtx.getProperty(Constants.CONTENT_TYPE).toString();
         if (!contentType.contains(MULTIPART_FORMDATA_DATA_TYPE)) {
-            JSONObject response = Utils.createJsonError("Supports only for the Content-Type : "
-                    + MULTIPART_FORMDATA_DATA_TYPE, axisMsgCtx, BAD_REQUEST);
+            JSONObject response = Utils.createJsonError("Error when deploying the Carbon Application. " +
+                    "Supports only for the Content-Type : " + MULTIPART_FORMDATA_DATA_TYPE, axisMsgCtx, BAD_REQUEST);
             Utils.setJsonPayLoad(axisMsgCtx, response);
             return;
         }
@@ -148,23 +148,23 @@ public class CarbonAppResource extends APIResource {
                             Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject(errorMessage));
                         }
                     } else {
-                        jsonResponse = Utils.createJsonError("Only files with the extension .car is supported. ",
-                                axisMsgCtx, BAD_REQUEST);
+                        jsonResponse = Utils.createJsonError("Error when deploying the Carbon Application. " +
+                                "Only files with the extension .car is supported. ", axisMsgCtx, BAD_REQUEST);
                         Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
                     }
                 } else {
-                    jsonResponse = Utils.createJsonError("Uploading Multiple files in one " +
-                            "request is not supported. ", axisMsgCtx, BAD_REQUEST);
+                    jsonResponse = Utils.createJsonError("Error when deploying the Carbon Application. " +
+                            "Uploading Multiple files in one request is not supported. ", axisMsgCtx, BAD_REQUEST);
                     Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
                 }
             } else {
-                jsonResponse = Utils.createJsonError("No file exist to be uploaded. ",
-                        axisMsgCtx, BAD_REQUEST);
+                jsonResponse = Utils.createJsonError("Error when deploying the Carbon Application. " +
+                                "No file exist to be uploaded. ", axisMsgCtx, BAD_REQUEST);
                 Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
             }
         } else {
-            jsonResponse = Utils.createJsonError("No valid message body found. ",
-                    axisMsgCtx, BAD_REQUEST);
+            jsonResponse = Utils.createJsonError("Error when deploying the Carbon Application. " +
+                            "No valid message body found. ", axisMsgCtx, BAD_REQUEST);
             Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
         }
     }
@@ -194,18 +194,18 @@ public class CarbonAppResource extends APIResource {
                     jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully removed Carbon Application " +
                             "named " + cAppName);
                 } else {
-                    jsonResponse = Utils.createJsonError("Carbon Application name " +
-                            cAppName + "' does not exist", axisMsgCtx, NOT_FOUND);
+                    jsonResponse = Utils.createJsonError("Cannot remove the Carbon Application." +
+                            cAppName + " does not exist", axisMsgCtx, NOT_FOUND);
                     Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
                 }
             } catch (IOException e) {
-                String message = "Error when undeploying the Carbon Application " + cAppName + ".car";
+                String message = "Error when removing the Carbon Application " + cAppName + ".car";
                 log.error(message, e);
                 Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject(message));
             }
         } else {
-            jsonResponse = Utils.createJsonError("Missing required " + CAPP_NAME
-                    + " parameter in the path", axisMsgCtx, BAD_REQUEST);
+            jsonResponse = Utils.createJsonError("Cannot remove the Carbon Application. Missing required " +
+                    CAPP_NAME + " parameter in the path", axisMsgCtx, BAD_REQUEST);
             Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
         }
     }
