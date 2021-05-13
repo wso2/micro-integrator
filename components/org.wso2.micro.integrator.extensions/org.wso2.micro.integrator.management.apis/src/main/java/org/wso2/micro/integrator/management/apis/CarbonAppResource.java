@@ -46,7 +46,7 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
-import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
+import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
 
 public class CarbonAppResource extends APIResource {
 
@@ -184,7 +184,7 @@ public class CarbonAppResource extends APIResource {
                             "named " + cAppNamePattern);
                 } else {
                     jsonResponse = Utils.createJsonError("Carbon Application(s) named or patterned " +
-                            cAppNamePattern + "' does not exist", axisMsgCtx, INTERNAL_SERVER_ERROR);
+                            cAppNamePattern + "' does not exist", axisMsgCtx, NOT_FOUND);
                 }
             } catch (IOException e) {
                 String message = "Error when undeploying the Carbon Application";
