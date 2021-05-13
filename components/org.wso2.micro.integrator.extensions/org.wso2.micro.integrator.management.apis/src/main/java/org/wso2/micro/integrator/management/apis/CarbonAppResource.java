@@ -52,7 +52,7 @@ public class CarbonAppResource extends APIResource {
 
     private static final Log log = LogFactory.getLog(CarbonAppResource.class);
     private static final String MULTIPART_FORMDATA_DATA_TYPE = "multipart/form-data";
-    private static final String CAPP_NAME_PATTERN = "name";
+    private static final String CAPP_NAME = "name";
     // HTTP method types supported by the resource
     private Set<String> methods;
 
@@ -80,7 +80,7 @@ public class CarbonAppResource extends APIResource {
 
         String httpMethod = axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString();
         if (log.isDebugEnabled()) {
-            log.debug("Handling " + httpMethod + "request.");
+            log.debug("Handling " + httpMethod + " request.");
         }
 
         switch (httpMethod) {
@@ -105,7 +105,7 @@ public class CarbonAppResource extends APIResource {
             default: {
                 Utils.setJsonPayLoad(axis2MessageContext,
                         Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET , " +
-                                "POST and  " + "DELETE methods are supported",
+                                "POST and DELETE methods are supported.",
                         axis2MessageContext, BAD_REQUEST));
                 break;
             }
@@ -123,76 +123,79 @@ public class CarbonAppResource extends APIResource {
             Utils.setJsonPayLoad(axisMsgCtx, response);
             return;
         }
-
-        StringBuilder unMovedCApps = new StringBuilder();
-        String errorMessage = "Error when deploying the Carbon Application : ";
         OMElement messageBody = axisMsgCtx.getEnvelope().getBody().getFirstElement();
         Iterator iterator = messageBody.getChildElements();
-        boolean isDeployedSuccesfully = true;
-        while (iterator.hasNext()) {
+        if (iterator.hasNext()) {
             OMElement fileElement = (OMElement) iterator.next();
-            String fileName = fileElement.getAttributeValue(new QName("filename"));
-            if (fileName != null && fileName.endsWith(".car")) {
-                byte[] bytes = Base64.getDecoder().decode(fileElement.getText());
-                Path cAppDirectoryPath = Paths.get(Utils.getCarbonHome(), "repository", "deployment",
-                        "server", "carbonapps", fileName);
-                try {
-                    Files.write(cAppDirectoryPath, bytes);
-                } catch (IOException e) {
-                    isDeployedSuccesfully = false;
-                    unMovedCApps.append(fileName).append(", ");
-                    log.error(errorMessage + fileName, e);
+            if (!iterator.hasNext()) {
+                String fileName = fileElement.getAttributeValue(new QName("filename"));
+                if (fileName != null && fileName.endsWith(".car")) {
+                    byte[] bytes = Base64.getDecoder().decode(fileElement.getText());
+                    Path cAppDirectoryPath = Paths.get(Utils.getCarbonHome(), "repository", "deployment",
+                            "server", "carbonapps", fileName);
+                    try {
+                        Files.write(cAppDirectoryPath, bytes);
+                        log.info("Successfully added Carbon Application : " + fileName);
+                        jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully added Carbon Application "
+                                + fileName);
+                        Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
+                    } catch (IOException e) {
+                        String errorMessage = "Error when deploying the Carbon Application ";
+                        log.error(errorMessage + fileName, e);
+                        Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject(errorMessage));
+                    }
+                } else {
+                    jsonResponse = Utils.createJsonError("Only files with the extension .car is supported. ",
+                            axisMsgCtx, BAD_REQUEST);
+                    Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
                 }
-                log.info("Successfully added Carbon Application : " + fileName);
             } else {
-                isDeployedSuccesfully = false;
-                unMovedCApps.append((fileName != null ? fileName : "filename: <null>")).append(", ");
+                jsonResponse = Utils.createJsonError("Uploading Multiple files in one " +
+                        "request is not supported. ", axisMsgCtx, BAD_REQUEST);
+                Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
             }
-        }
-
-        if (isDeployedSuccesfully) {
-            jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully added Carbon Application(s)");
-            Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
         } else {
-            Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject(errorMessage + unMovedCApps));
+            jsonResponse = Utils.createJsonError("No file exist to be uploaded. ",
+                    axisMsgCtx, BAD_REQUEST);
+            Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
         }
     }
 
     private void handleDelete(MessageContext messageContext, org.apache.axis2.context.MessageContext axisMsgCtx) {
-        String cAppNamePattern = Utils.getPathParameter(messageContext, CAPP_NAME_PATTERN);
+        String cAppName = Utils.getPathParameter(messageContext, CAPP_NAME);
         JSONObject jsonResponse = new JSONObject();
-        if (!Objects.isNull(cAppNamePattern)) {
+        if (!Objects.isNull(cAppName)) {
             try {
                 String cAppsDirectoryPath = Paths.get(
                         Utils.getCarbonHome(), "repository", "deployment", "server", "carbonapps").toString();
 
-                // List deployed CApps which has downloaded CApp name prefix
+                // List deployed CApp which has downloaded CApp name
                 File carbonAppsDirectory = new File(cAppsDirectoryPath);
                 File[] existingCApps = carbonAppsDirectory.listFiles(new FilenameFilter() {
                     public boolean accept(File dir, String name) {
-                        return name.contains(cAppNamePattern) && name.endsWith(".car");
+                        return name.equals(cAppName + ".car");
                     }
                 });
 
-                // Remove deployed CApps which has downloaded CApp name prefix
+                // Remove deployed CApp which has downloaded CApp name
                 if (existingCApps != null && existingCApps.length != 0) {
-                    for (File cApp : existingCApps) {
-                        Files.delete(cApp.toPath());
-                        log.info(cApp.getName() + " file deleted from " + cAppsDirectoryPath + " directory");
-                    }
+                    //there should be only one capp entry
+                    File cApp = existingCApps[0];
+                    Files.delete(cApp.toPath());
+                    log.info(cApp.getName() + " file deleted from " + cAppsDirectoryPath + " directory");
                     jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully removed Carbon Application(s) " +
-                            "named " + cAppNamePattern);
+                            "named " + cAppName);
                 } else {
-                    jsonResponse = Utils.createJsonError("Carbon Application(s) named or patterned " +
-                            cAppNamePattern + "' does not exist", axisMsgCtx, NOT_FOUND);
+                    jsonResponse = Utils.createJsonError("Carbon Application name " +
+                            cAppName + "' does not exist", axisMsgCtx, NOT_FOUND);
                 }
             } catch (IOException e) {
-                String message = "Error when undeploying the Carbon Application";
+                String message = "Error when undeploying the Carbon Application " + cAppName + ".car";
                 log.error(message, e);
                 Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject(message));
             }
         } else {
-            jsonResponse = Utils.createJsonError("Missing required " + CAPP_NAME_PATTERN
+            jsonResponse = Utils.createJsonError("Missing required " + CAPP_NAME
                     + " parameter in the path", axisMsgCtx, BAD_REQUEST);
         }
         Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
