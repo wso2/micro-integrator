@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
+import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
 import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
 
 public class CAppUnDeployerResource extends APIResource {
@@ -91,7 +92,7 @@ public class CAppUnDeployerResource extends APIResource {
                 });
 
                 // Remove deployed CApps which has downloaded CApp name prefix
-                if (existingCApps != null) {
+                if (existingCApps != null && existingCApps.length != 0) {
                     for (File cApp : existingCApps) {
                         Files.delete(cApp.toPath());
                         log.info(cApp.getName() + " file deleted from " + cAppsDirectoryPath + " directory");
@@ -99,8 +100,8 @@ public class CAppUnDeployerResource extends APIResource {
                     jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully removed Carbon Application(s) " +
                             "named " + cAppNamePattern);
                 } else {
-                    jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Carbon Application(s) named or patterned '"
-                            + cAppNamePattern + "'  does not exist");
+                    jsonResponse = Utils.createJsonError("Carbon Application(s) named or patterned " +
+                            cAppNamePattern + "' does not exist", axisMsgCtx, INTERNAL_SERVER_ERROR);
                 }
             } else {
                 jsonResponse = Utils.createJsonError("Missing required " + CAPP_NAME_PATTERN
