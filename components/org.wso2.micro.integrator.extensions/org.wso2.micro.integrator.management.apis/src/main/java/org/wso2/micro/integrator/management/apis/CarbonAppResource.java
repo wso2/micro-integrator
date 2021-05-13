@@ -183,7 +183,7 @@ public class CarbonAppResource extends APIResource {
                     File cApp = existingCApps[0];
                     Files.delete(cApp.toPath());
                     log.info(cApp.getName() + " file deleted from " + cAppsDirectoryPath + " directory");
-                    jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully removed Carbon Application(s) " +
+                    jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully removed Carbon Application " +
                             "named " + cAppName);
                 } else {
                     jsonResponse = Utils.createJsonError("Carbon Application name " +
