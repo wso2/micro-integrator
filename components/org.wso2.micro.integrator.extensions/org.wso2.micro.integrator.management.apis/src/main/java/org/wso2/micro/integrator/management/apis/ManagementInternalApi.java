@@ -29,12 +29,11 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_CARBON_APP_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_EXTERNAL_VAULT_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_TRANSACTION;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_USER;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_APIS;
-import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CAPP_DEPLOYER;
-import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CAPP_UNDEPLOYER;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CONNECTORS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_DATA_SERVICES;
@@ -75,6 +74,7 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new InboundEndpointResource(PREFIX_INBOUND_ENDPOINTS));
         resourcesList.add(new ProxyServiceResource(PREFIX_PROXY_SERVICES));
         resourcesList.add(new CarbonAppResource(PREFIX_CARBON_APPS));
+        resourcesList.add(new CarbonAppResource(PREFIX_CARBON_APPS + PATH_PARAM_CARBON_APP_NAME));
         resourcesList.add(new TaskResource(PREFIX_TASKS));
         resourcesList.add(new SequenceResource(PREFIX_SEQUENCES));
         resourcesList.add(new DataServiceResource(PREFIX_DATA_SERVICES));
@@ -94,9 +94,6 @@ public class ManagementInternalApi implements InternalAPI {
                                                  new RequestCountResource()));
         resourcesList.add(new ExternalVaultResource(PREFIX_EXTERNAL_VAULTS
                 + PATH_PARAM_EXTERNAL_VAULT_NAME));
-        resourcesList.add(new CAppDeployerResource(PREFIX_CAPP_DEPLOYER));
-        resourcesList.add(new CAppUnDeployerResource(PREFIX_CAPP_UNDEPLOYER));
-
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);
     }
