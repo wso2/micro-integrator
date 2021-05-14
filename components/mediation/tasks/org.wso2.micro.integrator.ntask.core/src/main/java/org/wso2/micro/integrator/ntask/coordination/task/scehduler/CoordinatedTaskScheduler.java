@@ -20,7 +20,11 @@ package org.wso2.micro.integrator.ntask.coordination.task.scehduler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.commons.util.MiscellaneousUtil;
+import org.apache.synapse.core.SynapseEnvironment;
+import org.apache.synapse.message.processor.MessageProcessor;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.ClusterCommunicator;
@@ -33,9 +37,11 @@ import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Scheduler class, which runs periodically to retrieve all the scheduled tasks assigned to the node and schedule
@@ -129,6 +135,7 @@ public class CoordinatedTaskScheduler implements Runnable {
                                  + "in this node or an invalid entry, hence ignoring it.");
             }
         });
+        cleanUpMessageProcessors(pausedTasks);
         taskStore.updateTaskState(pausedTasks, CoordinatedTask.States.PAUSED);
     }
 
@@ -213,5 +220,24 @@ public class CoordinatedTaskScheduler implements Runnable {
             }
         });
         taskStore.updateAssignmentAndState(tasksToBeUpdated);
+    }
+
+    private void cleanUpMessageProcessors(List<String> pausedTasks) {
+
+        Set<String> completedProcessors = new HashSet();
+        pausedTasks.forEach(task -> {
+            if (MiscellaneousUtil.isTaskOfMessageProcessor(task)) {
+                String messageProcessorName = MiscellaneousUtil.getMessageProcessorName(task);
+                if (!completedProcessors.contains(messageProcessorName)) {
+                    SynapseEnvironment synapseEnvironment = MicroIntegratorBaseUtils.getSynapseEnvironment();
+                    MessageProcessor messageProcessor = synapseEnvironment.getSynapseConfiguration().getMessageProcessors().
+                            get(messageProcessorName);
+                    if (messageProcessor != null) {
+                        messageProcessor.cleanUpDeactivatedProcessors();
+                    }
+                    completedProcessors.add(messageProcessorName);
+                }
+            }
+        });
     }
 }
