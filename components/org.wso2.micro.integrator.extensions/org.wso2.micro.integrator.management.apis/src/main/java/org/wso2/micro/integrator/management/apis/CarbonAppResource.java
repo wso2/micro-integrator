@@ -202,8 +202,8 @@ public class CarbonAppResource extends APIResource {
                 } else {
                     jsonResponse = Utils.createJsonError("Cannot remove the Carbon Application." +
                             cAppName + " does not exist", axisMsgCtx, NOT_FOUND);
-                    Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
                 }
+                Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
             } catch (IOException e) {
                 String message = "Error when removing the Carbon Application " + cAppName + ".car";
                 log.error(message, e);
