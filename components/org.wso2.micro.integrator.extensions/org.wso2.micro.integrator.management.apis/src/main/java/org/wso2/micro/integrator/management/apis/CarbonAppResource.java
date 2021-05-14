@@ -127,39 +127,45 @@ public class CarbonAppResource extends APIResource {
         SOAPBody soapBody = axisMsgCtx.getEnvelope().getBody();
         if (null != soapBody) {
             OMElement messageBody = soapBody.getFirstElement();
-            Iterator iterator = messageBody.getChildElements();
-            if (iterator.hasNext()) {
-                OMElement fileElement = (OMElement) iterator.next();
-                if (!iterator.hasNext()) {
-                    String fileName = fileElement.getAttributeValue(new QName("filename"));
-                    if (fileName != null && fileName.endsWith(".car")) {
-                        byte[] bytes = Base64.getDecoder().decode(fileElement.getText());
-                        Path cAppDirectoryPath = Paths.get(Utils.getCarbonHome(), "repository", "deployment",
-                                "server", "carbonapps", fileName);
-                        try {
-                            Files.write(cAppDirectoryPath, bytes);
-                            log.info("Successfully added Carbon Application : " + fileName);
-                            jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully added Carbon Application "
-                                    + fileName);
+            if (null != messageBody) {
+                Iterator iterator = messageBody.getChildElements();
+                if (iterator.hasNext()) {
+                    OMElement fileElement = (OMElement) iterator.next();
+                    if (!iterator.hasNext()) {
+                        String fileName = fileElement.getAttributeValue(new QName("filename"));
+                        if (fileName != null && fileName.endsWith(".car")) {
+                            byte[] bytes = Base64.getDecoder().decode(fileElement.getText());
+                            Path cAppDirectoryPath = Paths.get(Utils.getCarbonHome(), "repository", "deployment",
+                                    "server", "carbonapps", fileName);
+                            try {
+                                Files.write(cAppDirectoryPath, bytes);
+                                log.info("Successfully added Carbon Application : " + fileName);
+                                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully added Carbon Application "
+                                        + fileName);
+                                Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
+                            } catch (IOException e) {
+                                String errorMessage = "Error when deploying the Carbon Application ";
+                                log.error(errorMessage + fileName, e);
+                                Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject(errorMessage));
+                            }
+                        } else {
+                            jsonResponse = Utils.createJsonError("Error when deploying the Carbon Application. " +
+                                    "Only files with the extension .car is supported. ", axisMsgCtx, BAD_REQUEST);
                             Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
-                        } catch (IOException e) {
-                            String errorMessage = "Error when deploying the Carbon Application ";
-                            log.error(errorMessage + fileName, e);
-                            Utils.setJsonPayLoad(axisMsgCtx, Utils.createJsonErrorObject(errorMessage));
                         }
                     } else {
                         jsonResponse = Utils.createJsonError("Error when deploying the Carbon Application. " +
-                                "Only files with the extension .car is supported. ", axisMsgCtx, BAD_REQUEST);
+                                "Uploading Multiple files in one request is not supported. ", axisMsgCtx, BAD_REQUEST);
                         Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
                     }
                 } else {
                     jsonResponse = Utils.createJsonError("Error when deploying the Carbon Application. " +
-                            "Uploading Multiple files in one request is not supported. ", axisMsgCtx, BAD_REQUEST);
+                            "No file exist to be uploaded. ", axisMsgCtx, BAD_REQUEST);
                     Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
                 }
             } else {
                 jsonResponse = Utils.createJsonError("Error when deploying the Carbon Application. " +
-                                "No file exist to be uploaded. ", axisMsgCtx, BAD_REQUEST);
+                        "No valid element found. ", axisMsgCtx, BAD_REQUEST);
                 Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
             }
         } else {
