@@ -29,6 +29,7 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_CARBON_APP_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_EXTERNAL_VAULT_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_TRANSACTION;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_USER;
@@ -73,6 +74,7 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new InboundEndpointResource(PREFIX_INBOUND_ENDPOINTS));
         resourcesList.add(new ProxyServiceResource(PREFIX_PROXY_SERVICES));
         resourcesList.add(new CarbonAppResource(PREFIX_CARBON_APPS));
+        resourcesList.add(new CarbonAppResource(PREFIX_CARBON_APPS + PATH_PARAM_CARBON_APP_NAME));
         resourcesList.add(new TaskResource(PREFIX_TASKS));
         resourcesList.add(new SequenceResource(PREFIX_SEQUENCES));
         resourcesList.add(new DataServiceResource(PREFIX_DATA_SERVICES));
@@ -92,7 +94,6 @@ public class ManagementInternalApi implements InternalAPI {
                                                  new RequestCountResource()));
         resourcesList.add(new ExternalVaultResource(PREFIX_EXTERNAL_VAULTS
                 + PATH_PARAM_EXTERNAL_VAULT_NAME));
-
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);
     }
