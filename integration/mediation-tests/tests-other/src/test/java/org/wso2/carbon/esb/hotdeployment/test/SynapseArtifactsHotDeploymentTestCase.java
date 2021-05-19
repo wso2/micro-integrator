@@ -121,7 +121,6 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                 TimeUnit.MILLISECONDS).until(isCAppHotDeployed(cAppName2));
         assertTrue(checkCarbonAppExistence(cAppName2), "Carbon application Deployment failed");
-
     }
 
     @Test(groups = "wso2.esb",
