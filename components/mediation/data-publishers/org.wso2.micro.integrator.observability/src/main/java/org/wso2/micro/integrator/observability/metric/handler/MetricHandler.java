@@ -123,9 +123,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
             incrementInboundEndPointCount(inboundEndpointName);
             startTimers(synCtx, inboundEndpointName, MetricConstants.INBOUND_ENDPOINT,
                     null);
-        } else if (null != axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL) &&
-                !axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).toString().
-                        contains("services")) {
+        } else {
             serviceInvokePort = getServiceInvokePort(synCtx);
 
             if ((serviceInvokePort != internalHttpApiPort) && (null !=
@@ -369,8 +367,10 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
                 getProperty(NhttpConstants.SERVICE_PREFIX)) {
             String servicePort = ((Axis2MessageContext) synCtx).getAxis2MessageContext().
                     getProperty(NhttpConstants.SERVICE_PREFIX).toString();
-            servicePort = servicePort.substring((servicePort.lastIndexOf(':') + 1),
-                    servicePort.lastIndexOf(DELIMITER));
+            servicePort = servicePort.substring(servicePort.lastIndexOf(':') + 1);
+            if (servicePort.contains(DELIMITER)) {
+                servicePort = servicePort.substring(0, servicePort.indexOf(DELIMITER));
+            }
             invokePort = Integer.parseInt(servicePort);
         }
         return invokePort;

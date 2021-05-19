@@ -19,7 +19,9 @@ package org.wso2.micro.integrator.ntask.core.impl.standalone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.commons.util.MiscellaneousUtil;
 import org.apache.synapse.core.SynapseEnvironment;
+import org.apache.synapse.message.processor.MessageProcessor;
 import org.apache.synapse.task.TaskDescription;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.ntask.common.TaskException;
@@ -165,6 +167,14 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
                     scheduleTask(taskName);
                 } else {
                     resumeLocalTask(taskName);
+                    if (MiscellaneousUtil.isTaskOfMessageProcessor(taskName)) {
+                        String messageProcessorName = MiscellaneousUtil.getMessageProcessorName(taskName);
+                        MessageProcessor messageProcessor = synapseEnvironment.getSynapseConfiguration()
+                                .getMessageProcessors().get(messageProcessorName);
+                        if (messageProcessor != null) {
+                            messageProcessor.resumeRemotely();
+                        }
+                    }
                 }
                 locallyRunningCoordinatedTasks.add(taskName);
             } else {
@@ -230,6 +240,7 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
         return result;
     }
 
+    @Override
     public void handleTaskPause(String taskName) throws TaskException {
 
         if (deployedCoordinatedTasks.contains(taskName)) {
