@@ -156,7 +156,6 @@ public class SimpleHttpClient {
      */
     public HttpResponse doPostWithMultipart(String url, File file)
             throws IOException {
-
         MultipartEntityBuilder entitybuilder = MultipartEntityBuilder.create();
         entitybuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         entitybuilder.addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
