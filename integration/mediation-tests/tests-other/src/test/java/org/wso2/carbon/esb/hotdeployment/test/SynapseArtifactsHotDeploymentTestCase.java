@@ -61,6 +61,7 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
     private final String localEntryFileName = "HotDeploymentTestLocalEntry.xml";
     private final String messageStoreFileName = "HotDeploymentTestMessageStore.xml";
     private final String cAppFileName = "HotDeployment_1.0.0.car";
+    private final String cAppFileName2 = "SampleCappCompositeExporter_1.0.0.car";
 
     private final String proxyName = "HotDeploymentTestProxy";
     private final String sequenceName = "HotDeploymentTestSequence";
@@ -69,6 +70,7 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
     private final String localEntryName = "HotDeploymentTestLocalEntry";
     private final String messageStoreName = "HotDeploymentTestMessageStore";
     private final String cAppName = "HotDeploymentCompositeApplication";
+    private final String cAppName2 = "SampleCappCompositeExporter";
 
     @BeforeClass(alwaysRun = true)
     public void deployService() throws Exception {
@@ -80,40 +82,55 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
           description = "Carbon Application Hot Deployment")
     public void testHotDeployment() throws Exception {
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isProxyHotDeployed(proxyName));
+                TimeUnit.MILLISECONDS).until(isProxyHotDeployed(proxyName));
 
         assertTrue(checkProxyServiceExistence(proxyName), "Proxy Service Deployment failed");
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isSequenceHotDeployed(sequenceName));
+                TimeUnit.MILLISECONDS).until(isSequenceHotDeployed(sequenceName));
         assertTrue(checkSequenceExistence(sequenceName), "Sequence Deployment failed");
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isEndpointHotDeployed(endpointName));
+                TimeUnit.MILLISECONDS).until(isEndpointHotDeployed(endpointName));
         assertTrue(checkEndpointExistence(endpointName), "Endpoint Deployment failed");
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isApiHotDeployed(apiName));
+                TimeUnit.MILLISECONDS).until(isApiHotDeployed(apiName));
         assertTrue(checkApiExistence(apiName), "API Deployment failed");
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isLocalEntryHotDeployed(localEntryName));
+                TimeUnit.MILLISECONDS).until(isLocalEntryHotDeployed(localEntryName));
         assertTrue(checkLocalEntryExistence(localEntryName), "Local Entry Deployment failed");
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isMessageStoreHotDeployed(messageStoreName));
+                TimeUnit.MILLISECONDS).until(isMessageStoreHotDeployed(messageStoreName));
         assertTrue(checkMessageStoreExistence(messageStoreName), "Message Store Deployment failed");
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isCAppHotDeployed(cAppName));
+                TimeUnit.MILLISECONDS).until(isCAppHotDeployed(cAppName));
         assertTrue(checkCarbonAppExistence(cAppName), "Carbon application Deployment failed");
+    }
+
+    @Test(groups = "wso2.esb",
+            description = "Carbon Application Hot Deployment through REST API")
+    public void testCarbonAppDeploymentFromRESTApi() throws Exception {
+        log.info("--------  Running testCarbonAppDeploymentFromRESTApi --------");
+        String cAppFile = SOURCE_DIR + cAppFileName2;
+        File file = new File(cAppFile);
+        deployCarbonApplication(file);
+        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
+                TimeUnit.MILLISECONDS).until(isCAppHotDeployed(cAppName2));
+        assertTrue(checkCarbonAppExistence(cAppName2), "Carbon application Deployment failed");
+    }
+
+    @Test(groups = "wso2.esb",
+            description = "Carbon Application un-deploy through REST API")
+    public void testCarbonAppUnDeploymentFromRESTApi() throws Exception {
+        log.info("--------  Running testCarbonAppUnDeploymentFromRESTApi ---------");
+        unDeployCarbonApplication(cAppName2 + "_1.0.0");
+        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
+                TimeUnit.MILLISECONDS).until(isCAppUnDeployed(cAppName2));
+        assertFalse(checkCarbonAppExistence(cAppName2), "Carbon Application Undeployment failed");
     }
 
     @Test(groups = "wso2.esb", dependsOnMethods = "testHotDeployment",

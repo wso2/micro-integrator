@@ -18,6 +18,9 @@
 
 package org.wso2.esb.integration.common.utils.clients;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -31,7 +34,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentProducer;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.EntityTemplate;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpConnectionParams;
@@ -40,6 +46,7 @@ import org.apache.http.protocol.HttpContext;
 import org.wso2.esb.integration.common.utils.HttpDeleteWithEntity;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,6 +59,7 @@ import java.util.zip.GZIPOutputStream;
  */
 public class SimpleHttpClient {
 
+    protected Log log = LogFactory.getLog(getClass());
     private DefaultHttpClient client;
 
     public SimpleHttpClient() {
@@ -135,6 +143,25 @@ public class SimpleHttpClient {
             ent.setContentEncoding("gzip");
         }
         entityEncReq.setEntity(ent);
+        return client.execute(request);
+    }
+
+    /**
+     * Send a HTTP POST with multipart request to the specified URL
+     *
+     * @param url         Target endpoint URL
+     * @param file     File to be uploaded
+     * @return Returned HTTP response
+     * @throws IOException If an error occurs while making the invocation
+     */
+    public HttpResponse doPostWithMultipart(String url, File file)
+            throws IOException {
+        MultipartEntityBuilder entitybuilder = MultipartEntityBuilder.create();
+        entitybuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        entitybuilder.addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+        HttpPost request = new HttpPost(url);
+        HttpEntity mutiPartHttpEntity = entitybuilder.build();
+        request.setEntity(mutiPartHttpEntity);
         return client.execute(request);
     }
 
