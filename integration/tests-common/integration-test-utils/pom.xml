@@ -163,9 +163,15 @@
             <groupId>org.wso2.orbit.javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>${httpmime.version}</version>
+        </dependency>
     </dependencies>
     <properties>
         <sshd.version>2.2.0</sshd.version>
+        <httpmime.version>4.3.1</httpmime.version>
     </properties>
 
 </project>

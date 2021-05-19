@@ -935,6 +935,16 @@ public abstract class ESBIntegrationTest {
         return response.contains(proxyServiceName);
     }
 
+    protected String deployCarbonApplication(File carbonApp) throws IOException {
+
+        return deployCarbonApplicationUsingManagementApi("applications", carbonApp);
+    }
+
+    protected String unDeployCarbonApplication(String carbonApp) throws IOException {
+
+        return unDeployCarbonApplicationUsingManagementApi("applications", carbonApp);
+    }
+
     private boolean checkTaskExistence(String taskName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("tasks");
@@ -1003,6 +1013,37 @@ public abstract class ESBIntegrationTest {
                 + artifactType;
 
         HttpResponse response = client.doGet(endpoint, headers);
+        return client.getResponsePayload(response);
+    }
+
+    private String deployCarbonApplicationUsingManagementApi(String artifactType, File cabonApp) throws IOException {
+        if (!isManagementApiAvailable) {
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).
+                    atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+                    until(isManagementApiAvailable());
+        }
+        SimpleHttpClient client = new SimpleHttpClient();
+
+        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
+                + artifactType;
+        HttpResponse response = client.doPostWithMultipart(endpoint, cabonApp);
+        return client.getResponsePayload(response);
+    }
+
+    private String unDeployCarbonApplicationUsingManagementApi(String artifactType, String cabonApp)
+            throws IOException {
+        if (!isManagementApiAvailable) {
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).
+                    atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+                    until(isManagementApiAvailable());
+        }
+        SimpleHttpClient client = new SimpleHttpClient();
+
+        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
+                + artifactType + "/" + cabonApp;
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        HttpResponse response = client.doDelete(endpoint, headers);
         return client.getResponsePayload(response);
     }
 
