@@ -43,7 +43,6 @@ import org.apache.synapse.config.xml.EntryFactory;
 import org.apache.synapse.config.xml.SynapseImportFactory;
 import org.apache.synapse.config.xml.SynapseImportSerializer;
 import org.apache.synapse.config.xml.XMLConfigConstants;
-import org.apache.synapse.config.xml.rest.APIFactory;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.apache.synapse.deployers.APIDeployer;
 import org.apache.synapse.deployers.AbstractSynapseArtifactDeployer;
@@ -82,6 +81,7 @@ import org.wso2.micro.integrator.initializer.ServiceBusUtils;
 import org.wso2.micro.integrator.initializer.dashboard.ArtifactDeploymentListener;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
+import org.wso2.micro.integrator.initializer.utils.DeployerUtil;
 import org.wso2.micro.integrator.initializer.utils.LocalEntryUtil;
 
 import java.io.ByteArrayInputStream;
@@ -306,7 +306,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                         if (artifact.getType().equals("synapse/api")) {
                             OMElement apiElement =
                                     new StAXOMBuilder(new FileInputStream(new File(artifactPath))).getDocumentElement();
-                            API api = APIFactory.createAPI(apiElement);
+                            API api = DeployerUtil.partiallyBuildAPI(apiElement);
                             artifactName = api.getName();
                         }
 

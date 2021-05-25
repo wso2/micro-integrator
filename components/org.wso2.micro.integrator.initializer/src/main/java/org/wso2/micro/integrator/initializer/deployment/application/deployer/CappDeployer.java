@@ -18,7 +18,6 @@
 package org.wso2.micro.integrator.initializer.deployment.application.deployer;
 
 import com.google.gson.JsonObject;
-import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -31,12 +30,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.api.version.VersionStrategy;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.SynapseConfiguration;
-import org.apache.synapse.config.xml.rest.APIFactory;
 import org.apache.synapse.api.API;
-import org.apache.synapse.config.xml.rest.VersionStrategyFactory;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.ApplicationConfiguration;
@@ -45,6 +41,7 @@ import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.core.util.FileManipulator;
 import org.wso2.micro.integrator.initializer.dashboard.ArtifactDeploymentListener;
+import org.wso2.micro.integrator.initializer.utils.DeployerUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -650,11 +647,7 @@ public class CappDeployer extends AbstractDeployer {
 
         try {
             OMElement apiElement = new StAXOMBuilder(apiXmlStream).getDocumentElement();
-            OMAttribute nameAtt = apiElement.getAttribute(new QName("name"));
-            OMAttribute contextAtt = apiElement.getAttribute(new QName("context"));
-            API api = new API(nameAtt.getAttributeValue(), contextAtt.getAttributeValue());
-            VersionStrategy vStrategy = VersionStrategyFactory.createVersioningStrategy(api, apiElement);
-            api.setVersionStrategy(vStrategy);
+            API api = DeployerUtil.partiallyBuildAPI(apiElement);
             return api.getName();
         } catch (XMLStreamException | OMException e) {
             // Cannot find the API file or API is faulty.
