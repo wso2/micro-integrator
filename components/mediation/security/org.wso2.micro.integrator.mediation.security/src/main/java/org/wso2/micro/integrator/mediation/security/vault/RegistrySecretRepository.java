@@ -39,7 +39,7 @@ public class RegistrySecretRepository implements SecretRepository {
 
 	private MessageContext synCtx;
 
-	RegistrySecretRepository() {
+	public RegistrySecretRepository() {
 		super();
 
 	}
@@ -104,7 +104,7 @@ public class RegistrySecretRepository implements SecretRepository {
 		return this.parentRepository;
 	}
 
-	void setSynCtx(MessageContext synCtx) {
+	public void setSynCtx(MessageContext synCtx) {
 		this.synCtx = synCtx;
 	}
 
