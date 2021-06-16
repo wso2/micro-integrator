@@ -581,6 +581,7 @@ public class FilePollingConsumer {
                     Thread.sleep(iFileProcessingInterval);
                 } catch (InterruptedException ie) {
                     log.error("Unable to set the interval between file processors." + ie);
+                    Thread.currentThread().interrupt();
                 }
             } else if (iFileProcessingCount != null && iFileProcessingCount <= processCount) {
                 break;
@@ -704,6 +705,9 @@ public class FilePollingConsumer {
                 injectHandler.setTransportHeaders(transportHeaders);
                 // injectHandler
                 if (!injectHandler.invoke(file, name)) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Failed to inject the file : " + VFSUtils.maskURLPassword(file.toString()));
+                    }
                     return null;
                 }
             }
