@@ -33,6 +33,18 @@ class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.
 internal_crypto_provider = "org.wso2.micro.integrator.crypto.provider.KeyStoreBasedInternalCryptoProvider" #inferred
 key = "SECRET_KEY" # inferred
 
+# carbon.xml server configurations
+[[server_conf]]
+title = "MediationFlowStatisticConfig"
+
+[[server_conf.param]]
+key="StatWorkerCount"
+value="500"
+
+[[server_conf.param]]
+key="StatWorkerIdleInterval"
+value="600"
+
 [super_admin]
 #usr-mgt.xml
 username = "admin"              # inferred
