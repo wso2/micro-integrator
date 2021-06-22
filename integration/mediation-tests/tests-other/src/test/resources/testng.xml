@@ -73,9 +73,12 @@
     <!--</classes>-->
     <!--</test>-->
 
-    <test name="PostRequest-Test" preserve-order="true" verbose="2">
+    <test name="Synapse-commons-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.synapse.common"/>
+            <package name="org.wso2.carbon.esb.synapse.common.cors"/>
+            <package name="org.wso2.carbon.esb.synapse.common.formatters"/>
+            <package name="org.wso2.carbon.esb.synapse.common.resolvers"/>
         </packages>
     </test>
     <!-- Test are not written correctly need to review the pr
