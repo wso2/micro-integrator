@@ -2527,7 +2527,12 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
 
     public static QueryType sqlQueryType(String sqlQuery) {
 
-        String query = sqlQuery.substring(0, sqlQuery.indexOf(" ")).toUpperCase();
+        String query;
+        try {
+            query = sqlQuery.substring(0, sqlQuery.indexOf(" ")).toUpperCase();
+        } catch (IndexOutOfBoundsException e) {
+            return QueryType.UNDEFINED;
+        }
         
         switch (query) {
             case "UPDATE":
@@ -2542,6 +2547,9 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
             case "INSERT":
                 sqlQueryType = QueryType.INSERT;
                 break;
+            default:
+                sqlQueryType = QueryType.UNDEFINED;
+                break;
         }
         return sqlQueryType;
     }
@@ -2550,7 +2558,8 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
         UPDATE,
         INSERT,
         DELETE,
-        SELECT;
+        SELECT,
+        UNDEFINED;
     }
 
 }
