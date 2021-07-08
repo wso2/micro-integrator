@@ -53,8 +53,9 @@ public class SwaggerGenerator {
     protected void updateResponse(CarbonHttpResponse response, String responseString, String contentType) throws
             AxisFault {
         try {
-            ((BlobOutputStream) response.getOutputStream()).getBlob().readFrom(new ByteArrayInputStream
-                    (responseString.getBytes(SwaggerConstants.DEFAULT_ENCODING)), responseString.length());
+            byte[] responseStringBytes = responseString.getBytes(SwaggerConstants.DEFAULT_ENCODING);
+            ((BlobOutputStream) response.getOutputStream()).getBlob()
+                    .readFrom(new ByteArrayInputStream(responseStringBytes), responseStringBytes.length);
         } catch (StreamCopyException streamCopyException) {
             handleException("Error in generating Swagger definition : failed to copy data to response ",
                     streamCopyException);
