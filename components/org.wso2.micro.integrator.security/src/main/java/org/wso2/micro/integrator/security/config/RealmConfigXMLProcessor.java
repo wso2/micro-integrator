@@ -390,11 +390,12 @@ public class RealmConfigXMLProcessor {
             OMElement propElem = (OMElement) ite.next();
             propName = propElem.getAttributeValue(new QName("name"));
             propValue = propElem.getText();
-            if (secretResolver != null && secretResolver.isInitialized()) {
-                propValue = MiscellaneousUtil.resolve(propValue, this.secretResolver);
-            } else {
+            if (secretResolver == null) {
                 throw new SecureVaultException("Cannot resolve secret password because secret resolver " +
                         "is null or not initialized");
+            }
+            if (secretResolver.isInitialized()) {
+                propValue = MiscellaneousUtil.resolve(propValue, this.secretResolver);
             }
         }
 
