@@ -32,6 +32,7 @@ import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenCleanu
 import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenGenerator;
 import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenInfoDTO;
 import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenStore;
+import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
@@ -88,7 +89,7 @@ public class LoginResource implements MiApiResource {
         JWTTokenInfoDTO newToken = new JWTTokenInfoDTO(username);
         newToken.setToken(randomUUIDString);
         try {
-            if (MicroIntegratorSecurityUtils.isAdmin(username)) {
+            if (SecurityUtils.isAdmin(username)) {
                 newToken.setScope(AuthConstants.JWT_TOKEN_ADMIN_SCOPE);
             } else {
                 newToken.setScope(AuthConstants.JWT_TOKEN_DEFAULT_SCOPE);

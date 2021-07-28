@@ -121,7 +121,7 @@ public class UserResource implements MiApiResource {
         }
         JSONObject userObject = new JSONObject();
         userObject.put(USER_ID, user);
-        userObject.put(IS_ADMIN, MicroIntegratorSecurityUtils.isAdmin(user));
+        userObject.put(IS_ADMIN, SecurityUtils.isAdmin(user));
         String[] roles = getUserStore().getRoleListOfUser(user);
         JSONArray list = new JSONArray(roles);
         userObject.put(ROLES, list);

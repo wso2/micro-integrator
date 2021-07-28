@@ -68,6 +68,7 @@ public class ConfigurationLoader {
     private static final QName USER_Q = new QName("user");
     private static final QName USERNAME_Q = new QName("username");
     private static final QName PASSWORD_Q = new QName("password");
+    private static final QName IS_ADMIN_Q = new QName("isAdmin");
     private static final QName STORE_PASSWORD_Q = new QName("Password");
     private static final QName KEY_PASSWORD_Q = new QName("KeyPassword");
 
@@ -83,7 +84,7 @@ public class ConfigurationLoader {
 
     private static SSLConfiguration sslConfiguration;
     private static boolean sslConfiguredSuccessfully;
-    private static Map<String, char[]> userMap;
+    private static Map<String, UserInfo> userMap;
 
     private static List<InternalAPI> internalHttpApiList = new ArrayList<>();
     private static List<InternalAPI> internalHttpsApiList = new ArrayList<>();
@@ -204,8 +205,8 @@ public class ConfigurationLoader {
      * @param users the parent element of users
      * @return map of users against credentials
      */
-    private static Map<String, char[]> populateUsers(OMElement users) {
-        HashMap<String, char[]> userMap = new HashMap<>();
+    private static Map<String, UserInfo> populateUsers(OMElement users) {
+        HashMap<String, UserInfo> userMap = new HashMap<>();
         if (users != null) {
             @SuppressWarnings("unchecked")
             Iterator<OMElement> usersIterator = users.getChildrenWithName(USER_Q);
@@ -214,13 +215,19 @@ public class ConfigurationLoader {
                     OMElement userElement = usersIterator.next();
                     OMElement userNameElement = userElement.getFirstChildWithName(USERNAME_Q);
                     OMElement passwordElement = userElement.getFirstChildWithName(PASSWORD_Q);
+                    OMElement isAdminElement = userElement.getFirstChildWithName(IS_ADMIN_Q);
                     if (userNameElement != null && passwordElement != null) {
                         String userName = userNameElement.getText();
                         if (userMap.containsKey(userName)) {
                             handleException("Error parsing the file based user store. User: " + userName + " defined "
                                             + "more than once. ");
                         }
-                        userMap.put(userName, resolveSecret(passwordElement.getText()).toCharArray());
+                        boolean isAdmin = false;
+                        if (isAdminElement != null) {
+                            isAdmin = Boolean.parseBoolean(isAdminElement.getText());
+                        }
+                        userMap.put(userName, new UserInfo(resolveSecret(passwordElement.getText()).toCharArray(),
+                                isAdmin));
                     }
                 }
             }
@@ -330,7 +337,7 @@ public class ConfigurationLoader {
         }
     }
 
-    public static Map<String, char[]> getUserMap() {
+    public static Map<String, UserInfo> getUserMap() {
         return userMap;
     }
 

@@ -447,7 +447,8 @@
   "internal_apis.users": [
     {
       "user.name": "admin",
-      "user.password": "admin"
+      "user.password": "admin",
+      "user.is_admin": true
     }
   ],
 
