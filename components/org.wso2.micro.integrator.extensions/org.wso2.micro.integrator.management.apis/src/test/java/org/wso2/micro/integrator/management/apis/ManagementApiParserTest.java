@@ -27,6 +27,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.ConfigurationLoader;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.UserInfo;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 
@@ -58,14 +59,14 @@ public class ManagementApiParserTest {
 
     @Test
     public void testGetUserList() throws UserStoreUndefinedException {
-        Map<String, char[]> userMap = new HashMap<>();
-        userMap.put("user1", "pwd1".toCharArray());
+        Map<String, UserInfo> userMap = new HashMap<>();
+        userMap.put("user1", new UserInfo("user1", "pwd1".toCharArray(), false));
         PowerMockito.mockStatic(ConfigurationLoader.class);
         Mockito.when(ConfigurationLoader.getUserMap()).thenReturn(userMap);
         ManagementApiParser managementApiParser = new ManagementApiParser();
-        Map<String, char[]> retrievedUserMap = managementApiParser.getUserMap();
+        Map<String, UserInfo> retrievedUserMap = managementApiParser.getUserMap();
         Assert.assertNotNull(retrievedUserMap);
-        Assert.assertEquals("pwd1", new String(retrievedUserMap.get("user1")));
+        Assert.assertEquals("pwd1", new String(retrievedUserMap.get("user1").getPassword()));
     }
 
     @Test(expected = UserStoreUndefinedException.class)
