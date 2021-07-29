@@ -27,6 +27,9 @@ import org.wso2.micro.integrator.management.apis.UserStoreUndefinedException;
 
 import java.util.Map;
 
+/**
+ * This class is used to authenticate, authorize users against the File based user store defined in internal-apis.xml
+ */
 public class FileBasedUserStoreManager {
 
     private static final Log LOG = LogFactory.getLog(FileBasedUserStoreManager.class);

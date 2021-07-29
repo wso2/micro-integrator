@@ -93,11 +93,11 @@ public class AuthorizationHandler extends AuthorizationHandlerAdapter {
      */
     private boolean processAuthorizationWithFileBasedUserStore(String userName) {
 
-        boolean isAuthorized = FileBasedUserStoreManager.getUserStoreManager().isAdmin(userName);
-        if (!isAuthorized) {
+        boolean isAdmin = FileBasedUserStoreManager.getUserStoreManager().isAdmin(userName);
+        if (!isAdmin) {
             LOG.error("User " + userName + " cannot be authorized");
         }
-        return isAuthorized;
+        return isAdmin;
     }
 
     /**

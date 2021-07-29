@@ -23,11 +23,13 @@ package org.wso2.carbon.inbound.endpoint.internal.http.api;
  */
 public class UserInfo {
 
+    private String username;
     private char[] password;
     private boolean admin;
 
-    public UserInfo(char[] password, boolean admin) {
+    public UserInfo(String username, char[] password, boolean admin) {
 
+        this.username = username;
         this.password = password;
         this.admin = admin;
     }

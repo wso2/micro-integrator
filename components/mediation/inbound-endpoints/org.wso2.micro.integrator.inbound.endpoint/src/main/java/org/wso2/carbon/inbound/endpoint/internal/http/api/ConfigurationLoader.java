@@ -203,7 +203,7 @@ public class ConfigurationLoader {
      * Populates individual users.
      *
      * @param users the parent element of users
-     * @return map of users against credentials
+     * @return map of users against UserInfo config
      */
     private static Map<String, UserInfo> populateUsers(OMElement users) {
         HashMap<String, UserInfo> userMap = new HashMap<>();
@@ -224,10 +224,10 @@ public class ConfigurationLoader {
                         }
                         boolean isAdmin = false;
                         if (isAdminElement != null) {
-                            isAdmin = Boolean.parseBoolean(isAdminElement.getText());
+                            isAdmin = Boolean.parseBoolean(isAdminElement.getText().trim());
                         }
-                        userMap.put(userName, new UserInfo(resolveSecret(passwordElement.getText()).toCharArray(),
-                                isAdmin));
+                        userMap.put(userName, new UserInfo(userName,
+                                resolveSecret(passwordElement.getText()).toCharArray(), isAdmin));
                     }
                 }
             }

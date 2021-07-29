@@ -106,7 +106,7 @@ public class SecurityUtils {
     }
 
     /**
-     * Method to assert if a user is an admin
+     * Method to assert if a user is an admin.
      *
      * @param username the user to be validated as an admin
      * @return true if the admin role is assigned to the user
