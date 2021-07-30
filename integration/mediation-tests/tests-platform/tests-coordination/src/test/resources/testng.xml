@@ -31,6 +31,7 @@
         <classes>
             <class name="org.wso2.micro.integrator.startup.StartupTests"/>
             <class name="org.wso2.micro.integrator.tasks.TaskTests"/>
+            <class name="org.wso2.micro.integrator.tasks.TaskSchedulingTests"/>
             <class name="org.wso2.micro.integrator.message.processor.MessageProcessorTests"/>
         </classes>
     </test>

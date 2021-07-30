@@ -23,14 +23,17 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class MultipleServersManager {
 
     private static final Log log = LogFactory.getLog(MultipleServersManager.class);
     private Map<String, TestServerManager> servers = new HashMap<String, TestServerManager>();
+    private List<String> serverHomes = new ArrayList<>();
     private String deploymentDirectory = null;
     private String registryDirectory = null;
 
@@ -48,6 +51,7 @@ public class MultipleServersManager {
             try {
                 String carbonHome = testServerManager.startServer();
                 servers.put(carbonHome, testServerManager);
+                serverHomes.add(carbonHome);
             } catch (Exception ex) {
                 throw new AutomationFrameworkException(ex);
             }
@@ -82,6 +86,10 @@ public class MultipleServersManager {
 
     public String getDeploymentDirectory() {
         return deploymentDirectory;
+    }
+
+    public List<String> getServerHomes() {
+        return serverHomes;
     }
 
     public void stopAllServers() throws AutomationFrameworkException {
