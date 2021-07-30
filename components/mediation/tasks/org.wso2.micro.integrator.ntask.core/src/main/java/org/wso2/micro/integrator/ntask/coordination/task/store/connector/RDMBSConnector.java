@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.ACTIVATE_TASK;
@@ -279,6 +280,28 @@ public class RDMBSConnector {
     }
 
     /**
+     * Helper method to query data base and return coordinated task list.
+     *
+     * @param preparedStatement - Statement to be executed to retrieve the list of tasks.
+     * @throws SQLException - Exception.
+     */
+    private List<CoordinatedTask> queryTasks(PreparedStatement preparedStatement, String debug) throws SQLException {
+        List<CoordinatedTask> tasks = new ArrayList<>();
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                CoordinatedTask task = new CoordinatedTask(resultSet.getString(TASK_NAME),
+                        resultSet.getString(DESTINED_NODE_ID), CoordinatedTask.States.RUNNING);
+                tasks.add(task);
+            }
+        }
+        if (LOG.isDebugEnabled()) {
+            printDebugLogs(tasks.stream().map(CoordinatedTask::getTaskName).collect(Collectors.toList()),
+                    "Following list of tasks were retrieved " + debug);
+        }
+        return tasks;
+    }
+
+    /**
      * Helper method query data base and return task list.
      *
      * @param preparedStatement - Statement to be executed to retrieve the list of tasks.
@@ -304,11 +327,11 @@ public class RDMBSConnector {
      *
      * @return - List of available tasks.
      */
-    public List<String> getAllTaskNames() throws TaskCoordinationException {
+    public List<CoordinatedTask> getAllTaskNames() throws TaskCoordinationException {
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
                 RETRIEVE_ALL_TASKS)) {
-            return query(preparedStatement, "for all available tasks names.");
+            return queryTasks(preparedStatement, "for all available tasks names.");
         } catch (SQLException ex) {
             throw new TaskCoordinationException(ERROR_MSG, ex);
         }
