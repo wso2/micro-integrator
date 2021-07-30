@@ -61,7 +61,7 @@ public class TaskQueryHelper {
             "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = ? WHERE " + TASK_NAME + " =? AND " + DESTINED_NODE_ID
                     + " =?";
 
-    static final String RETRIEVE_ALL_TASKS = "SELECT  " + TASK_NAME + " FROM " + TABLE_NAME;
+    static final String RETRIEVE_ALL_TASKS = "SELECT  " + TASK_NAME  + "," + DESTINED_NODE_ID + " FROM " + TABLE_NAME;
 
     static final String RETRIEVE_UNASSIGNED_NOT_COMPLETED_TASKS =
             "SELECT " + TASK_NAME + " FROM " + TABLE_NAME + " WHERE  " + DESTINED_NODE_ID + " IS NULL AND " + TASK_STATE

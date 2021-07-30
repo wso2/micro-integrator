@@ -119,7 +119,7 @@ public class TaskStore {
      *
      * @return - List of available tasks.
      */
-    public List<String> getAllTaskNames() throws TaskCoordinationException {
+    public List<CoordinatedTask> getAllTaskNames() throws TaskCoordinationException {
 
         return rdmbsConnector.getAllTaskNames();
     }
