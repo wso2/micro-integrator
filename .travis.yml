@@ -20,3 +20,7 @@ matrix:
       install: true
 
       script: mvn -B clean install -P smoke-tests
+
+cache:
+  directories:
+  - $HOME/.m2
