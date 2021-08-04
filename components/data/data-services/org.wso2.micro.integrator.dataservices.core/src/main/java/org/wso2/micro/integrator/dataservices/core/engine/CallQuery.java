@@ -28,7 +28,9 @@ import org.wso2.micro.integrator.dataservices.core.DataServiceFault;import org.w
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +101,9 @@ public class CallQuery extends OutputElement {
 			if (context != null) {
 				return this.getDataService().getAuthorizationProvider().getUserRoles(context);
 			}
+		} else if ("CURRENT_TIMESTAMP".equals(propName)) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+			return format.format(new Date());
 		} else if ("NULL".equals(propName)) {
 			/* represent the special null value (not empty string) */
 			return null;
