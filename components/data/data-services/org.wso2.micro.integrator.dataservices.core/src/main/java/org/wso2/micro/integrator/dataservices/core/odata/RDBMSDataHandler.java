@@ -1029,6 +1029,7 @@ public class RDBMSDataHandler implements ODataDataHandler {
             while (resultSet.next()) {
                 String columnName = resultSet.getString("COLUMN_NAME");
                 int columnType = resultSet.getInt("DATA_TYPE");
+                String columnTypeName = resultSet.getString("TYPE_NAME");
                 int size = resultSet.getInt("COLUMN_SIZE");
                 boolean nullable = resultSet.getBoolean("NULLABLE");
                 String columnDefaultVal = resultSet.getString("COLUMN_DEF");
@@ -1045,6 +1046,16 @@ public class RDBMSDataHandler implements ODataDataHandler {
                 if (Types.DOUBLE == columnType || Types.FLOAT == columnType || Types.DECIMAL == columnType ||
                     Types.NUMERIC == columnType || Types.REAL == columnType) {
                     int scale = resultSet.getInt("DECIMAL_DIGITS");
+                    if (meta.getDatabaseProductName().toLowerCase().contains(ORACLE_SERVER) && size == 0 &&
+                            "NUMBER".equals(columnTypeName)) {
+                        /* for NUMBER type columns if the precision and scale are not defined, the precision and the scale
+                        should be 38 and 0 respectively. Therefore, setting precision as 38 and
+                        scale as 5 (to preserve the backward compatibility) to default values as below.*/
+                        size = 38;
+                        if (scale == -127) {
+                            scale = 5;
+                        }
+                    }
                     column.setPrecision(size);
                     if (scale == 0) {
                         //setting default scale as 5
