@@ -295,10 +295,6 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
                 	    serviceName = requestUri.substring(beginIndex);
                 	    axisService = cfgCtx.getAxisConfiguration().getServiceForActivation(serviceName);
                 	}
-
-                    if (axisService == null && !loadBalancer && serviceName != null) {
-                    	log.error("Unable to find axis service for service name : " + serviceName);
-                    }
                 }
 
                 if (queryString != null) {
