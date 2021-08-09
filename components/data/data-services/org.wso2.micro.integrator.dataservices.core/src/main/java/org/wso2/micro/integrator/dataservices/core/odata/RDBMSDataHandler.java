@@ -1055,6 +1055,8 @@ public class RDBMSDataHandler implements ODataDataHandler {
                         if (scale == -127) {
                             scale = 5;
                         }
+                        // Column max length also should be overwrite to new size as below
+                        column.setMaxLength(size);
                     }
                     column.setPrecision(size);
                     if (scale == 0) {
