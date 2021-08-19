@@ -715,7 +715,9 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                     deleteDirectory(resource);
                 }
             } else {
-                handleException("Parent folder: " + key + " does not exists.");
+                if (log.isDebugEnabled()) {
+                    log.debug("Unable to remove registry resource as " + key + " does not exists.");
+                }
             }
         } catch (URISyntaxException e) {
             handleException("Error occurred due to invalid URI while removing resource: " + key, e);
