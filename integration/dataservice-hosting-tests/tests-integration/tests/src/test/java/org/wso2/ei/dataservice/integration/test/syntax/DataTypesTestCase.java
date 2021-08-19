@@ -31,6 +31,8 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
+import java.time.LocalDate;
+
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
@@ -125,5 +127,45 @@ public class DataTypesTestCase extends DSSIntegrationTest {
         assertNotNull(responseProduct, "Response null " + responseProduct);
         assertTrue(responseProduct.toString().contains("<devdob"), "'devdob' should have exist in the response");
         log.info("Insert TimeStamp Operation Success");
+    }
+
+
+    /**
+     * Method to test insertion of default timestamp value.
+     *
+     * @throws Exception Error when adding default timestamp value
+     */
+    @Test(groups = {
+            "wso2.dss"}, description = "insert default value as timestamp value and check it's successful",
+            alwaysRun = true)
+    public void insertTimestampDefaultValueTest() throws Exception {
+
+        OMElement insertDefaultTimestampPayload = fac.createOMElement("addDeveloperWithDefaultTimestamp", omNs);
+
+        OMNamespace nullNameSpace = fac.createOMNamespace("http://www.w3.org/2001/XMLSchema-instance", "xsi");
+        insertDefaultTimestampPayload.declareNamespace(nullNameSpace);
+
+        OMElement devId = fac.createOMElement("devId", omNs);
+        devId.setText(3 + "");
+        insertDefaultTimestampPayload.addChild(devId);
+
+        OMElement devName = fac.createOMElement("devName", omNs);
+        devName.setText("name3");
+        insertDefaultTimestampPayload.addChild(devName);
+
+        new AxisServiceClient().sendRobust(insertDefaultTimestampPayload, getServiceUrlHttp(serviceName),
+                "addDeveloperWithDefaultTimestamp");
+
+        OMElement getDeveloperByIdPayload = fac.createOMElement("select_developers_by_id_operation", omNs);
+        getDeveloperByIdPayload.addChild(devId);
+
+        //retrieve and see whether inserted correctly
+        OMElement responseProduct = new AxisServiceClient().sendReceive(getDeveloperByIdPayload,
+                getServiceUrlHttp(serviceName), "select_developers_by_id_operation");
+        assertNotNull(responseProduct, "Response should not be null");
+        assertTrue(responseProduct.toString().contains("<devdob"), "'devdob' should have exist in the response");
+        assertTrue(responseProduct.toString().contains(LocalDate.now().toString()),
+                "Current date should have been added in the database");
+        log.info("Insert default value for timeStamp operation success");
     }
 }

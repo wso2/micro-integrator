@@ -31,8 +31,21 @@
       <param name="devName" ordinal="2" paramType="SCALAR" sqlType="STRING" type="IN"/>
       <param name="devdob" ordinal="3" paramType="SCALAR" sqlType="TIMESTAMP" type="IN"/>
    </query>
+   <query id="addDeveloperQueryWithDefaultTimestamp" useConfig="default">
+      <sql>insert into Developer (devId, devName, devdob) values(?, ?, ?)</sql>
+      <param name="devId" ordinal="1" paramType="SCALAR" sqlType="INTEGER" type="IN"/>
+      <param name="devName" ordinal="2" paramType="SCALAR" sqlType="STRING" type="IN"/>
+      <param name="devdob" ordinal="3" paramType="SCALAR" sqlType="TIMESTAMP" defaultValue="#{CURRENT_TIMESTAMP}"/>
+   </query>
    <operation name="addDeveloper">
       <call-query href="addDeveloperQuery">
+         <with-param name="devId" query-param="devId"/>
+         <with-param name="devName" query-param="devName"/>
+         <with-param name="devdob" query-param="devdob"/>
+      </call-query>
+   </operation>
+   <operation name="addDeveloperWithDefaultTimestamp">
+      <call-query href="addDeveloperQueryWithDefaultTimestamp">
          <with-param name="devId" query-param="devId"/>
          <with-param name="devName" query-param="devName"/>
          <with-param name="devdob" query-param="devdob"/>
