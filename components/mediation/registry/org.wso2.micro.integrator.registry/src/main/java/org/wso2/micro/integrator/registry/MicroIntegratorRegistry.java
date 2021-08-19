@@ -716,7 +716,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                 }
             } else {
                 if (log.isDebugEnabled()) {
-                    log.debug("Unable to remove registry resource as " + key + " does not exists.");
+                    log.debug("Unable to remove registry resource as " + key + " does not exist.");
                 }
             }
         } catch (URISyntaxException e) {
