@@ -78,22 +78,22 @@ The following is the summary of performance test results collected for the measu
 
 |  Scenario Name | Heap Size | Concurrent Users | Message Size (Bytes) | Back-end Service Delay (ms) | Error % | Throughput (Requests/sec) | Average Response Time (ms) | Standard Deviation of Response Time (ms) | 99th Percentile of Response Time (ms) | WSO2 Micro Integrator 4.0.0 GC Throughput (%) | Average WSO2 Micro Integrator 4.0.0 Memory Footprint After Full GC (M) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-|  Direct API | 2G | 100 | 500 | 0 | 0 | 256.59 | 389.59 | 955.94 | 3151 | N/A | N/A |
-|  Direct API | 2G | 100 | 1000 | 0 | 0 | 213.3 | 468.73 | 1038.73 | 3199 | N/A | N/A |
-|  Direct API | 2G | 100 | 10000 | 0 | 0 | 505.43 | 197.75 | 672.1 | 3055 | N/A | N/A |
-|  Direct API | 2G | 100 | 100000 | 0 | 0 | 1235.02 | 80.74 | 30.38 | 207 | N/A | N/A |
-|  Direct API | 2G | 200 | 500 | 0 | 0 | 142.54 | 1402.96 | 1699.56 | 6559 | N/A | N/A |
-|  Direct API | 2G | 200 | 1000 | 0 | 0 | 186.27 | 1073.42 | 1543.95 | 6463 | N/A | N/A |
-|  Direct API | 2G | 200 | 10000 | 0 | 0 | 287.49 | 695.54 | 1202.07 | 3279 | N/A | N/A |
-|  Direct API | 2G | 200 | 100000 | 0 | 0 | 1181.79 | 168.9 | 49.14 | 327 | N/A | N/A |
-|  Direct API | 2G | 500 | 500 | 0 | 0 | 114.27 | 4307.38 | 4055.56 | 19583 | N/A | N/A |
-|  Direct API | 2G | 500 | 1000 | 0 | 0 | 188.29 | 2629.03 | 2627.3 | 12671 | N/A | N/A |
-|  Direct API | 2G | 500 | 10000 | 0 | 0 | 331.14 | 1509.39 | 1802.51 | 6751 | N/A | N/A |
-|  Direct API | 2G | 500 | 100000 | 0 | 0 | 1129.14 | 442.43 | 98.46 | 699 | N/A | N/A |
-|  Direct API | 2G | 1000 | 500 | 0 | 0 | 114.5 | 6408.09 | 5746.17 | 26751 | N/A | N/A |
-|  Direct API | 2G | 1000 | 1000 | 0 | 0 | 157.26 | 6205.34 | 5888.49 | 29439 | N/A | N/A |
-|  Direct API | 2G | 1000 | 10000 | 0 | 0 | 189.21 | 5242.51 | 3807.11 | 16639 | N/A | N/A |
-|  Direct API | 2G | 1000 | 100000 | 0 | 0 | 1072.47 | 929.87 | 172.28 | 1351 | N/A | N/A |
+|  Direct API | 2G | 100 | 500 | 0 | 0 | 3975.54 | 25.06 | 36.77 | 112 | 92.4 | 196.363 |
+|  Direct API | 2G | 100 | 1000 | 0 | 0 | 4016.06 | 24.81 | 37.63 | 110 | N/A | N/A |
+|  Direct API | 2G | 100 | 10000 | 0 | 0 | 3472.02 | 28.69 | 30.48 | 116 | N/A | N/A |
+|  Direct API | 2G | 100 | 100000 | 0 | 0 | 1517.39 | 65.67 | 43.74 | 175 | N/A | N/A |
+|  Direct API | 2G | 200 | 500 | 0 | 0 | 4107.29 | 48.57 | 57.04 | 160 | N/A | N/A |
+|  Direct API | 2G | 200 | 1000 | 0 | 0 | 4106.4 | 48.59 | 50.25 | 161 | N/A | N/A |
+|  Direct API | 2G | 200 | 10000 | 0 | 0 | 3536.09 | 56.3 | 42.07 | 172 | N/A | N/A |
+|  Direct API | 2G | 200 | 100000 | 0 | 0 | 1506.66 | 132.48 | 69.11 | 309 | N/A | N/A |
+|  Direct API | 2G | 500 | 500 | 0 | 0 | 4069.84 | 122.64 | 94.23 | 311 | N/A | N/A |
+|  Direct API | 2G | 500 | 1000 | 0 | 0 | 4055.12 | 123.12 | 97.01 | 321 | N/A | N/A |
+|  Direct API | 2G | 500 | 10000 | 0 | 0 | 3513.18 | 142.09 | 80.47 | 337 | N/A | N/A |
+|  Direct API | 2G | 500 | 100000 | 0 | 0 | 1206.41 | 414 | 149.82 | 759 | N/A | N/A |
+|  Direct API | 2G | 1000 | 500 | 0 | 0 | 4021.59 | 248.43 | 169.77 | 575 | 89.65 | 300.26 |
+|  Direct API | 2G | 1000 | 1000 | 0 | 0 | 4086.02 | 244.48 | 141.99 | 575 | N/A | N/A |
+|  Direct API | 2G | 1000 | 10000 | 0 | 0 | 3470.04 | 287.85 | 158.52 | 607 | N/A | N/A |
+|  Direct API | 2G | 1000 | 100000 | 0 | 0 | 1393.55 | 716.26 | 234.68 | 1343 | N/A | N/A |
 |  Direct Proxy | 2G | 100 | 500 | 0 | 0 | 4203.41 | 23.7 | 38.04 | 109 | 91.83 | 246.502 |
 |  Direct Proxy | 2G | 100 | 1000 | 0 | 0 | 4228.91 | 23.55 | 37.33 | 108 | N/A | N/A |
 |  Direct Proxy | 2G | 100 | 10000 | 0 | 0 | 3597.87 | 27.68 | 28.7 | 112 | N/A | N/A |
@@ -102,46 +102,46 @@ The following is the summary of performance test results collected for the measu
 |  Direct Proxy | 2G | 200 | 1000 | 0 | 0 | 4266.64 | 46.75 | 50.79 | 156 | N/A | N/A |
 |  Direct Proxy | 2G | 200 | 10000 | 0 | 0 | 3607.31 | 55.3 | 42.58 | 166 | N/A | N/A |
 |  Direct Proxy | 2G | 200 | 100000 | 0 | 0 | 1469.57 | 135.77 | 44.24 | 244 | N/A | N/A |
-|  Direct Proxy | 2G | 500 | 500 | 0 | 0 | 4216.88 | 118.4 | 93.49 | 301 | N/A | N/A |
-|  Direct Proxy | 2G | 500 | 1000 | 0 | 0 | 4213.42 | 118.5 | 93.95 | 309 | N/A | N/A |
-|  Direct Proxy | 2G | 500 | 10000 | 0 | 0 | 802.46 | 622.68 | 1140.18 | 3551 | N/A | N/A |
-|  Direct Proxy | 2G | 500 | 100000 | 0 | 0 | 1144.43 | 436.47 | 89.56 | 679 | N/A | N/A |
-|  Direct Proxy | 2G | 1000 | 500 | 0 | 0 | 118.5 | 8236.81 | 6878.66 | 31743 | N/A | N/A |
-|  Direct Proxy | 2G | 1000 | 1000 | 0 | 0 | 117.86 | 8089.82 | 7296.51 | 34559 | N/A | N/A |
-|  Direct Proxy | 2G | 1000 | 10000 | 0 | 0 | 223.4 | 4431.86 | 3457.65 | 16191 | N/A | N/A |
-|  Direct Proxy | 2G | 1000 | 100000 | 0 | 0 | 1092.06 | 913.55 | 171.2 | 1343 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 100 | 500 | 0 | 0 | 596.84 | 167.46 | 603.29 | 2975 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 100 | 1000 | 0 | 0 | 692.74 | 144.26 | 538.64 | 2911 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 100 | 10000 | 0 | 0 | 1188.13 | 84.03 | 130.93 | 283 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 100 | 100000 | 0 | 0 | 186.48 | 535.94 | 174.13 | 959 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 200 | 500 | 0 | 0 | 426.66 | 468.66 | 1009.81 | 3215 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 200 | 1000 | 0 | 0 | 499.63 | 400.16 | 913.84 | 3119 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 200 | 10000 | 0 | 0 | 1164.48 | 171.63 | 195.57 | 443 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 200 | 100000 | 0 | 0 | 150.73 | 1323.57 | 512.29 | 2975 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 500 | 500 | 0 | 0 | 408.28 | 1224.3 | 1569.37 | 3743 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 500 | 1000 | 0 | 0 | 273.21 | 1829.4 | 1985.13 | 7039 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 500 | 10000 | 0 | 0 | 1016.81 | 491.4 | 461.06 | 3231 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 500 | 100000 | 0 | 0 | 89.99 | 5511.07 | 2022.88 | 10367 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 1000 | 500 | 0 | 0 | 214.25 | 4618.26 | 3495.35 | 16255 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 1000 | 1000 | 0 | 0 | 150.81 | 6505.12 | 5103.71 | 25855 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 1000 | 10000 | 0 | 0 | 728.97 | 1359.8 | 1032.94 | 4047 | N/A | N/A |
-|  CBR SOAP Header Proxy | 2G | 1000 | 100000 | 0 | 0 | 29.86 | 31815.94 | 6966.25 | 46335 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 100 | 500 | 0 | 0 | 206.64 | 483.86 | 1041.71 | 3103 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 100 | 1000 | 0 | 0 | 230.38 | 433.99 | 992.3 | 3119 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 100 | 10000 | 0 | 0 | 473.27 | 211.23 | 678.29 | 2911 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 100 | 100000 | 0 | 0 | 1209.48 | 82.45 | 32.05 | 220 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 200 | 500 | 0 | 0 | 157.24 | 1271.52 | 1731.19 | 6431 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 200 | 1000 | 0 | 0 | 147.35 | 1351.22 | 1680.3 | 6399 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 200 | 10000 | 0 | 0 | 303.95 | 657.83 | 1154.5 | 3167 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 200 | 100000 | 0 | 0 | 1175.61 | 169.79 | 49.89 | 335 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 500 | 500 | 0 | 0 | 140.88 | 3497.28 | 3546.14 | 15679 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 500 | 1000 | 0 | 0 | 121 | 4071.73 | 3913.05 | 18687 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 500 | 10000 | 0 | 0 | 271.85 | 1827.5 | 2048.36 | 9279 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 500 | 100000 | 0 | 0 | 1121.12 | 445.5 | 96.24 | 695 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 1000 | 500 | 0 | 0 | 127.01 | 7579.35 | 6623.48 | 31359 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 1000 | 1000 | 0 | 0 | 126.69 | 7751.2 | 7199.54 | 36863 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 1000 | 10000 | 0 | 0 | 148.19 | 6627.1 | 4842.95 | 22143 | N/A | N/A |
-|  CBR Transport Header Proxy | 2G | 1000 | 100000 | 0 | 0 | 1078.59 | 923.65 | 172.01 | 1351 | N/A | N/A |
+|  Direct Proxy | 2G | 500 | 500 | 0 | 0 | 4033.64 | 123.78 | 117.55 | 323 | 89.56 | 340.016 |
+|  Direct Proxy | 2G | 500 | 1000 | 0 | 0 | 4159.01 | 120.05 | 90.32 | 313 | N/A | N/A |
+|  Direct Proxy | 2G | 500 | 10000 | 0 | 0 | 3536.64 | 141.01 | 77.96 | 323 | N/A | N/A |
+|  Direct Proxy | 2G | 500 | 100000 | 0 | 0 | 1371.6 | 364.02 | 78.14 | 563 | N/A | N/A |
+|  Direct Proxy | 2G | 1000 | 500 | 0 | 0 | 3973.43 | 251.57 | 175.3 | 579 | 89.73 | 308.357 |
+|  Direct Proxy | 2G | 1000 | 1000 | 0 | 0 | 4067.36 | 245.64 | 165.93 | 567 | N/A | N/A |
+|  Direct Proxy | 2G | 1000 | 10000 | 0 | 0 | 3434.74 | 290.96 | 145.72 | 575 | N/A | N/A |
+|  Direct Proxy | 2G | 1000 | 100000 | 0 | 0 | 1326.44 | 752.49 | 130.18 | 1119 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 100 | 500 | 0 | 0 | 3452.08 | 28.87 | 31.48 | 113 | 93.56 | 167.992 |
+|  CBR SOAP Header Proxy | 2G | 100 | 1000 | 0 | 0 | 3299.98 | 30.21 | 32.62 | 112 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 100 | 10000 | 0 | 0 | 1521.07 | 65.6 | 42.06 | 201 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 100 | 100000 | 0 | 0 | 209.68 | 476.68 | 157.5 | 871 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 200 | 500 | 0 | 0 | 3582.67 | 55.7 | 39.05 | 175 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 200 | 1000 | 0 | 0 | 3330.62 | 59.92 | 49.51 | 185 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 200 | 10000 | 0 | 0 | 1491.74 | 133.89 | 72.93 | 347 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 200 | 100000 | 0 | 0 | 162.39 | 1228.71 | 482.52 | 2879 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 500 | 500 | 0 | 0 | 3492.68 | 143.01 | 92.84 | 369 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 500 | 1000 | 0 | 0 | 3306.38 | 151.01 | 82.14 | 385 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 500 | 10000 | 0 | 0 | 1416.36 | 353.05 | 148.23 | 743 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 500 | 100000 | 0 | 0 | 99.33 | 5008.19 | 1705.56 | 9535 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 1000 | 500 | 0 | 0 | 2977.6 | 335.54 | 158.48 | 743 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 1000 | 1000 | 0 | 0 | 3177.62 | 314.39 | 168.27 | 751 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 1000 | 10000 | 0 | 0 | 1221.1 | 817.09 | 308.15 | 2063 | N/A | N/A |
+|  CBR SOAP Header Proxy | 2G | 1000 | 100000 | 0 | 0 | 34.25 | 28454.08 | 7262.68 | 41215 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 100 | 500 | 0 | 0 | 4036.35 | 24.7 | 37.29 | 107 | 91.41 | 253.837 |
+|  CBR Transport Header Proxy | 2G | 100 | 1000 | 0 | 0 | 4021.85 | 24.78 | 37.41 | 108 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 100 | 10000 | 0 | 0 | 3432 | 29.03 | 29.77 | 114 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 100 | 100000 | 0 | 0 | 1505.6 | 66.18 | 26 | 145 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 200 | 500 | 0 | 0 | 4201.46 | 47.5 | 55.28 | 158 | 90.88 | 253.389 |
+|  CBR Transport Header Proxy | 2G | 200 | 1000 | 0 | 0 | 4240.82 | 47.03 | 52.57 | 152 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 200 | 10000 | 0 | 0 | 3715.9 | 53.69 | 38.28 | 162 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 200 | 100000 | 0 | 0 | 1587.97 | 125.68 | 64.85 | 283 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 500 | 500 | 0 | 0 | 4201.9 | 118.8 | 78.77 | 303 | 91.13 | 195.883 |
+|  CBR Transport Header Proxy | 2G | 500 | 1000 | 0 | 0 | 4199.77 | 118.75 | 98.94 | 307 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 500 | 10000 | 0 | 0 | 3619.29 | 137.95 | 93.74 | 331 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 500 | 100000 | 0 | 0 | 1461.23 | 341.35 | 138.19 | 679 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 1000 | 500 | 0 | 0 | 4033.94 | 247.68 | 153.86 | 567 | 89.84 | 312.003 |
+|  CBR Transport Header Proxy | 2G | 1000 | 1000 | 0 | 0 | 4100.07 | 243.53 | 180.13 | 551 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 1000 | 10000 | 0 | 0 | 3500.25 | 285.44 | 139.22 | 571 | N/A | N/A |
+|  CBR Transport Header Proxy | 2G | 1000 | 100000 | 0 | 0 | 1363.58 | 731.82 | 139.32 | 1159 | 96.46 | 104.162 |
 |  CBR Proxy | 2G | 100 | 500 | 0 | 0 | 3474.97 | 28.66 | 31.84 | 108 | 93.33 | 195.391 |
 |  CBR Proxy | 2G | 100 | 1000 | 0 | 0 | 3129.2 | 31.84 | 37.75 | 111 | N/A | N/A |
 |  CBR Proxy | 2G | 100 | 10000 | 0 | 0 | 1128.79 | 88.41 | 56.42 | 271 | N/A | N/A |
