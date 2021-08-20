@@ -345,11 +345,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         for (API api : synCtx.getEnvironment().getSynapseConfiguration().getAPIs()) {
             if (RESTUtils.matchApiPath(contextPath, api.getContext())) {
                 apiName = api.getName();
-                if (api.getVersionStrategy().getVersion() != null && !"".equals(api.getVersionStrategy().
-                        getVersion())) {
-                    apiName = apiName + ":v" + api.getVersionStrategy().getVersion();
-                }
-                 synCtx.setProperty(RESTConstants.PROCESSED_API, api);
+                synCtx.setProperty(RESTConstants.PROCESSED_API, api);
             }
         }
         return apiName;
