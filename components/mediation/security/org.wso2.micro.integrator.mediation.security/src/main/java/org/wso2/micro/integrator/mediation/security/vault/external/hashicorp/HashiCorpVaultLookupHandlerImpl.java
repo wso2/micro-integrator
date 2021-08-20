@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.mediation.security.vault.SecureVaultCacheContext;
 import org.wso2.micro.integrator.mediation.security.vault.external.ExternalVaultConfigLoader;
 import org.wso2.micro.integrator.mediation.security.vault.external.ExternalVaultException;
@@ -218,7 +218,7 @@ public class HashiCorpVaultLookupHandlerImpl implements ExternalVaultLookupHandl
             String trustStoreFilePath = parameters.get(HashiCorpVaultConstant.TRUST_STORE_PARAMETER);
             if (trustStoreFilePath.startsWith(HashiCorpVaultConstant.CARBON_HOME_VARIABLE)) {
                 trustStoreFilePath = trustStoreFilePath.replace(HashiCorpVaultConstant.CARBON_HOME_VARIABLE,
-                        CarbonUtils.getCarbonHome());
+                        MicroIntegratorBaseUtils.getCarbonHome());
                 parameters.put(HashiCorpVaultConstant.TRUST_STORE_PARAMETER, trustStoreFilePath);
             }
         }
@@ -227,7 +227,7 @@ public class HashiCorpVaultLookupHandlerImpl implements ExternalVaultLookupHandl
             String keyStoreFilePath = parameters.get(HashiCorpVaultConstant.KEY_STORE_PARAMETER);
             if (keyStoreFilePath.startsWith(HashiCorpVaultConstant.CARBON_HOME_VARIABLE)) {
                 keyStoreFilePath = keyStoreFilePath.replace(HashiCorpVaultConstant.CARBON_HOME_VARIABLE,
-                        CarbonUtils.getCarbonHome());
+                        MicroIntegratorBaseUtils.getCarbonHome());
                 parameters.put(HashiCorpVaultConstant.KEY_STORE_PARAMETER, keyStoreFilePath);
             }
         }
