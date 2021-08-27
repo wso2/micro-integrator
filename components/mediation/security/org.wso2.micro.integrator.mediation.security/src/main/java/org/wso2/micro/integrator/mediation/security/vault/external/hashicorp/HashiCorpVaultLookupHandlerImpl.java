@@ -420,7 +420,8 @@ public class HashiCorpVaultLookupHandlerImpl implements ExternalVaultLookupHandl
             log.warn("Cannot find a vault secret from the HashiCorp vault for, "
                     + (namespace != null ? "Namespace: " + namespace + ", " : "")
                     + "Path: " + pathParameter + ", Field: " + fieldParameter);
-            return null;
+            // return an empty string value if no secret found for the given parameters
+            return "";
         }
 
         if (decryptedValue.isEmpty()) {
