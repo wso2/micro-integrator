@@ -37,6 +37,7 @@ import org.wso2.micro.integrator.security.user.core.model.UserMgtContext;
 import org.wso2.micro.integrator.security.user.core.service.RealmService;
 import org.wso2.micro.integrator.security.util.Secret;
 
+import javax.sql.DataSource;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -51,7 +52,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.sql.DataSource;
 
 /**
  * Utility class to handle user kernel utilities.
@@ -1081,7 +1081,8 @@ public final class UserCoreUtil {
     }
 
     public static void logUnsupportedOperation() {
-        log.debug("This Functionality is not available in WSO2 Micro Integrator",
-                 new Throwable("Unsupported operation"));
+        // please un-comment to find usages
+        /*log.debug("This Functionality is not available in WSO2 Micro Integrator",
+                 new Throwable("Unsupported operation"));*/
     }
 }
