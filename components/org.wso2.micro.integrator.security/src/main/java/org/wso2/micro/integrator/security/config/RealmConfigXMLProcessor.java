@@ -243,10 +243,9 @@ public class RealmConfigXMLProcessor {
 
         OMElement adminUser = mainConfig.getFirstChildWithName(new QName("AdminUser"));
         adminUserName = adminUser.getFirstChildWithName(new QName("UserName")).getText().trim();
-        adminPassword = adminUser.getFirstChildWithName(new QName("Password")).getText().trim();
-        if (this.secretResolver != null && this.secretResolver.isInitialized() && this.secretResolver.isTokenProtected("UserManager.AdminUser.Password")) {
-            adminPassword = this.secretResolver.resolve("UserManager.AdminUser.Password");
-        }
+        OMElement adminPasswordElement =
+                adminUser.getFirstChildWithName(new QName(UserCoreConstants.RealmConfig.LOCAL_NAME_PASSWORD));
+        adminPassword = MiscellaneousUtil.resolve(adminPasswordElement, secretResolver);
 
         adminRoleName = mainConfig.getFirstChildWithName(new QName("AdminRole")).getText().trim();
         everyOneRoleName = mainConfig.getFirstChildWithName(new QName("EveryOneRoleName")).getText().trim();
