@@ -33,6 +33,8 @@ public class HashiCorpVaultConstant {
     static final String TOKEN_PARAMETER = "rootToken";
     static final String ROLE_ID_PARAMETER = "roleId";
     static final String SECRET_ID_PARAMETER = "secretId";
+    static final String LDAP_USERNAME_PARAMETER = "ldapUsername";
+    static final String LDAP_PASSWORD_PARAMETER = "ldapPassword";
     static final String ENGINE_TYPE_PARAMETER = "engineVersion";
     static final String CACHEABLE_DURATION_PARAMETER = "cacheableDuration";
     static final String NAMESPACE_PARAMETER = "namespace";
