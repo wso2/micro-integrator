@@ -145,9 +145,10 @@ public class CappDeployer extends AbstractDeployer {
         }
 
         String targetCAppPath = cAppDirectory + File.separator + cAppName;
+        CarbonApplication currentApp = null;
 
         try {
-            CarbonApplication currentApp = buildCarbonApplication(targetCAppPath, cAppName, axisConfig);
+            currentApp = buildCarbonApplication(targetCAppPath, cAppName, axisConfig);
 
             if (currentApp != null) {
                 // deploy sub artifacts of this cApp
@@ -185,8 +186,10 @@ public class CappDeployer extends AbstractDeployer {
                 ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedCarbonApp);
             }
         } catch (DeploymentException e) {
+            log.error("Error occurred while deploying the Carbon application: " + cAppName
+                      + ". Reverting successfully deployed artifacts in the CApp.", e);
+            undeployCarbonApp(currentApp, axisConfig);
             faultyCapps.add(cAppName);
-            log.error("Error occurred while deploying the Carbon application: " + targetCAppPath, e);
         }
     }
 
