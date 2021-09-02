@@ -51,7 +51,12 @@ public class Constants {
     public static final String ROOT_CONTEXT = "/";
 
     public static final String COUNT = "count";
+    public static final String TOTAL_COUNT = "totalCount";
     public static final String LIST = "list";
+    public static final String ACTIVE_COUNT = "activeCount";
+    public static final String ACTIVE_LIST = "activeList";
+    public static final String FAULTY_COUNT = "faultyCount";
+    public static final String FAULTY_LIST = "faultyList";
     public static final String NAME = "name";
     public static final String STATUS = "status";
     public static final String URL = "url";
@@ -80,6 +85,8 @@ public class Constants {
     public static final String BAD_REQUEST = "400";
     public static final String MESSAGE_TYPE = "messageType";
     public static final String CONTENT_TYPE = "ContentType";
+
+    public static final String MEDIA_TYPE_APPLICATION_OCTET_STREAM = "application/octet-stream";
 
     public static final String HTTP_METHOD_PROPERTY = "HTTP_METHOD";
     public static final String HTTP_POST = "POST";
