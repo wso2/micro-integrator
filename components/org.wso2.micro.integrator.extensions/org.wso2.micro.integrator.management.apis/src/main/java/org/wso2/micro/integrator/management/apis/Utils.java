@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -67,9 +68,8 @@ public class Utils {
      * @return the resolved value from the url. Returns null if not present.
      */
     public static String getPathParameter(MessageContext messageContext, String key){
-        String pathParameter = messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key).toString();
-        if (Objects.nonNull(pathParameter)) {
-            return pathParameter;
+        if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key))) {
+            return messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key).toString();
         }
         return null;
     }
@@ -150,6 +150,23 @@ public class Utils {
         JSONArray list = new JSONArray();
         jsonBody.put(Constants.COUNT, count);
         jsonBody.put(Constants.LIST, list);
+        return jsonBody;
+    }
+
+    /**
+     * Create a json list to list down carbon applications
+     * @param activeCount active cApp count
+     * @param faultyCount faulty cApp count
+     * @return json object
+     */
+    public static JSONObject createCAppJSONList(int activeCount, int faultyCount) {
+
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put(Constants.TOTAL_COUNT, activeCount + faultyCount);
+        jsonBody.put(Constants.ACTIVE_COUNT, activeCount);
+        jsonBody.put(Constants.ACTIVE_LIST, new JSONArray());
+        jsonBody.put(Constants.FAULTY_COUNT, faultyCount);
+        jsonBody.put(Constants.FAULTY_LIST, new JSONArray());
         return jsonBody;
     }
 
@@ -278,6 +295,15 @@ public class Utils {
             }
         }
         return carbonLogsPath;
+    }
+
+    /**
+     * This method will return the path to cApps directory.
+     *
+     * @return path as string.
+     */
+    public static String getCAppPath() {
+        return Paths.get(getCarbonHome(), "repository", "deployment", "server", "carbonapps").toString();
     }
 
     /**
