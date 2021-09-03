@@ -123,6 +123,7 @@ public class TaskStoreCleaner {
         // We first add to list and then to the store  while deploying. So all the tasks retrieved from the store
         // which has valid node ids should be in the list, if not they are invalid entries.
         tasksList.removeIf(task -> allNodesAvailableInCluster.contains(task.getDestinedNodeId()));
+        tasksList.removeIf(task -> deployedCoordinatedTasks.contains(task.getTaskName()));
         taskStore.deleteTasks(tasksList.stream().map(CoordinatedTask::getTaskName).collect(Collectors.toList()));
         if (LOG.isDebugEnabled()) {
             tasksList.forEach(removedTask -> LOG.debug("Removed invalid task :" + removedTask));

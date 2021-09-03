@@ -24,10 +24,15 @@ import org.wso2.micro.integrator.ntask.core.TaskInfo;
 import org.wso2.micro.integrator.ntask.core.TaskManagerId;
 import org.wso2.micro.integrator.ntask.core.TaskRepository;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,10 +41,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 /**
  * Files based task repository implementation.
@@ -153,30 +154,30 @@ public class FileBasedTaskRepository implements TaskRepository {
     }
 
     @Override
-    public List<org.wso2.micro.integrator.ntask.core.TaskInfo> getAllTasks() throws TaskException {
-        Set<org.wso2.micro.integrator.ntask.core.TaskInfo> result = new HashSet<org.wso2.micro.integrator.ntask.core.TaskInfo>();
+    public List<org.wso2.micro.integrator.ntask.core.TaskInfo> getAllTasks() {
+
+        Set<org.wso2.micro.integrator.ntask.core.TaskInfo> result = new HashSet<>();
         String tasksPath = this.getMyTasksPath();
-        try {
-            File resource = new File(getSystemDependentPath(resourcePath + tasksPath));
-            if (resource.exists()) {
-                File[] taskPaths = resource.listFiles();
-                org.wso2.micro.integrator.ntask.core.TaskInfo taskInfo;
-                if (taskPaths != null)
-                    for (File taskPath : taskPaths) {
-                        if (!taskPath.getName().startsWith("_meta_")) {
+        File resource = new File(getSystemDependentPath(resourcePath + tasksPath));
+        if (resource.exists()) {
+            File[] taskPaths = resource.listFiles();
+            org.wso2.micro.integrator.ntask.core.TaskInfo taskInfo;
+            if (taskPaths != null)
+                for (File taskPath : taskPaths) {
+                    if (!taskPath.getName().startsWith("_meta_")) {
+                        try {
                             taskInfo = this.getTaskInfoRegistryPath(taskPath.getAbsolutePath());
                             result.add(taskInfo);
+                        } catch (JAXBException | IOException ex) {
+                            log.error("Invalid/ corrupted entry found in : " + taskPath.getAbsolutePath(), ex);
                         }
                     }
-            }
-            return new ArrayList<org.wso2.micro.integrator.ntask.core.TaskInfo>(result);
-        } catch (Exception e) {
-            throw new TaskException("Error in getting all tasks from repository: " + e.getMessage(),
-                                    TaskException.Code.CONFIG_ERROR, e);
+                }
         }
+        return new ArrayList<>(result);
     }
 
-    private org.wso2.micro.integrator.ntask.core.TaskInfo getTaskInfoRegistryPath(String path) throws Exception {
+    private org.wso2.micro.integrator.ntask.core.TaskInfo getTaskInfoRegistryPath(String path) throws IOException, JAXBException {
         InputStream in = null;
         try {
             in = new FileInputStream(path);
