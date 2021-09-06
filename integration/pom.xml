@@ -891,6 +891,7 @@
 <!--                Commenting out since micli is no longer usable with MI. Need to use apictl instead-->
 <!--                <module>cli-tests</module>-->
                 <module>dataservice-hosting-tests</module>
+                <module>management-api-tests</module>
             </modules>
         </profile>
         <profile>
