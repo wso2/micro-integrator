@@ -52,32 +52,32 @@ public class ExposeSOAPasSOAPTest extends ScenarioTestBase {
         super.init();
     }
 
-    @Test(description = "4.1.1.1.1")
+    @Test(description = "4.1.1.1.1", enabled = false)
     public void testPassThroughProxyTemplate() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_1_Proxy_SimplePassThroughTemplate"));
     }
 
-    @Test(description = "4.1.1.1.2")
+    @Test(description = "4.1.1.1.2", enabled = false)
     public void testCustomProxyTemplate() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_2_Proxy_SimpleCustomTemplate"));
     }
 
-    @Test(description = "4.1.1.1.3")
+    @Test(description = "4.1.1.1.3", enabled = false)
     public void testLogAndForwardTemplate() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_3_Proxy_SimpleLogForwardTemplate"));
     }
 
-    @Test(description = "4.1.1.1.4")
+    @Test(description = "4.1.1.1.4", enabled = false)
     public void testWSDLTemplate() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_4_Proxy_SimpleWSDLProxyTemplate"));
     }
 
-    @Test(description = "4.1.1.1.5")
+    @Test(description = "4.1.1.1.5", enabled = false)
     public void testPassThroughWithNamedEP() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_5_Proxy_PassThroughWithNamedEP"));
     }
 
-    @Test(description = "4.1.1.1.6")
+    @Test(description = "4.1.1.1.6", enabled = false)
     public void testPassThroughEPinTarget() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_6_Proxy_PassThroughProxyEPinTarget"));
     }
@@ -96,7 +96,7 @@ public class ExposeSOAPasSOAPTest extends ScenarioTestBase {
                 wsdlDoc, "WSDL from the proxy differ from expected");
     }
 
-    @Test(description = "4.1.1.1.8")
+    @Test(description = "4.1.1.1.8", enabled = false)
     public void testPublishingWSDLFromURL() throws IOException, XMLStreamException {
         String wsdlDoc = "SimpleStockQuoteService";
         String url = getProxyServiceURLHttp("4_1_1_1_8_Proxy_PublishWSDLFromURL");
