@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.Artifact;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 
@@ -71,6 +72,7 @@ public class CarbonAppResource extends APIResource {
     private static final Log log = LogFactory.getLog(CarbonAppResource.class);
     private static final String MULTIPART_FORMDATA_DATA_TYPE = "multipart/form-data";
     private static final String CAPP_NAME = "name";
+    private static final String CAPP_FILE_NAME = "cAppFileName";
     // HTTP method types supported by the resource
     private Set<String> methods;
 
@@ -100,7 +102,7 @@ public class CarbonAppResource extends APIResource {
         if (log.isDebugEnabled()) {
             log.debug("Handling " + httpMethod + " request.");
         }
-
+        String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
         switch (httpMethod) {
             case Constants.HTTP_GET: {
                 String param = Utils.getQueryParameter(messageContext, "carbonAppName");
@@ -119,11 +121,11 @@ public class CarbonAppResource extends APIResource {
                 break;
             }
             case Constants.HTTP_POST: {
-                handlePost(axis2MessageContext);
+                handlePost(performedBy, axis2MessageContext);
                 break;
             }
             case Constants.HTTP_DELETE: {
-                handleDelete(messageContext, axis2MessageContext);
+                handleDelete(performedBy, messageContext, axis2MessageContext);
                 break;
             }
             default: {
@@ -204,7 +206,7 @@ public class CarbonAppResource extends APIResource {
         }
     }
 
-    private void handlePost(org.apache.axis2.context.MessageContext axisMsgCtx) {
+    private void handlePost(String performedBy, org.apache.axis2.context.MessageContext axisMsgCtx) {
         JSONObject jsonResponse = new JSONObject();
         String contentType = axisMsgCtx.getProperty(Constants.CONTENT_TYPE).toString();
         if (!contentType.contains(MULTIPART_FORMDATA_DATA_TYPE)) {
@@ -232,6 +234,10 @@ public class CarbonAppResource extends APIResource {
                                 jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully added Carbon Application "
                                         + fileName);
                                 Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
+                                JSONObject info = new JSONObject();
+                                info.put(CAPP_FILE_NAME, fileName);
+                                AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_CARBON_APPLICATION,
+                                                            Constants.AUDIT_LOG_ACTION_CREATED, info);
                             } catch (IOException e) {
                                 String errorMessage = "Error when deploying the Carbon Application ";
                                 log.error(errorMessage + fileName, e);
@@ -264,7 +270,7 @@ public class CarbonAppResource extends APIResource {
         }
     }
 
-    private void handleDelete(MessageContext messageContext, org.apache.axis2.context.MessageContext axisMsgCtx) {
+    private void handleDelete(String performedBy, MessageContext messageContext, org.apache.axis2.context.MessageContext axisMsgCtx) {
         String cAppName = Utils.getPathParameter(messageContext, CAPP_NAME);
         JSONObject jsonResponse = new JSONObject();
         if (!Objects.isNull(cAppName)) {
@@ -288,6 +294,10 @@ public class CarbonAppResource extends APIResource {
                     log.info(cApp.getName() + " file deleted from " + cAppsDirectoryPath + " directory");
                     jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully removed Carbon Application " +
                             "named " + cAppName);
+                    JSONObject info = new JSONObject();
+                    info.put(CAPP_FILE_NAME, cAppName);
+                    AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_CARBON_APPLICATION,
+                                                Constants.AUDIT_LOG_ACTION_DELETED, info);
                 } else {
                     jsonResponse = Utils.createJsonError("Cannot remove the Carbon Application." +
                             cAppName + " does not exist", axisMsgCtx, NOT_FOUND);

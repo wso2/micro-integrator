@@ -32,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.service.mgt.ServiceAdmin;
@@ -116,8 +117,8 @@ public class Utils {
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
     }
 
-    static JSONObject handleTracing(AspectConfiguration config, String artifactName,
-                                    org.apache.axis2.context.MessageContext axisMsgCtx) {
+    static JSONObject handleTracing(String performedBy, String type, JSONObject info, AspectConfiguration config,
+                                    String artifactName, org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject payload = new JSONObject(JsonUtil.jsonPayloadToString(axisMsgCtx));
         JSONObject response = new JSONObject();
@@ -128,10 +129,12 @@ public class Utils {
                 config.enableTracing();
                 msg = "Enabled tracing for ('" + artifactName + "')";
                 response.put(Constants.MESSAGE, msg);
+                AuditLogger.logAuditMessage(performedBy, type, Constants.AUDIT_LOG_ACTION_ENABLE, info);
             } else if (Constants.DISABLE.equalsIgnoreCase(traceState)) {
                 config.disableTracing();
                 msg = "Disabled tracing for ('" + artifactName + "')";
                 response.put(Constants.MESSAGE, msg);
+                AuditLogger.logAuditMessage(performedBy, type, Constants.AUDIT_LOG_ACTION_DISABLED, info);
             } else {
                 msg = "Invalid value for state " + Constants.TRACE;
                 response = createJsonError(msg, axisMsgCtx, Constants.BAD_REQUEST);

@@ -58,6 +58,8 @@ public class TemplateResource extends APIResource {
     private static final String SEQUENCE_TEMPLATE_TYPE = "sequence";
     /* Name of the template parameter list */
     private static final String PARAMETERS = "Parameters";
+    private static final String SEQUENCE_NAME = "sequenceName";
+    private static final String SEQUENCE_TYPE = "sequenceType";
 
     public TemplateResource(String urlTemplate) {
         super(urlTemplate);
@@ -118,7 +120,12 @@ public class TemplateResource extends APIResource {
         SynapseConfiguration configuration = msgCtx.getConfiguration();
         TemplateMediator sequenceTemplate = configuration.getSequenceTemplate(seqTempName);
         if (sequenceTemplate != null) {
-            response = Utils.handleTracing(sequenceTemplate.getAspectConfiguration(), seqTempName, axisMsgCtx);
+            String performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+            JSONObject info = new JSONObject();
+            info.put(SEQUENCE_NAME, seqTempName);
+            info.put(SEQUENCE_TYPE, SEQUENCE_TEMPLATE_TYPE);
+            response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_SEQUENCE_TEMPLATE_TRACE, info,
+                                           sequenceTemplate.getAspectConfiguration(), seqTempName, axisMsgCtx);
         } else {
             response = Utils.createJsonError("Specified sequence template ('" + seqTempName + "') not found",
                     axisMsgCtx, Constants.BAD_REQUEST);

@@ -32,6 +32,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.service.mgt.ServiceAdmin;
 import org.wso2.micro.service.mgt.ServiceMetaData;
 
@@ -51,6 +52,8 @@ import static org.wso2.micro.integrator.management.apis.Constants.SYNAPSE_CONFIG
 public class ProxyServiceResource extends APIResource {
 
     private static Log LOG = LogFactory.getLog(ProxyServiceResource.class);
+
+    private static final String PROXY_NAME = "proxyName";
 
     private static ServiceAdmin serviceAdmin = null;
 
@@ -94,10 +97,14 @@ public class ProxyServiceResource extends APIResource {
                     return true;
                 }
                 JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
+                String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                JSONObject info = new JSONObject();
+                String name = payload.get(NAME).getAsString();
+                info.put(PROXY_NAME, name);
                 if (payload.has(NAME) && payload.has(STATUS)) {
-                    changeProxyState(messageContext, axis2MessageContext, payload);
+                    changeProxyState(performedBy, info, messageContext, axis2MessageContext, payload);
                 } else {
-                    handleTracing(payload, messageContext, axis2MessageContext);
+                    handleTracing(performedBy, info, payload, messageContext, axis2MessageContext);
                 }
             } catch (IOException e) {
                 LOG.error("Error when parsing JSON payload", e);
@@ -107,7 +114,7 @@ public class ProxyServiceResource extends APIResource {
         return true;
     }
 
-    private void handleTracing(JsonObject payload, MessageContext msgCtx,
+    private void handleTracing(String performedBy, JSONObject info, JsonObject payload, MessageContext msgCtx,
                                org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
@@ -116,7 +123,8 @@ public class ProxyServiceResource extends APIResource {
             SynapseConfiguration configuration = msgCtx.getConfiguration();
             ProxyService proxyService = configuration.getProxyService(proxyName);
             if (proxyService != null) {
-                response = Utils.handleTracing(proxyService.getAspectConfiguration(), proxyName, axisMsgCtx);
+                response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_PROXY_SERVICE_TRACE, info,
+                                               proxyService.getAspectConfiguration(), proxyName, axisMsgCtx);
             } else {
                 response = Utils.createJsonError("Specified proxy ('" + proxyName + "') not found", axisMsgCtx,
                                                  Constants.BAD_REQUEST);
@@ -223,7 +231,7 @@ public class ProxyServiceResource extends APIResource {
      * @param axis2MessageContext AXIS2 message context
      * @param payload             json payload
      */
-    private void changeProxyState(MessageContext messageContext,
+    private void changeProxyState(String performedBy, JSONObject info, MessageContext messageContext,
                                   org.apache.axis2.context.MessageContext axis2MessageContext, JsonObject payload) {
 
         SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
@@ -243,6 +251,8 @@ public class ProxyServiceResource extends APIResource {
                 proxyService.start(synapseConfiguration);
                 jsonResponse.put("Message", "Proxy service " + name + " started successfully");
                 Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
+                AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_PROXY_SERVICE,
+                                            Constants.AUDIT_LOG_ACTION_ENABLE, info);
             }
         } else if (INACTIVE_STATUS.equalsIgnoreCase(status)) {
             if (pinnedServers.isEmpty() ||
@@ -250,6 +260,9 @@ public class ProxyServiceResource extends APIResource {
                 proxyService.stop(synapseConfiguration);
                 jsonResponse.put("Message", "Proxy service " + name + " stopped successfully");
                 Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
+
+                AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_PROXY_SERVICE,
+                                            Constants.AUDIT_LOG_ACTION_DISABLED, info);
             }
         } else {
             Utils.setJsonPayLoad(axis2MessageContext,

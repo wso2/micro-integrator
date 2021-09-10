@@ -35,6 +35,7 @@ import org.apache.synapse.message.processor.impl.sampler.SamplingProcessor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.micro.core.util.AuditLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,6 +67,7 @@ public class MessageProcessorResource extends APIResource {
     private static final String FILE_NAME_PROPERTY = "fileName";
     private static final String PARAMETER_PROPERTY = "parameters";
     private static final String MESSAGE_STORE_PROPERTY = "messageStore";
+    private static final String MESSAGE_PROCESSOR_NAME = "messageProcessorName";
     //HTTP method types supported by the resource
     Set<String> methods;
 
@@ -217,12 +219,19 @@ public class MessageProcessorResource extends APIResource {
         MessageProcessor messageProcessor = synapseConfiguration.getMessageProcessors().get(processorName);
         if (Objects.nonNull(messageProcessor)) {
             JSONObject jsonResponse = new JSONObject();
+            String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+            JSONObject info = new JSONObject();
+            info.put(MESSAGE_PROCESSOR_NAME, processorName);
             if (INACTIVE_STATUS.equalsIgnoreCase(status)) {
                 messageProcessor.deactivate();
                 jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, processorName + " : is deactivated");
+                AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_MESSAGE_PROCESSOR,
+                                            Constants.AUDIT_LOG_ACTION_DISABLED, info);
             } else if (ACTIVE_STATUS.equalsIgnoreCase(status)) {
                 messageProcessor.activate();
                 jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, processorName + " : is activated");
+                AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_MESSAGE_PROCESSOR,
+                                            Constants.AUDIT_LOG_ACTION_ENABLE, info);
             } else {
                 jsonResponse = Utils.createJsonError("Provided state is not valid", axis2MessageContext, Constants.BAD_REQUEST);
             }
