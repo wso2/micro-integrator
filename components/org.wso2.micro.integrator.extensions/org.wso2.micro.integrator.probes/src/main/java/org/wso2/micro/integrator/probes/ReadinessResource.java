@@ -42,7 +42,7 @@ public class ReadinessResource extends APIResource {
     private static Log log = LogFactory.getLog(ReadinessResource.class);
     private static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     private static final String HTTP_SC = "HTTP_SC";
-
+    public static final String UPDATE_LEVEL = "UPDATE_LEVEL";
     private int responseCode;
 
     /**
@@ -80,7 +80,8 @@ public class ReadinessResource extends APIResource {
         // appending MI server version number to the response
         CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
         String miVersion = serverConfig.getServerVersion();
-        response = "{\"version\":\"" + miVersion + "\",";
+        response = "{\"version\":\"" + miVersion + "\", \"update_level\":\"" + System.getProperty(UPDATE_LEVEL) +
+                "\", ";
 
         ArrayList<String> faultyCapps = new ArrayList<>(CappDeployer.getFaultyCapps());
         if (!faultyCapps.isEmpty()) {

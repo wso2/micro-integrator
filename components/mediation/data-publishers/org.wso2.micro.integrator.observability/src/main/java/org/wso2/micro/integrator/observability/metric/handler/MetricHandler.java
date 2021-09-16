@@ -30,6 +30,7 @@ import org.apache.synapse.rest.RESTUtils;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.observability.metric.handler.prometheus.reporter.PrometheusReporter;
 import org.wso2.micro.integrator.observability.util.MetricConstants;
 
@@ -56,12 +57,16 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
     private static final String JAVA_HOME = System.getProperty(MetricConstants.JAVA_HOME);
     private int internalHttpApiPort = getInternalHttpApiPort();
 
+
     @Override
     public boolean handleServerInit() {
         metricReporterInstance = this.getMetricReporter();
+        CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
+        String miVersion = serverConfig.getServerVersion();
+        String updateLevel = System.getProperty(MetricConstants.UPDATE_LEVEL);
         metricReporterInstance.initMetrics();
-
         metricReporterInstance.serverUp(HOST, PORT, JAVA_HOME, JAVA_VERSION);
+        metricReporterInstance.serverVersion(miVersion, updateLevel);
         return true;
     }
 
