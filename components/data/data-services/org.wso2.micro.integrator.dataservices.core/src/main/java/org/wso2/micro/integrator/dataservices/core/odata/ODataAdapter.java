@@ -1640,17 +1640,13 @@ public class ODataAdapter implements ServiceHandler {
                 case INT32:
                     property.setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
                     break;
                 case INT16:
                     property.setType(EdmPrimitiveTypeKind.Int16.getFullQualifiedName());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
                     break;
                 case DOUBLE:
                     property.setType(EdmPrimitiveTypeKind.Double.getFullQualifiedName());
-                    property.setPrecision(column.getPrecision());
-                    property.setScale(column.getScale());
                     property.setNullable(column.isNullable());
                     break;
                 case STRING:
@@ -1661,7 +1657,6 @@ public class ODataAdapter implements ServiceHandler {
                 case BOOLEAN:
                     property.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
                     break;
                 case BINARY:
                     property.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
@@ -1681,48 +1676,40 @@ public class ODataAdapter implements ServiceHandler {
                 case DATE:
                     property.setType(EdmPrimitiveTypeKind.Date.getFullQualifiedName());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
                     break;
                 case DURATION:
                     property.setType(EdmPrimitiveTypeKind.Duration.getFullQualifiedName());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
+                    property.setPrecision(column.getPrecision());
                     break;
                 case DECIMAL:
                     property.setType(EdmPrimitiveTypeKind.Decimal.getFullQualifiedName());
                     property.setPrecision(column.getPrecision());
                     property.setScale(column.getScale());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
                     break;
                 case SINGLE:
                     property.setType(EdmPrimitiveTypeKind.Single.getFullQualifiedName());
-                    property.setPrecision(column.getPrecision());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
-                    property.setScale(column.getScale());
                     break;
                 case TIMEOFDAY:
                     property.setType(EdmPrimitiveTypeKind.TimeOfDay.getFullQualifiedName());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
+                    property.setPrecision(column.getPrecision());
                     break;
                 case INT64:
                     property.setType(EdmPrimitiveTypeKind.Int64.getFullQualifiedName());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
                     break;
                 case DATE_TIMEOFFSET:
                     property.setType(EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
                     // Setting as 9 to support nano second representations from certain databases.
                     property.setPrecision(9);
                     break;
                 case GUID:
                     property.setType(EdmPrimitiveTypeKind.Guid.getFullQualifiedName());
                     property.setNullable(column.isNullable());
-                    property.setMaxLength(column.getMaxLength());
                     break;
                 case STREAM:
                     property.setType(EdmPrimitiveTypeKind.Stream.getFullQualifiedName());
