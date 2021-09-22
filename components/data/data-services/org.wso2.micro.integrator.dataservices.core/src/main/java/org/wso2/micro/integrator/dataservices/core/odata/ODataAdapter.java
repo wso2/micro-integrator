@@ -1858,7 +1858,7 @@ public class ODataAdapter implements ServiceHandler {
                 break;
             case INT16:
                 propertyType = EdmPrimitiveTypeKind.Int16.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : ConverterUtil.convertToByte(paramValue);
+                value = paramValue == null ? null : ConverterUtil.convertToShort(paramValue);
                 break;
             case DOUBLE:
                 propertyType = EdmPrimitiveTypeKind.Double.getFullQualifiedName().getFullQualifiedNameAsString();
