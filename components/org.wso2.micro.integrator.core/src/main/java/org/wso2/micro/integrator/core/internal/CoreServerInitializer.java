@@ -341,6 +341,49 @@ public class CoreServerInitializer {
     }
 
     /**
+     * Restart server
+     * @param isGraceful Whether a graceful shutdown or not
+     */
+    public void restart(boolean isGraceful) {
+        SecurityManager secMan = System.getSecurityManager();
+        if (secMan != null) {
+            secMan.checkPermission(new ManagementPermission("control"));
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("restarting " + serverName + "...");
+        }
+        Runtime.getRuntime().removeShutdownHook(shutdownHook);
+        try {
+            try {
+                ServerStatus.setServerShuttingDown();
+                if (isGraceful) {
+                    log.info("Gracefully restarting " + serverName + "...");
+                    Map<String, TransportInDescription> inTransports = serverConfigContext.getAxisConfiguration()
+                                                                                          .getTransportsIn();
+                    new ServerManagement(inTransports, serverConfigContext).startMaintenanceForShutDown();
+                } else {
+                    log.info("Restarting " + serverName + "...");
+                }
+            } catch (AxisFault e) {
+                String msg = "Cannot set server to shutdown mode";
+                log.error(msg, e);
+            }
+            new Thread(new Runnable() {
+                public void run() {
+                    log.info("Starting a new Carbon instance. Current instance will be shutdown");
+                    log.info("Halting JVM");
+                    System.exit(121);
+                }
+            }).start();
+        } catch (Exception e) {
+            log.error("Error occurred while restarting down " + serverName, e);
+            if (!isShutdownTriggeredByShutdownHook) {
+                System.exit(1);
+            }
+        }
+    }
+
+    /**
      * Graceful shutdown
      */
     public void shutdownGracefully() {
@@ -352,9 +395,7 @@ public class CoreServerInitializer {
             log.error(msg, e);
         }
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Gracefully shutting down " + serverName + "...");
-            }
+            log.info("Gracefully shutting down " + serverName + "...");
             Map<String, TransportInDescription> inTransports = serverConfigContext.getAxisConfiguration()
                     .getTransportsIn();
             new ServerManagement(inTransports, serverConfigContext).startMaintenanceForShutDown();

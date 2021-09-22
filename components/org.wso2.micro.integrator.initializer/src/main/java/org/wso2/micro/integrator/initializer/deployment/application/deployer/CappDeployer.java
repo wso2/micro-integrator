@@ -70,6 +70,7 @@ public class CappDeployer extends AbstractDeployer {
 
     private List<AppDeploymentHandler> appDeploymentHandlers = new ArrayList<>();
     private static ArrayList<CarbonApplication> cAppMap = new ArrayList<>();
+    private static ArrayList<CarbonApplication> faultyCAppObjects = new ArrayList<>();
     private static ArrayList<String> faultyCapps = new ArrayList<>();
     private final Object lock = new Object();
     private static final String SWAGGER_SUBSTRING = "_swagger";
@@ -189,6 +190,7 @@ public class CappDeployer extends AbstractDeployer {
             log.error("Error occurred while deploying the Carbon application: " + cAppName
                       + ". Reverting successfully deployed artifacts in the CApp.", e);
             undeployCarbonApp(currentApp, axisConfig);
+            faultyCAppObjects.add(currentApp);
             faultyCapps.add(cAppName);
         }
     }
@@ -622,6 +624,12 @@ public class CappDeployer extends AbstractDeployer {
         synchronized (lock) {
             String cAppName = appFilePath.substring(appFilePath.lastIndexOf(File.separator) + 1);
             faultyCapps.remove(cAppName);
+            for (CarbonApplication application : faultyCAppObjects) {
+                if (application.getAppFilePath().equals(appFilePath)) {
+                    faultyCAppObjects.remove(application);
+                    break;
+                }
+            }
         }
     }
 
@@ -634,10 +642,20 @@ public class CappDeployer extends AbstractDeployer {
         return Collections.unmodifiableList(faultyCapps);
     }
 
+    /**
+     * Get a list of faulty cApp objects in the server.
+     *
+     * @return list of faulty cApp objects
+     */
+    public static List<CarbonApplication> getFaultyCAppObjects() {
+        return Collections.unmodifiableList(faultyCAppObjects);
+    }
+
     public void cleanup() {
         //cleanup the capp list during the unload
         cAppMap.clear();
         faultyCapps.clear();
+        faultyCAppObjects.clear();
     }
 
     /**

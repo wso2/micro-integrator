@@ -27,6 +27,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.wso2.carbon.crypto.api.ExternalCryptoProvider;
 import org.wso2.micro.core.encryption.KeyStoreBasedExternalCryptoProvider;
+import org.wso2.micro.core.util.CoreServerInitializerHolder;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
@@ -79,6 +80,7 @@ public class Activator implements BundleActivator {
             CoreServerInitializer coreServerInitializer =
                     new CoreServerInitializer(CarbonCoreDataHolder.getInstance().getServerConfigurationService(),
                             bundleContext);
+            CoreServerInitializerHolder.getInstance().setCoreServerInitializer(coreServerInitializer);
             coreServerInitializer.initMIServer();
         } catch (Throwable e) {
             throw new Exception(e);
