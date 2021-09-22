@@ -57,6 +57,7 @@
     <test name="OData-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataDataTypeSupportTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.odata.ODataMetaDataTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataQueryTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataETagTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataReferenceTestCase"/>
