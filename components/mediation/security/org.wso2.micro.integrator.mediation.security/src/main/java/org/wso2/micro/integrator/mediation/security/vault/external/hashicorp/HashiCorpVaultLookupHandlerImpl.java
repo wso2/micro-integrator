@@ -24,6 +24,7 @@ import com.bettercloud.vault.VaultConfig;
 import com.bettercloud.vault.VaultException;
 import com.bettercloud.vault.api.Logical;
 import com.bettercloud.vault.rest.RestException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
@@ -37,6 +38,8 @@ import org.wso2.micro.integrator.mediation.security.vault.external.ExternalVault
 import java.io.File;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class responsible for the HashiCorp vault integration model.
@@ -72,6 +75,12 @@ public class HashiCorpVaultLookupHandlerImpl implements ExternalVaultLookupHandl
     private boolean isAppRolePullAuthentication = true;
 
     private String currentAliasPassword;
+
+    /**
+     * Regex for environment variable inside vault config.
+     */
+    private static final String environmentVariableRegex = "\\$env:(.*)";
+    private static Pattern vaultLookupPattern = Pattern.compile(environmentVariableRegex);
 
     private HashiCorpVaultLookupHandlerImpl() throws ExternalVaultException {
         try {
@@ -342,6 +351,20 @@ public class HashiCorpVaultLookupHandlerImpl implements ExternalVaultLookupHandl
     public String evaluate(Map<String, String> vaultParameters, MessageContext synCtx) throws ExternalVaultException {
         SynapseConfiguration synapseConfiguration = synCtx.getConfiguration();
         Map<String, Object> decryptedCacheMap = synapseConfiguration.getDecryptedCacheMap();
+        // Check if parameters configured as environment variable and resolve
+        for (Map.Entry<String, String> entry : vaultParameters.entrySet()) {
+            Matcher lookupMatcher = vaultLookupPattern.matcher(entry.getValue());
+            if (lookupMatcher.matches()) {
+                String expressionStr = lookupMatcher.group(0).substring(5);
+                String resolvedValue = System.getenv(expressionStr);
+                if (StringUtils.isEmpty(resolvedValue)) {
+                    log.warn("Evaluated environment variable " + expressionStr +
+                            " of the " + name() + " secure vault is empty");
+                } else {
+                    entry.setValue(resolvedValue);
+                }
+            }
+        }
         String pathParameter = vaultParameters.get(HashiCorpVaultConstant.PATH_PARAMETER);
         String fieldParameter = vaultParameters.get(HashiCorpVaultConstant.FIELD_PARAMETER);
 
