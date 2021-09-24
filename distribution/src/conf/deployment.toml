@@ -105,3 +105,6 @@ algorithm = "AES"
 # enable = true
 # username = "admin"
 # password = "admin"
+
+# [dashboard_config]
+# dashboard_url = "https://localhost:9743/dashboard/api/"

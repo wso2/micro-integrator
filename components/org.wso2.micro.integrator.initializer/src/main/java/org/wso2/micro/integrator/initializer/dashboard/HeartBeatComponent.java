@@ -38,7 +38,6 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.ConfigurationLoader;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.util.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -49,12 +48,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.COLON;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_GROUP_ID;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_HEARTBEAT_INTERVAL;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_NODE_ID;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_URL;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DEFAULT_GROUP_ID;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.FORWARD_SLASH;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.HEADER_VALUE_APPLICATION_JSON;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.HTTPS_PREFIX;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.MANAGEMENT;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.NODE_ID_SYSTEM_PROPERTY;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.PRODUCT_MI;
 
@@ -79,9 +82,8 @@ public class HeartBeatComponent {
         String groupId = getGroupId();
         String nodeId = getNodeId();
         long interval = getInterval();
-        String carbonLocalIp = System.getProperty("carbon.local.ip");
-        int internalHttpApiPort = ConfigurationLoader.getInternalInboundHttpsPort();
-        String mgtApiUrl = "https://" + carbonLocalIp + ":" + internalHttpApiPort + "/management/";
+        String mgtApiUrl = getMgtApiUrl();
+
         final HttpPost httpPost = new HttpPost(heartbeatApiUrl);
 
         JsonObject heartbeatPayload = new JsonObject();
@@ -121,6 +123,28 @@ public class HeartBeatComponent {
             } 
         };
         scheduledExecutorService.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
+    }
+
+    private static String getMgtApiUrl() {
+        String serviceIp = System.getProperty("carbon.local.ip");
+        String httpApiPort = Integer.toString(ConfigurationLoader.getInternalInboundHttpsPort());
+        String mgtApiUrl = HTTPS_PREFIX.concat(serviceIp).concat(COLON).concat(httpApiPort).concat(FORWARD_SLASH)
+                                       .concat(MANAGEMENT).concat(FORWARD_SLASH);
+
+        Object mgtApiServiceName = configs.get(Constants.DASHBOARD_CONFIG_MANAGEMENT_HOSTNAME);
+        if (null != mgtApiServiceName) {
+            serviceIp = mgtApiServiceName.toString();
+            Object configuredMgtPort = configs.get(Constants.DASHBOARD_CONFIG_MANAGEMENT_PORT);
+            if (null != configuredMgtPort) {
+                String servicePort = configuredMgtPort.toString();
+                mgtApiUrl = HTTPS_PREFIX.concat(serviceIp).concat(COLON).concat(servicePort).concat(FORWARD_SLASH)
+                                        .concat(MANAGEMENT).concat(FORWARD_SLASH);
+            } else {
+                mgtApiUrl = HTTPS_PREFIX.concat(serviceIp).concat(FORWARD_SLASH).concat(MANAGEMENT)
+                                        .concat(FORWARD_SLASH);
+            }
+        }
+        return mgtApiUrl;
     }
 
     private static String getGroupId() {
