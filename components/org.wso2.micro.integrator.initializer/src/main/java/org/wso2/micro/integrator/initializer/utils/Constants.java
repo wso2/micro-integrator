@@ -39,6 +39,10 @@ public class Constants {
     public static final String SERVICE_CATALOG_CONFIG = "service_catalog";
     public static final String APIM_HOST = "apim_host";
     public static final String ENABLE = "enable";
+    public static final String SERVER_HOSTNAME = "server.hostname";
+    public static final String HTTPS_LISTENER_PORT = "transport.https.listener.parameter.port";
+    public static final String HTTP_LISTENER_PORT = "transport.http.listener.parameter.port";
+    public static final String SERVER_PORT_OFFSET = "portOffset";
     public static final String USER_NAME = "username";
     public static final String PASSWORD = "password";
 
@@ -58,7 +62,11 @@ public class Constants {
     public static final String ZIP_FOLDER_NAME = "payload.zip";
     public static final String METADATA_FILE_NAME = "metadata.yaml";
     public static final String SWAGGER_FILE_NAME = "definition.yaml";
+    public static final String WSDL_FILE_NAME = "definition.wsdl";
     public static final String YAML_FILE_EXTENSION = ".yaml";
+    public static final String PROXY_SERVICE_SUFFIX = "_proxy";
+    public static final String PATH_SEPARATOR = "/";
+    public static final String WSDL_URL_PATH = "?wsdl";
 
     // constants related to retry mechanism
     public static final int INTERVAL_BETWEEN_RETRIES = 2000;
