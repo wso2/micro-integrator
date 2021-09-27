@@ -49,6 +49,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.KeyStore;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -63,6 +64,7 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
 
     private static final String FAULTY_CAPP = "invalidCompositeApplication_1.0.0.car";
     private static final String CAPP_WITH_META_AND_ENV = "blaCompositeExporter_1.0.0-SNAPSHOT.car";
+    private static final String CAPP_WITH_PROXY_META = "proxyCompositeExporter_1.0.0-SNAPSHOT.car";
     private static final String NEW_CAPP_NAME = "demoCompositeExporter_1.0.0-SNAPSHOT.car";
     private static final String MODIFIED_NEW_CAPP_NAME = "changed_demoCompositeExporter_1.0.0-SNAPSHOT.car";
     private static final String SH_FILE_NAME = "micro-integrator.sh";
@@ -156,7 +158,7 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
         serverConfigurationManager.copyToCarbonapps(metadataCAPP);
         serverConfigurationManager.restartMicroIntegrator();
         assertTrue(Utils.checkForLog(carbonLogReader,
-                "Environment variables are not configured correctly", 10), "Did not receive the expected info log");
+                "Successfully updated the service catalog", 10), "Did not receive the expected info log");
     }
 
     @Test(groups = {"wso2.esb"},
@@ -258,6 +260,37 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
                 "Did not receive the expected info log");
         File zipFile = new File(payloadZipPath);
         assertFalse(zipFile.exists(), "Payload.zip file should not be created");
+    }
+
+    @Test(groups = {"wso2.esb"}, description = "Test service catalog with proxy services", priority = 9)
+    public void testServiceCatalogProxyServiceMetadata()
+            throws CarbonException, IOException, AutomationUtilException, InterruptedException {
+        File metadataCAPP = new File(getESBResourceLocation() + File.separator
+                + SERVICE_CATALOG_FOLDER + File.separator + CAPP_WITH_PROXY_META);
+        serverConfigurationManager.copyToCarbonapps(metadataCAPP);
+        // replace server startup scripts
+        String shFile = CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + SH_FILE_NAME;
+        String batFile = CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + BAT_FILE_NAME;
+        File oldShFile = new File( shFile + ".backup");
+        File newShFile = new File(shFile);
+        if (new File(shFile).delete() && oldShFile.renameTo(newShFile)) {
+            assertTrue(newShFile.exists(), "Error while replacing default sh script");
+        }
+        File oldBatFile = new File( batFile + ".backup");
+        File newBatFile = new File(batFile);
+        if (new File(batFile).delete() && oldBatFile.renameTo(newBatFile)) {
+            assertTrue(newBatFile.exists(), "Error while replacing default bat script");
+        }
+        serverConfigurationManager.restartMicroIntegrator();
+        assertTrue(Utils.checkForLog(carbonLogReader,
+                "Successfully updated the service catalog", 10), "Did not receive the expected info log");
+        File extracted = chekAndExtractPayloadZip();
+        assertTrue(extracted.exists(), "Error occurred while extracting the ZIP");
+        File metadataFile = new File(extracted, "SampleProxyService_proxy_v1.0.0");
+        File yamlFile = new File(metadataFile, "metadata.yaml");
+        assertTrue(yamlFile.exists(), "Could not find the metadata yaml file");
+        File wsdlFile = new File(metadataFile, "definition.wsdl");
+        assertTrue(wsdlFile.exists(), "Could not find the definition wsdl file");
     }
 
     private static File chekAndExtractPayloadZip() throws CarbonException {
