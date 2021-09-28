@@ -175,7 +175,7 @@ public class SequenceResource extends APIResource {
         }
         sequenceObject.put("mediators", mediatorTypes);
         sequenceObject.put(Constants.SYNAPSE_CONFIGURATION,
-                new SequenceMediatorSerializer().serializeAnonymousSequence(null, sequenceMediator));
+                new SequenceMediatorSerializer().serializeSpecificMediator(sequenceMediator));
 
         return sequenceObject;
     }
