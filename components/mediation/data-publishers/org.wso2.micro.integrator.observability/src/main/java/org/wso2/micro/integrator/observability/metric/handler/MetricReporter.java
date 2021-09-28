@@ -108,6 +108,15 @@ public interface MetricReporter {
     void serverUp(String host, String port, String javaHome, String javaVersion);
 
     /**
+     * Instrument metrics related to MI server version is and the
+     * specific update 2 level of the MI server.
+     *
+     * @param version        The MI server version
+     * @param updateLevel    The specific update 2 level of the MI server
+     */
+    void serverVersion(String version, String updateLevel);
+
+    /**
      * Instrument metrics on server undeployment.
      *
      * @param host        The IP Address of the host the MI server is running

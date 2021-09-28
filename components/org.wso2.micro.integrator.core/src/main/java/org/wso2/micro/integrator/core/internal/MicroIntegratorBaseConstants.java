@@ -45,6 +45,7 @@ public class MicroIntegratorBaseConstants {
 
     public static final String COMPONENT_REP0_ENV = "COMPONENTS_REPO";
     public static final String AXIS2_REPO_ENV = "AXIS2_REPO";
+    public static final String UPDATE_LEVEL = "UPDATE_LEVEL";
 
     /**
      * Remove default constructor and make it not available to initialize.
