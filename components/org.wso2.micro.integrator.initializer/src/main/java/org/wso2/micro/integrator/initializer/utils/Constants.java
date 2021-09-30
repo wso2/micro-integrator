@@ -39,10 +39,6 @@ public class Constants {
     public static final String SERVICE_CATALOG_CONFIG = "service_catalog";
     public static final String APIM_HOST = "apim_host";
     public static final String ENABLE = "enable";
-    public static final String SERVER_HOSTNAME = "server.hostname";
-    public static final String HTTPS_LISTENER_PORT = "transport.https.listener.parameter.port";
-    public static final String HTTP_LISTENER_PORT = "transport.http.listener.parameter.port";
-    public static final String SERVER_PORT_OFFSET = "portOffset";
     public static final String USER_NAME = "username";
     public static final String PASSWORD = "password";
 
