@@ -23,6 +23,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
@@ -148,6 +149,9 @@ public class UserResource implements MiApiResource {
         JSONObject jsonBody = new JSONObject();
         jsonBody.put(USER_ID, user);
         jsonBody.put(STATUS, "Deleted");
+        JSONObject info = new JSONObject();
+        info.put(USER_ID, user);
+        AuditLogger.logAuditMessage(userName, Constants.AUDIT_LOG_TYPE_USER, Constants.AUDIT_LOG_ACTION_DELETED, info);
         return jsonBody;
     }
 

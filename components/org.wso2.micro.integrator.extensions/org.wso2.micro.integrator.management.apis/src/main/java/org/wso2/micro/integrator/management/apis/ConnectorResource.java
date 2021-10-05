@@ -31,6 +31,7 @@ import org.apache.synapse.libraries.model.Library;
 import org.apache.synapse.libraries.model.SynapseLibrary;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.initializer.ServiceBusUtils;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
@@ -57,6 +58,8 @@ public class ConnectorResource implements MiApiResource {
     private static final String STATUS_ATTRIBUTE = "status";
     private static final String PACKAGE_ATTRIBUTE = "package";
     private static final String DESCRIPTION_ATTRIBUTE = "description";
+    private static final String CONNECTOR_NAME = "connectorName";
+    private static final String PACKAGE_NAME = "packageName";
 
     public ConnectorResource() {
 
@@ -90,8 +93,9 @@ public class ConnectorResource implements MiApiResource {
                     Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("POST method required json payload"));
                 } else {
                     JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
+                    String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
                     if (payload.has(NAME_ATTRIBUTE) && payload.has(STATUS_ATTRIBUTE) && payload.has(PACKAGE_ATTRIBUTE)) {
-                        changeConnectorState(axis2MessageContext, payload, synapseConfiguration);
+                        changeConnectorState(performedBy, axis2MessageContext, payload, synapseConfiguration);
                     } else {
                         Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Missing parameters in payload"));
                     }
@@ -183,7 +187,7 @@ public class ConnectorResource implements MiApiResource {
      * @param axis2MessageContext axis2 message context
      * @param payload             request json payload
      */
-    private void changeConnectorState(org.apache.axis2.context.MessageContext axis2MessageContext,
+    private void changeConnectorState(String performedBy, org.apache.axis2.context.MessageContext axis2MessageContext,
                                       JsonObject payload, SynapseConfiguration synapseConfiguration) throws AxisFault {
 
         String connector = payload.get(NAME_ATTRIBUTE).getAsString();
@@ -197,6 +201,13 @@ public class ConnectorResource implements MiApiResource {
         JSONObject jsonResponse = new JSONObject();
         if (updated) {
             persistStatus(axisConfiguration, synapseConfiguration, qualifiedName);
+            JSONObject info = new JSONObject();
+            info.put(CONNECTOR_NAME, connector);
+            info.put(PACKAGE_NAME, packageName);
+            info.put(STATUS_ATTRIBUTE, state);
+            AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_CONNECTOR,
+                                        Constants.AUDIT_LOG_ACTION_CREATED, info);
+
             jsonResponse.put("Message", "Status updated successfully");
         } else {
             jsonResponse.put("Message", "Status updated failed");

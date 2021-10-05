@@ -136,4 +136,27 @@ public class Constants {
 
     // toml properties
     public static String FILE_BASED_USER_STORE_ENABLE = "internal_apis.file_user_store.enable";
+
+    public static final String AUDIT_LOG_TYPE_ENDPOINT = "endpoint";
+    public static final String AUDIT_LOG_TYPE_USER = "user";
+    public static final String AUDIT_LOG_TYPE_PROXY_SERVICE = "proxy_service";
+    public static final String AUDIT_LOG_TYPE_LOG_LEVEL = "log_level";
+    public static final String AUDIT_LOG_TYPE_ROOT_LOG_LEVEL = "root_log_level";
+    public static final String AUDIT_LOG_TYPE_MESSAGE_PROCESSOR = "message_processor";
+    public static final String AUDIT_LOG_TYPE_CARBON_APPLICATION = "carbon_application";
+    public static final String AUDIT_LOG_TYPE_CONNECTOR = "connector";
+
+    public static final String AUDIT_LOG_TYPE_API_TRACE = "api_trace";
+    public static final String AUDIT_LOG_TYPE_PROXY_SERVICE_TRACE = "proxy_service_trace";
+    public static final String AUDIT_LOG_TYPE_INBOUND_ENDPOINT_TRACE = "inbound_endpoint_trace";
+    public static final String AUDIT_LOG_TYPE_SEQUENCE_TEMPLATE_TRACE = "sequence_template_trace";
+    public static final String AUDIT_LOG_TYPE_SEQUENCE_TRACE = "sequence_trace";
+    public static final String AUDIT_LOG_TYPE_ENDPOINT_TRACE = "endpoint_trace";
+
+    public static final String AUDIT_LOG_ACTION_ENABLE = "enabled";
+    public static final String AUDIT_LOG_ACTION_DISABLED = "disabled";
+    public static final String AUDIT_LOG_ACTION_CREATED = "created";
+    public static final String AUDIT_LOG_ACTION_DELETED = "deleted";
+    public static final String AUDIT_LOG_ACTION_UPDATED = "updated";
+
 }
