@@ -123,7 +123,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         this.localNodeId = getNodeId();
         this.communicationBusContext = communicationBusContext;
         this.rdbmsMemberEventProcessor = new RDBMSMemberEventProcessor(localNodeId, localGroupId,
-                                                                       heartbeatMaxRetryInterval, communicationBusContext);
+                (int) heartbeatWarningMargin, communicationBusContext);
     }
 
     /**
