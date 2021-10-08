@@ -492,7 +492,7 @@ public class CarbonServerManager {
         String jacocoAgentFile = CodeCoverageUtils.getJacocoAgentJarLocation();
         coverageDumpFilePath = FrameworkPathUtil.getCoverageDumpFilePath();
         CodeCoverageUtils.insertJacocoAgentToStartupBat(Paths.get(carbonHome, "bin", scriptName + ".bat").toFile(),
-                Paths.get(carbonHome, "bin", scriptName + ".bat").toFile(), "-Dcatalina.base",
+                Paths.get(carbonHome, "tmp", scriptName + ".bat").toFile(), "-Dcatalina.base",
                 "-javaagent:" + jacocoAgentFile + "=destfile=" + coverageDumpFilePath + "" + ",append=true,includes="
                         + CodeCoverageUtils.getInclusionJarsPattern(":") + ",excludes=" + CodeCoverageUtils
                         .getExclusionJarsPattern(":"));
