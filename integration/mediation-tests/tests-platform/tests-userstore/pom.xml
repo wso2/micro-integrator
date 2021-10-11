@@ -85,6 +85,7 @@
                         </carbon.zip>
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
+                        <jacoco.skip>${jacoco.skip}</jacoco.skip>
                     </systemProperties>
                     <classpathDependencyExcludes>
                         <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>

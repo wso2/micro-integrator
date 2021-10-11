@@ -102,6 +102,7 @@
                         </carbon.zip>
                         <instr.file>${basedir}/src/test/resources/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
+                        <jacoco.skip>${jacoco.skip}</jacoco.skip>
                     </systemProperties>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>

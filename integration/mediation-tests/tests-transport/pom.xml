@@ -69,6 +69,7 @@
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
                         <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
+                        <jacoco.skip>${jacoco.skip}</jacoco.skip>
                     </systemProperties>
                     <classpathDependencyExcludes>
                         <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>

@@ -95,7 +95,7 @@ public class CarbonServerManager {
 
             File commandDir = new File(carbonHome);
 
-            log.info("Starting server ... ");
+            log.info("ing server ... ");
             if (StringUtils.isNotEmpty(System.getProperty("startupScript"))) {
                 scriptName = System.getProperty("startupScript");
             } else {
@@ -226,7 +226,8 @@ public class CarbonServerManager {
         copyResources();
         try {
             //read coverage status from automation.xml
-            isCoverageEnable = Boolean.parseBoolean(automationContext.getConfigurationValue("//coverage"));
+            isCoverageEnable = Boolean.parseBoolean(automationContext.getConfigurationValue("//coverage")) &&
+                    !Boolean.parseBoolean(System.getProperty("jacoco.skip"));
         } catch (XPathExpressionException e) {
             throw new AutomationFrameworkException("Coverage configuration not found in automation.xml", e);
         }

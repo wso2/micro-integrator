@@ -201,6 +201,7 @@
                             <name>connector_repo</name>
                             <value>${basedir}/target</value>
                         </property>
+                        <jacoco.skip>${jacoco.skip}</jacoco.skip>
                     </systemProperties>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>

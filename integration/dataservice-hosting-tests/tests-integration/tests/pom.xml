@@ -33,6 +33,7 @@
     <build>
         <plugins>
             <plugin>
+
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
                 <version>2.12.4</version>
@@ -70,6 +71,7 @@
                         <instr.file>${basedir}/src/test/resources/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/src/test/resources/filters.txt</filters.file>
                         <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
+                        <jacoco.skip>${jacoco.skip}</jacoco.skip>
                     </systemProperties>
                     <classpathDependencyExcludes>
                         <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>

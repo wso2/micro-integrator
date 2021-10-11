@@ -79,6 +79,7 @@
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
                         <version>${project.version}</version>
+                        <jacoco.skip>${jacoco.skip}</jacoco.skip>
                     </systemProperties>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>

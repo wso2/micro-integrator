@@ -797,6 +797,7 @@
         <org.wso2.json.version>3.0.0.wso2v1</org.wso2.json.version>
         <maven.model.version>3.3.9</maven.model.version>
         <testng.suiteXml.location>src/test/resources/testng.xml</testng.suiteXml.location>
+        <jacoco.skip>false</jacoco.skip>
 
         <!-- TODO Remove after fixing the test cases, kept for compilation purposes.-->
         <carbon.registry.version>4.6.46</carbon.registry.version>
@@ -830,6 +831,7 @@
             <id>smoke-tests</id>
             <properties>
                 <testng.suiteXml.location>src/test/resources/smokeTestng.xml</testng.suiteXml.location>
+                <jacoco.skip>true</jacoco.skip>
             </properties>
             <modules>
                 <module>samples/product</module>
