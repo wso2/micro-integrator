@@ -197,10 +197,10 @@ public class LoggingResource extends ApiResource {
             } else {
                 if (isLoggerExist(loggerName)) {
                     config.setProperty(LOGGER_PREFIX + loggerName + LOGGER_LEVEL_SUFFIX, logLevel);
-                    applyConfigs();
-                    jsonBody.put(Constants.MESSAGE, getSuccessMsg("", loggerName, logLevel));
                     AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_LOG_LEVEL,
                                                 Constants.AUDIT_LOG_ACTION_UPDATED, info);
+                    applyConfigs();
+                    jsonBody.put(Constants.MESSAGE, getSuccessMsg("", loggerName, logLevel));
                 } else {
                     jsonBody = createJsonError("Specified logger ('" + loggerName + "') not found", "",
                                                axis2MessageContext);

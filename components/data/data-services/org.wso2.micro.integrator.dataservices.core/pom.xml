@@ -140,10 +140,10 @@
             <groupId>org.wso2.orbit.commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.htmlcleaner.wso2</groupId>
-            <artifactId>htmlcleaner</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.htmlcleaner.wso2</groupId>-->
+<!--            <artifactId>htmlcleaner</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.jboss.spec.javax.transaction</groupId>
             <artifactId>jboss-transaction-api_1.1_spec</artifactId>
