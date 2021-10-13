@@ -41,6 +41,7 @@ import org.wso2.securevault.SecurityConstants;
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -145,6 +146,13 @@ public class DataServiceFactory {
 
             /* set disable legacy boxcarring mode */
             dataService.setDisableLegacyBoxcarringMode(disableLegacyBoxcarringMode);
+
+            /* set transports */
+            String transports = dbsElement.getAttributeValue(new QName(DBSFields.TRANSPORTS));
+            if (transports != null && !transports.isEmpty()) {
+                List<String> transportsList = Arrays.asList(transports.split("\\s"));
+                dataService.setTransports(transportsList);
+            }
 
             /* add the password manager */
             Iterator<OMElement> passwordMngrItr = dbsElement.getChildrenWithName(
