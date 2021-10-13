@@ -93,7 +93,10 @@ public class ConnectorResource implements MiApiResource {
                     Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("POST method required json payload"));
                 } else {
                     JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
-                    String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                    String performedBy = Constants.ANONYMOUS_USER;
+                    if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                        performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                    }
                     if (payload.has(NAME_ATTRIBUTE) && payload.has(STATUS_ATTRIBUTE) && payload.has(PACKAGE_ATTRIBUTE)) {
                         changeConnectorState(performedBy, axis2MessageContext, payload, synapseConfiguration);
                     } else {

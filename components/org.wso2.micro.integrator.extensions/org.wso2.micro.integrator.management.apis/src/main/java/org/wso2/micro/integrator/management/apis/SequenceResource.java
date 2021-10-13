@@ -86,7 +86,10 @@ public class SequenceResource extends APIResource {
                 SynapseConfiguration configuration = msgCtx.getConfiguration();
                 SequenceMediator sequence = configuration.getDefinedSequences().get(seqName);
                 if (sequence != null) {
-                    String performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+                    String performedBy = Constants.ANONYMOUS_USER;
+                    if (msgCtx.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                        performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+                    }
                     JSONObject info = new JSONObject();
                     info.put(SEQUENCE_NAME, seqName);
                     response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_SEQUENCE_TRACE, info,

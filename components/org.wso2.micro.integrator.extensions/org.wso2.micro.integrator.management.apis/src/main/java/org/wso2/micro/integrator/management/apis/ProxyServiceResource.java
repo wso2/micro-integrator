@@ -97,7 +97,10 @@ public class ProxyServiceResource extends APIResource {
                     return true;
                 }
                 JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
-                String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                String performedBy = Constants.ANONYMOUS_USER;
+                if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                    performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                }
                 JSONObject info = new JSONObject();
                 String name = payload.get(NAME).getAsString();
                 info.put(PROXY_NAME, name);

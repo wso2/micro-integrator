@@ -180,7 +180,10 @@ public class UsersResource extends UserResource {
             JSONObject jsonBody = new JSONObject();
             jsonBody.put(USER_ID, user);
             jsonBody.put(STATUS, "Added");
-            String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+            String performedBy = Constants.ANONYMOUS_USER;
+            if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+            }
             JSONObject info = new JSONObject();
             info.put(USER_ID, user);
             info.put(IS_ADMIN, isAdmin);

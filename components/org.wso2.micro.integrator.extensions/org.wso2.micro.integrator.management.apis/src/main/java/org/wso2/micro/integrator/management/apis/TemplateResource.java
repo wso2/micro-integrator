@@ -120,7 +120,10 @@ public class TemplateResource extends APIResource {
         SynapseConfiguration configuration = msgCtx.getConfiguration();
         TemplateMediator sequenceTemplate = configuration.getSequenceTemplate(seqTempName);
         if (sequenceTemplate != null) {
-            String performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+            String performedBy = Constants.ANONYMOUS_USER;
+            if (msgCtx.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+            }
             JSONObject info = new JSONObject();
             info.put(SEQUENCE_NAME, seqTempName);
             info.put(SEQUENCE_TYPE, SEQUENCE_TEMPLATE_TYPE);
