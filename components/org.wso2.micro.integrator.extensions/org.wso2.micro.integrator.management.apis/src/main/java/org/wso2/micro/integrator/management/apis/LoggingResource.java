@@ -124,7 +124,10 @@ public class LoggingResource extends ApiResource {
                         String loggerName = jsonPayload.getString(Constants.LOGGER_NAME);
                         boolean isRootLogger = Constants.ROOT_LOGGER.equals(loggerName);
                         boolean hasLoggerClass = jsonPayload.has(LOGGER_CLASS);
-                        String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                        String performedBy = Constants.ANONYMOUS_USER;
+                        if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                            performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                        }
                         JSONObject info = new JSONObject();
                         info.put(Constants.LOGGER_NAME, loggerName);
                         info.put(Constants.LOGGING_LEVEL, logLevel);

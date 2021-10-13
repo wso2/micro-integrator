@@ -219,7 +219,10 @@ public class MessageProcessorResource extends APIResource {
         MessageProcessor messageProcessor = synapseConfiguration.getMessageProcessors().get(processorName);
         if (Objects.nonNull(messageProcessor)) {
             JSONObject jsonResponse = new JSONObject();
-            String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+            String performedBy = Constants.ANONYMOUS_USER;
+            if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+            }
             JSONObject info = new JSONObject();
             info.put(MESSAGE_PROCESSOR_NAME, processorName);
             if (INACTIVE_STATUS.equalsIgnoreCase(status)) {
