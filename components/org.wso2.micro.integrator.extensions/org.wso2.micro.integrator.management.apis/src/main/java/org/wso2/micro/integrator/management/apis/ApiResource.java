@@ -96,7 +96,10 @@ public class ApiResource extends APIResource {
                 String apiName = payload.get(Constants.NAME).getAsString();
                 SynapseConfiguration configuration = msgCtx.getConfiguration();
                 API api = configuration.getAPI(apiName);
-                String performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+                String performedBy = Constants.ANONYMOUS_USER;
+                if (msgCtx.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                    performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+                }
                 JSONObject info = new JSONObject();
                 info.put(API_NAME, apiName);
                 if (api != null) {

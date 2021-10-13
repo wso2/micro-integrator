@@ -76,6 +76,7 @@ public class Constants {
     public static final String COMPONENT_NAME = "componentName";
     public static final String LOGGING_LEVEL = "loggingLevel";
     public static final String ROOT_LOGGER = "rootLogger";
+    public static final String ANONYMOUS_USER = "anonymous";
 
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     public static final String HTTP_STATUS_CODE = "HTTP_SC";

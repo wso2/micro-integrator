@@ -88,7 +88,10 @@ public class InboundEndpointResource extends APIResource {
                 SynapseConfiguration configuration = msgCtx.getConfiguration();
                 InboundEndpoint inboundEndpoint = configuration.getInboundEndpoint(inboundName);
                 if (inboundEndpoint != null) {
-                    String performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+                    String performedBy = Constants.ANONYMOUS_USER;
+                    if (msgCtx.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                        performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+                    }
                     JSONObject info = new JSONObject();
                     info.put(INBOUND_ENDPOINT_NAME, inboundName);
                     response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_INBOUND_ENDPOINT_TRACE, info,
