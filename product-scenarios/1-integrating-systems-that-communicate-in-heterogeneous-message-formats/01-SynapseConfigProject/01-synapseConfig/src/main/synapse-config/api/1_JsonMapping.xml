@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/json" name="JsonMapping" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/message/1_1_1_1_1">
+        <inSequence>
+            <log level="full">
+                <property expression="json-eval($.LookupCity.Zip)" name="zip"/>
+            </log>
+            <payloadFactory description="Build Response Payload in JSON format" media-type="json">
+                <format>{"LookupCityResult": {"City": "Chicago","State": "IL","Zip": "60601"}}</format>
+                <args/>
+            </payloadFactory>
+            <log level="full"/>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
