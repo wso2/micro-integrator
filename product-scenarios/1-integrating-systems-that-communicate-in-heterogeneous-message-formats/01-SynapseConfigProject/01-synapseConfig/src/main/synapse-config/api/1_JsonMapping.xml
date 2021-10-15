@@ -93,4 +93,26 @@
         <outSequence/>
         <faultSequence/>
     </resource>
+    <resource methods="POST" uri-template="/message/1_2_1_1_1">
+        <inSequence>
+            <log level="full">
+                <property expression="json-eval($)" name="json"/>
+            </log>
+            <switch source="json-eval($)">
+                <case regex="\{ &quot;LookupCity&quot;: \{&quot;Zip&quot;: 60601}}">
+                    <payloadFactory description="Build Response Payload in JSON format" media-type="json">
+                        <format>{"LookupCityResult": {"City": "Chicago","State": "IL","Zip": "60601"}}</format>
+                        <args/>
+                    </payloadFactory>
+                </case>
+                <default>
+                    <sequence key="contentMismatchPayload"/>
+                </default>
+            </switch>
+            <log level="full"/>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
 </api>

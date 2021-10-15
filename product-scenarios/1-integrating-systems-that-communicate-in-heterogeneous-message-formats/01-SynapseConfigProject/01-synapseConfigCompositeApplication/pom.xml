@@ -9,8 +9,8 @@
   <name>01-synapseConfigCompositeApplication</name>
   <description>01-synapseConfigCompositeApplication</description>
   <properties>
-    <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_1_1_Proxy_SoapToPoxMsgEnrichWithChild>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_1_1_Proxy_SoapToPoxMsgEnrichWithChild>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1.6.3.6_xml>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1.6.3.6_xml>
+    <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_1_1_Proxy_SoapToPoxMsgEnrichWithChild>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_1_1_Proxy_SoapToPoxMsgEnrichWithChild>
     <org.wso2.ei.product-scenarios.scenario_01.local-entry_._in_transform>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.local-entry_._in_transform>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_3_8_xml>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_3_8_xml>
     <org.wso2.ei.product-scenarios.scenario_01.api_._1_2_2_API_pox_to_json_using_message_type>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.api_._1_2_2_API_pox_to_json_using_message_type>
@@ -27,8 +27,8 @@
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_7_outputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_7_outputSchema>
     <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_2_2_Proxy_Add_Sibling_xpath>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_2_2_Proxy_Add_Sibling_xpath>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_6_outputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_6_outputSchema>
-    <org.wso2.ei.product-scenarios.scenario_01.sequence_._fullLogSeq>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.sequence_._fullLogSeq>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_8_inputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_8_inputSchema>
+    <org.wso2.ei.product-scenarios.scenario_01.sequence_._fullLogSeq>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.sequence_._fullLogSeq>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_convert_json_to_soap_outputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_convert_json_to_soap_outputSchema>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_3_inputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_3_inputSchema>
     <org.wso2.ei.product-scenarios.scenario_01.api_._1_2_1_API_pox_to_json_using_payload_factory>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.api_._1_2_1_API_pox_to_json_using_payload_factory>
@@ -54,8 +54,9 @@
     <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_10_1_Proxy_AlterPayloadWithInlineGroovyScript>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_10_1_Proxy_AlterPayloadWithInlineGroovyScript>
     <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_4_1_Proxy_RemoveElements_ScriptMediator>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_4_1_Proxy_RemoveElements_ScriptMediator>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_convert_soap_to_json>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_convert_soap_to_json>
-    <org.wso2.ei.product-scenarios.scenario_01.sequence_._callJsonMappingApi>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.sequence_._callJsonMappingApi>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_5_inputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_5_inputSchema>
+    <org.wso2.ei.product-scenarios.scenario_01.sequence_._callJsonMappingApi>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.sequence_._callJsonMappingApi>
+    <org.wso2.ei.product-scenarios.scenario_01.sequence_._contentMismatchPayload>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.sequence_._contentMismatchPayload>
     <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_3_3_Proxy_replace_targetDefinedThroughXpathBySourceProperty>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_3_3_Proxy_replace_targetDefinedThroughXpathBySourceProperty>
     <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_8_1_1_PlainTextReceiverProxy>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_8_1_1_PlainTextReceiverProxy>
     <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_10_2_Proxy_alterPayloadWithInlineJavaScript>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_10_2_Proxy_alterPayloadWithInlineJavaScript>
@@ -65,8 +66,8 @@
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_4_outputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_4_outputSchema>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_4_inputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_4_inputSchema>
     <org.wso2.ei.product-scenarios.scenario_01.local-entry_._out_transform>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.local-entry_._out_transform>
-    <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_4_3_Proxy_removeElementUsingXsltMediator>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_4_3_Proxy_removeElementUsingXsltMediator>
     <org.wso2.ei.product-scenarios.scenario_01.api_._1_3_1_API_json_to_soap_using_xslt>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.api_._1_3_1_API_json_to_soap_using_xslt>
+    <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_4_3_Proxy_removeElementUsingXsltMediator>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_4_3_Proxy_removeElementUsingXsltMediator>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_4_3_xsltStyleSheet_xml>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_4_3_xsltStyleSheet_xml>
     <org.wso2.ei.product-scenarios.scenario_01.api_._1_6_13_API_performStringOperations>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.api_._1_6_13_API_performStringOperations>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_4_outputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_4_outputSchema>
@@ -87,8 +88,8 @@
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_convert_soap_to_json_outputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_convert_soap_to_json_outputSchema>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1.6.3.7_xml>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1.6.3.7_xml>
     <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_1_4_Proxy_addPayloadStoredInPropertyAsChild>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_1_4_Proxy_addPayloadStoredInPropertyAsChild>
-    <org.wso2.ei.product-scenarios.scenario_01.endpoint_._Plaintext_EP>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.endpoint_._Plaintext_EP>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_6_inputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_6_inputSchema>
+    <org.wso2.ei.product-scenarios.scenario_01.endpoint_._Plaintext_EP>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.endpoint_._Plaintext_EP>
     <org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_2_4_Proxy_Add_Sibling_toMessageBodyStoredInProperty>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.proxy-service_._1_6_2_4_Proxy_Add_Sibling_toMessageBodyStoredInProperty>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_3_outputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_12_3_outputSchema>
     <org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_1_inputSchema>capp/EnterpriseServiceBus</org.wso2.ei.product-scenarios.scenario_01.resource_._config_1_6_13_1_inputSchema>
@@ -123,37 +124,25 @@
   <dependencies>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1.6.3.5_xml</artifactId>
+      <artifactId>config_convert_json_to_soap_inputSchema</artifactId>
       <version>1.0.0</version>
       <type>zip</type>
     </dependency>
     <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1.6.3.6_xml</artifactId>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.endpoint</groupId>
+      <artifactId>SOAP_EP</artifactId>
       <version>1.0.0</version>
-      <type>zip</type>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.endpoint</groupId>
+      <artifactId>JSON_EP</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
       <artifactId>config_1.6.3.7_xml</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_1</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_10</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_10_inputSchema</artifactId>
       <version>1.0.0</version>
       <type>zip</type>
     </dependency>
@@ -164,44 +153,26 @@
       <type>zip</type>
     </dependency>
     <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_3_2_Proxy_replace_targetBySourceBodyDefinedThroughXpath</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_1_inputSchema</artifactId>
+      <artifactId>config_1_6_13_4_outputSchema</artifactId>
       <version>1.0.0</version>
       <type>zip</type>
     </dependency>
     <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_1_outputSchema</artifactId>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.local-entry</groupId>
+      <artifactId>out_transform</artifactId>
       <version>1.0.0</version>
-      <type>zip</type>
+      <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_2</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_2_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_2_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_3</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_3_inputSchema</artifactId>
+      <artifactId>config_1.6.3.5_xml</artifactId>
       <version>1.0.0</version>
       <type>zip</type>
     </dependency>
@@ -213,67 +184,7 @@
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_4</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_4_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_4_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_5</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_5_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_5_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_6</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_6_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
       <artifactId>config_1_6_12_6_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_7</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_7_inputSchema</artifactId>
       <version>1.0.0</version>
       <type>zip</type>
     </dependency>
@@ -285,195 +196,21 @@
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_8</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_8_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_8_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_9</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_9_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_12_9_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_1</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_1_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_1_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_2</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_2_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_2_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_3</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_3_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
       <artifactId>config_1_6_13_3_outputSchema</artifactId>
       <version>1.0.0</version>
       <type>zip</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_4</artifactId>
+      <artifactId>config_1_6_12_2_outputSchema</artifactId>
       <version>1.0.0</version>
       <type>zip</type>
     </dependency>
     <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_4_inputSchema</artifactId>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_2_1_Proxy_Add_Sibling_Inline</artifactId>
       <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_4_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_5</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_5_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_5_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_6</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_6_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_6_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_7</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_7_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_13_7_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_3_8_xml</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_1_6_4_3_xsltStyleSheet_xml</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_convert_json_to_soap</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_convert_json_to_soap_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_convert_json_to_soap_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
+      <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
@@ -482,170 +219,8 @@
       <type>zip</type>
     </dependency>
     <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_convert_soap_to_json</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_convert_soap_to_json_inputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_convert_soap_to_json_outputSchema</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
-      <artifactId>config_convert_soap_to_json_xsltStyleSheet</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
-      <artifactId>1_2_1_API_pox_to_json_using_payload_factory</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
-      <artifactId>1_2_2_API_pox_to_json_using_message_type</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
-      <artifactId>1_3_1_API_json_to_soap_using_xslt</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
-      <artifactId>1_3_2_API_json_to_soap_using_payload_factory</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
-      <artifactId>1_6_12_API_performArithmeticOperations</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
-      <artifactId>1_6_13_API_performStringOperations</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
-      <artifactId>1_JsonMapping</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.endpoint</groupId>
-      <artifactId>JSON_EP</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.endpoint</groupId>
       <artifactId>POX_EP</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.endpoint</groupId>
-      <artifactId>Plaintext_EP</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.endpoint</groupId>
-      <artifactId>SOAP_EP</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.endpoint</groupId>
-      <artifactId>VFS_Sample_EP</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.local-entry</groupId>
-      <artifactId>in_transform</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.local-entry</groupId>
-      <artifactId>out_transform</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_1_1_Proxy_soap_to_json_using_payload_factory</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_1_2_Proxy_soap_to_json_using_message_type</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_1_3_Proxy_soap_to_json_using_data_mapper</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_10_1_Proxy_AlterPayloadWithInlineGroovyScript</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_10_2_Proxy_alterPayloadWithInlineJavaScript</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_1_1_Proxy_SoapToPoxMsgEnrichWithChild</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_1_2_Proxy_SoapToPoxEnrichWithXpathAsChild</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_1_3_Proxy_addCurrentPayloadAsChild</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_1_4_Proxy_addPayloadStoredInPropertyAsChild</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_2_1_Proxy_Add_Sibling_Inline</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
@@ -656,10 +231,76 @@
       <type>xml</type>
     </dependency>
     <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_3_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_2_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_7_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_2_3_Proxy_Add_Sibling_toTargetBody</artifactId>
+      <artifactId>1_6_4_1_Proxy_RemoveElements_ScriptMediator</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_3_8_xml</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_1_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_5_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.sequence</groupId>
+      <artifactId>contentMismatchPayload</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_10</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_6</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_7</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_convert_soap_to_json</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
@@ -668,14 +309,56 @@
       <type>xml</type>
     </dependency>
     <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_4</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_5</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_2</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.local-entry</groupId>
+      <artifactId>in_transform</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_3</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_1</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_3_1_Proxy_replace_messageBody_usingPayloadStoredInProperty</artifactId>
+      <artifactId>1_1_1_Proxy_soap_to_json_using_payload_factory</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_3_2_Proxy_replace_targetBySourceBodyDefinedThroughXpath</artifactId>
+      <artifactId>1_6_1_4_Proxy_addPayloadStoredInPropertyAsChild</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
+      <artifactId>1_2_1_API_pox_to_json_using_payload_factory</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
@@ -687,37 +370,61 @@
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_3_4_Proxy_replace_targetDefinedThroughXpathBySourceInlineContent</artifactId>
+      <artifactId>1_8_1_1_Proxy_PlainTextReceiver</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_8</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_9</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.endpoint</groupId>
+      <artifactId>VFS_Sample_EP</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_3_5_Proxy_replaceBodyOfPayloadSourceDefinedInlineGovReg</artifactId>
+      <artifactId>1_6_2_3_Proxy_Add_Sibling_toTargetBody</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_3_6_Proxy_replaceBodyOfPayloadUsingSourceDefinedInlineConfReg</artifactId>
+      <artifactId>1_6_3_1_Proxy_replace_messageBody_usingPayloadStoredInProperty</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_3_7_Proxy_replaceTargetDefinedThroughXpathSourceInlineGovReg</artifactId>
+      <artifactId>1_6_1_1_Proxy_SoapToPoxMsgEnrichWithChild</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1.6.3.6_xml</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
+      <artifactId>1_JsonMapping</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_3_8_Proxy_replaceTargetDefinedThroughXpathSourceInlineConfReg</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_6_4_1_Proxy_RemoveElements_ScriptMediator</artifactId>
+      <artifactId>1_6_10_1_Proxy_AlterPayloadWithInlineGroovyScript</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
@@ -728,16 +435,274 @@
       <type>xml</type>
     </dependency>
     <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_4_3_xsltStyleSheet_xml</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_6_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_3_7_Proxy_replaceTargetDefinedThroughXpathSourceInlineGovReg</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_convert_soap_to_json_xsltStyleSheet</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_3_6_Proxy_replaceBodyOfPayloadUsingSourceDefinedInlineConfReg</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.sequence</groupId>
+      <artifactId>fullLogSeq</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_4_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_5</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_1_3_Proxy_soap_to_json_using_data_mapper</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_6</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_3</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_4</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.sequence</groupId>
+      <artifactId>callJsonMappingApi</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_1_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_1</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_2</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_3_4_Proxy_replace_targetDefinedThroughXpathBySourceInlineContent</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_5_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_1_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_9_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_8_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_2_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_7</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_convert_json_to_soap_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.endpoint</groupId>
+      <artifactId>Plaintext_EP</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_10_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_4_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_convert_json_to_soap</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_10_2_Proxy_alterPayloadWithInlineJavaScript</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_5_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_2_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_1_2_Proxy_SoapToPoxEnrichWithXpathAsChild</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_6_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_1_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_7_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_3_8_Proxy_replaceTargetDefinedThroughXpathSourceInlineConfReg</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_8_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_12_9_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_3_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_4_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_1_3_Proxy_addCurrentPayloadAsChild</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
       <artifactId>1_6_4_3_Proxy_removeElementUsingXsltMediator</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
     <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
-      <artifactId>1_8_1_1_Proxy_PlainTextReceiver</artifactId>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_5_inputSchema</artifactId>
       <version>1.0.0</version>
-      <type>xml</type>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_6_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_convert_soap_to_json_outputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.sequence</groupId>
@@ -746,8 +711,20 @@
       <type>xml</type>
     </dependency>
     <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.sequence</groupId>
-      <artifactId>callSoapSeq</artifactId>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_1_6_13_7_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
+      <artifactId>1_6_13_API_performStringOperations</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
+      <artifactId>1_6_12_API_performArithmeticOperations</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
@@ -759,15 +736,45 @@
     </dependency>
     <dependency>
       <groupId>org.wso2.ei.product-scenarios.scenario_01.sequence</groupId>
-      <artifactId>fullLogSeq</artifactId>
+      <artifactId>callSoapSeq</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
     </dependency>
     <dependency>
-      <groupId>org.wso2.ei.product-scenarios.scenario_01.sequence</groupId>
-      <artifactId>callJsonMappingApi</artifactId>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
+      <artifactId>1_3_1_API_json_to_soap_using_xslt</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
+      <artifactId>1_2_2_API_pox_to_json_using_message_type</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.api</groupId>
+      <artifactId>1_3_2_API_json_to_soap_using_payload_factory</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_6_3_5_Proxy_replaceBodyOfPayloadSourceDefinedInlineGovReg</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.proxy-service</groupId>
+      <artifactId>1_1_2_Proxy_soap_to_json_using_message_type</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>org.wso2.ei.product-scenarios.scenario_01.resource</groupId>
+      <artifactId>config_convert_soap_to_json_inputSchema</artifactId>
+      <version>1.0.0</version>
+      <type>zip</type>
     </dependency>
   </dependencies>
   <repositories>
