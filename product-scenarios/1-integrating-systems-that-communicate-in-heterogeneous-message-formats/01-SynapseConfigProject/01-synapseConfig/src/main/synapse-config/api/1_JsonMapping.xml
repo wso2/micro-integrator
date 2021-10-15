@@ -13,12 +13,7 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <payloadFactory description="Build Default Response Payload in JSON format" media-type="json">
-                        <format>{
-    "status": "content mismatch in json"
-}</format>
-                        <args/>
-                    </payloadFactory>
+                    <sequence key="contentMismatchPayload"/>
                 </default>
             </switch>
             <log level="full"/>
@@ -56,12 +51,40 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <payloadFactory description="Build Default Response Payload in JSON format" media-type="json">
+                    <sequence key="contentMismatchPayload"/>
+                </default>
+            </switch>
+            <log level="full"/>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/message/1_1_3_1_1">
+        <inSequence>
+            <log level="full">
+                <property expression="json-eval($)" name="json"/>
+            </log>
+            <switch source="json-eval($)">
+                <case regex="\{&quot;item&quot;:\[\{&quot;name&quot;:&quot;Berry-Berry Belgian Waffles&quot;,&quot;price&quot;:&quot;\$8.95&quot;,&quot;calories&quot;:900,&quot;orgin&quot;:&quot;Belgian&quot;,&quot;veg&quot;:true,&quot;description&quot;:&quot;Light Belgian waffles covered with an assortment of fresh berries and whipped cream&quot;}]}">
+                    <payloadFactory description="Build Response Payload in JSON format" media-type="json">
                         <format>{
-    "status": "content mismatch in json"
+    "item": [
+        {
+            "name": "Berry-Berry Belgian Waffles",
+            "price": "$8.95",
+            "calories": 900,
+            "orgin": "Belgian",
+            "veg": true,
+            "description": "Light Belgian waffles covered with an assortment of fresh berries and whipped cream"
+        }
+    ]
 }</format>
                         <args/>
                     </payloadFactory>
+                </case>
+                <default>
+                    <sequence key="contentMismatchPayload"/>
                 </default>
             </switch>
             <log level="full"/>

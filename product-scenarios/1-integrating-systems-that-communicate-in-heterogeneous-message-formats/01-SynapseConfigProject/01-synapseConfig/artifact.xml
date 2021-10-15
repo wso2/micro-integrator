@@ -131,4 +131,7 @@
     <artifact name="callJsonMappingApi" groupId="org.wso2.ei.product-scenarios.scenario_01.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/sequences/callJsonMappingApi.xml</file>
     </artifact>
+    <artifact name="contentMismatchPayload" groupId="org.wso2.ei.product-scenarios.scenario_01.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/contentMismatchPayload.xml</file>
+    </artifact>
 </artifacts>
