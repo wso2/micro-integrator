@@ -22,13 +22,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.management.apis.security.handler.AuthConstants;
 import org.wso2.micro.integrator.management.apis.security.handler.JWTConfig;
 import org.wso2.micro.integrator.management.apis.security.handler.JWTInMemoryTokenStore;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
 /**
  * Resource for logout. This revokes the issued token.
@@ -69,6 +73,10 @@ public class LogoutResource implements MiApiResource {
             handleServerError(axis2MessageContext, "Log out failed due to incorrect credentials");
             return true;
         }
+        long time = System.currentTimeMillis();
+        Date currentTime = new Date(time);
+        String username = messageContext.getProperty(USERNAME_PROPERTY).toString();
+        AuditLogger.logAuditMessage(username + " logged out at [" + currentTime.toString() + "]");
         return true;
     }
 

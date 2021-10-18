@@ -30,6 +30,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.micro.core.util.AuditLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -123,9 +124,16 @@ public class LoggingResource extends ApiResource {
                         String loggerName = jsonPayload.getString(Constants.LOGGER_NAME);
                         boolean isRootLogger = Constants.ROOT_LOGGER.equals(loggerName);
                         boolean hasLoggerClass = jsonPayload.has(LOGGER_CLASS);
+                        String performedBy = Constants.ANONYMOUS_USER;
+                        if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                            performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                        }
+                        JSONObject info = new JSONObject();
+                        info.put(Constants.LOGGER_NAME, loggerName);
+                        info.put(Constants.LOGGING_LEVEL, logLevel);
                         if (isRootLogger || !hasLoggerClass) {
                             // update existing logger
-                            jsonBody = updateLoggerData(axis2MessageContext, loggerName, logLevel);
+                            jsonBody = updateLoggerData(performedBy, info, axis2MessageContext, loggerName, logLevel);
                         } else {
                             try {
                                 if (isLoggerExist(loggerName)) {
@@ -134,7 +142,8 @@ public class LoggingResource extends ApiResource {
                                     jsonBody = createJsonError(errorMsg, "", axis2MessageContext);
                                 } else {
                                     String loggerClass = jsonPayload.getString(LOGGER_CLASS);
-                                    jsonBody = updateLoggerData(axis2MessageContext, loggerName, loggerClass, logLevel);
+                                    jsonBody = updateLoggerData(performedBy, info,
+                                                                axis2MessageContext, loggerName, loggerClass, logLevel);
                                 }
                             } catch (IOException exception) {
                                 jsonBody = createJsonError(EXCEPTION_MSG, exception, axis2MessageContext);
@@ -154,7 +163,8 @@ public class LoggingResource extends ApiResource {
         return true;
     }
 
-    private JSONObject updateLoggerData(org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName,
+    private JSONObject updateLoggerData(String performedBy, JSONObject info,
+                                        org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName,
                                         String loggerClass, String logLevel) {
 
         try {
@@ -165,13 +175,17 @@ public class LoggingResource extends ApiResource {
             config.setProperty(LOGGER_PREFIX + loggerName + LOGGER_LEVEL_SUFFIX, logLevel);
             applyConfigs();
             jsonBody.put(Constants.MESSAGE, getSuccessMsg(loggerClass, loggerName, logLevel));
+            AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_LOG_LEVEL,
+                                        Constants.AUDIT_LOG_ACTION_CREATED, info);
+
         } catch (ConfigurationException | IOException exception) {
             jsonBody = createJsonError("Exception while updating logger data ", exception, axis2MessageContext);
         }
         return jsonBody;
     }
 
-    private JSONObject updateLoggerData(org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName,
+    private JSONObject updateLoggerData(String performedBy, JSONObject info,
+                                        org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName,
                                         String logLevel) {
 
         try {
@@ -180,9 +194,14 @@ public class LoggingResource extends ApiResource {
                 config.setProperty(loggerName + LOGGER_LEVEL_SUFFIX, logLevel);
                 applyConfigs();
                 jsonBody.put(Constants.MESSAGE, getSuccessMsg("", loggerName, logLevel));
+                AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_ROOT_LOG_LEVEL,
+                                            Constants.AUDIT_LOG_ACTION_UPDATED, info);
+
             } else {
                 if (isLoggerExist(loggerName)) {
                     config.setProperty(LOGGER_PREFIX + loggerName + LOGGER_LEVEL_SUFFIX, logLevel);
+                    AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_LOG_LEVEL,
+                                                Constants.AUDIT_LOG_ACTION_UPDATED, info);
                     applyConfigs();
                     jsonBody.put(Constants.MESSAGE, getSuccessMsg("", loggerName, logLevel));
                 } else {

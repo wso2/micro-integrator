@@ -165,6 +165,20 @@ public class SimpleHttpClient {
         return client.execute(request);
     }
 
+    public HttpResponse doPostWithMultipart(String url, File file, Map<String, String> header)
+            throws IOException {
+        MultipartEntityBuilder entitybuilder = MultipartEntityBuilder.create();
+        entitybuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        entitybuilder.addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+        HttpPost request = new HttpPost(url);
+        for (String headerKey : header.keySet()) {
+            request.addHeader(headerKey, header.get(headerKey));
+        }
+        HttpEntity mutiPartHttpEntity = entitybuilder.build();
+        request.setEntity(mutiPartHttpEntity);
+        return client.execute(request);
+    }
+
     /**
      * Extracts the payload from a HTTP response. For a given HttpResponse object, this
      * method can be called only once.

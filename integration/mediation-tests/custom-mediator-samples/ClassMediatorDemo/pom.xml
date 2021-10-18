@@ -102,17 +102,6 @@
             <version>2.0.0.wso2v2</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-            <id>wso2-nexus</id>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-        </repository>
-    </repositories>
     <pluginRepositories>
         <pluginRepository>
             <releases>
@@ -121,7 +110,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
             <id>wso2-nexus</id>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
         </pluginRepository>
     </pluginRepositories>
     <build>

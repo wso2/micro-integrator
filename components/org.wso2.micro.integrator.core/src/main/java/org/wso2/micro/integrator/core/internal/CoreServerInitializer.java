@@ -152,7 +152,8 @@ public class CoreServerInitializer {
                 log.fatal(serverName + " startup failed.");
                 throw new ServletException(msg);
             }
-
+            String updateLevel = MicroIntegratorBaseUtils.getUpdateLevel();
+            System.setProperty(MicroIntegratorBaseConstants.UPDATE_LEVEL, updateLevel);
             try {
                 System.setProperty(MicroIntegratorBaseConstants.LOCAL_IP_ADDRESS, NetworkUtils.getLocalHostname());
             } catch (SocketException ignored) {

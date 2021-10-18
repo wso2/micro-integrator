@@ -32,10 +32,12 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.endpoints.AbstractEndpoint;
 import org.apache.synapse.endpoints.Endpoint;
 import org.json.JSONObject;
+import org.wso2.micro.core.util.AuditLogger;
 
 import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -72,6 +74,10 @@ public class EndpointResource implements MiApiResource {
                           SynapseConfiguration synapseConfiguration) {
 
         String endpointName = Utils.getQueryParameter(messageContext, ENDPOINT_NAME);
+        String performedBy = Constants.ANONYMOUS_USER;
+        if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+            performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+        }
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(endpointName)) {
                 populateEndpointData(messageContext, endpointName);
@@ -86,9 +92,9 @@ public class EndpointResource implements MiApiResource {
                 }
                 JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
                 if (payload.has(Constants.NAME) && payload.has(STATUS)) {
-                    changeEndpointStatus(axis2MessageContext, synapseConfiguration, payload);
+                    changeEndpointStatus(performedBy, axis2MessageContext, synapseConfiguration, payload);
                 } else {
-                    handleTracing(payload, messageContext, axis2MessageContext);
+                    handleTracing(performedBy, payload, messageContext, axis2MessageContext);
                 }
             } catch (IOException e) {
                 LOG.error("Error when parsing JSON payload", e);
@@ -99,7 +105,7 @@ public class EndpointResource implements MiApiResource {
         return true;
     }
 
-    private void handleTracing(JsonObject payload, MessageContext msgCtx,
+    private void handleTracing(String performedBy, JsonObject payload, MessageContext msgCtx,
                                org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
@@ -109,7 +115,10 @@ public class EndpointResource implements MiApiResource {
             Endpoint endpoint = configuration.getEndpoint(endpointName);
             if (endpoint != null) {
                 AspectConfiguration aspectConfiguration = ((AbstractEndpoint) endpoint).getDefinition().getAspectConfiguration();
-                response = Utils.handleTracing(aspectConfiguration, endpointName, axisMsgCtx);
+                JSONObject info = new JSONObject();
+                info.put(ENDPOINT_NAME, endpointName);
+                response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_ENDPOINT_TRACE, info,
+                                               aspectConfiguration, endpointName, axisMsgCtx);
             } else {
                 response = Utils.createJsonError("Specified endpoint ('" + endpointName + "') not found", axisMsgCtx,
                         Constants.BAD_REQUEST);
@@ -204,7 +213,7 @@ public class EndpointResource implements MiApiResource {
      * @param configuration       Synapse configuration
      * @param payload             Request json payload
      */
-    private void changeEndpointStatus(org.apache.axis2.context.MessageContext axis2MessageContext,
+    private void changeEndpointStatus(String performedBy, org.apache.axis2.context.MessageContext axis2MessageContext,
                                       SynapseConfiguration configuration, JsonObject payload) {
 
         String endpointName = payload.get(Constants.NAME).getAsString();
@@ -212,12 +221,18 @@ public class EndpointResource implements MiApiResource {
         Endpoint ep = configuration.getEndpoint(endpointName);
         if (ep != null) {
             JSONObject jsonResponse = new JSONObject();
+            JSONObject info = new JSONObject();
+            info.put(ENDPOINT_NAME, endpointName);
             if (INACTIVE_STATUS.equalsIgnoreCase(status)) {
                 ep.getContext().switchOff();
                 jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, endpointName + " is switched Off");
+                AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_ENDPOINT,
+                                            Constants.AUDIT_LOG_ACTION_DISABLED, info);
             } else if (ACTIVE_STATUS.equalsIgnoreCase(status)) {
                 ep.getContext().switchOn();
                 jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, endpointName + " is switched On");
+                AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_ENDPOINT,
+                                            Constants.AUDIT_LOG_ACTION_ENABLE, info);
             } else {
                 jsonResponse = Utils.createJsonError("Provided state is not valid", axis2MessageContext, Constants.BAD_REQUEST);
             }

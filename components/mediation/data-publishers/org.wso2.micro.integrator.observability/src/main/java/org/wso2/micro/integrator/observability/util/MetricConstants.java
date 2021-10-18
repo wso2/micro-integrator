@@ -28,6 +28,7 @@ public class MetricConstants {
     public static final String HTTP_PORT = "http.nio.port";
     public static final String JAVA_VERSION = "java.vm.specification.version";
     public static final String JAVA_HOME = "java.home";
+    public static final String UPDATE_LEVEL = "UPDATE_LEVEL";
 
     //Constants for Synapse properties
     public static final String TRANSPORT_IN_URL = "TransportInURL";
@@ -53,6 +54,7 @@ public class MetricConstants {
 
     public static final String SERVER_UP = "wso2_integration_server_up";
     public static final String SERVICE_UP = "wso2_integration_service_up";
+    public static final String SERVER_VERSION = "wso2_integration_server_version";
 
     public static final String METRIC_HANDLER = "metric_handler";
     public static final String PROXY_LATENCY_BUCKETS = "proxy_latency_buckets";
@@ -65,6 +67,7 @@ public class MetricConstants {
 
     public static final String SERVER = "Server";
     public static final String SERVICE = "Service";
+    public static final String VERSION = "Version";
 
     //Constants for Prometheus Metrics types
     public static final String COUNTER = "Counter";
@@ -78,5 +81,7 @@ public class MetricConstants {
     public static final String JAVA_HOME_LABEL = "java_home";
     public static final String HOST = "host";
     public static final String PORT = "port";
+    public static final String VERSION_LABEL = "version";
+    public static final String UPDATE_LEVEL_LABEL = "update_level";
 
 }

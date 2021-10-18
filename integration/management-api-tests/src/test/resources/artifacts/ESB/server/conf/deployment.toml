@@ -18,4 +18,4 @@ alias = "symmetric.key.value"
 algorithm = "AES"
 
 [management_api.jwt_token_security_handler]
-enable = false
+enable = true

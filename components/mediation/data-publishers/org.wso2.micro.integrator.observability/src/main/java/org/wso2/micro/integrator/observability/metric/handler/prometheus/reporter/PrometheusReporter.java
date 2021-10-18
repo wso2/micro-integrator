@@ -51,6 +51,7 @@ public class PrometheusReporter implements MetricReporter {
 
     private Gauge SERVER_UP;
     private Gauge SERVICE_UP;
+    private Gauge SERVER_VERSION;
 
     private static Log log = LogFactory.getLog(PrometheusReporter.class);
 
@@ -63,6 +64,7 @@ public class PrometheusReporter implements MetricReporter {
     @Override
     public void initMetrics() {
         this.initializeServeMetrics();
+        this.initializeServerVersionMetrics();
         this.initializeArtifactDeploymentMetrics();
 
         this.initializeProxyMetrics();
@@ -134,6 +136,10 @@ public class PrometheusReporter implements MetricReporter {
             SERVER_UP = Gauge.build(MetricConstants.SERVER_UP, "Server status").
                     labelNames(labels).register();
             metricMap.put(MetricConstants.SERVER_UP, SERVER_UP);
+        } else if (serviceType.equals(MetricConstants.VERSION)) {
+            SERVER_VERSION = Gauge.build(MetricConstants.SERVER_VERSION, metricHelp).
+                    labelNames(labels).register();
+            metricMap.put(MetricConstants.SERVER_VERSION, SERVER_VERSION);
         } else {
             SERVICE_UP = Gauge.build(MetricConstants.SERVICE_UP, "Service status").
                     labelNames(labels).register();
@@ -196,6 +202,12 @@ public class PrometheusReporter implements MetricReporter {
     public void serverUp(String host, String port, String javaHome, String javaVersion) {
         Gauge gauge = (Gauge) metricMap.get(MetricConstants.SERVER_UP);
         gauge.labels(host, port, javaHome, javaVersion).setToCurrentTime();
+    }
+
+    @Override
+    public void serverVersion(String version, String updateLevel) {
+        Gauge gauge = (Gauge) metricMap.get(MetricConstants.SERVER_VERSION);
+        gauge.labels(version, updateLevel).setToCurrentTime();
     }
 
     @Override
@@ -357,6 +369,15 @@ public class PrometheusReporter implements MetricReporter {
         createMetrics(MetricConstants.SERVER, MetricConstants.GAUGE, MetricConstants.SERVER_UP,
                 "Server Status", new String[]{MetricConstants.HOST, MetricConstants.PORT,
                         MetricConstants.JAVA_HOME_LABEL, MetricConstants.JAVA_VERSION_LABEL});
+    }
+
+    /**
+     * Create the metrics related to server version.
+     */
+    public void initializeServerVersionMetrics() {
+        createMetrics(MetricConstants.VERSION, MetricConstants.GAUGE, MetricConstants.SERVER_VERSION,
+                "Version and Update Level of Server",
+                new String[]{MetricConstants.VERSION_LABEL, MetricConstants.UPDATE_LEVEL_LABEL});
     }
 
     /**

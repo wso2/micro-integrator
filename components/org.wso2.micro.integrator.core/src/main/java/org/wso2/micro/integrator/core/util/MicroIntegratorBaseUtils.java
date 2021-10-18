@@ -18,6 +18,7 @@
 
 package org.wso2.micro.integrator.core.util;
 
+import com.google.gson.Gson;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.util.base64.Base64Utils;
 import org.apache.axis2.AxisFault;
@@ -46,20 +47,24 @@ import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.lang.management.ManagementPermission;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -80,6 +85,7 @@ public class MicroIntegratorBaseUtils {
     private static Log log = LogFactory.getLog(MicroIntegratorBaseUtils.class);
 
     private static final String REPOSITORY = "repository";
+    private static final String UPDATES = "updates";
     private static boolean isServerConfigInitialized;
     private static OMElement axis2Config;
     private static final String TRUE = "true";
@@ -97,6 +103,28 @@ public class MicroIntegratorBaseUtils {
             return getCarbonConfigDirPath() + File.separator + "carbon.xml";
         }
         return carbonXML + File.separator + "carbon.xml";
+    }
+
+    public static String getUpdateLevel() {
+        String defaultUpdateLevel = "-";
+        String carbonHome = getCarbonHome();
+        if (carbonHome != null) {
+            String configFilePath = carbonHome + File.separator + UPDATES + File.separator + "config.json";
+            File configFile = new File(configFilePath);
+            if (configFile.exists()) {
+                Gson gsonParser = new Gson();
+                try {
+                    Reader configFileReader = Files.newBufferedReader(Paths.get(configFilePath));
+                    Map<?, ?> configMap = gsonParser.fromJson(configFileReader, Map.class);
+                    return (String) configMap.get("update-level");
+                } catch (Exception e) {
+                    return defaultUpdateLevel;
+                }
+            } else {
+                return defaultUpdateLevel;
+            }
+        }
+        return defaultUpdateLevel;
     }
 
     public static String getCarbonConfigDirPath() {
