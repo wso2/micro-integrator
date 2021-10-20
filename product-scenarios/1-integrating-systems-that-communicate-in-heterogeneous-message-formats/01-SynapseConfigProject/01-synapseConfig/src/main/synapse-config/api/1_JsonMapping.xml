@@ -13,7 +13,7 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <sequence key="contentMismatchPayload"/>
+                    <sequence key="contentMismatchJsonPayload"/>
                 </default>
             </switch>
             <log level="full"/>
@@ -51,7 +51,7 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <sequence key="contentMismatchPayload"/>
+                    <sequence key="contentMismatchJsonPayload"/>
                 </default>
             </switch>
             <log level="full"/>
@@ -84,7 +84,7 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <sequence key="contentMismatchPayload"/>
+                    <sequence key="contentMismatchJsonPayload"/>
                 </default>
             </switch>
             <log level="full"/>
@@ -106,7 +106,7 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <sequence key="contentMismatchPayload"/>
+                    <sequence key="contentMismatchJsonPayload"/>
                 </default>
             </switch>
             <log level="full"/>
@@ -147,7 +147,7 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <sequence key="contentMismatchPayload"/>
+                    <sequence key="contentMismatchJsonPayload"/>
                 </default>
             </switch>
             <log level="full"/>
@@ -187,7 +187,7 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <sequence key="contentMismatchPayload"/>
+                    <sequence key="contentMismatchJsonPayload"/>
                 </default>
             </switch>
             <log level="full"/>
@@ -215,7 +215,7 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <sequence key="contentMismatchPayload"/>
+                    <sequence key="contentMismatchJsonPayload"/>
                 </default>
             </switch>
             <log level="full"/>
@@ -245,7 +245,7 @@
                     </payloadFactory>
                 </case>
                 <default>
-                    <sequence key="contentMismatchPayload"/>
+                    <sequence key="contentMismatchJsonPayload"/>
                 </default>
             </switch>
             <log level="full"/>
