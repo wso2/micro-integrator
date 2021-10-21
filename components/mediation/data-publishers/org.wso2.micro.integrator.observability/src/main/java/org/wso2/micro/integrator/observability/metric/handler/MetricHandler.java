@@ -133,12 +133,19 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
 
             if ((serviceInvokePort != internalHttpApiPort) && (null !=
                     axis2MessageContext.getProperty(MetricConstants.SERVICE_PREFIX))) {
-                String context = axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).
+                String url = axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).
                         toString();
-                String apiInvocationUrl = axis2MessageContext.getProperty(MetricConstants.SERVICE_PREFIX).
-                        toString() + context.replaceFirst(DELIMITER, EMPTY);
-                String apiName = getApiName(context, synCtx);
+                String apiName = getApiName(url, synCtx);
                 if (apiName != null) {
+                    String context = "";
+                    if (synCtx.getConfiguration() != null) {
+                        API api = synCtx.getConfiguration().getAPI(apiName);
+                        if (api != null) {
+                            context = api.getContext();
+                        }
+                    }
+                    String apiInvocationUrl = axis2MessageContext.getProperty(MetricConstants.SERVICE_PREFIX).
+                            toString() + context.replaceFirst(DELIMITER, EMPTY);
                     incrementAPICount(apiName, apiInvocationUrl);
                     startTimers(synCtx, apiName, SynapseConstants.FAIL_SAFE_MODE_API, apiInvocationUrl);
                 }
