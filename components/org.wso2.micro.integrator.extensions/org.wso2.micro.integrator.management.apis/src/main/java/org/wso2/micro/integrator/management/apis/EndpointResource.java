@@ -74,7 +74,10 @@ public class EndpointResource implements MiApiResource {
                           SynapseConfiguration synapseConfiguration) {
 
         String endpointName = Utils.getQueryParameter(messageContext, ENDPOINT_NAME);
-        String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+        String performedBy = Constants.ANONYMOUS_USER;
+        if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+            performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+        }
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(endpointName)) {
                 populateEndpointData(messageContext, endpointName);

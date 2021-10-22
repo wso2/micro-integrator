@@ -719,6 +719,9 @@
                 {% if handler.handler_order_phase is defined %}
                 <order {% if handler.handler_order_phase is defined %} phase = "{{handler.handler_order_phase}}" {% endif %} {% if handler.order_before is defined %} before = "{{handler.order_before}}"{% endif %} {% if handler.order_after is defined %} after = "{{handler.order_after}}"{% endif %} {% if handler.order_phase_first is defined %} phaseFirst = "{{handler.order_phase_first}}"{% endif %} {% if handler.order_phase_last is defined %} phaseLast = "{{handler.order_phase_last}}"{% endif %} />
                 {% endif %}
+                {% for handler_handler in handler.handler_handlers %}
+                <handler name="{{handler_handler.handler_name}}" class="{{handler_handler.handler_class}}" />
+                {% endfor %}
             </handler>
             {% endfor %}
         </phase>

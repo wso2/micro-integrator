@@ -124,7 +124,10 @@ public class LoggingResource extends ApiResource {
                         String loggerName = jsonPayload.getString(Constants.LOGGER_NAME);
                         boolean isRootLogger = Constants.ROOT_LOGGER.equals(loggerName);
                         boolean hasLoggerClass = jsonPayload.has(LOGGER_CLASS);
-                        String performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                        String performedBy = Constants.ANONYMOUS_USER;
+                        if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                            performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+                        }
                         JSONObject info = new JSONObject();
                         info.put(Constants.LOGGER_NAME, loggerName);
                         info.put(Constants.LOGGING_LEVEL, logLevel);
@@ -197,10 +200,10 @@ public class LoggingResource extends ApiResource {
             } else {
                 if (isLoggerExist(loggerName)) {
                     config.setProperty(LOGGER_PREFIX + loggerName + LOGGER_LEVEL_SUFFIX, logLevel);
-                    applyConfigs();
-                    jsonBody.put(Constants.MESSAGE, getSuccessMsg("", loggerName, logLevel));
                     AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_LOG_LEVEL,
                                                 Constants.AUDIT_LOG_ACTION_UPDATED, info);
+                    applyConfigs();
+                    jsonBody.put(Constants.MESSAGE, getSuccessMsg("", loggerName, logLevel));
                 } else {
                     jsonBody = createJsonError("Specified logger ('" + loggerName + "') not found", "",
                                                axis2MessageContext);
