@@ -27,6 +27,13 @@ import org.wso2.micro.integrator.coordination.util.MemberEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.ExecutionException;
+
 /**
  * The task that runs periodically to detect membership change events.
  */
@@ -56,14 +63,24 @@ public class RDBMSMemberEventListenerTask implements Runnable {
      */
     private List<MemberEventListener> listeners;
 
+    /**
+     * Using heart beat warning margin to make sure other nodes in the cluster
+     * are not starting tasks until this node completes stops the tasks
+     */
+    private int heartbeatWarningMargin;
+
     private boolean wasMemberUnresponsive = false;
 
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+
     public RDBMSMemberEventListenerTask(String nodeId, String localGroupId,
-                                        RDBMSCommunicationBusContextImpl communicationBusContext) {
+                                        RDBMSCommunicationBusContextImpl communicationBusContext, 
+                                        int heartbeatWarningMargin) {
         this.nodeID = nodeId;
         this.localGroupId = localGroupId;
         this.listeners = new ArrayList<>();
         this.communicationBusContext = communicationBusContext;
+        this.heartbeatWarningMargin = heartbeatWarningMargin;
     }
 
     /**
@@ -72,7 +89,7 @@ public class RDBMSMemberEventListenerTask implements Runnable {
     @Override public void run() {
 
         try {
-            List<MemberEvent> membershipEvents = readMembershipEvents();
+            List<MemberEvent> membershipEvents = getMembershipEvents();
             if (!membershipEvents.isEmpty()) {
                 for (MemberEvent event : membershipEvents) {
                     switch (event.getMembershipEventType()) {
@@ -105,6 +122,15 @@ public class RDBMSMemberEventListenerTask implements Runnable {
                 notifyUnresponsiveness(nodeID, localGroupId);
                 wasMemberUnresponsive = true;
             }
+        }
+    }
+
+    private List<MemberEvent> getMembershipEvents() throws ClusterCoordinationException  {
+        try {
+            Future<List<MemberEvent>> listFuture = executor.submit(this::readMembershipEvents);
+            return listFuture.get(heartbeatWarningMargin, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException e) {
+            throw new ClusterCoordinationException("Reading membership events took more time than max timeout retry interval", e);
         }
     }
 

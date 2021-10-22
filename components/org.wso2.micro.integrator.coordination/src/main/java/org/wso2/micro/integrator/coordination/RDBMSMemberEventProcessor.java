@@ -84,7 +84,7 @@ public class RDBMSMemberEventProcessor {
                 scheduledPeriod = RDBMSConstantUtils.DEFAULT_SCHEDULED_PERIOD_INTERVAL;
             }
         }
-        membershipListenerTask = new RDBMSMemberEventListenerTask(nodeId, localGroupId, communicationBusContext);
+        membershipListenerTask = new RDBMSMemberEventListenerTask(nodeId, localGroupId, communicationBusContext, heartbeatMaxRetry);
         this.clusterMembershipReaderTaskScheduler.scheduleWithFixedDelay(membershipListenerTask,
                                                                          scheduledPeriod, scheduledPeriod, TimeUnit.MILLISECONDS);
         if (log.isDebugEnabled()) {
