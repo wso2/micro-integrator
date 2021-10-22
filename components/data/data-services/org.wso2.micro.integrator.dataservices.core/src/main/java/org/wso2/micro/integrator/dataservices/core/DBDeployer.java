@@ -57,8 +57,10 @@ import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.core.SynapseEnvironment;
-import org.apache.synapse.util.resolver.SecureVaultResolver;
+import org.apache.synapse.mediators.Value;
+import org.apache.synapse.util.xpath.SynapseXPath;
 import org.apache.ws.commons.schema.utils.NamespaceMap;
+import org.jaxen.JaxenException;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.DBSFields;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.ResultTypes;
@@ -104,6 +106,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -150,6 +153,12 @@ public class DBDeployer extends AbstractDeployer {
 
     /** cached transaction manager instance */
     private static TransactionManager cachedTransactionManager = null;
+
+	/**
+	 * Regex for any vault expression.
+	 */
+	private static final String secureVaultRegex = "\\{(.*?):vault-lookup\\('(.*?)'\\)\\}";
+	private static Pattern vaultLookupPattern = Pattern.compile(secureVaultRegex);
 
 	public ConfigurationContext getConfigContext() {
 		return configCtx;
@@ -1225,15 +1234,40 @@ public class DBDeployer extends AbstractDeployer {
     		this.secureVaultResolve(childEls.next());
     	}
 		// check for existence of the vault-lookup function
-		String elementText = dbsElement.toString();
-		if (SecureVaultResolver.checkVaultLookupPattersExists(elementText)) {
-			Parameter synapseEnv = axisConfig.getParameter(SynapseConstants.SYNAPSE_ENV);
-			if (synapseEnv != null) {
-				synapseEnvironment = (SynapseEnvironment) synapseEnv.getValue();
+		String elementText = dbsElement.getText();
+		dbsElement.setText(resolveVaultExpressions(elementText));
+	}
+
+	/**
+	 * Resolve secure-vault property values
+	 *
+	 * @param propertyValue value to be resolved
+	 * @return a resolved value
+	 */
+	private String resolveVaultExpressions(String propertyValue) {
+		Matcher lookupMatcher = vaultLookupPattern.matcher(propertyValue);
+		if (lookupMatcher.matches()) {
+			//getting the expression with out curly brackets
+			String expressionStr = lookupMatcher.group(0).substring(1, lookupMatcher.group(0).length() - 1);
+			try {
+				String resolvedValue = null;
+				Value expression = new Value(new SynapseXPath(expressionStr));
+				Parameter synapseEnv = axisConfig.getParameter(SynapseConstants.SYNAPSE_ENV);
+				if (synapseEnv != null) {
+					SynapseEnvironment synapseEnvironment = (SynapseEnvironment) synapseEnv.getValue();
+					resolvedValue = expression.evaluateValue(synapseEnvironment.createMessageContext());
+				}
+				if (resolvedValue == null || resolvedValue.isEmpty()) {
+					log.warn("Found Empty value for expression : " + expression.getExpression());
+				} else {
+					return resolvedValue;
+				}
+			} catch (JaxenException e) {
+				log.error("Error while building the expression : " + expressionStr);
 			}
-			dbsElement.setText(SecureVaultResolver.resolve(synapseEnvironment, elementText));
 		}
-    }
+		return propertyValue;
+	}
 
 	private void removeODataHandler(String tenantDomain, String dataServiceName) throws DataServiceFault {
 		ODataServiceRegistry registry = ODataServiceRegistry.getInstance();
