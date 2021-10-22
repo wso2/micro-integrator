@@ -439,11 +439,20 @@ public class DBUtils {
         Map<String, AxisService> map = axisConfiguration.getServices();
         Set<String> set = map.keySet();
         for (String serviceName : set) {
-            AxisService axisService = axisConfiguration.getService(serviceName);
-            Parameter parameter = axisService.getParameter(DBConstants.AXIS2_SERVICE_TYPE);
-            if (parameter != null) {
-                if (DBConstants.DB_SERVICE_TYPE.equals(parameter.getValue().toString())) {
-                    serviceList.add(serviceName);
+            try {
+                AxisService axisService = axisConfiguration.getService(serviceName);
+                Parameter parameter = axisService.getParameter(DBConstants.AXIS2_SERVICE_TYPE);
+                if (parameter != null) {
+                    if (DBConstants.DB_SERVICE_TYPE.equals(parameter.getValue().toString())) {
+                        serviceList.add(serviceName);
+                    }
+                }
+            } catch (AxisFault axisFault) {
+                if (axisFault.getMessage().contains("inactive")) {
+                    log.debug("Ignoring axisFault due to inactive service.");
+                } else {
+                    log.error("Error occurred while populating service " + serviceName + " : "
+                              + axisFault.getMessage(), axisFault);
                 }
             }
         }

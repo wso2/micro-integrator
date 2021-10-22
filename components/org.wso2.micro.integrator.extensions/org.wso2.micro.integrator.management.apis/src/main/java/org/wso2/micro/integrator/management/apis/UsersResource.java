@@ -24,6 +24,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONObject;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.core.multiplecredentials.UserAlreadyExistsException;
@@ -53,6 +54,9 @@ import static org.wso2.micro.integrator.management.apis.Constants.USER_ID;
 public class UsersResource extends UserResource {
 
     private static final Log LOG = LogFactory.getLog(UsersResource.class);
+
+    private static final String USER_ID = "userId";
+    private static final String IS_ADMIN = "isAdmin";
 
     public UsersResource() {
 
@@ -155,11 +159,13 @@ public class UsersResource extends UserResource {
             return Utils.createJsonErrorObject("JSON payload is missing");
         }
         JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
+        boolean isAdmin = false;
         if (payload.has(USER_ID) && payload.has(PASSWORD)) {
             String[] roleList = null;
             if (payload.has(IS_ADMIN) && payload.get(IS_ADMIN).getAsBoolean()) {
                 String adminRole = getRealmConfiguration().getAdminRoleName();
                 roleList = new String[]{adminRole};
+                isAdmin = payload.get(IS_ADMIN).getAsBoolean();
             }
             String user = payload.get(USER_ID).getAsString();
             if (LOG.isDebugEnabled()) {
@@ -174,6 +180,14 @@ public class UsersResource extends UserResource {
             JSONObject jsonBody = new JSONObject();
             jsonBody.put(USER_ID, user);
             jsonBody.put(STATUS, "Added");
+            String performedBy = Constants.ANONYMOUS_USER;
+            if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+            }
+            JSONObject info = new JSONObject();
+            info.put(USER_ID, user);
+            info.put(IS_ADMIN, isAdmin);
+            AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_USER, Constants.AUDIT_LOG_ACTION_CREATED, info);
             return jsonBody;
         } else {
             throw new IOException("Missing one or more of the fields, '" + USER_ID + "', '" + PASSWORD + "' in the "

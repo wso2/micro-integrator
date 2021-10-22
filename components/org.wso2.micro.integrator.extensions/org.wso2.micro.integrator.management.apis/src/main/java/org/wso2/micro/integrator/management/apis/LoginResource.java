@@ -25,6 +25,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.json.JSONObject;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.management.apis.security.handler.AuthConstants;
 import org.wso2.micro.integrator.management.apis.security.handler.JWTConfig;
 import org.wso2.micro.integrator.management.apis.security.handler.JWTInMemoryTokenStore;
@@ -37,6 +38,7 @@ import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -132,6 +134,8 @@ public class LoginResource implements MiApiResource {
         Utils.setJsonPayLoad(axis2MessageContext, jsonPayload);
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         JWTTokenCleanupTask.startCleanupTask();
+        Date currentTime = new Date(time);
+        AuditLogger.logAuditMessage(username + " logged in at [" + currentTime.toString() + "]");
         return true;
     }
 

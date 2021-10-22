@@ -86,7 +86,14 @@ public class SequenceResource extends APIResource {
                 SynapseConfiguration configuration = msgCtx.getConfiguration();
                 SequenceMediator sequence = configuration.getDefinedSequences().get(seqName);
                 if (sequence != null) {
-                    response = Utils.handleTracing(sequence.getAspectConfiguration(), seqName, axisMsgCtx);
+                    String performedBy = Constants.ANONYMOUS_USER;
+                    if (msgCtx.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                        performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+                    }
+                    JSONObject info = new JSONObject();
+                    info.put(SEQUENCE_NAME, seqName);
+                    response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_SEQUENCE_TRACE, info,
+                                                   sequence.getAspectConfiguration(), seqName, axisMsgCtx);
                 } else {
                     response = Utils.createJsonError("Specified sequence ('" + seqName + "') not found", axisMsgCtx,
                             Constants.BAD_REQUEST);
@@ -175,7 +182,7 @@ public class SequenceResource extends APIResource {
         }
         sequenceObject.put("mediators", mediatorTypes);
         sequenceObject.put(Constants.SYNAPSE_CONFIGURATION,
-                new SequenceMediatorSerializer().serializeAnonymousSequence(null, sequenceMediator));
+                new SequenceMediatorSerializer().serializeSpecificMediator(sequenceMediator));
 
         return sequenceObject;
     }
