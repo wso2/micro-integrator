@@ -36,6 +36,7 @@ import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.core.util.StringUtils;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
@@ -50,8 +51,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -72,8 +75,13 @@ public class ServiceCatalogUtils {
 
     private static final Log log = LogFactory.getLog(ServiceCatalogUtils.class);
     private static SecretResolver secretResolver;
-    private static List<Map<String, String>> md5List = new ArrayList<>();
+    private static List<ServiceMetaDataHolder> md5List = new ArrayList<>();
     private static Boolean alreadyUploaded = false;
+    private static String resolvedHostName;
+    private static String httpListenerPort;
+    private static String httpsListenerPort;
+    private static String resolvedUrl;
+    private static String lineSeparator;
 
     /**
      * Update the service url by injecting env variables.
@@ -85,20 +93,57 @@ public class ServiceCatalogUtils {
     private static String updateServiceUrl(String currentUrl) throws ResolverException {
         /*
             Supported formats
-            https://{host}:{port}/api1
-            https://{url}/api1
+            https://{MI_HOST}:{MI_PORT}/api1
+            https://{MI_URL}/api1
         */
         SystemResolver resolver = new SystemResolver();
-        if (currentUrl.contains(HOST) && currentUrl.contains(PORT)) {
+        if (currentUrl.contains(HOST) || currentUrl.contains(PORT)) {
+            String envHost, envPort;
+            // update the {MI_HOST} with server.hostname value
             resolver.setVariable(MI_HOST);
-            String host = resolver.resolve();
+            if (currentUrl.contains(HOST)) {
+                try {
+                    envHost = resolver.resolve();
+                    if (envHost.isEmpty()) {
+                        throw new ResolverException("Environment variable could not be empty");
+                    }
+                } catch (ResolverException e) {
+                    if (resolvedHostName == null) {
+                        resolvedHostName = MicroIntegratorBaseUtils.getServerHostName();
+                    }
+                    envHost = resolvedHostName;
+                }
+                currentUrl = currentUrl.replace(HOST, envHost);
+            }
+            // update the {MI_PORT} with server listener ports
             resolver.setVariable(MI_PORT);
-            String port = resolver.resolve();
-            currentUrl = currentUrl.replace(HOST, host).replace(PORT, port);
+            if (currentUrl.contains(PORT)) {
+                try {
+                    envPort = resolver.resolve();
+                    if (envPort.isEmpty()) {
+                        throw new ResolverException("Environment variable could not be empty");
+                    }
+                } catch (ResolverException e) {
+                    if (currentUrl.startsWith(org.wso2.micro.core.Constants.HTTPS_TRANSPORT)) {
+                        if (httpsListenerPort == null) {
+                            httpsListenerPort = String.valueOf(MicroIntegratorBaseUtils.getServerHTTPSListenerPort());
+                        }
+                        envPort = httpsListenerPort;
+                    } else {
+                        if (httpListenerPort == null) {
+                            httpListenerPort = String.valueOf(MicroIntegratorBaseUtils.getServerHTTPListenerPort());
+                        }
+                        envPort = httpListenerPort;
+                    }
+                }
+                currentUrl = currentUrl.replace(PORT, envPort);
+            }
         } else if (currentUrl.contains(URL)) {
-            resolver.setVariable(MI_URL);
-            String url = resolver.resolve();
-            currentUrl = currentUrl.replace(MI_URL, url);
+            if (resolvedUrl == null) {
+                resolver.setVariable(MI_URL);
+                resolvedUrl = resolver.resolve();
+            }
+            currentUrl = currentUrl.replace(MI_URL, resolvedUrl);
         }
         return currentUrl;
     }
@@ -372,6 +417,29 @@ public class ServiceCatalogUtils {
                                            Map<String, String> md5MapOfAllService) throws IOException
             , ResolverException, NoSuchAlgorithmException {
         String metaFileName = metadataYamlFolder.getName();
+        // check metadata is relevant to proxy-service, if so process as a proxy else process as an api
+        return  (metaFileName.contains(PROXY_SERVICE_SUFFIX) && !(new File(metadataFolder,
+                metaFileName.replaceAll(METADATA_FOLDER_STRING, SWAGGER_FOLDER_STRING))).exists()) ?
+                processProxyServiceMetadata(tempDir, metadataYamlFolder, md5MapOfAllService) :
+                processAPIMetadata(metadataFolder, metaFileName, tempDir, metadataYamlFolder, md5MapOfAllService);
+    }
+
+    /**
+     * Process metadata folder of APIs and move to temporary location.
+     *
+     * @param metadataFolder     metadata folder inside CAPP.
+     * @param metaFileName       metadata file name.
+     * @param tempDir            temporary directory to put metadata.
+     * @param metadataYamlFolder YAML folder inside CAPP.
+     * @param md5MapOfAllService map containing md5 values of all services.
+     * @return metadata processed successfully
+     * @throws IOException              error occurred while moving files.
+     * @throws ResolverException        error occurred while updating the metadata file.
+     * @throws NoSuchAlgorithmException could not find the MD% algorithm.
+     */
+    private static boolean processAPIMetadata(File metadataFolder, String metaFileName, File tempDir,
+                                              File metadataYamlFolder, Map<String, String> md5MapOfAllService)
+            throws IOException, ResolverException, NoSuchAlgorithmException {
         String APIName = metaFileName.substring(0, metaFileName.indexOf(METADATA_FOLDER_STRING));
         String APIVersion =
                 metaFileName.substring(metaFileName.lastIndexOf(METADATA_FOLDER_STRING) +
@@ -410,15 +478,81 @@ public class ServiceCatalogUtils {
             FileUtils.copyFile(swaggerFile, newSwaggerFile);
 
             // Add to map to be included in filter formdata field.
-            Map<String, String> md5Map = new HashMap<>();
-            md5Map.put(METADATA_KEY, key);
             // if API is changed add the previous MD5 sum, if new API add the new MD5 sum.
-            md5Map.put(MD5, StringUtils.isEmpty(md5FromServer) ? newMD5String : md5FromServer);
-            md5List.add(md5Map);
+            md5List.add(new ServiceMetaDataHolder(key, StringUtils.isEmpty(md5FromServer) ? newMD5String : md5FromServer));
         } else {
             alreadyUploaded = true;
             if (log.isDebugEnabled()) {
                 log.debug(APIName + " is already updated in the service catalog");
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Process metadata folder of proxy service and move to temporary location.
+     *
+     * @param tempDir            temporary directory to put metadata.
+     * @param metadataYamlFolder YAML folder inside CAPP.
+     * @param md5MapOfAllService map containing md5 values of all services.
+     * @return metadata processed successfully
+     * @throws IOException              error occurred while moving files.
+     * @throws ResolverException        error occurred while updating the metadata file.
+     * @throws NoSuchAlgorithmException could not find the MD% algorithm.
+     */
+    private static boolean processProxyServiceMetadata(File tempDir, File metadataYamlFolder,
+                                           Map<String, String> md5MapOfAllService) throws IOException
+            , ResolverException, NoSuchAlgorithmException {
+
+        String metaFileName = metadataYamlFolder.getName();
+        String proxyServiceName = metaFileName.substring(0,
+                metaFileName.indexOf(PROXY_SERVICE_SUFFIX + METADATA_FOLDER_STRING));
+        String proxyServiceVersion =
+                metaFileName.substring(metaFileName.lastIndexOf(METADATA_FOLDER_STRING) +
+                        METADATA_FOLDER_STRING.length());
+
+        // Create new folder in temp directory for this proxy service
+        File newMetaFile = new File(tempDir,  proxyServiceName + PROXY_SERVICE_SUFFIX
+                + "_v" + proxyServiceVersion);
+        File newYamlFile = new File(newMetaFile, METADATA_FILE_NAME);
+        File metadataYamlFile = new File(metadataYamlFolder, proxyServiceName + PROXY_SERVICE_SUFFIX
+                + METADATA_FILE_STRING + proxyServiceVersion + YAML_FILE_EXTENSION);
+
+        // Edit metadata yaml and add host details
+        String key = updateMetadataWithServiceUrl(metadataYamlFile);
+        String md5FromServer = md5MapOfAllService.get(key);
+
+        // Check WSDL file is fetched
+        if (!readProxyServiceWSDL(metadataYamlFile, metadataYamlFolder)) {
+            log.error("Could not find WSDL definition of proxy service: " + proxyServiceName);
+            return false;
+        }
+        File wsdlFile = new File(metadataYamlFolder, WSDL_FILE_NAME);
+
+        // Generate md5 values for verifier
+        String md5SumOfMetadata = getFileChecksum(metadataYamlFile);
+        String md5SumOfWSDL = getFileChecksum(wsdlFile);
+        String newMD5String = md5SumOfWSDL + md5SumOfMetadata;
+
+        // if proxy-service is not registered yet or, proxy-service is modified (md5 changed),
+        // add metadata files to temp folder
+        if (StringUtils.isEmpty(md5FromServer) || !newMD5String.equals(md5FromServer)) {
+            if (!newMetaFile.mkdir()) {
+                log.error("Could not create temporary files");
+                return false;
+            }
+            // Copy metadata yaml file to the temp location.
+            FileUtils.copyFile(metadataYamlFile, newYamlFile);
+            // Copy wsdl file to the temp location.
+            FileUtils.copyFile(wsdlFile, new File(newMetaFile, wsdlFile.getName()));
+
+            // Add to map to be included in filter formdata field.
+            // if API is changed add the previous MD5 sum, if new API add the new MD5 sum.
+            md5List.add(new ServiceMetaDataHolder(key, StringUtils.isEmpty(md5FromServer) ? newMD5String : md5FromServer));
+        } else {
+            alreadyUploaded = true;
+            if (log.isDebugEnabled()) {
+                log.debug(proxyServiceName + " is already updated in the service catalog");
             }
         }
         return true;
@@ -524,12 +658,17 @@ public class ServiceCatalogUtils {
             log.info("Cannot find carbon applications - aborting the service-catalog uploader");
             return false;
         }
-        // Skip if no APIs are deployed
+        // Skip if no APIs or Proxy Services are deployed
         Collection APITable =
                 SynapseConfigUtils.getSynapseConfiguration(
                         org.wso2.micro.core.Constants.SUPER_TENANT_DOMAIN_NAME).getAPIs();
-        if (APITable.isEmpty()) {
-            log.info("Cannot find APIs - aborting the service-catalog uploader");
+        Collection proxyTable =
+                SynapseConfigUtils.getSynapseConfiguration(
+                        org.wso2.micro.core.Constants.SUPER_TENANT_DOMAIN_NAME).getProxyServices();
+        if (APITable.isEmpty() && proxyTable.isEmpty()) {
+            if (log.isDebugEnabled()) {
+                log.debug("Cannot find APIs or Proxy Services - aborting the service-catalog uploader");
+            }
             return false;
         }
         return true;
@@ -556,6 +695,9 @@ public class ServiceCatalogUtils {
          *    - artifact.xml
          *  - testApi_swagger_1.0.0
          *    - testApi_swagger-1.0.0.yaml
+         *    - artifact.xml
+         *  - testProxyService_proxy_metadata_1.0.0
+         *    - testProxyService_proxy_metadata-1.0.0.yaml
          *    - artifact.xml
          */
 
@@ -654,5 +796,75 @@ public class ServiceCatalogUtils {
             sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
         }
         return sb.toString();
+    }
+
+    /**
+     * Reads WSDL of the proxy service and make a WSDL file in the given location.
+     *
+     * @param metadataYamlFile service metadata yaml file.
+     * @param storeLocation read wsdl file store location.
+     * @return WSDL file creation result.
+     */
+    private static boolean readProxyServiceWSDL(File metadataYamlFile, File storeLocation) {
+        BufferedReader bufferedReader = null;
+        try {
+            String proxyServiceUrl = getProxyServiceUrlFromMetadata(metadataYamlFile);
+            if (proxyServiceUrl == null) {
+                return false;
+            }
+            if (proxyServiceUrl.endsWith(PATH_SEPARATOR)) {
+                proxyServiceUrl = proxyServiceUrl.substring(proxyServiceUrl.length() - 1);
+            }
+            proxyServiceUrl = proxyServiceUrl + WSDL_URL_PATH;
+            URL website = new URL(proxyServiceUrl);
+            URLConnection connection = website.openConnection();
+            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder responseWSDL = new StringBuilder();
+            if (lineSeparator == null) {
+                lineSeparator = System.getProperty("line.separator");
+            }
+            String inputLine;
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                responseWSDL.append(inputLine).append(lineSeparator);
+            }
+            if (responseWSDL.length() == 0) {
+                return false;
+            }
+            if (storeLocation.exists()) {
+                Files.write(Paths.get(storeLocation.getAbsolutePath(), WSDL_FILE_NAME),
+                        responseWSDL.toString().getBytes());
+                return true;
+            }
+        } catch (IOException e) {
+            log.error("Error while getting WSDL definition of the given proxy service", e);
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    log.error("Error while closing the buffer reader", e);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Reads service URL from metadata file.
+     *
+     * @param yamlFile location of the yamlFile.
+     * @return URL of the metadata service.
+     */
+    private static String getProxyServiceUrlFromMetadata(File yamlFile) {
+        Yaml yaml = new Yaml();
+        String currentServiceUrl = null;
+        try (InputStream yamlStream = new FileInputStream(yamlFile)) {
+            Map<String, Object> obj = (Map<String, Object>) yaml.load(yamlStream);
+            currentServiceUrl = (String) obj.get(SERVICE_URL);
+        } catch (IOException e) {
+            log.error("Failed to fetch serviceUrl from the metadata YAML file or file does not exist");
+        }
+        return currentServiceUrl;
     }
 }

@@ -78,5 +78,7 @@ public class Constants {
 
     public static final String HTTP_TRANSPORT = "http";
     public static final String HTTPS_TRANSPORT = "https";
+    public static final String TRANSPORT_PORT = "port";
+    public static final String SERVER_PORT_OFFSET = "portOffset";
 
 }

@@ -34,6 +34,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.commons.resolvers.ResolverException;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.xerces.util.SecurityManager;
 import org.w3c.dom.Document;
@@ -91,6 +92,7 @@ public class MicroIntegratorBaseUtils {
     private static final String TRUE = "true";
     private static final int ENTITY_EXPANSION_LIMIT = 0;
     private static CarbonAxisConfigurator carbonAxisConfigurator;
+    private static CarbonServerConfigurationService serverConfigurationService;
 
     public static String getServerXml() {
 
@@ -588,6 +590,15 @@ public class MicroIntegratorBaseUtils {
     }
 
     /**
+     * This is to set the serverConfigurationService instance.
+     *
+     * @param serverConfiguration server configuration service
+     */
+    public static void setServerConfigurationService(CarbonServerConfigurationService serverConfiguration) {
+        serverConfigurationService = serverConfiguration;
+    }
+
+    /**
      * This is to get the carbonAxisConfigurator instance.
      */
     public static CarbonAxisConfigurator getCarbonAxisConfigurator() {
@@ -607,4 +618,46 @@ public class MicroIntegratorBaseUtils {
         return (SynapseEnvironment) synapseEnvironmentParatemer.getValue();
     }
 
+    /**
+     * Gets Server hostname.
+     *
+     * @return server hostname
+     */
+    public static String getServerHostName() {
+        return serverConfigurationService.getFirstProperty("HostName");
+    }
+
+    /**
+     * Gets Server http listener port.
+     *
+     * @return http port
+     * @throws ResolverException exception
+     */
+    public static int getServerHTTPListenerPort() throws ResolverException {
+        try {
+            return Integer.parseInt(carbonAxisConfigurator.getAxisConfiguration().getTransportsIn()
+                    .get(org.wso2.micro.core.Constants.HTTP_TRANSPORT)
+                    .getParameter(org.wso2.micro.core.Constants.TRANSPORT_PORT).getValue().toString())
+                    + Integer.parseInt(System.getProperty(org.wso2.micro.core.Constants.SERVER_PORT_OFFSET));
+        } catch (AxisFault e) {
+            throw new ResolverException("Error in getting server default http listener port", e);
+        }
+    }
+
+    /**
+     * Gets Server https listener port.
+     *
+     * @return https port
+     * @throws ResolverException exception
+     */
+    public static int getServerHTTPSListenerPort() throws ResolverException {
+        try {
+            return Integer.parseInt(carbonAxisConfigurator.getAxisConfiguration().getTransportsIn()
+                    .get(org.wso2.micro.core.Constants.HTTPS_TRANSPORT)
+                    .getParameter(org.wso2.micro.core.Constants.TRANSPORT_PORT).getValue().toString())
+                    + Integer.parseInt(System.getProperty(org.wso2.micro.core.Constants.SERVER_PORT_OFFSET));
+        } catch (AxisFault e) {
+            throw new ResolverException("Error in getting server default https listener port", e);
+        }
+    }
 }
