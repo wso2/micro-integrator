@@ -815,6 +815,7 @@
                 <module>tests-common</module>
                 <module>mediation-tests</module>
                 <module>dataservice-hosting-tests</module>
+                <module>management-api-tests</module>
             </modules>
         </profile>
         <profile>
