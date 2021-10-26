@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import javax.xml.namespace.QName;
 
@@ -34,9 +35,8 @@ public class ProxyServiceEnablingHTTPTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/wsdlBasedProxy/proxy_service_enabling_only_http.xml");
-
+        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(context);
+        serverConfigurationManager.restartMicroIntegrator();
     }
 
     @Test(groups = "wso2.esb", description = "- WSDL based proxy" + "- Proxy service enabling only http")
