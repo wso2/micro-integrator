@@ -1064,10 +1064,11 @@ public class FilePollingConsumer {
     }
 
     private String extractRelativePath(FileObject fileObject) throws FileSystemException {
-        String pathRelativeToInDirectory;
-        pathRelativeToInDirectory =
-                (fileObject.getParent().getPublicURIString()).replaceFirst(this.fileObject.getPublicURIString()
-                        , "");
+        
+        String parentPath = fileObject.getParent().getPublicURIString();
+        // Escape the meta characters . [ ] { } ( ) \ ^ $ | ? * +
+        String path = this.fileObject.getPublicURIString().replaceAll("([\\Q{}()[]^$|?*+&$\\E])",  "\\\\$1");
+        String pathRelativeToInDirectory = parentPath.replaceFirst(path, "");
         return pathRelativeToInDirectory;
     }
 }
