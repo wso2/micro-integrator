@@ -13,12 +13,18 @@
             <package name="org.wso2.carbon.esb.proxyservice.test.customProxy"/>
             <package name="org.wso2.carbon.esb.proxyservice.test.passThroughProxy"/>
             <package name="org.wso2.carbon.esb.proxyservice.test.transformerProxy"/>
-            <package name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy"/>
             <!-- secureProxy package commented since it requires carbon-identity release for applySecurity functionality
                 in SecurityConfigAdmin -->
             <!--package name="org.wso2.carbon.esb.proxyservice.test.secureProxy"/-->
         </packages>
         <classes>
+            <class name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy.ProxyServiceEnablingHTTPTestCase"/>
+            <class name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy.ProxyServiceEnablingHTTPSTestCase"/>
+            <class name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy.ProxyWithPublishSameServiceContractTestCase"/>
+            <class name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy.WSDLOptionsPickedFromRegistryTestCase"/>
+            <class name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy.WSDLOptionsSpecifiedInlineTestCase"/>
+            <class name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy.WSDLOptionsSpecifiedSourceUrlTestCase"/>
+
             <class name="org.wso2.carbon.esb.proxyservice.test.loggingProxy.WSDLOptionsPickedFromRegistryTestCase">
                 <methods>
                     <exclude name=".*"/>
