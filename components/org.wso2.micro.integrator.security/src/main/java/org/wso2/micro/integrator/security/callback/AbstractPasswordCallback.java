@@ -32,6 +32,7 @@ import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
 import java.io.IOException;
 import java.security.KeyStore;
+import java.util.List;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -45,6 +46,7 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
     protected final Log log = LogFactory.getLog(AbstractPasswordCallback.class);
     private UserStoreManager userStoreManager;
     private RealmConfiguration realmConfig;
+    private List<String> allowedRoles = null;
 
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
@@ -177,10 +179,7 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
         boolean isAuthenticated;
         try {
             isAuthenticated = userStoreManager.authenticate(user, password);
-
-            // TODO - Handle Authorization of users, once they are authenticated
-
-            return isAuthenticated;
+            return isAuthenticated && hasAllowedRole(user);
         } catch (Exception e) {
             log.error("Error in authenticating user.", e);
             throw e;
@@ -195,6 +194,14 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
         this.realmConfig = realmConfig;
     }
 
+    public void setAllowedRoles(List<String> roles) {
+        this.allowedRoles = roles;
+    }
+
+    public void removeAllowedRoles() {
+        this.allowedRoles = null;
+    }
+
     private String getPrivateKeyPassword(String username) throws IOException, Exception {
         String password = null;
         KeyStoreManager keyMan = KeyStoreManager.getInstance(Constants.SUPER_TENANT_ID);
@@ -203,5 +210,18 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
             password = keyMan.getPrimaryPrivateKeyPasssword();
         }
         return password;
+    }
+
+    private boolean hasAllowedRole(String authenticatedUser) throws UserStoreException {
+        if (allowedRoles != null) {
+            String[] existingRoles = userStoreManager.getRoleListOfUser(authenticatedUser);
+            for (String existingRole : existingRoles) {
+                if (allowedRoles.contains(existingRole)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 }
