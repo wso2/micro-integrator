@@ -29,8 +29,6 @@ public class SecurityConfigParams {
     private String trustStores;
     private String allowedRoles;
     private String keyAlias;
-    private String serverPrincipalPassword;
-    private boolean isServerPrincipalPasswordEncrypted = true;
 
     /**
      * Get the private key store
@@ -51,30 +49,12 @@ public class SecurityConfigParams {
     }
 
     /**
-     * Set the private store
-     *
-     * @param privateStore private store
-     */
-    public void setPrivateStore(String privateStore) {
-        this.privateStore = privateStore;
-    }
-
-    /**
      * Get trusted stores
      *
      * @return trusted stores as comma separated value
      */
     public String getTrustStores() {
         return trustStores;
-    }
-
-    /**
-     * Set the trusted stores
-     *
-     * @param trustStores trusted stores as comma separated value
-     */
-    public void setTrustStores(String trustStores) {
-        this.trustStores = trustStores;
     }
 
     /**
@@ -109,51 +89,5 @@ public class SecurityConfigParams {
             return serverConfig.getFirstProperty("Security.KeyStore.KeyAlias");
         }
         return keyAlias;
-    }
-
-    /**
-     * Set the private key alias
-     *
-     * @param keyAlias key alias
-     */
-    public void setKeyAlias(String keyAlias) {
-        this.keyAlias = keyAlias;
-    }
-
-    /**
-     * Get the server principal password for kerberos authentication
-     *
-     * @return server principal password
-    */
-    public String getServerPrincipalPassword() {
-        return serverPrincipalPassword;
-    }
-
-    /**
-     * Set the server principal password for kerberos authentication
-     *
-     * @param serverPrincipalPassword server principal password
-     */
-    public void setServerPrincipalPassword(String serverPrincipalPassword) {
-        this.serverPrincipalPassword = serverPrincipalPassword;
-    }
-
-    /**
-     * Whether server principal password for kerberos authentication is encrypted
-     * If the parameter is not set, default value is true
-     *
-     * @return whether server principal password is encrypted
-     */
-    public boolean isServerPrincipalPasswordEncrypted() {
-        return isServerPrincipalPasswordEncrypted;
-    }
-
-    /**
-     * Set server principal password for kerberos authentication is encrypted or not
-     *
-     * @param isServerPrincipalPasswordEncrypted whether server principal password is encrypted
-     */
-    public void setServerPrincipalPasswordEncrypted(boolean isServerPrincipalPasswordEncrypted) {
-        this.isServerPrincipalPasswordEncrypted = isServerPrincipalPasswordEncrypted;
     }
 }

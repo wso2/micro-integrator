@@ -89,30 +89,7 @@ public class SecurityConfigParamBuilder {
             while (iterator.hasNext()) {
                 OMElement configCategoryElem = (OMElement) iterator.next();
 
-                if (trustQName.equals(configCategoryElem.getQName())) {
-                    Iterator trustPropsElem = configCategoryElem.getChildElements();
-
-                    while (trustPropsElem.hasNext()) {
-                        OMElement trustProperty = (OMElement) trustPropsElem.next();
-
-                        if (propertyQName.equals(trustProperty.getQName())) {
-                            String name = trustProperty.getAttributeValue(nameQName);
-                            String value = trustProperty.getText().trim();
-                            if (log.isDebugEnabled()) {
-                                log.debug("Trust Config property name : " + name +
-                                          " value : " + value);
-                            }
-
-                            if (ServerCrypto.PROP_ID_PRIVATE_STORE.equals(name)) {
-                                securityConfigParams.setPrivateStore(value);
-                            } else if (ServerCrypto.PROP_ID_TRUST_STORES.equals(name)) {
-                                securityConfigParams.setTrustStores(value);
-                            } else if (ServerCrypto.PROP_ID_DEFAULT_ALIAS.equals(name)) {
-                                securityConfigParams.setKeyAlias(value);
-                            }
-                        }
-                    }
-                } else if (authorizationQName.equals(configCategoryElem.getQName())) {
+                if (authorizationQName.equals(configCategoryElem.getQName())) {
                     Iterator authorizationPropsElem = configCategoryElem.getChildElements();
 
                     while (authorizationPropsElem.hasNext()) {
@@ -127,29 +104,6 @@ public class SecurityConfigParamBuilder {
                             }
                             if (Constants.ALLOWED_ROLES_PARAM_NAME.equals(name)) {
                                 securityConfigParams.setAllowedRoles(value);
-                            }
-                        }
-                    }
-                } else if (kerberosQName.equals(configCategoryElem.getQName())) {
-                    Iterator kerberosPropsElem = configCategoryElem.getChildElements();
-
-                    while (kerberosPropsElem.hasNext()) {
-                        OMElement kerberosProperty = (OMElement) kerberosPropsElem.next();
-
-                        if (propertyQName.equals(kerberosProperty.getQName())) {
-                            String name = kerberosProperty.getAttributeValue(nameQName);
-                            String value = kerberosProperty.getText().trim();
-                            if (log.isDebugEnabled()) {
-                                log.debug("Kerberos Config property name : " + name +
-                                          " value : " + value);
-                            }
-                            if (KerberosConfig.SERVICE_PRINCIPLE_PASSWORD.equals(name)) {
-                                securityConfigParams.setServerPrincipalPassword(value);
-                                if (kerberosProperty.getAttribute(encryptedQName) != null) {
-                                    securityConfigParams.setServerPrincipalPasswordEncrypted(
-                                            Boolean.parseBoolean(
-                                                    kerberosProperty.getAttributeValue(encryptedQName)));
-                                }
                             }
                         }
                     }
