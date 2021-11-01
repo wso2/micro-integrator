@@ -92,6 +92,9 @@
     <!-- Returns 401 for UT secured scenario with incorrect/missing credentials -->
     <parameter name="enableBasicAuth" locked="false">true</parameter>
 
+    <!-- Used to handle WS policies -->
+    <listener class="org.wso2.micro.integrator.security.deployment.SecurityDeploymentInterceptor"/>
+
     {% if transport.default_content_type is defined %}
     <parameter name="defaultContentType" locked="false">"{{transport.default_content_type}}"</parameter>
     {% endif %}
