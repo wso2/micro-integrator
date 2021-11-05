@@ -45,7 +45,7 @@ public class PayloadFactoryIntegrationSpecialCharactersAtPayloadFactoryTestCase 
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SpecialCharactersAtPayloadFactoryTestCaseProxy"),
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
-        assertTrue(response.toString().contains("$WSO2$"), "Symbol $WSO2$ not found in response message");
+        assertTrue(response.toString().contains("#WSO2#"), "Symbol #WSO2# not found in response message");
 
     }
 }
