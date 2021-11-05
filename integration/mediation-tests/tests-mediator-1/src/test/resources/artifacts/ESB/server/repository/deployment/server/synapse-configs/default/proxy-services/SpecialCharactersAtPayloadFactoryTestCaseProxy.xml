@@ -22,7 +22,7 @@
         <inSequence>
             <log level="full"/>
             <!-- using payloadFactory mediator to transform the request message -->
-            <property name="data" value="$WSO2$"/>
+            <property name="data" value="#WSO2#"/>
 
             <payloadFactory>
                 <format>
