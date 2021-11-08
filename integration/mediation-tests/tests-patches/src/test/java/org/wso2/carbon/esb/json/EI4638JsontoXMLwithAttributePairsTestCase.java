@@ -38,7 +38,6 @@ public class EI4638JsontoXMLwithAttributePairsTestCase extends ESBIntegrationTes
     public void setEnvironment() throws Exception {
         super.init();
         httpClient = new SimpleHttpClient();
-        verifyProxyServiceExistence("JSONtoXMLProxy");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test JSON to XML conversion when JSON payload has " +
