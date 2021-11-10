@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.esb.endpoint.test;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -33,8 +34,11 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.carbon.automation.test.utils.http.client.HttpURLConnectionClient;
+import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -43,6 +47,7 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
     private static final String CUSTOMER_API_CONTEXT = "customerService";
     private static final String RESOURCE_CONTEXT = "/customer";
     private static final String RESOURCE_ENCODED_CONTEXT = "/customer/encoded/";
+    private static final String AUTHENTICATION_RESOURCE_CONTEXT = "authentication";
     private static final String customerId = "8fa3fc1b-f63c-4b21-8aff-3ac684c74d97";
     private static final String customerName = "John";
     private static final String updateCustomerName = "Emma";
@@ -122,6 +127,19 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
         HttpResponse getResponseData = HttpURLConnectionClient.sendGetRequest(getEncodedRestURI, null);
         assertTrue(getResponseData.getData().contains(getCustomerResponse),
                    "Unexpected output received for encoded URL:" + getResponseData.toString());
+    }
+
+    @Test(groups = {"wso2.esb"}, description = "HTTP endpoint with basic auth", priority = 11)
+    public void testBasicAuthHTTPEndpoint() throws IOException, XPathExpressionException, AutomationUtilException {
+        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(context);
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
+                getESBResourceLocation() + File.separator + "config" + File.separator + "deployment.toml"));
+        String getAuthRestURI = getApiInvocationURL(AUTHENTICATION_RESOURCE_CONTEXT) + "/with-basic-authentication";
+        HttpResponse getResponseData = HttpURLConnectionClient.sendGetRequest(getAuthRestURI, null);
+        assertEquals(getResponseData.getResponseCode(), 200, "Basic authentication failed");
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
+                getESBResourceLocation() + File.separator + "server" + File.separator + "conf"
+                        + File.separator + "deployment.toml"));
     }
 
     @Test(groups = {"wso2.esb"}, description = "HTTP endpoint POST test: SOAP", priority = 2)
