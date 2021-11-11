@@ -48,7 +48,6 @@ public class AuditLogTestCase extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         super.init();
         carbonLogReader.start();
-        offset = portOffset + 10;
     }
 
 

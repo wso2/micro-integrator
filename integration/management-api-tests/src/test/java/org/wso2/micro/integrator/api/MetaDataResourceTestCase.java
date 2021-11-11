@@ -173,8 +173,12 @@ public class MetaDataResourceTestCase extends ESBIntegrationTest {
      * @throws IOException
      */
     private void sendPatchRequest(String status) throws IOException {
+        String accessToken = TokenUtil.getAccessToken(hostName, offset);
+        Assert.assertNotNull(accessToken);
+
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
+        headers.put("Accept", "application/json");
+        headers.put("Authorization", "Bearer " + accessToken);
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + offset) + "/management/"
                           + "server";
@@ -189,5 +193,7 @@ public class MetaDataResourceTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void cleanState() throws Exception {
         super.cleanup();
+        // revert the portOffset changes
+        System.setProperty("port.offset", String.valueOf(portOffset));
     }
 }
