@@ -26,11 +26,11 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
-    <test name="Management-API-Tests" verbose="2" parallel="none">
+    <test name="Management-API-Tests" verbose="2" parallel="false">
         <classes>
-            <!--<class name="org.wso2.micro.integrator.api.CarbonAppResourceTestCase"/>-->
-            <!---<class name="org.wso2.micro.integrator.api.MetaDataResourceTestCase"/>-->
             <class name="org.wso2.micro.integrator.api.AuditLogTestCase"/>
+            <class name="org.wso2.micro.integrator.api.CarbonAppResourceTestCase"/>
+            <class name="org.wso2.micro.integrator.api.MetaDataResourceTestCase"/>
         </classes>
     </test>
 </suite>

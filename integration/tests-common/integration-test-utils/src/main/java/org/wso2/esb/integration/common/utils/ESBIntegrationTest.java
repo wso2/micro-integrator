@@ -109,7 +109,7 @@ public abstract class ESBIntegrationTest {
     private List<String> priorityExecutorList = null;
     private List<String[]> scheduledTaskList = null;
     private List<String> inboundEndpointList = null;
-    protected static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
+    public static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
     protected String hostName = null;
     protected int portOffset;
     protected final int DEFAULT_TIMEOUT = 60;
