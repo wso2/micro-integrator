@@ -17,6 +17,7 @@
  */
 package org.wso2.micro.integrator.observability.metric.handler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.AbstractExtendedSynapseHandler;
@@ -358,6 +359,11 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
             if (RESTUtils.matchApiPath(contextPath, api.getContext())) {
                 apiName = api.getName();
                 synCtx.setProperty(RESTConstants.PROCESSED_API, api);
+                // if we match to a versioned API, search should stop.
+                // else check other API's to see if there is a match
+                if (StringUtils.isNotEmpty(api.getVersion())) {
+                    break;
+                }
             }
         }
         return apiName;
