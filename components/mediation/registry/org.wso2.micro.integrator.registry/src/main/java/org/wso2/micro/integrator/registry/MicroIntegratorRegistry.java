@@ -640,7 +640,12 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                 File file = new File(new URI(resolveRegistryURI(path)));
                 if (file.exists()) {
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                        writer.write(value.toString());
+                        if (value != null) {
+                            writer.write(value.toString());
+                        } else {
+                            log.warn("Updating the registry location : " + path + " with empty content");
+                            writer.write("");
+                        }
                         writer.flush();
                     } catch (IOException e) {
                         handleException("Couldn't write to registry entry: " + path, e);
@@ -843,7 +848,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             handleException("Unable to create parent directory: " + parentName);
         }
         File newFile = new File(parent, newFileName);
-        if (!newFile.createNewFile()) {
+        if (!newFile.exists() && !newFile.createNewFile()) {
             handleException("Couldn't create resource: " + newFileName);
         }
     }
