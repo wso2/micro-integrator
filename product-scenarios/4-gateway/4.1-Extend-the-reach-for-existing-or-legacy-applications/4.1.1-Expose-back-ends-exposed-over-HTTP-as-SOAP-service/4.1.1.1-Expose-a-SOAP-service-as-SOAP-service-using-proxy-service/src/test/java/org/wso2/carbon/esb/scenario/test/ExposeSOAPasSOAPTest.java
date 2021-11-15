@@ -52,17 +52,17 @@ public class ExposeSOAPasSOAPTest extends ScenarioTestBase {
         super.init();
     }
 
-    @Test(description = "4.1.1.1.1", enabled = false)
+    @Test(description = "4.1.1.1.1")
     public void testPassThroughProxyTemplate() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_1_Proxy_SimplePassThroughTemplate"));
     }
 
-    @Test(description = "4.1.1.1.2", enabled = false)
+    @Test(description = "4.1.1.1.2")
     public void testCustomProxyTemplate() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_2_Proxy_SimpleCustomTemplate"));
     }
 
-    @Test(description = "4.1.1.1.3", enabled = false)
+    @Test(description = "4.1.1.1.3")
     public void testLogAndForwardTemplate() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_3_Proxy_SimpleLogForwardTemplate"));
     }
@@ -72,12 +72,12 @@ public class ExposeSOAPasSOAPTest extends ScenarioTestBase {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_4_Proxy_SimpleWSDLProxyTemplate"));
     }
 
-    @Test(description = "4.1.1.1.5", enabled = false)
+    @Test(description = "4.1.1.1.5")
     public void testPassThroughWithNamedEP() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_5_Proxy_PassThroughWithNamedEP"));
     }
 
-    @Test(description = "4.1.1.1.6", enabled = false)
+    @Test(description = "4.1.1.1.6")
     public void testPassThroughEPinTarget() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_6_Proxy_PassThroughProxyEPinTarget"));
     }
