@@ -154,13 +154,14 @@ public class DataSourceResource implements MiApiResource {
             datasourceInformation.put(DESCRIPTION, dataSourceMetaInfo.getDescription());
             datasourceInformation.put(TYPE, dataSourceMetaInfo.getDefinition().getType());
             datasourceInformation.put(Constants.SYNAPSE_CONFIGURATION, DataSourceUtils.
-                    elementToString((Element) dataSource.getDSMInfo().getDefinition().getDsXMLConfiguration()));
+                    elementToStringWithMaskedPasswords(
+                            (Element) dataSource.getDSMInfo().getDefinition().getDsXMLConfiguration()));
 
             if (dataSource.getDSObject() instanceof DataSource) {
                 DataSource dataSourceObject = (DataSource) dataSource.getDSObject();
                 PoolConfiguration pool = dataSourceObject.getPoolProperties();
                 datasourceInformation.put(DRIVER, pool.getDriverClassName());
-                datasourceInformation.put(URL, pool.getUrl());
+                datasourceInformation.put(URL, DataSourceUtils.maskURLPassword(pool.getUrl()));
                 datasourceInformation.put(USER_NAME, pool.getUsername());
                 // set configuration parameters
                 JSONObject configParameters = new JSONObject();
