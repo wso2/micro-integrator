@@ -46,7 +46,6 @@ public class DataSourceResource implements MiApiResource {
     private static final String DESCRIPTION = "description";
     private static final String JNDIConfig = "jndiConfig";
     private static final String TYPE = "type";
-    private static final String STATUS = "status";
     private static final String DRIVER = "driverClass";
     private static final String URL = "url";
     private static final String USER_NAME = "userName";
@@ -153,16 +152,16 @@ public class DataSourceResource implements MiApiResource {
             DataSourceMetaInfo dataSourceMetaInfo = dataSource.getDSMInfo();
             datasourceInformation.put(Constants.NAME, dataSourceMetaInfo.getName());
             datasourceInformation.put(DESCRIPTION, dataSourceMetaInfo.getDescription());
-            datasourceInformation.put(STATUS, dataSource.getDSStatus().getMode());
             datasourceInformation.put(TYPE, dataSourceMetaInfo.getDefinition().getType());
             datasourceInformation.put(Constants.SYNAPSE_CONFIGURATION, DataSourceUtils.
-                    elementToString((Element) dataSource.getDSMInfo().getDefinition().getDsXMLConfiguration()));
+                    elementToStringWithMaskedPasswords(
+                            (Element) dataSource.getDSMInfo().getDefinition().getDsXMLConfiguration()));
 
             if (dataSource.getDSObject() instanceof DataSource) {
                 DataSource dataSourceObject = (DataSource) dataSource.getDSObject();
                 PoolConfiguration pool = dataSourceObject.getPoolProperties();
                 datasourceInformation.put(DRIVER, pool.getDriverClassName());
-                datasourceInformation.put(URL, pool.getUrl());
+                datasourceInformation.put(URL, DataSourceUtils.maskURLPassword(pool.getUrl()));
                 datasourceInformation.put(USER_NAME, pool.getUsername());
                 // set configuration parameters
                 JSONObject configParameters = new JSONObject();
