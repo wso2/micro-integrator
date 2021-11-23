@@ -43,6 +43,7 @@
             <user>
                 <username>admin</username>
                 <password>admin</password>
+                <isAdmin>true</isAdmin>
             </user>
             <user>
                 <username>user1</username>

@@ -82,10 +82,22 @@ public class AuthorizationHandler extends AuthorizationHandlerAdapter {
             }
         } else {
             //Uses in memory user store
-            LOG.error("Authorization is not supported with the in memory user store. Please plug in a user store for "
-                      + "the correct functionality");
-            return false;
+            return processAuthorizationWithFileBasedUserStore(userName);
         }
+    }
+
+    /**
+     * Processes the authorization request using file based user store.
+     *
+     * @return true if successfully authorized
+     */
+    private boolean processAuthorizationWithFileBasedUserStore(String userName) {
+
+        boolean isAdmin = FileBasedUserStoreManager.getUserStoreManager().isAdmin(userName);
+        if (!isAdmin) {
+            LOG.error("User " + userName + " cannot be authorized");
+        }
+        return isAdmin;
     }
 
     /**

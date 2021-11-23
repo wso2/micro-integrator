@@ -22,6 +22,7 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.ConfigurationLoader;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.UserInfo;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.securevault.SecretResolverFactory;
@@ -94,8 +95,8 @@ public class ManagementApiParser {
      * @return a non null map if the user store is defined.
      * @throws UserStoreUndefinedException if the user store is not defined in internal-apis.xml
      */
-    public Map<String, char[]> getUserMap() throws UserStoreUndefinedException {
-        Map<String, char[]> usersMap = ConfigurationLoader.getUserMap();
+    public Map<String, UserInfo> getUserMap() throws UserStoreUndefinedException {
+        Map<String, UserInfo> usersMap = ConfigurationLoader.getUserMap();
         if (Objects.nonNull(usersMap)) {
             return usersMap;
         } else {
