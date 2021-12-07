@@ -49,6 +49,7 @@
             <class name="org.wso2.carbon.esb.mediators.enrich.ESBJAVA3676EnrichSourcePropNoClone"/>
             <class name="org.wso2.carbon.esb.mediators.enrich.ESBJAVA4892EnrichPropertyTestCase"/>
             <class name="org.wso2.carbon.esb.mediators.enrich.EI2084EnrichNamespaceAdditionTestCase"/>
+            <class name="org.wso2.carbon.esb.mediators.enrich.MI2479TargetTypeKeyWithoutActionTestCase"/>
             <class name="org.wso2.carbon.esb.mediators.callout.CARBON15119DuplicateSOAPActionHeader"/>
             <class name="org.wso2.carbon.esb.mediators.callout.ESBJAVA_4118_SOAPHeaderHandlingTest"/>
             <class name="org.wso2.carbon.esb.mediators.callout.ESBJAVA_4239_HTTP_SC_HandlingTests"/>
@@ -57,6 +58,7 @@
             <class name="org.wso2.carbon.esb.mediators.payloadFactory.JSONPayloadXMLSpecialCharEscapeTest"/>
             <class name="org.wso2.carbon.esb.mediators.clone.ESBJAVA4913HandleExceptionTest"/>
             <class name="org.wso2.carbon.esb.mediators.aggregate.ESBJAVA5103CorrelateOnExpressionTestCase"/>
+            <class name="org.wso2.carbon.esb.mediators.aggregate.EI5523TestJsonStreamAfterAggregateMediator"/>
             <class name="org.wso2.carbon.esb.mediators.cache.DistributedCachingHeaderSerializationTestcase"/>
             <!--class name="org.wso2.carbon.esb.mediators.cache.ESBJAVA4318Testcase"/-->
             <class name="org.wso2.carbon.esb.mediators.rule.ESBJAVA2506RuleFetchFromRegistryFailsForTheFirstTime"/>
