@@ -60,9 +60,12 @@
                     </log>
                 </onComplete>
             </aggregate>
-            <log level="custom">
-                <property expression="json-eval($)" name="*** Payload After Aggregate ***"/>
-            </log>
+            <payloadFactory media-type="json">
+                <format>{"payloadAfterAggregate": "$1"}</format>
+                <args>
+                    <arg evaluator="json" expression="$"/>
+                </args>
+            </payloadFactory>
             <respond/>
         </inSequence>
     </target>
