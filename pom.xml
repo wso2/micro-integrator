@@ -1442,7 +1442,7 @@
         <orbit.version.poi.scratchpad>3.17.0.wso2v1</orbit.version.poi.scratchpad>
         <slf4j.version>1.7.21</slf4j.version>
         <simple.slf4j.version>1.6.1</simple.slf4j.version>
-        <version.log4j.core>2.12.0</version.log4j.core>
+        <version.log4j.core>2.15.0</version.log4j.core>
         <version.jaxb>2.2.5.wso2v1</version.jaxb>
         <javasysmon.version>0.3.3.wso2v1</javasysmon.version>
         <version.eclipse.ecj>4.4.2</version.eclipse.ecj>
