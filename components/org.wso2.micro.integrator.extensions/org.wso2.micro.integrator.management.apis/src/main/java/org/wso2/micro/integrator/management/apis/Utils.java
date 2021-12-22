@@ -24,16 +24,17 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.aspects.AspectConfiguration;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.rest.RESTConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.ops4j.pax.logging.PaxLoggingConstants;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.wso2.micro.core.util.AuditLogger;
-import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
@@ -49,6 +50,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -267,7 +270,24 @@ public class Utils {
         ConfigurationAdmin configurationAdmin = ConfigurationHolder.getInstance().getConfigAdminService();
         Configuration configuration =
                 configurationAdmin.getConfiguration(Constants.PAX_LOGGING_CONFIGURATION_PID, "?");
-        configuration.update();
+        Dictionary properties = new Hashtable<>();
+        properties.put(Constants.SERVICE_PID, PaxLoggingConstants.LOGGING_CONFIGURATION_PID);
+        Hashtable paxLoggingProperties = getPaxLoggingProperties();
+        paxLoggingProperties.forEach(properties::put);
+        configuration.update(properties);
+    }
+
+    private static Hashtable getPaxLoggingProperties() throws IOException {
+        String paxPropertiesFileLocation = System.getProperty("org.ops4j.pax.logging.property.file");
+        if (StringUtils.isNotEmpty(paxPropertiesFileLocation)) {
+            File file = new File(paxPropertiesFileLocation);
+            if (file.exists()) {
+                Properties properties = new Properties();
+                properties.load(new FileInputStream(file));
+                return properties;
+            }
+        }
+        return new Hashtable();
     }
 
     /**

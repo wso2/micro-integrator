@@ -179,4 +179,6 @@ public class Constants {
         }
     }
 
+
+    static final String SERVICE_PID = "service.pid";
 }
