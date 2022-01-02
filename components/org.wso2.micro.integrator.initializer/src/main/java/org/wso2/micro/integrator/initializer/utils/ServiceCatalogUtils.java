@@ -82,6 +82,7 @@ public class ServiceCatalogUtils {
     private static String httpsListenerPort;
     private static String resolvedUrl;
     private static String lineSeparator;
+    private static Map<String, Object> parsedConfigs;
 
     /**
      * Update the service url by injecting env variables.
@@ -97,46 +98,49 @@ public class ServiceCatalogUtils {
             https://{MI_URL}/api1
         */
         SystemResolver resolver = new SystemResolver();
+        if (parsedConfigs == null) {
+            parsedConfigs = ConfigParser.getParsedConfigs();
+        }
         if (currentUrl.contains(HOST) || currentUrl.contains(PORT)) {
-            String envHost, envPort;
             // update the {MI_HOST} with server.hostname value
-            resolver.setVariable(MI_HOST);
             if (currentUrl.contains(HOST)) {
-                try {
-                    envHost = resolver.resolve();
-                    if (envHost.isEmpty()) {
-                        throw new ResolverException("Environment variable could not be empty");
+                if (resolvedHostName == null) {
+                    try {
+                        resolver.setVariable(MI_HOST);
+                        resolvedHostName = resolver.resolve();
+                    } catch (ResolverException e) {
+                        resolvedHostName = (String) parsedConfigs.get(SERVER_HOSTNAME);
                     }
-                } catch (ResolverException e) {
-                    if (resolvedHostName == null) {
-                        resolvedHostName = MicroIntegratorBaseUtils.getServerHostName();
-                    }
-                    envHost = resolvedHostName;
                 }
-                currentUrl = currentUrl.replace(HOST, envHost);
+                currentUrl = currentUrl.replace(HOST, resolvedHostName);
             }
             // update the {MI_PORT} with server listener ports
-            resolver.setVariable(MI_PORT);
             if (currentUrl.contains(PORT)) {
-                try {
-                    envPort = resolver.resolve();
-                    if (envPort.isEmpty()) {
-                        throw new ResolverException("Environment variable could not be empty");
-                    }
-                } catch (ResolverException e) {
-                    if (currentUrl.startsWith(org.wso2.micro.core.Constants.HTTPS_TRANSPORT)) {
-                        if (httpsListenerPort == null) {
-                            httpsListenerPort = String.valueOf(MicroIntegratorBaseUtils.getServerHTTPSListenerPort());
+                if (currentUrl.startsWith("https")) {
+                    if (httpsListenerPort == null) {
+                        try {
+                            resolver.setVariable(MI_PORT);
+                            httpsListenerPort = resolver.resolve();
+                        } catch (ResolverException e) {
+                            int portOffset = Integer.parseInt(System.getProperty(SERVER_PORT_OFFSET));
+                            int httpsPort = Integer.parseInt((String) parsedConfigs.get(HTTPS_LISTENER_PORT));
+                            httpsListenerPort = String.valueOf(httpsPort + portOffset);
                         }
-                        envPort = httpsListenerPort;
-                    } else {
-                        if (httpListenerPort == null) {
-                            httpListenerPort = String.valueOf(MicroIntegratorBaseUtils.getServerHTTPListenerPort());
-                        }
-                        envPort = httpListenerPort;
                     }
+                    currentUrl = currentUrl.replace(PORT, httpsListenerPort);
+                } else if (currentUrl.startsWith("http")) {
+                    if(httpListenerPort == null) {
+                        try {
+                            resolver.setVariable(MI_PORT);
+                            httpListenerPort = resolver.resolve();
+                        } catch (ResolverException e) {
+                            int portOffset = Integer.parseInt(System.getProperty(SERVER_PORT_OFFSET));
+                            int httpsPort = Integer.parseInt((String) parsedConfigs.get(HTTP_LISTENER_PORT));
+                            httpListenerPort = String.valueOf(httpsPort + portOffset);
+                        }
+                    }
+                    currentUrl = currentUrl.replace(PORT, httpListenerPort);
                 }
-                currentUrl = currentUrl.replace(PORT, envPort);
             }
         } else if (currentUrl.contains(URL)) {
             if (resolvedUrl == null) {

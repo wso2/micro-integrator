@@ -70,4 +70,10 @@ public class Constants {
 
     public static final int UNAUTHENTICATED = 401;
 
+    // constants related to config parser
+    public static final String SERVER_HOSTNAME = "server.hostname";
+    public static final String HTTPS_LISTENER_PORT = "transport.https.listener.parameter.port";
+    public static final String HTTP_LISTENER_PORT = "transport.http.listener.parameter.port";
+    public static final String SERVER_PORT_OFFSET = "portOffset";
+
 }

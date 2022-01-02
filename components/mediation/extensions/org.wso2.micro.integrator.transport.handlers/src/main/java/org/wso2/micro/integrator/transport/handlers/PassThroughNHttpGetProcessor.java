@@ -42,6 +42,7 @@ import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.transport.passthru.ProtocolState;
 import org.apache.synapse.transport.passthru.SourceContext;
 import org.apache.synapse.transport.passthru.SourceHandler;
+import org.apache.synapse.transport.passthru.config.PassThroughConfiguration;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
@@ -441,10 +442,9 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
 
      */
     protected boolean isServiceListBlocked(String incomingURI) {
-        String isBlocked = NHttpConfiguration.getInstance().isServiceListBlocked();
+        boolean isBlocked = PassThroughConfiguration.getInstance().isServiceListBlocked();
 
-        return (("/services").equals(incomingURI) || ("/services" + "/").equals(incomingURI)) &&
-               Boolean.parseBoolean(isBlocked);
+        return (("/services").equals(incomingURI) || ("/services" + "/").equals(incomingURI)) && isBlocked;
     }
     
     
