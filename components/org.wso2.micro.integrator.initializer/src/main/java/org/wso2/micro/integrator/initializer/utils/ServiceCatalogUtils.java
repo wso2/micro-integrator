@@ -402,6 +402,29 @@ public class ServiceCatalogUtils {
     }
 
     /**
+     * Read APIM host configurations from deployment.toml file.
+     *
+     * @param secretCallbackHandlerService secret callback handler reference.
+     * @return map of resolved values.
+     */
+    public static Map<String, String> readConfiguration() {
+        Map<String, String> configMap = new HashMap<>();
+        Map<String, String> catalogProperties =
+                (Map<String, String>) ((ArrayList) ConfigParser.getParsedConfigs().get(
+                        SERVICE_CATALOG_CONFIG)).get(0);
+
+        String apimHost = catalogProperties.get(APIM_HOST);
+
+        String userName = catalogProperties.get(USER_NAME);
+        String password = catalogProperties.get(PASSWORD);
+
+        configMap.put(APIM_HOST, apimHost);
+        configMap.put(USER_NAME, userName);
+        configMap.put(PASSWORD, password);
+        return configMap;
+    }
+
+    /**
      * Process metadata folder and move to temporary location.
      *
      * @param tempDir            temporary directory to put metadata.
@@ -571,7 +594,7 @@ public class ServiceCatalogUtils {
             if (alreadyUploaded) {
                 log.info("Service catalog already contains the latest configs, aborting the service-catalog uploader");
             } else {
-                log.info("Could not find metadata to upload, aborting the service-catalog uploader");
+                log.info("Metadata not included, hence not publishing to Service Catalog");
             }
             return false;
         }
@@ -866,5 +889,18 @@ public class ServiceCatalogUtils {
             log.error("Failed to fetch serviceUrl from the metadata YAML file or file does not exist");
         }
         return currentServiceUrl;
+    }
+
+    public static boolean isServiceCatalogEnabled() {
+        Map<String, Object> catalogProperties;
+        if (ConfigParser.getParsedConfigs().get(SERVICE_CATALOG_CONFIG) != null) {
+            catalogProperties =
+                    (Map<String, Object>) ((ArrayList) ConfigParser.getParsedConfigs().get(
+                            SERVICE_CATALOG_CONFIG)).get(0);
+            if ((boolean) catalogProperties.get(ENABLE)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
