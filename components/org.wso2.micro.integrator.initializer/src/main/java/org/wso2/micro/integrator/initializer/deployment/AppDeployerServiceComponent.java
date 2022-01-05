@@ -159,6 +159,7 @@ public class AppDeployerServiceComponent {
         // Initialize CApp deployer here
         CappDeployer cappDeployer = new CappDeployer();
         cappDeployer.setDirectory(artifactRepoPath + DeploymentConstants.CAPP_DIR_NAME);
+        cappDeployer.setSecretCallbackHandlerService(secretCallbackHandlerService);
         cappDeployer.init(configCtx);
 
         // Register application deployment handlers

@@ -384,6 +384,7 @@ public class ServiceCatalogUtils {
 
         String userName = catalogProperties.get(USER_NAME);
         String password = catalogProperties.get(PASSWORD);
+        String executorThreads = catalogProperties.get(SERVICE_CATALOG_EXECUTOR_THREADS);
         if (secretResolver == null) {
             secretResolver = SecretResolverFactory.create((OMElement) null, false);
         }
@@ -402,29 +403,7 @@ public class ServiceCatalogUtils {
         configMap.put(APIM_HOST, apimHost);
         configMap.put(USER_NAME, userName);
         configMap.put(PASSWORD, password);
-        return configMap;
-    }
-
-    /**
-     * Read APIM host configurations from deployment.toml file.
-     *
-     * @param secretCallbackHandlerService secret callback handler reference.
-     * @return map of resolved values.
-     */
-    public static Map<String, String> readConfiguration() {
-        Map<String, String> configMap = new HashMap<>();
-        Map<String, String> catalogProperties =
-                (Map<String, String>) ((ArrayList) ConfigParser.getParsedConfigs().get(
-                        SERVICE_CATALOG_CONFIG)).get(0);
-
-        String apimHost = catalogProperties.get(APIM_HOST);
-
-        String userName = catalogProperties.get(USER_NAME);
-        String password = catalogProperties.get(PASSWORD);
-
-        configMap.put(APIM_HOST, apimHost);
-        configMap.put(USER_NAME, userName);
-        configMap.put(PASSWORD, password);
+        configMap.put(SERVICE_CATALOG_EXECUTOR_THREADS, executorThreads);
         return configMap;
     }
 
@@ -895,6 +874,11 @@ public class ServiceCatalogUtils {
         return currentServiceUrl;
     }
 
+    /**
+     * Checks whether Service Catalog configuration is Enabled.
+     *
+     * @return whether Service Catalog is enabled.
+     */
     public static boolean isServiceCatalogEnabled() {
         Map<String, Object> catalogProperties;
         if (ConfigParser.getParsedConfigs().get(SERVICE_CATALOG_CONFIG) != null) {
@@ -906,5 +890,34 @@ public class ServiceCatalogUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * Retrieve Executor Thread configuration for Service Catalog.
+     *
+     * @param serviceCatalogConfig  Map containing deployment.toml configuration
+     * @param def                   Default value
+     *
+     * @return Executor Thread count.
+     */
+    public static int getExecutorThreadCount(Map<String, String> serviceCatalogConfig, int def) {
+        String executorThreads = serviceCatalogConfig.get(SERVICE_CATALOG_EXECUTOR_THREADS);
+        int threads;
+        if (executorThreads != null) {
+            try {
+                threads = Integer.parseInt(executorThreads);
+                if (log.isDebugEnabled()) {
+                    log.debug("Service Catalog Executor Thread count is set to " + threads);
+                }
+            } catch (NumberFormatException e) {
+                log.warn("Invalid Service Catalog Executor Thread count. Setting to default " + def);
+                return def;
+            }
+            return threads ;
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Service Catalog Executor Thread count is not defined. Setting to default " + def);
+        }
+        return def;
     }
 }

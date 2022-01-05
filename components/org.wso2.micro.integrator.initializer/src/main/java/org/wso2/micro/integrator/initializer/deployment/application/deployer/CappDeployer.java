@@ -33,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.api.API;
+import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.ApplicationConfiguration;
@@ -101,6 +102,11 @@ public class CappDeployer extends AbstractDeployer {
      */
     private Map serviceCatalogConfiguration;
 
+    /**
+     * SecretCallbackHandlerService to read Service Catalog Configs
+     */
+    private SecretCallbackHandlerService secretCallbackHandlerService;
+
     public void init(ConfigurationContext configurationContext) {
         if (log.isDebugEnabled()) {
             log.debug("Initializing Capp Deployer..");
@@ -113,8 +119,9 @@ public class CappDeployer extends AbstractDeployer {
         FileManipulator.deleteDir(appUnzipDir);
 
         if (ServiceCatalogUtils.isServiceCatalogEnabled()) {
-            serviceCatalogExecutor = Executors.newFixedThreadPool(10);
-            serviceCatalogConfiguration = ServiceCatalogUtils.readConfiguration();
+            serviceCatalogConfiguration = ServiceCatalogUtils.readConfiguration(secretCallbackHandlerService);
+            serviceCatalogExecutor = Executors.newFixedThreadPool(
+                    ServiceCatalogUtils.getExecutorThreadCount(serviceCatalogConfiguration, 10));
         }
     }
 
@@ -213,7 +220,7 @@ public class CappDeployer extends AbstractDeployer {
             faultyCAppObjects.add(currentApp);
             faultyCapps.add(cAppName);
         }
-        if (ServiceCatalogUtils.isServiceCatalogEnabled()) {
+        if (serviceCatalogConfiguration != null && !faultyCapps.contains(cAppName)) {
             ServiceCatalogDeployer serviceDeployer = new ServiceCatalogDeployer(cAppName,
                     ((CarbonAxisConfigurator) axisConfig.getAxisConfiguration().getConfigurator()).getRepoLocation(),
                     serviceCatalogConfiguration);
@@ -682,6 +689,10 @@ public class CappDeployer extends AbstractDeployer {
         cAppMap.clear();
         faultyCapps.clear();
         faultyCAppObjects.clear();
+    }
+
+    public void setSecretCallbackHandlerService(SecretCallbackHandlerService secretCallbackHandlerService) {
+        this.secretCallbackHandlerService = secretCallbackHandlerService;
     }
 
     /**

@@ -31,13 +31,12 @@ import static org.wso2.micro.integrator.initializer.utils.ServiceCatalogUtils.pu
 
 public class ServiceCatalogDeployer implements Runnable {
 
-    private String cAppName;
-    private Map serviceCatalogConfiguration;
-    private final String repoLocation;
-
+    private static final Log log = LogFactory.getLog(ServiceCatalogDeployer.class);
     private static final String CAPP_UNZIP_DIR;
 
-    private static final Log log = LogFactory.getLog(ServiceCatalogDeployer.class);
+    private final String cAppName;
+    private final Map serviceCatalogConfiguration;
+    private final String repoLocation;
 
     public ServiceCatalogDeployer(String name, String repoLocation, Map serviceCatalogConfiguration) {
         this.cAppName = name;

@@ -41,6 +41,7 @@ public class Constants {
     public static final String ENABLE = "enable";
     public static final String USER_NAME = "username";
     public static final String PASSWORD = "password";
+    public static final String SERVICE_CATALOG_EXECUTOR_THREADS = "executor_threads";
 
     public static final String SERVICE_CATALOG_PUBLISH_ENDPOINT = "api/am/service-catalog/v0/services/import?overwrite" +
             "=true";
