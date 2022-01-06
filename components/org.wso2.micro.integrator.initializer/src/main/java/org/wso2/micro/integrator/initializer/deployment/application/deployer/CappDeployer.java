@@ -33,15 +33,19 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.api.API;
+import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.ApplicationConfiguration;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
+import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.core.util.FileManipulator;
 import org.wso2.micro.integrator.initializer.dashboard.ArtifactDeploymentListener;
+import org.wso2.micro.integrator.initializer.serviceCatalog.ServiceCatalogDeployer;
 import org.wso2.micro.integrator.initializer.utils.DeployerUtil;
+import org.wso2.micro.integrator.initializer.utils.ServiceCatalogUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,6 +59,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -86,6 +92,21 @@ public class CappDeployer extends AbstractDeployer {
      */
     private String extension;
 
+    /**
+     * Service Catalog Executor threads for publishing Services to Service Catalog.
+     */
+    private ExecutorService serviceCatalogExecutor;
+
+    /**
+     * Map object to store Service Catalog configuration
+     */
+    private Map serviceCatalogConfiguration;
+
+    /**
+     * SecretCallbackHandlerService to read Service Catalog Configs
+     */
+    private SecretCallbackHandlerService secretCallbackHandlerService;
+
     public void init(ConfigurationContext configurationContext) {
         if (log.isDebugEnabled()) {
             log.debug("Initializing Capp Deployer..");
@@ -96,6 +117,12 @@ public class CappDeployer extends AbstractDeployer {
         String appUnzipDir = AppDeployerUtils.getAppUnzipDir() + File.separator +
                 AppDeployerUtils.getTenantIdString();
         FileManipulator.deleteDir(appUnzipDir);
+
+        if (ServiceCatalogUtils.isServiceCatalogEnabled()) {
+            serviceCatalogConfiguration = ServiceCatalogUtils.readConfiguration(secretCallbackHandlerService);
+            serviceCatalogExecutor = Executors.newFixedThreadPool(
+                    ServiceCatalogUtils.getExecutorThreadCount(serviceCatalogConfiguration, 10));
+        }
     }
 
     public void setDirectory(String cAppDir) {
@@ -192,6 +219,12 @@ public class CappDeployer extends AbstractDeployer {
             undeployCarbonApp(currentApp, axisConfig);
             faultyCAppObjects.add(currentApp);
             faultyCapps.add(cAppName);
+        }
+        if (serviceCatalogConfiguration != null && !faultyCapps.contains(cAppName)) {
+            ServiceCatalogDeployer serviceDeployer = new ServiceCatalogDeployer(cAppName,
+                    ((CarbonAxisConfigurator) axisConfig.getAxisConfiguration().getConfigurator()).getRepoLocation(),
+                    serviceCatalogConfiguration);
+            serviceCatalogExecutor.execute(serviceDeployer);
         }
     }
 
@@ -656,6 +689,10 @@ public class CappDeployer extends AbstractDeployer {
         cAppMap.clear();
         faultyCapps.clear();
         faultyCAppObjects.clear();
+    }
+
+    public void setSecretCallbackHandlerService(SecretCallbackHandlerService secretCallbackHandlerService) {
+        this.secretCallbackHandlerService = secretCallbackHandlerService;
     }
 
     /**
