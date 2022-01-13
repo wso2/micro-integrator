@@ -247,16 +247,18 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
             //check if service listing request is blocked
             if (isServiceListBlocked(uri)) {
                 response.setStatusCode(HttpStatus.SC_FORBIDDEN);
-                sourceHandler.commitResponseHideExceptions(conn, response);
             } else {
                 generateServicesList(response, conn, outputStream, servicePath);
 
                 messageContext.setProperty("WSDL_GEN_HANDLED", true);
             }
+            SourceContext.updateState(conn, ProtocolState.WSDL_RESPONSE_DONE);
             try {
                 outputStream.flush();
                 outputStream.close();
             } catch (IOException ignore) {
+            } finally {
+                sourceHandler.commitResponseHideExceptions(conn, response);
             }
             isRequestHandled = true ;
         } else {
@@ -348,8 +350,6 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
             byte[] bytes = getServicesHTML(
                     servicePath.endsWith("/") ? "" : servicePath + "/").getBytes();
             response.addHeader(CONTENT_TYPE, TEXT_HTML);
-            SourceContext.updateState(conn, ProtocolState.WSDL_RESPONSE_DONE);
-            sourceHandler.commitResponseHideExceptions(conn, response);
             os.write(bytes);
 
         } catch (IOException e) {
