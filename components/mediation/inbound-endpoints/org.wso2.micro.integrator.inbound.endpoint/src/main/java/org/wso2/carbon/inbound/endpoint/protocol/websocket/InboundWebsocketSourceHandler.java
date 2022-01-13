@@ -445,6 +445,10 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
         return wrappedContext;
     }
 
+    public URI getSubscriber() {
+        return subscriberPath;
+    }
+
     public String getSubscriberPath() {
         return subscriberPath.getPath();
     }
