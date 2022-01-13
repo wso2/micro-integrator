@@ -149,7 +149,8 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String endpointName = WebsocketEndpointManager.getInstance().getEndpointName(port, tenantDomain);
         if (endpointName == null) {
-            handleException("Endpoint not found for port : " + port + "" + " tenant domain : " + tenantDomain);
+            int portWithOffset = port + portOffset;
+            handleException("Endpoint not found for port : " + portWithOffset + "" + " tenant domain : " + tenantDomain);
         }
         WebsocketSubscriberPathManager.getInstance()
                 .addChannelContext(endpointName, subscriberPath.getPath(), wrappedContext);
@@ -195,7 +196,8 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
 
         String endpointName = WebsocketEndpointManager.getInstance().getEndpointName(port, tenantDomain);
         if (endpointName == null) {
-            handleException("Endpoint not found for port : " + port + "" + " tenant domain : " + tenantDomain);
+            int portWithOffset = port + portOffset;
+            handleException("Endpoint not found for port : " + portWithOffset + "" + " tenant domain : " + tenantDomain);
         }
 
         WebsocketSubscriberPathManager.getInstance()
