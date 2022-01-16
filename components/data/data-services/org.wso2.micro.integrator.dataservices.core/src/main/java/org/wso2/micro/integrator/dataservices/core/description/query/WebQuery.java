@@ -19,7 +19,8 @@ package org.wso2.micro.integrator.dataservices.core.description.query;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.webharvest.runtime.variables.Variable;
 import org.wso2.micro.integrator.dataservices.core.DataServiceFault;
 import org.wso2.micro.integrator.dataservices.core.description.config.WebConfig;
@@ -45,7 +46,7 @@ public class WebQuery extends Query {
 
     private String scraperVariable;
 
-    private static Logger log = Logger.getLogger(WebQuery.class);
+    private static Log log = LogFactory.getLog(WebQuery.class);
 
     public WebQuery(DataService dataService, String queryId,
                     List<QueryParam> queryParams, String configId, Result result,
