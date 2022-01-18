@@ -1425,7 +1425,7 @@
         <neethi.osgi.version>2.0.4.wso2v5</neethi.osgi.version>
         <version.woden>1.0.0.M9-wso2v1</version.woden>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
-        <version.XmlSchema>1.4.7.wso2v6</version.XmlSchema>
+        <version.XmlSchema>1.4.7-wso2v8</version.XmlSchema>
         <commons-xmlschema.version>1.4.7</commons-xmlschema.version>
         <version.commons.codec>1.12</version.commons.codec>
         <version.annogen>0.1.0.wso2v1</version.annogen>
@@ -1567,8 +1567,8 @@
 
         <carbon.user.api.imp.pkg.version>[1.0.1,1.1.0)</carbon.user.api.imp.pkg.version> <!-- todo remove this and use {carbon.kernel.imp.pkg.version} after carbon base bundles are corrected to export correct versions-->
 
-        <xmlschema.orbit.version>1.4.7.wso2v8</xmlschema.orbit.version>
-        <xmlschema.orbit.imp.pkg.version>[1.4.7.wso2v8,1.5.0)</xmlschema.orbit.imp.pkg.version>
+        <xmlschema.orbit.version>1.4.7.wso2v3</xmlschema.orbit.version>
+        <xmlschema.orbit.imp.pkg.version>[1.4.7.wso2v3,1.5.0)</xmlschema.orbit.imp.pkg.version>
 
         <neethi.orbit.version>2.0.4.wso2v4</neethi.orbit.version>
         <neethi.orbit.imp.pkg.version>[2.0.4.wso2v4,2.1.0)</neethi.orbit.imp.pkg.version>
