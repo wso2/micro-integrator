@@ -42,6 +42,7 @@ public class InboundWebsocketConstants {
 
     public static final String WEBSOCKET_TARGET_HANDLER_CONTEXT = "websocket.target.handler.context";
     public static final String WEBSOCKET_SOURCE_HANDLER_CONTEXT = "websocket.source.handler.context";
+    public static final String WEBSOCKET_SOURCE_CHANNEL_IDENTIFIER = "websocket.source.channel.identifier";
 
     public static final String WEBSOCKET_BINARY_FRAME_PRESENT = "websocket.binary.frame.present";
     public static final String WEBSOCKET_BINARY_FRAME = "websocket.binary.frame";
