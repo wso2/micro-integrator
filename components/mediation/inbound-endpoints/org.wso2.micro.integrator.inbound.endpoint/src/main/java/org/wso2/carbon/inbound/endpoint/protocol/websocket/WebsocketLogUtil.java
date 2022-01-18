@@ -26,7 +26,7 @@ import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
 
 import java.util.Map;
 
@@ -48,11 +48,11 @@ public class WebsocketLogUtil {
      * <p>
      * " >> Headers [channelContextId] [header name] : [header value]"
      *
-     * @param log {@link Logger} object of the relevant class
+     * @param log {@link Log} object of the relevant class
      * @param msg {@link FullHttpRequest} response from the backend
      * @param ctx {@link ChannelHandlerContext} context
      */
-    public static void printHeaders(Logger log, FullHttpRequest msg, ChannelHandlerContext ctx) {
+    public static void printHeaders(Log log, FullHttpRequest msg, ChannelHandlerContext ctx) {
         //the direction is always inbound.
         String logStatement = getDirectionString(true) + "Headers " + resolveContextId(ctx) + " ";
         if (msg.headers() == null || msg.headers().isEmpty()) {
@@ -68,13 +68,13 @@ public class WebsocketLogUtil {
     /**
      * Print {@link WebSocketFrame} information.
      *
-     * @param log       {@link Logger} object of the relevant class
+     * @param log       {@link Log} object of the relevant class
      * @param frame     {@link WebSocketFrame} frame
      * @param ctx       {@link ChannelHandlerContext} context
      * @param customMsg Custom message along with the frame information
      * @param isInbound true if the frame is inbound, false if it is outbound
      */
-    public static void printWebSocketFrame(Logger log, WebSocketFrame frame, ChannelHandlerContext ctx,
+    public static void printWebSocketFrame(Log log, WebSocketFrame frame, ChannelHandlerContext ctx,
                                            String customMsg, boolean isInbound) {
         String channelContextId = resolveContextId(ctx);
         printWebSocketFrame(log, frame, channelContextId, customMsg, isInbound);
@@ -83,12 +83,12 @@ public class WebsocketLogUtil {
     /**
      * Print {@link WebSocketFrame} information.
      *
-     * @param log       {@link Logger} object of the relevant class
+     * @param log       {@link Log} object of the relevant class
      * @param frame     {@link WebSocketFrame} frame
      * @param ctx       {@link ChannelHandlerContext} context
      * @param isInbound true if the frame is inbound, false if it is outbound
      */
-    public static void printWebSocketFrame(Logger log, WebSocketFrame frame, ChannelHandlerContext ctx,
+    public static void printWebSocketFrame(Log log, WebSocketFrame frame, ChannelHandlerContext ctx,
                                            boolean isInbound) {
         String channelContextId = resolveContextId(ctx);
         printWebSocketFrame(log, frame, channelContextId, null, isInbound);
@@ -97,14 +97,14 @@ public class WebsocketLogUtil {
     /**
      * Print {@link WebSocketFrame} information.
      *
-     * @param log              {@link Logger} object of the relevant class
+     * @param log              {@link Log} object of the relevant class
      * @param frame            {@link WebSocketFrame} frame
      * @param channelContextId {@link ChannelHandlerContext} context id as a String
      * @param customMsg        Log message which needs to be appended to the frame information,
      *                         if it is not required provide null
      * @param isInbound        true if the frame is inbound, false if it is outbound
      */
-    private static void printWebSocketFrame(Logger log, WebSocketFrame frame, String channelContextId,
+    private static void printWebSocketFrame(Log log, WebSocketFrame frame, String channelContextId,
                                             String customMsg, boolean isInbound) {
 
         String logStatement = getDirectionString(isInbound) + channelContextId;
@@ -131,11 +131,11 @@ public class WebsocketLogUtil {
     /**
      * Print specific debug logs with the {@link ChannelHandlerContext} context.
      *
-     * @param log     log {@link Logger} object of the relevant class
+     * @param log     log {@link Log} object of the relevant class
      * @param ctx     {@link ChannelHandlerContext} context
      * @param message Log message
      */
-    public static void printSpecificLog(Logger log, ChannelHandlerContext ctx, String message) {
+    public static void printSpecificLog(Log log, ChannelHandlerContext ctx, String message) {
         log.debug(" " + message + " on Context id : " + ctx.channel().toString());
     }
 
