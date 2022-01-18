@@ -20,7 +20,6 @@ package org.wso2.esb.integration.common.utils.coverage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.BasicConfigurator;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.engine.frameworkutils.ArchiveExtractorUtil;
 import org.wso2.carbon.automation.engine.frameworkutils.CodeCoverageUtils;
