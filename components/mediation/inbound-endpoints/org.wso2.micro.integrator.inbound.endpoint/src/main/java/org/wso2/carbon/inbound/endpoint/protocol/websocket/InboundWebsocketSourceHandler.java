@@ -56,7 +56,6 @@ import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.api.ApiConstants;
 import org.apache.synapse.api.inbound.InboundApiHandler;
-import org.apache.synapse.api.inbound.InboundApiHandler;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.MessageContextCreatorForAxis2;
 import org.apache.synapse.inbound.InboundEndpoint;
