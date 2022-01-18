@@ -192,6 +192,18 @@ public class JMSConstants {
      */
     public static final String JMSX_GROUP_ID = "JMSXGroupID";
     /**
+     * A MessageContext property or client Option indicating the JMS destination to use on a Send
+     */
+    public static final String JMS_DESTINATION = "JMS_DESTINATION";
+    /**
+     * A MessageContext property or client Option indicating the JMS replyTo Destination
+     */
+    public static final String JMS_REPLY_TO = "JMS_REPLY_TO";
+    /**
+     * A MessageContext property indicating the JMS type String returned by {@link javax.jms.Message.getJMSType()}
+     */
+    public static final String JMS_TYPE = "JMS_TYPE";
+    /**
      * A MessageContext property or client Option indicating the JMS delivery mode as an Integer or String
      * Value 1 - javax.jms.DeliveryMode.NON_PERSISTENT
      * Value 2 - javax.jms.DeliveryMode.PERSISTENT
