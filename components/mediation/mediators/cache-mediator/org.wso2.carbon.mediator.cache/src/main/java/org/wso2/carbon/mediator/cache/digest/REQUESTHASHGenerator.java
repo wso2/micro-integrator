@@ -25,6 +25,7 @@ import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.mediator.cache.CachingConstants;
 import org.wso2.carbon.mediator.cache.CachingException;
 
 import java.io.ByteArrayOutputStream;
@@ -33,9 +34,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This is the extended implementation of <a href="http://www.ietf.org/rfc/rfc2803.txt">DOMHASH algorithm</a> over a
@@ -70,8 +69,17 @@ public class REQUESTHASHGenerator extends DOMHASHGenerator {
         if (msgContext.getTo() != null) {
             toAddress = msgContext.getTo().getAddress();
         }
-        Map<String, String> headers = (Map) msgContext.getProperty(
-                org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
+        String[]  permanentlyExcludedHeaders = CachingConstants.PERMANENTLY_EXCLUDED_HEADERS;
+        Map<String, String> headers = new TreeMap<String, String>(new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                return o1.compareToIgnoreCase(o2);
+            }
+        });
+        headers.putAll((Map<String, String>)msgContext.getProperty(MessageContext.TRANSPORT_HEADERS));
+        //remove permanently excluded headers from hashing methods
+        for (String excludedHeader : permanentlyExcludedHeaders) {
+            headers.remove(excludedHeader);
+        }
         if (body != null) {
             byte[] digest = null;
             if (toAddress != null) {
