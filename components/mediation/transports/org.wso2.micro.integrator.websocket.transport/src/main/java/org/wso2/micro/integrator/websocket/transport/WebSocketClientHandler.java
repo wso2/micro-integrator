@@ -26,6 +26,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
@@ -175,6 +177,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                         (handshaker.actualSubprotocol() != null) && !handshaker.actualSubprotocol()
                                 .contains(WebsocketConstants.SYNAPSE_SUBPROTOCOL_PREFIX)))) {
                     handleWebsocketBinaryFrame(frame);
+                    return;
+                } else if ((frame instanceof PingWebSocketFrame) && ((handshaker.actualSubprotocol() == null) ||
+                        ((handshaker.actualSubprotocol() != null) &&
+                                !handshaker.actualSubprotocol().contains(WebsocketConstants.SYNAPSE_SUBPROTOCOL_PREFIX)))) {
+                    ctx.channel().writeAndFlush(new PongWebSocketFrame(frame.content().retain()));
                     return;
                 } else if ((frame instanceof TextWebSocketFrame) && ((handshaker.actualSubprotocol() == null) || (
                         (handshaker.actualSubprotocol() != null) && !handshaker.actualSubprotocol()

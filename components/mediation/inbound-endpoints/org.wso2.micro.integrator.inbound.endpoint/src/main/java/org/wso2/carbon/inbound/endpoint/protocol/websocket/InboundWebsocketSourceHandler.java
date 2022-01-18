@@ -375,7 +375,6 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
                     synCtx.setEnvelope(TransportUtils.createSOAPEnvelope(documentElement));
                     injectForMediation(synCtx, endpoint);
                 } else if (frame instanceof PingWebSocketFrame) {
-                    ctx.channel().writeAndFlush(new PongWebSocketFrame(frame.content().retain()));
                     PongWebSocketFrame pongWebSocketFrame = new PongWebSocketFrame(frame.content().retain());
                     ctx.channel().writeAndFlush(pongWebSocketFrame);
                     if (log.isDebugEnabled()) {
