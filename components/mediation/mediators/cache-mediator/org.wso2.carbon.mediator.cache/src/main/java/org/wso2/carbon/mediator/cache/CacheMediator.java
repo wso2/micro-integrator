@@ -79,6 +79,8 @@ public class CacheMediator extends AbstractMediator implements ManagedLifecycle,
      */
     private final String jsonContentType = "application/json";
 
+    private static final String CONTENT_TYPE = "Content-Type";
+
     /**
      * Cache configuration ID.
      */
@@ -376,6 +378,8 @@ public class CacheMediator extends AbstractMediator implements ManagedLifecycle,
                     headerProperties);
             msgCtx.setProperty(Constants.Configuration.MESSAGE_TYPE,
                     headerProperties.get(Constants.Configuration.MESSAGE_TYPE));
+            msgCtx.setProperty(Constants.Configuration.CONTENT_TYPE,
+                    headerProperties.get(CONTENT_TYPE));
         }
 
         // take specified action on cache hit
