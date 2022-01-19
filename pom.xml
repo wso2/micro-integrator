@@ -1433,7 +1433,7 @@
         <neethi.osgi.version>2.0.4.wso2v5</neethi.osgi.version>
         <version.woden>1.0.0.M9-wso2v1</version.woden>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
-        <version.XmlSchema>1.4.7.wso2v6</version.XmlSchema>
+        <version.XmlSchema>1.4.7-wso2v8</version.XmlSchema>
         <commons-xmlschema.version>1.4.7</commons-xmlschema.version>
         <version.commons.codec>1.12</version.commons.codec>
         <version.annogen>0.1.0.wso2v1</version.annogen>
