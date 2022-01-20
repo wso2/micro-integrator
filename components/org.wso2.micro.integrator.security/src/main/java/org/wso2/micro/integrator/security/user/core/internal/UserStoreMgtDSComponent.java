@@ -20,7 +20,14 @@ package org.wso2.micro.integrator.security.user.core.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.micro.core.Constants;
+import org.wso2.micro.integrator.core.TemporaryService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
@@ -37,7 +44,7 @@ import org.wso2.micro.integrator.security.user.core.tracker.UserStoreManagerRegi
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-//@Component(name = "user.store.mgt.dscomponent", immediate = true)
+@Component(name = "user.store.mgt.dscomponent", immediate = true)
 public class UserStoreMgtDSComponent {
     private static Log log = LogFactory.getLog(UserStoreMgtDSComponent.class);
     private static RealmService realmService;
@@ -48,8 +55,8 @@ public class UserStoreMgtDSComponent {
         return realmService;
     }
 
-//    @Reference(name = "user.realmservice.default", cardinality = ReferenceCardinality.MANDATORY,
-//            policy = ReferencePolicy.DYNAMIC, unbind = "unsetRealmService")
+    @Reference(name = "user.realmservice.default", cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC, unbind = "unsetRealmService")
     protected void setRealmService(RealmService rlmService) {
         realmService = rlmService;
     }
@@ -58,13 +65,13 @@ public class UserStoreMgtDSComponent {
         return UserStoreMgtDSComponent.serverConfigurationService;
     }
 
-//    @Reference(name = "server.configuration.service", cardinality = ReferenceCardinality.MANDATORY,
-//            policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
+    @Reference(name = "server.configuration.service", cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
     protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
         UserStoreMgtDSComponent.serverConfigurationService = serverConfigurationService;
     }
 
-//    @Activate
+    @Activate
     protected void activate(ComponentContext ctxt) {
         if (Boolean.parseBoolean(System.getProperty("NonUserCoreMode"))) {
             log.debug("UserCore component activated in NonUserCoreMode Mode");
@@ -86,13 +93,18 @@ public class UserStoreMgtDSComponent {
 
             UserStoreManagerRegistry.init(ctxt.getBundleContext());
 
+            // Registering a TemporaryService so that app deployer service component can continue.
+            // Micro-integrator initializer should wait for this bundle to be activated.
+            TemporaryService temporaryService = new TemporaryService();
+            ctxt.getBundleContext().registerService(TemporaryService.class.getName(), temporaryService, null);
+
             log.info("Carbon UserStoreMgtDSComponent activated successfully.");
         } catch (Exception e) {
             log.error("Failed to activate Carbon UserStoreMgtDSComponent ", e);
         }
     }
 
-//    @Deactivate
+    @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
             log.debug("Carbon UserStoreMgtDSComponent is deactivated ");
@@ -114,8 +126,8 @@ public class UserStoreMgtDSComponent {
         return UserStoreMgtDSComponent.claimManagerFactory;
     }
 
-//    @Reference(name = "claim.mgt.component", cardinality = ReferenceCardinality.OPTIONAL,
-//            policy = ReferencePolicy.DYNAMIC, unbind = "unsetClaimManagerFactory")
+    @Reference(name = "claim.mgt.component", cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC, unbind = "unsetClaimManagerFactory")
     protected void setClaimManagerFactory(ClaimManagerFactory claimManagerFactory) {
         this.claimManagerFactory = claimManagerFactory;
         try {

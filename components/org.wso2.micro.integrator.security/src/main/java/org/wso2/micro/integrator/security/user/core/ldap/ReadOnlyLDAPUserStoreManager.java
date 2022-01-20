@@ -3582,7 +3582,7 @@ public class ReadOnlyLDAPUserStoreManager extends AbstractUserStoreManager {
     }
 
     private void addAllRolesToUserRolesCache(String userName, List<String> roleList) throws UserStoreException {
-        String[] internalRoleList = doGetDefaultInternalRoleList();
+        String[] internalRoleList = doGetInternalRoleListOfUser(userName, "*");
         String[] combinedRoleList = UserCoreUtil.combineArrays((roleList.toArray(new String[roleList.size()])), internalRoleList);
         addToUserRolesCache(getTenantId(), userName, combinedRoleList);
     }

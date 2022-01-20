@@ -32,22 +32,23 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.micro.core.CarbonAxisConfigurator;
+import org.wso2.micro.integrator.core.TemporaryService;
 import org.wso2.micro.integrator.dataservices.core.DBDeployer;
 import org.wso2.micro.integrator.initializer.StartupFinalizer;
 import org.wso2.micro.integrator.initializer.dashboard.HeartBeatComponent;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
+import org.wso2.micro.integrator.initializer.deployment.user.store.deployer.UserStoreDeployer;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
-
 
 @Component(name = "org.wso2.micro.integrator.initializer.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
 
     private static SecretCallbackHandlerService secretCallbackHandlerService;
-
+    private static TemporaryService temporaryService;
     private static final Log log = LogFactory.getLog(AppDeployerServiceComponent.class);
 
     private ConfigurationContext configCtx;
@@ -148,6 +149,11 @@ public class AppDeployerServiceComponent {
         // Register CappDeployer in DeploymentEngine (required for CApp hot deployment)
         addCAppDeployer(deploymentEngine);
 
+        // Register user-store deployer
+        if (!Boolean.parseBoolean(System.getProperty("NonUserCoreMode"))) {
+            addUserStoreDeployer(deploymentEngine);
+        }
+
     }
 
     /**
@@ -196,6 +202,22 @@ public class AppDeployerServiceComponent {
         }
     }
 
+    private void addUserStoreDeployer(DeploymentEngine deploymentEngine) {
+        String artifactRepoPath = configCtx.getAxisConfiguration().getRepository().getPath();
+
+        // Create user store deployer
+        UserStoreDeployer userStoreDeployer = new UserStoreDeployer();
+        userStoreDeployer.setDirectory(artifactRepoPath + DeploymentConstants.USER_STORE_DIR_NAME);
+        userStoreDeployer.setExtension(DeploymentConstants.XML_TYPE_EXTENSION);
+
+        // Register user store deployer in DeploymentEngine
+        deploymentEngine.addDeployer(userStoreDeployer, DeploymentConstants.USER_STORE_DIR_NAME, DeploymentConstants.XML_TYPE_EXTENSION);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Successfully registered UserStore Deployer");
+        }
+    }
+
     /**
      * Invoke all registered deployers.
      */
@@ -204,6 +226,18 @@ public class AppDeployerServiceComponent {
         if (axisConfigurator instanceof CarbonAxisConfigurator) {
             ((CarbonAxisConfigurator) axisConfigurator).deployServices();
         }
+    }
+
+    // Waiting for this reference to change the bundle startup order
+    // Waiting for user store mgt service component.
+    @Reference(name = "user.temporaryService.default", cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC, unbind = "unsetTemporaryService")
+    protected void setTemporaryService(TemporaryService temporaryService) {
+        this.temporaryService = temporaryService;
+    }
+
+    protected void unsetTemporaryService(TemporaryService temporaryService) {
+        temporaryService = null;
     }
 
     @Reference(

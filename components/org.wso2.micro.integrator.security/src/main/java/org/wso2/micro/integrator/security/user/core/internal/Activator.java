@@ -20,13 +20,11 @@ package org.wso2.micro.integrator.security.user.core.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
-import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.security.user.api.UserRealmService;
 import org.wso2.micro.integrator.security.user.core.common.DefaultRealmService;
 import org.wso2.micro.integrator.security.user.core.service.RealmService;
 import org.wso2.micro.integrator.security.user.core.util.UserCoreUtil;
 
-import java.io.File;
 import java.lang.management.ManagementPermission;
 
 /**
@@ -36,34 +34,36 @@ import java.lang.management.ManagementPermission;
  * Therefore we read properties but do not keep a reference to it.
  */
 public class Activator extends BundleCheckActivator {
+
     private static final Log log = LogFactory.getLog(Activator.class);
 
     public void startDeploy(BundleContext bundleContext) throws Exception {
+
+        if (Boolean.parseBoolean(System.getProperty("NonUserCoreMode"))) {
+            return;
+        }
+
         // Need permissions in order to instantiate user core
         SecurityManager secMan = System.getSecurityManager();
 
-		/*
+        /*
          * Read the SSL trust store configurations from the Security.TrustStore
-		 * element of the Carbon.xml
-		 */
-        CarbonServerConfigurationService config = CarbonServerConfigurationService.getInstance();
-        String type = config.getFirstProperty("Security.TrustStore.Type");
-        String password = config.getFirstProperty("Security.TrustStore.Password");
-        String storeFile =
-                new File(config.getFirstProperty("Security.TrustStore.Location")).getAbsolutePath();
-        // set the SSL trust store System Properties
-        System.setProperty("javax.net.ssl.trustStore", storeFile);
-        System.setProperty("javax.net.ssl.trustStoreType", type);
-        System.setProperty("javax.net.ssl.trustStorePassword", password);
+         * element of the Carbon.xml
+         */
+//        CarbonServerConfigurationService config = CarbonServerConfigurationService.getInstance();
+//        String type = config.getFirstProperty("Security.TrustStore.Type");
+//        String password = config.getFirstProperty("Security.TrustStore.Password");
+//        String storeFile =
+//                new File(config.getFirstProperty("Security.TrustStore.Location")).getAbsolutePath();
+//        // set the SSL trust store System Properties
+//        System.setProperty("javax.net.ssl.trustStore", storeFile);
+//        System.setProperty("javax.net.ssl.trustStoreType", type);
+//        System.setProperty("javax.net.ssl.trustStorePassword", password);
 
         if (secMan != null) {
             secMan.checkPermission(new ManagementPermission("control"));
         }
         try {
-            if (Boolean.parseBoolean(System.getProperty("NonUserCoreMode"))) {
-                log.debug("UserCore component activated in NonUserCoreMode Mode");
-                return;
-            }
             RealmService realmService = new DefaultRealmService(bundleContext);
             bundleContext.registerService(new String[]{RealmService.class.getName(), UserRealmService.class.getName()},
                     realmService, null);

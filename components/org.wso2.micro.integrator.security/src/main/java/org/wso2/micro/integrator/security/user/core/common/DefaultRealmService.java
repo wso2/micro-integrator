@@ -83,8 +83,8 @@ public class DefaultRealmService implements RealmService {
         } else {
             this.bootstrapRealmConfig = buildBootStrapRealmConfig();
         }
-        this.tenantMgtConfiguration = buildTenantMgtConfig(bc,
-                this.bootstrapRealmConfig.getUserStoreProperty(UserCoreConstants.TenantMgtConfig.LOCAL_NAME_TENANT_MANAGER));
+//        this.tenantMgtConfiguration = buildTenantMgtConfig(bc,
+//                this.bootstrapRealmConfig.getUserStoreProperty(UserCoreConstants.TenantMgtConfig.LOCAL_NAME_TENANT_MANAGER));
         this.dataSource = DatabaseUtil.getRealmDataSource(bootstrapRealmConfig);
         // TODO We do not need to init DB for now
         //initializeDatabase(dataSource);
@@ -92,10 +92,10 @@ public class DefaultRealmService implements RealmService {
         properties.put(UserCoreConstants.FIRST_STARTUP_CHECK, isFirstInitialization);
 
         //this.tenantManager = this.initializeTenantManger(this.getTenantConfigurationElement(bc));
-        this.tenantManager = this.initializeTenantManger(this.tenantMgtConfiguration);
-        this.tenantManager.setBundleContext(bc);
+//        this.tenantManager = this.initializeTenantManger(this.tenantMgtConfiguration);
+//        this.tenantManager.setBundleContext(bc);
         //initialize existing partitions if applicable with the particular tenant manager.
-        this.tenantManager.initializeExistingPartitions();
+//        this.tenantManager.initializeExistingPartitions();
         // initializing the bootstrapRealm
         this.bc = bc;
         bootstrapRealm = initializeRealm(bootstrapRealmConfig, Constants.SUPER_TENANT_ID);

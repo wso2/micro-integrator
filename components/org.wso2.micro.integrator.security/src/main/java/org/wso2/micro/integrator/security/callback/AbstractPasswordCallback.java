@@ -24,11 +24,11 @@ import org.apache.ws.security.WSPasswordCallback;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.util.KeyStoreManager;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
-import org.wso2.micro.integrator.security.internal.DataHolder;
-import org.wso2.micro.integrator.security.internal.ServiceComponent;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
+import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
+import org.wso2.micro.integrator.security.user.core.util.UserCoreUtil;
 
 import java.io.IOException;
 import java.security.KeyStore;
@@ -179,7 +179,9 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
         boolean isAuthenticated;
         try {
             isAuthenticated = userStoreManager.authenticate(user, password);
-            return isAuthenticated && hasAllowedRole(user);
+            String domainName = UserCoreUtil.getDomainFromThreadLocal();
+            String usernameWithDomain = addDomainToName(user, domainName);
+            return isAuthenticated && hasAllowedRole(usernameWithDomain);
         } catch (Exception e) {
             log.error("Error in authenticating user.", e);
             throw e;
@@ -224,4 +226,19 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
         }
         return true;
     }
+
+    public static String addDomainToName(String name, String domainName) {
+        if (domainName != null && name != null && !name.contains(UserCoreConstants.DOMAIN_SEPARATOR) &&
+                !"PRIMARY".equalsIgnoreCase(domainName)) {
+            if (!"Internal".equalsIgnoreCase(domainName) && !"Workflow".equalsIgnoreCase(domainName) &&
+                    !"Application".equalsIgnoreCase(domainName)) {
+                name = domainName.toUpperCase() + UserCoreConstants.DOMAIN_SEPARATOR + name;
+            } else {
+                name = domainName.substring(0, 1).toUpperCase() + domainName.substring(1).toLowerCase() +
+                        UserCoreConstants.DOMAIN_SEPARATOR + name;
+            }
+        }
+        return name;
+    }
+
 }
