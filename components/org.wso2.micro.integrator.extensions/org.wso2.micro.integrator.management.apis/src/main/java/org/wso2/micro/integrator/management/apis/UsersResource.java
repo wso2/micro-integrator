@@ -172,8 +172,10 @@ public class UsersResource extends UserResource {
                 LOG.debug("Adding user, id: " + user + ", roleList: " + Arrays.toString(roleList));
             }
             try {
-                getUserStore().addUser(user, payload.get(PASSWORD).getAsString(),
-                                       roleList, null, null);
+                synchronized (this) {
+                    getUserStore().addUser(user, payload.get(PASSWORD).getAsString(),
+                            roleList, null, null);
+                }
             } catch (UserAlreadyExistsException e) {
                 throw new IOException("User: " + user + " already exists.", e);
             }
