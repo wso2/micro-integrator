@@ -38,14 +38,25 @@ public class PayloadFactoryXMLJSONTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JsonToXML With Dollar Mark And Quotes")
-    public void testJsonToXMLWithDollarMarkAndQuotes() throws Exception {
+    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JsonToXML With $ Mark And Literal true")
+    public void testJsonToXMLWithDollarMarkAndLiteralTrue() throws Exception {
 
         String jsonPayloadWithDollarMarkAndQuotes = "{\"test\": \"test \\\"$\\\"\"}";
         String responseString =
                 postJSONPayload("services/pfJSONtoXMLWithDollarMarkProxy", jsonPayloadWithDollarMarkAndQuotes);
         assertEquals(responseString, "<root xmlns=\"http://ws.apache.org/ns/synapse\">" +
-                "<ticketinformation>{\"test\": \"test \\\"$\\\"\"}</ticketinformation></root>",
+                        "<ticketinformation>{\"test\": \"test \\\"$\\\"\"}</ticketinformation></root>",
+                "PayloadFactory did not return proper response");
+    }
+
+    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JsonToXML With Ampersand And Literal true")
+    public void testJsonToXMLWithAmpersand() throws Exception {
+
+        String jsonPayloadWithAmpersand = "{\"test\":\"error &\"}";
+        String responseString =
+                postJSONPayload("pfJSONtoXMLWithAmpersandAPI", jsonPayloadWithAmpersand);
+        assertEquals(responseString, "<mediate><entity_document>{\"test\":\"error &amp;\"}" +
+                        "</entity_document></mediate>",
                 "PayloadFactory did not return proper response");
     }
 
@@ -65,23 +76,41 @@ public class PayloadFactoryXMLJSONTestCase extends ESBIntegrationTest {
         String responseString =
                 postJSONPayload("pfConvertJsonStreamToXML", jsonPayload);
         assertEquals(responseString, "<root><information>{\"location\":\"\",\"parent\":\"\"," +
-                "\"priority\":\"3\",\"state\":\"1\",\"number\":\"MN32432\",\"impact\":\"2\"," +
-                "\"description\":\"print issue\"}</information></root>",
+                        "\"priority\":\"3\",\"state\":\"1\",\"number\":\"MN32432\",\"impact\":\"2\"," +
+                        "\"description\":\"print issue\"}</information></root>",
                 "PayloadFactory did not return proper response");
     }
 
-    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JsonToXML With Curly Brackets")
+    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test String With Curly Brackets")
     public void testXMLStringWithCurlyBracketsProxy() throws Exception {
 
         String jsonPayloadRandom = "{\"test\": \"test \\\"$\\\"\"}";
         String responseString =
                 postJSONPayload("services/pfXMLStringWithCurlyBracketsProxy", jsonPayloadRandom);
         assertEquals(responseString, "<root xmlns=\"http://ws.apache.org/ns/synapse\">" +
-                "<apikey>{string starts with curly braces}</apikey></root>",
+                        "<apikey>{string starts with curly braces}</apikey></root>",
                 "PayloadFactory did not return proper response");
     }
 
-    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test complex JSON stream to XML\"")
+    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test String With Square Brackets")
+    public void testXMLStringWithSquareBracketsProxy() throws Exception {
+
+        String jsonPayloadRandom = "{ \"data\": {\n" +
+                "\t\t\t\"address1\":\"[yyyy]\",\n" +
+                "\t\t\t\"address2\":\"xxxx\"\n" +
+                "}\t\n" +
+                "}\n";
+        String responseString =
+                postJSONPayload("services/pfXMLStringWithSquareBracketsProxy", jsonPayloadRandom);
+        assertEquals(responseString, "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
+                        "xmlns:hub=\"http://schemas.datacontract.org/2004/07/HubWebAPI\" " +
+                        "xmlns:tem=\"http://tempuri.org/\"><soapenv:Header/><soapenv:Body><tem:UpdatePlayerAddress>" +
+                        "<tem:address1>[yyyy]</tem:address1></tem:UpdatePlayerAddress>" +
+                        "</soapenv:Body></soapenv:Envelope>",
+                "PayloadFactory did not return proper response");
+    }
+
+    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test complex JSON stream to XML")
     public void testComplexJSONToXML() throws Exception {
 
         String jsonPayloadComplex = "{\n" +
@@ -103,7 +132,7 @@ public class PayloadFactoryXMLJSONTestCase extends ESBIntegrationTest {
                 "</testroot></soapenv:Body></soapenv:Envelope>", "PayloadFactory did not return proper response");
     }
 
-    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JSON to JSON\"")
+    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JSON to JSON")
     public void testJSONToJSONConversion() throws Exception {
 
         String jsonPayloadString = "{\"test\":\"Hello World\"}";
@@ -113,7 +142,7 @@ public class PayloadFactoryXMLJSONTestCase extends ESBIntegrationTest {
                 "PayloadFactory did not return proper response");
     }
 
-    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JSON to JSON With Carriage Return\"")
+    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JSON to JSON With Carriage Return")
     public void testJSONToJSONConversionWithCarriageReturn() throws Exception {
 
         String jsonPayloadStringWithCarriageString = "{\n" +
@@ -129,7 +158,7 @@ public class PayloadFactoryXMLJSONTestCase extends ESBIntegrationTest {
                 "PayloadFactory did not return proper response");
     }
 
-    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JSON to JSON With Array As Literal\"")
+    @Test(groups = "wso2.esb", description = "Payloadfactory mediator - test JSON to JSON With Array As Literal")
     public void testJSONToJSONConversionWithArrayAsLiteral() throws Exception {
 
         String jsonPayloadStringWithArray = "{ \"Activities\":{ \"Activity\":[ { \"EARLY_FINISH\":\"30-12-2021\", " +
