@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -23,41 +23,36 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
-import java.io.IOException;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
 import static org.wso2.micro.integrator.management.apis.Constants.DOMAIN;
 import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
-import static org.wso2.micro.integrator.management.apis.Constants.IS_ADMIN;
 import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
-import static org.wso2.micro.integrator.management.apis.Constants.ROLES;
+import static org.wso2.micro.integrator.management.apis.Constants.ROLE;
 import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
-import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
+import static org.wso2.micro.integrator.management.apis.Constants.USERS;
 import static org.wso2.micro.integrator.management.apis.Constants.USER_ID;
 
-
 /**
- * Resource for a retrieving and deleting a single user with the userId provided.
- * <p>
- * Handles resources in the form "management/users/{userId}"
+ * This resource will handle requests coming to roles/{role}.
+ * Handle fetching details of a given role and deleting a given role.
  */
-public class UserResource implements MiApiResource {
+public class RoleResource implements MiApiResource {
 
-    private static final Log LOG = LogFactory.getLog(UserResource.class);
-
+    private static final Log LOG = LogFactory.getLog(RoleResource.class);
+    private static final String INTERNAL_ROLE = "internal";
+    private static final String APPLICATION_ROLE = "application";
     // HTTP method types supported by the resource
     protected Set<String> methods;
 
-    public UserResource() {
+    public RoleResource() {
         methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
         methods.add(Constants.HTTP_DELETE);
@@ -71,6 +66,7 @@ public class UserResource implements MiApiResource {
     @Override
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
+
         String httpMethod = axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Handling " + httpMethod + "request.");
@@ -94,16 +90,14 @@ public class UserResource implements MiApiResource {
                 }
                 default: {
                     response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET and "
-                                                     + "DELETE methods are supported",
-                                                     axis2MessageContext, BAD_REQUEST);
+                                    + "DELETE methods are supported",
+                            axis2MessageContext, BAD_REQUEST);
                     break;
                 }
             }
         } catch (UserStoreException e) {
             response = Utils.createJsonError("Error initializing the user store. Please try again later", e,
-                                             axis2MessageContext, INTERNAL_SERVER_ERROR);
-        } catch (IOException e) {
-            response = Utils.createJsonError("Error processing the request. ", e, axis2MessageContext, BAD_REQUEST);
+                    axis2MessageContext, INTERNAL_SERVER_ERROR);
         } catch (ResourceNotFoundException e) {
             response = Utils.createJsonError("Requested resource not found. ", e, axis2MessageContext, NOT_FOUND);
         }
@@ -114,67 +108,56 @@ public class UserResource implements MiApiResource {
 
     protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException, ResourceNotFoundException {
         String domain = Utils.getQueryParameter(messageContext, DOMAIN);
-        String user = getUserFromPathParam(messageContext, domain);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Requested details for the user: " + user);
-        }
-        String[] roles = Utils.getUserStore(domain).getRoleListOfUser(user);
+        String roleName = Utils.getPathParameter(messageContext, ROLE);
         if (!StringUtils.isEmpty(domain)) {
-            user = Utils.addDomainToName(user, domain);
+            roleName = Utils.addDomainToName(roleName, domain);
         }
-        JSONObject userObject = new JSONObject();
-        userObject.put(USER_ID, user);
-        userObject.put(IS_ADMIN, SecurityUtils.isAdmin(user));
-        JSONArray list = new JSONArray(roles);
-        userObject.put(ROLES, list);
-        return userObject;
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Requested details for the role: " + roleName);
+        }
+        if (!Utils.getUserStore(null).isExistingRole(roleName)) {
+            throw new ResourceNotFoundException("Role: " + roleName + " cannot be found.");
+        }
+        JSONObject roleObject = new JSONObject();
+        roleObject.put(ROLE, roleName);
+        String[] users = Utils.getUserStore(null).getUserListOfRole(roleName);
+        JSONArray list = new JSONArray(users);
+        roleObject.put(USERS, list);
+        return roleObject;
     }
 
-    protected JSONObject handleDelete(MessageContext messageContext) throws UserStoreException, IOException,
-            ResourceNotFoundException {
+    protected JSONObject handleDelete(MessageContext messageContext)
+            throws UserStoreException, ResourceNotFoundException {
         String domain = Utils.getQueryParameter(messageContext, DOMAIN);
-        String user = getUserFromPathParam(messageContext, domain);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Request received to delete the user: " + user);
+        String roleName = Utils.getPathParameter(messageContext, ROLE);
+        String domainAwareRoleName = roleName;
+        String adminRole = Utils.getRealmConfiguration().getAdminRoleName();
+        if (roleName.equals(adminRole)) {
+            throw new UserStoreException("Cannot remove the admin role");
         }
-        String userName = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
-        if (Objects.isNull(userName)) {
-            LOG.warn("Deleting a user without authenticating/authorizing the request sender. Adding "
-                    + "authentication and authorization handlers is recommended.");
-        } else {
-            if (userName.equals(user)) {
-                throw new IOException("Attempt to delete the logged in user. Operation not allowed. Please login "
-                        + "from another user.");
+        if (!StringUtils.isEmpty(domain)) {
+            domainAwareRoleName = Utils.addDomainToName(roleName, domain);
+            // for internal or application roles fetch the primary user store
+            if (INTERNAL_ROLE.equalsIgnoreCase(domain) || APPLICATION_ROLE.equalsIgnoreCase(domain)) {
+                domain = null;
             }
         }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Requested details for the role: " + roleName);
+        }
         UserStoreManager userStoreManager = Utils.getUserStore(domain);
-        userStoreManager.deleteUser(user);
+        if (userStoreManager.isExistingRole(roleName)) {
+            userStoreManager.deleteRole(roleName);
+        } else if (userStoreManager.isExistingRole(domainAwareRoleName)) {
+            userStoreManager.deleteRole(domainAwareRoleName);
+        } else {
+            throw new ResourceNotFoundException("Role: " + roleName + " cannot be found.");
+        }
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put(USER_ID, user);
+        jsonBody.put(ROLE, roleName);
         jsonBody.put(STATUS, "Deleted");
         JSONObject info = new JSONObject();
-        info.put(USER_ID, user);
-        AuditLogger.logAuditMessage(userName, Constants.AUDIT_LOG_TYPE_USER, Constants.AUDIT_LOG_ACTION_DELETED, info);
+        info.put(USER_ID, roleName);
         return jsonBody;
-    }
-
-    private String getUserFromPathParam(MessageContext messageContext, String domain) throws UserStoreException,
-            ResourceNotFoundException {
-        String userId = Utils.getPathParameter(messageContext, USER_ID);
-        String domainAwareUserName = Utils.addDomainToName(userId, domain);
-        if (Objects.isNull(userId)) {
-            throw new AssertionError("Incorrect path parameter used: " + USER_ID);
-        }
-        UserStoreManager userStoreManager = Utils.getUserStore(domain);
-        String[] users = userStoreManager.listUsers(userId, -1);
-        if (null == users || 0 == users.length) {
-            throw new ResourceNotFoundException("User: " + userId + " cannot be found.");
-        }
-        for (String user : users) {
-            if (domainAwareUserName.equals(user)) {
-                return userId;
-            }
-        }
-        throw new ResourceNotFoundException("User: " + userId + " cannot be found.");
     }
 }

@@ -18,6 +18,8 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+
 import javax.xml.namespace.QName;
 
 public class Constants {
@@ -48,6 +50,8 @@ public class Constants {
     public static final String PREFIX_LOG_FILES = "/logs";
     public static final String PREFIX_TRANSACTION = "/transactions";
     public static final String PREFIX_DATA_SOURCES = "/data-sources";
+    public static final String PREFIX_ROLES = "/roles";
+    public static final String PATH_PARAM_ROLE = "/" + "{role}";
     public static final String PATH_PARAM_TRANSACTION = "/" + "{param}";
     public static final String ROOT_CONTEXT = "/";
 
@@ -93,6 +97,7 @@ public class Constants {
     public static final String HTTP_METHOD_PROPERTY = "HTTP_METHOD";
     public static final String HTTP_POST = "POST";
     public static final String HTTP_GET = "GET";
+    public static final String HTTP_PUT = "PUT";
     public static final String HTTP_DELETE = "DELETE";
 
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
@@ -113,6 +118,8 @@ public class Constants {
 
     // Constants used for the users resource
     public static final String USER_ID = "userId";
+    public static final String USERS = "users";
+    public static final String DOMAIN = "domain";
     public static final String ROLES = "roles";
     public static final String ROLE = "role";
     public static final String PASSWORD = "password";
@@ -160,5 +167,16 @@ public class Constants {
     public static final String AUDIT_LOG_ACTION_CREATED = "created";
     public static final String AUDIT_LOG_ACTION_DELETED = "deleted";
     public static final String AUDIT_LOG_ACTION_UPDATED = "updated";
+
+    public static final String DOMAIN_SEPARATOR;
+
+    static {
+        String userDomainSeparator = CarbonServerConfigurationService.getInstance().getFirstProperty("UserDomainSeparator");
+        if (userDomainSeparator != null && !userDomainSeparator.trim().isEmpty()) {
+            DOMAIN_SEPARATOR = userDomainSeparator.trim();
+        } else {
+            DOMAIN_SEPARATOR = "/";
+        }
+    }
 
 }
