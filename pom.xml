@@ -1372,7 +1372,7 @@
         <carbon.kernel.imp.pkg.version>[4.5.0,5.0.0)</carbon.kernel.imp.pkg.version>
         <version.jaxb.api>2.4.0-b180830.0359</version.jaxb.api>
 
-        <synapse.version>2.1.7-wso2v243</synapse.version>
+        <synapse.version>2.1.7-wso2v248</synapse.version>
         <imp.pkg.version.synapse>[2.1.7, 2.1.8)</imp.pkg.version.synapse>
         <carbon.mediation.version>4.7.109</carbon.mediation.version>
         <carbon.crypto.version>1.1.3</carbon.crypto.version>
@@ -1430,7 +1430,7 @@
         <orbit.version.tiles>2.0.5.wso2v1</orbit.version.tiles>
         <version.ant>1.7.0.wso2v1</version.ant>
         <version.xmlbeans>2.3.0</version.xmlbeans>
-        <orbit.version.axiom>1.2.11-wso2v20</orbit.version.axiom>
+        <orbit.version.axiom>1.2.11-wso2v21</orbit.version.axiom>
         <neethi.osgi.version>2.0.4.wso2v5</neethi.osgi.version>
         <version.woden>1.0.0.M9-wso2v1</version.woden>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
