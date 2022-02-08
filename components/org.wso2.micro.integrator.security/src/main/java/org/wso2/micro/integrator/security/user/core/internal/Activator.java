@@ -46,20 +46,6 @@ public class Activator extends BundleCheckActivator {
         // Need permissions in order to instantiate user core
         SecurityManager secMan = System.getSecurityManager();
 
-        /*
-         * Read the SSL trust store configurations from the Security.TrustStore
-         * element of the Carbon.xml
-         */
-//        CarbonServerConfigurationService config = CarbonServerConfigurationService.getInstance();
-//        String type = config.getFirstProperty("Security.TrustStore.Type");
-//        String password = config.getFirstProperty("Security.TrustStore.Password");
-//        String storeFile =
-//                new File(config.getFirstProperty("Security.TrustStore.Location")).getAbsolutePath();
-//        // set the SSL trust store System Properties
-//        System.setProperty("javax.net.ssl.trustStore", storeFile);
-//        System.setProperty("javax.net.ssl.trustStoreType", type);
-//        System.setProperty("javax.net.ssl.trustStorePassword", password);
-
         if (secMan != null) {
             secMan.checkPermission(new ManagementPermission("control"));
         }

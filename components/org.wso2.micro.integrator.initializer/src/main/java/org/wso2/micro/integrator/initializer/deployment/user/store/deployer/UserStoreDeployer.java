@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.security.user.core.common.UserStoreDeploymentManager;
 
 /**
- * Deploy user sore configurations.
+ * Deploy user store configurations.
  */
 public class UserStoreDeployer extends AbstractDeployer {
 

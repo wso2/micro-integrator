@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.micro.core.CarbonAxisConfigurator;
-import org.wso2.micro.integrator.core.TemporaryService;
+import org.wso2.micro.integrator.core.UserStoreTemporaryService;
 import org.wso2.micro.integrator.dataservices.core.DBDeployer;
 import org.wso2.micro.integrator.initializer.StartupFinalizer;
 import org.wso2.micro.integrator.initializer.dashboard.HeartBeatComponent;
@@ -48,7 +48,7 @@ import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeploye
 public class AppDeployerServiceComponent {
 
     private static SecretCallbackHandlerService secretCallbackHandlerService;
-    private static TemporaryService temporaryService;
+    private static UserStoreTemporaryService userStoreTemporaryService;
     private static final Log log = LogFactory.getLog(AppDeployerServiceComponent.class);
 
     private ConfigurationContext configCtx;
@@ -232,12 +232,12 @@ public class AppDeployerServiceComponent {
     // Waiting for user store mgt service component.
     @Reference(name = "user.temporaryService.default", cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC, unbind = "unsetTemporaryService")
-    protected void setTemporaryService(TemporaryService temporaryService) {
-        this.temporaryService = temporaryService;
+    protected void setTemporaryService(UserStoreTemporaryService userStoreTemporaryService) {
+        this.userStoreTemporaryService = userStoreTemporaryService;
     }
 
-    protected void unsetTemporaryService(TemporaryService temporaryService) {
-        temporaryService = null;
+    protected void unsetTemporaryService(UserStoreTemporaryService userStoreTemporaryService) {
+        userStoreTemporaryService = null;
     }
 
     @Reference(

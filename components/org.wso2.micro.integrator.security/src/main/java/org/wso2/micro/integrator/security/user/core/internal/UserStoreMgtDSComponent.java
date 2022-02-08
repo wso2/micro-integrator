@@ -27,7 +27,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.micro.core.Constants;
-import org.wso2.micro.integrator.core.TemporaryService;
+import org.wso2.micro.integrator.core.UserStoreTemporaryService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
@@ -95,8 +95,9 @@ public class UserStoreMgtDSComponent {
 
             // Registering a TemporaryService so that app deployer service component can continue.
             // Micro-integrator initializer should wait for this bundle to be activated.
-            TemporaryService temporaryService = new TemporaryService();
-            ctxt.getBundleContext().registerService(TemporaryService.class.getName(), temporaryService, null);
+            UserStoreTemporaryService userStoreTemporaryService = new UserStoreTemporaryService();
+            ctxt.getBundleContext().registerService(UserStoreTemporaryService.class.getName(),
+                    userStoreTemporaryService, null);
 
             log.info("Carbon UserStoreMgtDSComponent activated successfully.");
         } catch (Exception e) {

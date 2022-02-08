@@ -17,6 +17,10 @@
  */
 package org.wso2.micro.integrator.core;
 
-public class TemporaryService {
+/**
+ * This is a temporary service we are registering to keep the OSGi bundle resolving order.
+ * Need to activate UserStoreMgtDSComponent before AppDeployerServiceComponent when user-core mode is enabled.
+ */
+public class UserStoreTemporaryService {
 
 }
