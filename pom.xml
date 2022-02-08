@@ -95,7 +95,7 @@
             <dependency>
                 <groupId>org.wso2.transport.http</groupId>
                 <artifactId>org.wso2.transport.http.netty</artifactId>
-                <version>${transport.http.netty}</version>
+                <version>${transport.http.netty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ws.commons.schema</groupId>
@@ -594,6 +594,31 @@
                 <groupId>io.netty</groupId>
                 <artifactId>netty-resolver</artifactId>
                 <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-handler-proxy</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-socks</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-tcnative</artifactId>
+                <version>${netty.tcnative.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-tcnative-classes</artifactId>
+                <version>${netty.tcnative.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-tcnative-boringssl-static</artifactId>
+                <version>${netty.tcnative.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jacoco</groupId>
@@ -1500,7 +1525,8 @@
         <google.guava.version>27.0-jre</google.guava.version>
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
         <junit.version>4.8.2</junit.version>
-        <netty.version>4.1.34.Final</netty.version>
+        <netty.version>4.1.73.Final</netty.version>
+        <netty.tcnative.version>2.0.47.Final</netty.tcnative.version>
         <jacoco.agent.version>0.8.2</jacoco.agent.version>
         <activemq.version>5.2.0</activemq.version>
         <activemq.broker.version>5.15.2</activemq.broker.version>
