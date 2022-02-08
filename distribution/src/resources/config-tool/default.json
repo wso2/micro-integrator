@@ -22,6 +22,11 @@
     }
   },
 
+  "authorization_manager.class" : "org.wso2.micro.integrator.security.user.core.authorization.JDBCAuthorizationManager",
+  "authorization_manager.properties.AdminRoleManagementPermissions" : "/permission",
+  "authorization_manager.properties.AuthorizationCacheEnabled" : true,
+  "authorization_manager.properties.GetAllRolesOfUserEnabled" : false,
+
   "synapse_properties.'synapse.threads.core'": "20",
   "synapse_properties.'synapse.threads.max'": "100",
   "synapse_properties.'synapse.global_timeout_interval'": "120000",

@@ -41,7 +41,7 @@ public class DataHolder {
         return realmConfig;
     }
 
-    protected void setRealmConfig(RealmConfiguration realmConfig) {
+    public void setRealmConfig(RealmConfiguration realmConfig) {
         this.realmConfig = realmConfig;
     }
 

@@ -210,5 +210,10 @@
             <Property name="ReadTimeout"/>
             <Property name="RetryAttempts"/>
         </ISUserStoreManager-->
+        <AuthorizationManager class="org.wso2.micro.integrator.security.user.core.authorization.JDBCAuthorizationManager">
+            <Property name="AdminRoleManagementPermissions">/permission</Property>
+            <Property name="AuthorizationCacheEnabled">true</Property>
+            <Property name="GetAllRolesOfUserEnabled">false</Property>
+        </AuthorizationManager>
     </Realm>
 </UserManager>
