@@ -49,7 +49,8 @@ import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.description.InOutAxisOperation;
 import org.apache.axis2.transport.TransportUtils;
 import org.apache.commons.io.input.AutoCloseInputStream;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
@@ -82,7 +83,7 @@ import static org.wso2.carbon.inbound.endpoint.common.Constants.TENANT_DOMAIN;
 
 public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter {
 
-    private static Logger log = Logger.getLogger(InboundWebsocketSourceHandler.class);
+    private static Log log = LogFactory.getLog(InboundWebsocketSourceHandler.class);
 
     private InboundWebsocketChannelContext wrappedContext;
     private WebSocketServerHandshaker handshaker;

@@ -104,6 +104,15 @@
     <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
     {% endfor %}
 
+    <!-- ================================================= -->
+    <!--                  Listeners                        -->
+    <!-- ================================================= -->
+
+    {% if server.enable_security_deployment_interceptor == true %}
+    <!-- To handle WS policies -->
+    <listener class="org.wso2.micro.integrator.security.deployment.SecurityDeploymentInterceptor"/>
+    {% endif %}
+
     <!-- To override repository/services you need to uncomment following parameter and value -->
     <!-- SHOULD be absolute file path. -->
     <!--<parameter name="ServicesDirectory" locked="false">service</parameter>-->

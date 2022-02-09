@@ -24,14 +24,15 @@ import org.apache.ws.security.WSPasswordCallback;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.util.KeyStoreManager;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
-import org.wso2.micro.integrator.security.internal.DataHolder;
-import org.wso2.micro.integrator.security.internal.ServiceComponent;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
+import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
+import org.wso2.micro.integrator.security.user.core.util.UserCoreUtil;
 
 import java.io.IOException;
 import java.security.KeyStore;
+import java.util.List;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -45,6 +46,7 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
     protected final Log log = LogFactory.getLog(AbstractPasswordCallback.class);
     private UserStoreManager userStoreManager;
     private RealmConfiguration realmConfig;
+    private List<String> allowedRoles = null;
 
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
@@ -177,10 +179,9 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
         boolean isAuthenticated;
         try {
             isAuthenticated = userStoreManager.authenticate(user, password);
-
-            // TODO - Handle Authorization of users, once they are authenticated
-
-            return isAuthenticated;
+            String domainName = UserCoreUtil.getDomainFromThreadLocal();
+            String usernameWithDomain = addDomainToName(user, domainName);
+            return isAuthenticated && hasAllowedRole(usernameWithDomain);
         } catch (Exception e) {
             log.error("Error in authenticating user.", e);
             throw e;
@@ -195,6 +196,14 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
         this.realmConfig = realmConfig;
     }
 
+    public void setAllowedRoles(List<String> roles) {
+        this.allowedRoles = roles;
+    }
+
+    public void removeAllowedRoles() {
+        this.allowedRoles = null;
+    }
+
     private String getPrivateKeyPassword(String username) throws IOException, Exception {
         String password = null;
         KeyStoreManager keyMan = KeyStoreManager.getInstance(Constants.SUPER_TENANT_ID);
@@ -204,4 +213,32 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
         }
         return password;
     }
+
+    private boolean hasAllowedRole(String authenticatedUser) throws UserStoreException {
+        if (allowedRoles != null) {
+            String[] existingRoles = userStoreManager.getRoleListOfUser(authenticatedUser);
+            for (String existingRole : existingRoles) {
+                if (allowedRoles.contains(existingRole)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static String addDomainToName(String name, String domainName) {
+        if (domainName != null && name != null && !name.contains(UserCoreConstants.DOMAIN_SEPARATOR) &&
+                !"PRIMARY".equalsIgnoreCase(domainName)) {
+            if (!"Internal".equalsIgnoreCase(domainName) && !"Workflow".equalsIgnoreCase(domainName) &&
+                    !"Application".equalsIgnoreCase(domainName)) {
+                name = domainName.toUpperCase() + UserCoreConstants.DOMAIN_SEPARATOR + name;
+            } else {
+                name = domainName.substring(0, 1).toUpperCase() + domainName.substring(1).toLowerCase() +
+                        UserCoreConstants.DOMAIN_SEPARATOR + name;
+            }
+        }
+        return name;
+    }
+
 }

@@ -21,7 +21,8 @@ import com.google.protobuf.Empty;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.inbound.InboundProcessorParams;
@@ -35,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class InboundGRPCListener implements InboundRequestProcessor {
     private int port;
     private GRPCInjectHandler injectHandler;
-    private static final Logger log = Logger.getLogger(InboundGRPCListener.class.getName());
+    private static final Log log = LogFactory.getLog(InboundGRPCListener.class.getName());
     private Server server;
 
     public InboundGRPCListener(InboundProcessorParams params) {

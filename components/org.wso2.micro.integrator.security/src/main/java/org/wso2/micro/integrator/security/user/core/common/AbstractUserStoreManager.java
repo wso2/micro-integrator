@@ -387,15 +387,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         return hybridRoleManager.getHybridRoleListOfUser(userName, filter);
     }
 
-    /**
-     * Only Gets the default internal role list defined in the realm configuration.
-     *
-     * @return the default internal role list defined for the realm configuration
-     */
-    protected String[] doGetDefaultInternalRoleList() {
-        return new String[]{realmConfig.getEveryOneRoleName()};
-    }
-
     protected Map<String, List<String>> doGetInternalRoleListOfUsers(List<String> userNames, String domainName)
             throws UserStoreException {
 
@@ -682,26 +673,26 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
 
             int tenantId = abstractUserStoreManager.getTenantId();
 
-            try {
-                RealmService realmService = UserCoreUtil.getRealmService();
-                if (realmService != null) {
-                    boolean tenantActive = realmService.getTenantManager().isTenantActive(tenantId);
-
-                    if (!tenantActive) {
-                        String errorCode = ErrorMessages.ERROR_CODE_TENANT_DEACTIVATED.getCode();
-                        String errorMessage = String
-                                .format(ErrorMessages.ERROR_CODE_TENANT_DEACTIVATED.getMessage(), tenantId);
-                        log.warn(errorCode + " - " + errorMessage);
-                        handleOnAuthenticateFailure(errorCode, errorMessage, userName, credential);
-                        return false;
-                    }
-                }
-            } catch (org.wso2.micro.integrator.security.user.api.UserStoreException e) {
-                handleOnAuthenticateFailure(ErrorMessages.ERROR_CODE_ERROR_WHILE_PRE_AUTHENTICATION.getCode(),
-                        String.format(ErrorMessages.ERROR_CODE_ERROR_WHILE_PRE_AUTHENTICATION.getMessage(),
-                                e.getMessage()), userName, credential);
-                throw new UserStoreException("Error while trying to check tenant status for Tenant : " + tenantId, e);
-            }
+//            try {
+//                RealmService realmService = UserCoreUtil.getRealmService();
+//                if (realmService != null) {
+//                    boolean tenantActive = realmService.getTenantManager().isTenantActive(tenantId);
+//
+//                    if (!tenantActive) {
+//                        String errorCode = ErrorMessages.ERROR_CODE_TENANT_DEACTIVATED.getCode();
+//                        String errorMessage = String
+//                                .format(ErrorMessages.ERROR_CODE_TENANT_DEACTIVATED.getMessage(), tenantId);
+//                        log.warn(errorCode + " - " + errorMessage);
+//                        handleOnAuthenticateFailure(errorCode, errorMessage, userName, credential);
+//                        return false;
+//                    }
+//                }
+//            } catch (org.wso2.micro.integrator.security.user.api.UserStoreException e) {
+//                handleOnAuthenticateFailure(ErrorMessages.ERROR_CODE_ERROR_WHILE_PRE_AUTHENTICATION.getCode(),
+//                        String.format(ErrorMessages.ERROR_CODE_ERROR_WHILE_PRE_AUTHENTICATION.getMessage(),
+//                                e.getMessage()), userName, credential);
+//                throw new UserStoreException("Error while trying to check tenant status for Tenant : " + tenantId, e);
+//            }
 
             // We are here due to two reason. Either there is no secondary UserStoreManager or no
             // domain name provided with user name.
@@ -3966,7 +3957,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 || APPLICATION_DOMAIN.equalsIgnoreCase(UserCoreUtil.extractDomainFromName(roleName)) ||
                 WORKFLOW_DOMAIN.equalsIgnoreCase(UserCoreUtil.extractDomainFromName(roleName))) {
 
-            String[] internalRoles = doGetDefaultInternalRoleList();
+            String[] internalRoles = doGetInternalRoleListOfUser(userName, roleName);
             if (UserCoreUtil.isContain(roleName, internalRoles)) {
                 addToIsUserHasRole(modifiedUserName, roleName, roles);
                 return true;
@@ -4291,6 +4282,11 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         }
 
         String usernameWithDomain = UserCoreUtil.addDomainToName(userName, getMyDomainName());
+        // Check whether roles exist in cache
+        roleNames = getRoleListOfUserFromCache(this.tenantId, usernameWithDomain);
+        if (roleNames != null && roleNames.length > 0) {
+            return roleNames;
+        }
 
         UserStore userStore = getUserStore(userName);
         if (userStore.isRecurssive()) {
@@ -5296,7 +5292,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         if (requireRoles) {
             roles = getRoleListOfUser(userName);
         } else if (requireIntRoles) {
-            roles = doGetDefaultInternalRoleList();
+            roles = doGetInternalRoleListOfUser(userName, "*");
         } else if (requireExtRoles) {
 
             List<String> rolesList = new ArrayList<String>();
@@ -5726,7 +5722,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             return roleList;
         }
 
-        String[] internalRoles = doGetDefaultInternalRoleList();
+        String[] internalRoles = doGetInternalRoleListOfUser(userName, filter);
 
         String[] modifiedExternalRoleList = new String[0];
 
