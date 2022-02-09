@@ -327,6 +327,7 @@ do
     -Dproperties.file.path=default \
     -DenableReadinessProbe=true \
     -DenableManagementApi=true \
+    -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
     $NODE_PARAMS \
     -Dorg.apache.activemq.SERIALIZABLE_PACKAGES="*" \
     org.wso2.micro.integrator.bootstrap.Bootstrap $*
