@@ -57,32 +57,43 @@ public class InboundRequestProcessorFactoryImpl implements InboundRequestProcess
         String protocol = params.getProtocol();
         InboundRequestProcessor inboundRequestProcessor = null;
         if (protocol != null) {
-            if (Protocols.jms.toString().equals(protocol)) {
-                inboundRequestProcessor = new JMSProcessor(params);
-            } else if (Protocols.file.toString().equals(protocol)) {
-                inboundRequestProcessor = new VFSProcessor(params);
-            } else if (Protocols.http.toString().equals(protocol)) {
-                inboundRequestProcessor = new InboundHttpListener(params);
-            } else if (Protocols.https.toString().equals(protocol)) {
-                inboundRequestProcessor = new InboundHttpsListener(params);
-            } else if (Protocols.ws.toString().equals(protocol)) {
-                inboundRequestProcessor = new InboundWebsocketListener(params);
-            } else if (Protocols.wss.toString().equals(protocol)) {
-                inboundRequestProcessor = new InboundSecureWebsocketListener(params);
-            } else if (Protocols.hl7.toString().equals(protocol)) {
-                inboundRequestProcessor = new InboundHL7Listener(params);
-            } else if (Protocols.kafka.toString().equals(protocol)) {
-                inboundRequestProcessor = new KAFKAProcessor(params);
-            } else if (Protocols.mqtt.toString().equals(protocol)) {
-                inboundRequestProcessor = new MqttListener(params);
-            } else if (Protocols.rabbitmq.toString().equals(protocol)) {
-                inboundRequestProcessor = new RabbitMQListener(params);
-            } else if (Protocols.grpc.toString().equals(protocol)) {
-                inboundRequestProcessor = new InboundGRPCListener(params);
-            } else if (Protocols.httpws.toString().equals(protocol)) {
-                inboundRequestProcessor = new InboundHttpWebsocketListener(params);
-            } else if (Protocols.httpswss.toString().equals(protocol)) {
-                inboundRequestProcessor = new InboundHttpsSecureWebsocketListener(params);
+            switch(Protocols.valueOf(protocol)) {
+                case jms:
+                    inboundRequestProcessor = new JMSProcessor(params);
+                    break;
+                case file:
+                    inboundRequestProcessor = new VFSProcessor(params);
+                    break;
+                case http:
+                    inboundRequestProcessor = new InboundHttpListener(params);
+                    break;
+                case https:
+                    inboundRequestProcessor = new InboundHttpsListener(params);
+                    break;
+                case ws:
+                    inboundRequestProcessor = new InboundWebsocketListener(params);
+                    break;
+                case wss:
+                    inboundRequestProcessor = new InboundSecureWebsocketListener(params);
+                    break;
+                case hl7:
+                    inboundRequestProcessor = new InboundHL7Listener(params);
+                    break;
+                case kafka:
+                    inboundRequestProcessor = new KAFKAProcessor(params);
+                    break;
+                case mqtt:
+                    inboundRequestProcessor = new MqttListener(params);
+                    break;
+                case rabbitmq:
+                    inboundRequestProcessor = new RabbitMQListener(params);
+                    break;
+                case httpws:
+                    inboundRequestProcessor = new InboundHttpWebsocketListener(params);
+                    break;
+                case httpswss:
+                    inboundRequestProcessor = new InboundHttpsSecureWebsocketListener(params);
+                    break;
             }
         } else if (params.getClassImpl() != null) {
             if (GenericInboundListener.isListeningInboundEndpoint(params)) {
