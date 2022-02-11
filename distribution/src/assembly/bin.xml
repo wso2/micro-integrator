@@ -464,6 +464,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>src/conf/netty.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>netty.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>src/conf/synapse.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>synapse.properties</destName>

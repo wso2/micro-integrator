@@ -75,6 +75,26 @@
             <artifactId>netty-buffer</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler-proxy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-socks</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative-classes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative-boringssl-static</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.aries.blueprint</groupId>
             <artifactId>org.apache.aries.blueprint</artifactId>
         </dependency>
@@ -126,6 +146,11 @@
                                 <bundleDef>io.netty:netty-codec:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-buffer:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-handler:compatible:${netty.version}</bundleDef>
+                                <bundleDef>io.netty:netty-tcnative:compatible:${netty.tcnative.version}</bundleDef>
+                                <bundleDef>io.netty:netty-tcnative-boringssl-static:compatible:${netty.tcnative.version}</bundleDef>
+                                <bundleDef>io.netty:netty-tcnative-classes:compatible:${netty.tcnative.version}</bundleDef>
+                                <bundleDef>io.netty:netty-handler-proxy:compatible:${netty.version}</bundleDef>
+                                <bundleDef>io.netty:netty-codec-socks:compatible:${netty.version}</bundleDef>
                                 <bundleDef>org.apache.aries.blueprint:org.apache.aries.blueprint</bundleDef>
                                 <bundleDef>org.apache.aries.proxy:org.apache.aries.proxy</bundleDef>
                                 <bundleDef>org.apache.aries:org.apache.aries.util</bundleDef>

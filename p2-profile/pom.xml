@@ -198,6 +198,11 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.dataservices.server.feature:${project.version}
                                 </featureArtifactDef>
+
+                                <!-- Transport HTTP-Netty -->
+                                <featureArtifactDef>
+                                    org.wso2.transport.http:org.wso2.transport.http.netty.feature:${transport.http.netty.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -407,6 +412,11 @@
                                 <feature>
                                     <id>org.wso2.micro.integrator.dataservices.server.feature.group</id>
                                     <version>${project.version}</version>
+                                </feature>
+                                <!-- Transport HTTP-Netty -->
+                                <feature>
+                                    <id>org.wso2.transport.http.netty.feature.group</id>
+                                    <version>${transport.http.netty.version}</version>
                                 </feature>
                             </features>
                         </configuration>
