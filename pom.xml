@@ -1284,6 +1284,26 @@
                 <artifactId>geronimo-jta_1.1_spec</artifactId>
                 <version>${version.geronimo.jta.spec}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.saml.common</groupId>
+                <artifactId>org.wso2.carbon.identity.saml.common.util</artifactId>
+                <version>${saml.common.util.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.santuario</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>${xmlsec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.xalan</groupId>
+                <artifactId>xalan</artifactId>
+                <version>2.7.2.wso2v2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.jsr105</groupId>
+                <artifactId>jsr105</artifactId>
+                <version>1.0.1.wso2v1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1410,10 +1430,14 @@
         <carbon.commons.version>4.7.32</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
-        <wss4j.version>1.5.11-wso2v20</wss4j.version>
-        <rampart.wso2.version>1.6.1-wso2v39</rampart.wso2.version>
+        <wss4j.version>1.5.11-wso2v22-SNAPSHOT</wss4j.version>
+        <rampart.wso2.version>1.6.1-wso2v45-SNAPSHOT</rampart.wso2.version>
         <siddhi.version>3.2.3</siddhi.version>
-        <opensaml.orbit.version>2.6.6.wso2v3</opensaml.orbit.version>
+        <opensaml.orbit.version>3.3.1.wso2v3</opensaml.orbit.version>
+        <saml.common.util.version>1.0.9</saml.common.util.version>
+        <imp.pkg.version.xmlsec>[1.4.2, 2.3.0)</imp.pkg.version.xmlsec>
+        <xmlsec.version>2.0.5</xmlsec.version>
+        <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
         <bouncycastle.orbit.version>1.69.0.wso2v1</bouncycastle.orbit.version>
         <orbit.version.poi.ooxml>3.17.0.wso2v1</orbit.version.poi.ooxml>
         <org.wso2.json.version>3.0.0.wso2v1</org.wso2.json.version>
