@@ -121,10 +121,10 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
             }
         };
 
-        httpsServer.createContext("/api/am/service-catalog/v0/services", new FirstController());
-        httpsServer.createContext("/second/api/am/service-catalog/v0/services", new SecondController());
-        httpsServer.createContext("/third/api/am/service-catalog/v0/services", new ThirdController());
-        httpsServer.createContext("/fourth/api/am/service-catalog/v0/services", new FourthController());
+        httpsServer.createContext("/api/am/service-catalog/v1/services", new FirstController());
+        httpsServer.createContext("/second/api/am/service-catalog/v1/services", new SecondController());
+        httpsServer.createContext("/third/api/am/service-catalog/v1/services", new ThirdController());
+        httpsServer.createContext("/fourth/api/am/service-catalog/v1/services", new FourthController());
         httpsServer.setExecutor(Executors.newCachedThreadPool());
         httpsServer.setHttpsConfigurator(httpsConfigurator);
         httpsServer.start();

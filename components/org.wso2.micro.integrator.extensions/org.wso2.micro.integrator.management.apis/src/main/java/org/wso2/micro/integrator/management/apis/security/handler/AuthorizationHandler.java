@@ -50,6 +50,7 @@ public class AuthorizationHandler extends AuthorizationHandlerAdapter {
     protected void populateDefaultResources() {
         defaultResources = new ArrayList<>(1);
         defaultResources.add(Constants.PREFIX_USERS);
+        defaultResources.add(Constants.PREFIX_ROLES);
     }
 
     @Override

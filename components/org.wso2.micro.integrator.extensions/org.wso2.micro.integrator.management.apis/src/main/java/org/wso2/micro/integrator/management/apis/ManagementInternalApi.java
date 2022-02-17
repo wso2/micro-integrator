@@ -31,6 +31,7 @@ import java.util.List;
 
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_CARBON_APP_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_EXTERNAL_VAULT_NAME;
+import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_ROLE;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_TRANSACTION;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_USER;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_APIS;
@@ -49,6 +50,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOG_FIL
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_PROCESSORS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_ROLES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SEQUENCES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SERVER_DATA;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TASKS;
@@ -96,6 +98,8 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ExternalVaultResource(PREFIX_EXTERNAL_VAULTS
                 + PATH_PARAM_EXTERNAL_VAULT_NAME));
         resourcesList.add(new ApiResourceAdapter(PREFIX_DATA_SOURCES, new DataSourceResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_ROLES, new RolesResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_ROLES + PATH_PARAM_ROLE, new RoleResource()));
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);
     }
