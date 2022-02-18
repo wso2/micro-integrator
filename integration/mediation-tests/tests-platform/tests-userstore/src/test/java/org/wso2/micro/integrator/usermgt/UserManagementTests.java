@@ -44,7 +44,7 @@ public class UserManagementTests extends ESBIntegrationTest {
     public void initialize() {
         initLight();
         userResource = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management"
-                       + "/users";
+                + "/users";
     }
 
     @Test
@@ -60,7 +60,7 @@ public class UserManagementTests extends ESBIntegrationTest {
         //Assert user details
         Assert.assertEquals((usersJson.getJSONArray("list")).length(), 1, errorMessageOnAssertionFailure);
         Assert.assertEquals((usersJson.getJSONArray("list")).getJSONObject(0).get(USER_ID_PARAM), "admin",
-                            errorMessageOnAssertionFailure);
+                errorMessageOnAssertionFailure);
     }
 
     @Test(dependsOnMethods = "testGetInitialUsers")
@@ -69,9 +69,9 @@ public class UserManagementTests extends ESBIntegrationTest {
         String response = addValidUser(userId, "adminpwd", true);
         JSONObject successResponse = new JSONObject(response);
         Assert.assertEquals(successResponse.getString(USER_ID_PARAM), userId,
-                            "Invalid response received " + successResponse);
+                "Invalid response received " + successResponse);
         Assert.assertEquals(successResponse.getString("status"), "Added",
-                            "Invalid response received " + successResponse);
+                "Invalid response received " + successResponse);
         validateUserDetails(userId, new String[]{"Internal/everyone", "admin"}, true);
     }
 
@@ -81,9 +81,9 @@ public class UserManagementTests extends ESBIntegrationTest {
         String response = deleteUserSuccessfully(userId);
         JSONObject successResponse = new JSONObject(response);
         Assert.assertEquals(successResponse.getString(USER_ID_PARAM), userId,
-                            "Invalid response received " + successResponse);
+                "Invalid response received " + successResponse);
         Assert.assertEquals(successResponse.getString("status"), "Deleted",
-                            "Invalid response received " + successResponse);
+                "Invalid response received " + successResponse);
         assertNonExistenceOfUser(userId);
     }
 
@@ -93,9 +93,9 @@ public class UserManagementTests extends ESBIntegrationTest {
         String response = addValidUser(userId, "pwd-nonadmin", false);
         JSONObject successResponse = new JSONObject(response);
         Assert.assertEquals(successResponse.getString(USER_ID_PARAM), userId,
-                            "Invalid response received " + successResponse);
+                "Invalid response received " + successResponse);
         Assert.assertEquals(successResponse.getString("status"), "Added",
-                            "Invalid response received " + successResponse);
+                "Invalid response received " + successResponse);
         validateUserDetails(userId, new String[]{"Internal/everyone"}, false);
     }
 
@@ -105,11 +105,13 @@ public class UserManagementTests extends ESBIntegrationTest {
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testAddExistingUser")
     public void testDeleteNonExistentUser() throws Exception {
         String userId = "nonExistentUser";
         HttpResponse response = deleteUser(userId);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 404);
+        // Delete extra users than admin
+        deleteUser(NON_ADMIN_USER_ID);
     }
 
     private String getUsers() throws IOException {
@@ -164,10 +166,10 @@ public class UserManagementTests extends ESBIntegrationTest {
 
         String endpoint = userResource;
         String payload = "{"
-                         + "\"" + USER_ID_PARAM + "\":\"" + userName + "\","
-                         + "\"password\":\"" + password + "\","
-                         + "\"isAdmin\":\"" + isAdmin + "\" "
-                         + "}";
+                + "\"" + USER_ID_PARAM + "\":\"" + userName + "\","
+                + "\"password\":\"" + password + "\","
+                + "\"isAdmin\":\"" + isAdmin + "\" "
+                + "}";
 
         return client.doPost(endpoint, headers, payload, "application/json");
     }
@@ -211,8 +213,8 @@ public class UserManagementTests extends ESBIntegrationTest {
         }
 
         Assert.assertTrue(Arrays.equals(expectedRoles, returnedRoleArray),
-                          "There's mismatch between the expected roles " + Arrays.toString(expectedRoles) + "and "
-                          + "returned roles: " + Arrays.toString(returnedRoleArray));
+                "There's mismatch between the expected roles " + Arrays.toString(expectedRoles) + "and "
+                        + "returned roles: " + Arrays.toString(returnedRoleArray));
 
     }
 

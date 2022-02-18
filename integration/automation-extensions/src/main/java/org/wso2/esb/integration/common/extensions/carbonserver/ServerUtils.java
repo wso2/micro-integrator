@@ -44,6 +44,7 @@ class ServerUtils {
                         + File.separator + "server";
         copyFolders(new File(carbonHome + File.separator + "conf"), new File(destCarbonHome + File.separator + "conf"));
         copyFolders(new File(carbonHome + File.separator + "lib"), new File(destCarbonHome + File.separator + "lib"));
+        copyFolders(new File(carbonHome + File.separator + "bin"), new File(destCarbonHome + File.separator + "bin"));
 
         File destinationDeploymentDirectory = new File(
                 String.join(File.separator, destCarbonHome, "repository", "deployment"));

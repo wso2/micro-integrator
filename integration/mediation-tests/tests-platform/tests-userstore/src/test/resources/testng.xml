@@ -30,6 +30,7 @@
     <test name="Platform-tests" verbose="2" parallel="none">
         <classes>
             <class name="org.wso2.micro.integrator.usermgt.UserManagementTests"/>
+            <!--<class name="org.wso2.micro.integrator.usermgt.SecondaryUserManagementTests"/>-->
             <class name="org.wso2.micro.integrator.ws.policies.WSPoliciesTests"/>
         </classes>
     </test>
