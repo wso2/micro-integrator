@@ -96,7 +96,6 @@
                             samples.*;
                         </Export-Package>
                         <Import-Package>
-                            org.slf4j.*;version="[1.7.2,2)",
                             *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

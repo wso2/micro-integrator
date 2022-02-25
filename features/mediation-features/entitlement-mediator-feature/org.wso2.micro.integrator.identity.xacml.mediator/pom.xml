@@ -48,10 +48,6 @@
             <groupId>libthrift.wso2</groupId>
             <artifactId>libthrift</artifactId>
         </dependency>
-        <dependency>
-            <groupId>slf4j.wso2</groupId>
-            <artifactId>slf4j</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -83,7 +79,6 @@
                                 </bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.authenticator.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon.commons:org.wso2.carbon.identity.entitlement.stub</bundleDef>
-                                <bundleDef>slf4j.wso2:slf4j</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.apache.synapse.wso2:compatible:${synapse.version}

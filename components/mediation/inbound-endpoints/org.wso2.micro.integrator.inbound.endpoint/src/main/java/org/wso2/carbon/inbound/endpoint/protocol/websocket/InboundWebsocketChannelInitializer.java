@@ -26,15 +26,12 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketFrameAggregator;
 import io.netty.handler.ssl.SslHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wso2.carbon.inbound.endpoint.protocol.websocket.ssl.InboundWebsocketSSLConfiguration;
 import org.wso2.carbon.inbound.endpoint.protocol.websocket.ssl.SSLHandlerFactory;
 
 import java.util.ArrayList;
 
 public class InboundWebsocketChannelInitializer extends ChannelInitializer<SocketChannel> {
-    private static final Logger log = LoggerFactory.getLogger(InboundWebsocketChannelInitializer.class);
 
     private InboundWebsocketSSLConfiguration sslConfiguration;
     private int clientBroadcastLevel;
