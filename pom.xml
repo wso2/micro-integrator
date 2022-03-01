@@ -1415,7 +1415,7 @@
         <carbon.kernel.imp.pkg.version>[4.5.0,5.0.0)</carbon.kernel.imp.pkg.version>
         <version.jaxb.api>2.4.0-b180830.0359</version.jaxb.api>
 
-        <synapse.version>2.1.7-wso2v252</synapse.version>
+        <synapse.version>2.1.7-wso2v260</synapse.version>
         <imp.pkg.version.synapse>[2.1.7, 2.1.8)</imp.pkg.version.synapse>
         <carbon.mediation.version>4.7.115</carbon.mediation.version>
         <carbon.crypto.version>1.1.3</carbon.crypto.version>
@@ -1449,7 +1449,7 @@
         <carbon.commons.version>4.7.45</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
-        <wss4j.version>1.6.0-wso2v1</wss4j.version>
+        <wss4j.version>1.6.0-wso2v2</wss4j.version>
         <rampart.wso2.version>1.7.0-wso2v1</rampart.wso2.version>
         <siddhi.version>3.2.3</siddhi.version>
         <opensaml.orbit.version>3.3.1.wso2v4</opensaml.orbit.version>
