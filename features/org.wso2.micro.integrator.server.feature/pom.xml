@@ -279,13 +279,10 @@
                                 <bundleDef>io.swagger:swagger-core:${swagger.core.v2.version}</bundleDef>
                                 <bundleDef>io.swagger:swagger-models:${swagger.core.v2.version}</bundleDef>
                                 <bundleDef>io.swagger:swagger-annotations:${swagger.core.v2.version}</bundleDef>
-                                <bundleDef>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson.core.version}</bundleDef>
-                                <bundleDef>com.fasterxml.jackson.core:jackson-core:${jackson.core.version}</bundleDef>
-                                <bundleDef>com.fasterxml.jackson.core:jackson-databind:${jackson.core.version}</bundleDef>
-                                <bundleDef>com.fasterxml.jackson.core:jackson-annotations:${jackson.core.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${fasterxml.jackson.version}</bundleDef>
                                 <bundleDef>javax.validation:validation-api:${javax.validation.version}</bundleDef>
                                 <bundleDef>org.yaml:snakeyaml:${snakeyaml.version}</bundleDef>
-                                <bundleDef>com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jackson.core.version}</bundleDef>
+                                <bundleDef>com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${fasterxml.jackson.version}</bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.commons:commons-lang3:${commons.lang3.version}</bundleDef>
                                 <bundleDef>org.wso2.ei:javax.cache.wso2:${project.version}</bundleDef>
                             </bundles>

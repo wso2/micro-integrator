@@ -513,7 +513,6 @@
                 <version>${apache.felix.scr.ds.annotations.version}</version>
                 <scope>provided</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.wso2.orbit.org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
@@ -1227,27 +1226,27 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${jackson.core.version}</version>
+                <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>${jackson.core.version}</version>
+                <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.core.version}</version>
+                <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson.core.version}</version>
+                <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>${jackson.core.version}</version>
+                <version>${fasterxml.jackson.version}</version>
             </dependency>
             <!-- End of OAS 3 feature dependencies-->
             <dependency>
@@ -1426,7 +1425,7 @@
 
         <carbon.analytics.common.version>5.2.36</carbon.analytics.common.version>
         <carbon.analytics.common.imp.pkg.version>[5.2.0, 6.0.0)</carbon.analytics.common.imp.pkg.version>
-        <fasterxml.jackson.version>2.10.3</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.13.1</fasterxml.jackson.version>
         <carbon.commons.version>4.7.45</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
@@ -1509,7 +1508,7 @@
         <org.wso2.carbon.caching.core.version>4.2.0</org.wso2.carbon.caching.core.version>
         <orbit.version.snakeyaml>1.26.0.wso2v1</orbit.version.snakeyaml>
         <json.smart.version>2.3</json.smart.version>
-        <google.guava.version>27.0-jre</google.guava.version>
+        <google.guava.version>31.0.1-jre</google.guava.version>
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
         <junit.version>4.8.2</junit.version>
         <netty.version>4.1.73.Final</netty.version>
@@ -1709,9 +1708,8 @@
         <version.equinox.platform>3.14.0</version.equinox.platform>
         <!-- OAS3 Versions -->
         <swagger.parser.orbit.version>2.0.20.wso2v1</swagger.parser.orbit.version>
-        <swagger.core.v2.version>1.6.1</swagger.core.v2.version>
-        <jackson.core.version>2.12.1</jackson.core.version>
-        <snakeyaml.version>1.27</snakeyaml.version>
+        <swagger.core.v2.version>1.6.5</swagger.core.v2.version>
+        <snakeyaml.version>1.30</snakeyaml.version>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <version.disruptor>3.4.2</version.disruptor>
         <version.geronimo.jta.spec>1.1</version.geronimo.jta.spec>
