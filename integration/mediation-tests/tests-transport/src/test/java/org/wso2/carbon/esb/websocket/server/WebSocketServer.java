@@ -24,15 +24,15 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.ssl.SslContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Simple WebSocket server for Test cases.
  */
 public final class WebSocketServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketServer.class);
+    private static final Log logger = LogFactory.getLog(WebSocketServer.class);
 
     private final int port;
     private String subProtocols = null;

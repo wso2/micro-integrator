@@ -48,10 +48,6 @@
             <groupId>org.quartz-scheduler.wso2</groupId>
             <artifactId>quartz</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
 
     </dependencies>
 
@@ -85,7 +81,6 @@
                                 </bundleDef>
                                 <bundleDef>org.wso2.ei:org.wso2.micro.integrator.coordination</bundleDef>
                                 <bundleDef>org.quartz-scheduler.wso2:quartz</bundleDef>
-                                <bundleDef>org.slf4j:slf4j-api</bundleDef>
                             </bundles>
                         </configuration>
                     </execution>
