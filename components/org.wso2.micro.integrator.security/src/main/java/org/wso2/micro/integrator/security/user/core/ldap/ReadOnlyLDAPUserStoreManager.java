@@ -273,7 +273,16 @@ public class ReadOnlyLDAPUserStoreManager extends AbstractUserStoreManager {
 
         this.connectionSource = new LDAPConnectionContext(realmConfig);
 
-        hybridRoleManager = new HybridRoleManager(tenantId, realmConfig, userRealm);
+        try {
+            this.dataSource = DatabaseUtil.getRealmDataSource(realmConfig);
+        } catch (Exception ex) {
+            // datasource is not configured
+            if (log.isDebugEnabled()) {
+                log.debug("Datasource is not configured for LDAP user store");
+            }
+        }
+        hybridRoleManager =
+                new HybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
     }
 
     /**

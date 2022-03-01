@@ -57,7 +57,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
 
     public JdbcHybridRoleManager(DataSource dataSource, int tenantId, RealmConfiguration realmConfig,
                                  UserRealm realm) throws UserStoreException {
-        super(tenantId, realmConfig, realm);
+        super(dataSource, tenantId, realmConfig, realm);
         this.dataSource = dataSource;
         this.isCascadeDeleteEnabled = realmConfig.getRealmProperty(UserCoreDBConstants.CASCADE_DELETE_ENABLED);
         //persist internal domain

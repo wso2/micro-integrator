@@ -3735,11 +3735,12 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             isExisting = hybridRoleManager.isExistingRole(roleName);
         }
 
-        if (!isExisting) {
-            if (systemUserRoleManager.isExistingRole(roleName)) {
-                isExisting = true;
-            }
-        }
+        // systemUserRoleManager is not initialized
+//        if (!isExisting) {
+//            if (systemUserRoleManager.isExistingRole(roleName)) {
+//                isExisting = true;
+//            }
+//        }
 
         return isExisting;
     }
