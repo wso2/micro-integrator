@@ -23,9 +23,6 @@
  */
 package org.wso2.micro.integrator.identity.entitlement.proxy.generatedCode;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -172,8 +169,6 @@ public class EntitlementThriftClient {
 
     public static class Processor<I extends Iface> extends org.apache.thrift.TBaseProcessor
             implements org.apache.thrift.TProcessor {
-        private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class.getName());
-
         public Processor(I iface) {
             super(iface, getProcessMap(
                     new HashMap<String, org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>>()));

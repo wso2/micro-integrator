@@ -37,8 +37,6 @@
     <path id="axis2.class.path">
         <fileset dir="${wso2ds.home}">
             <include name="wso2/lib/*.jar" />
-	    <include name="wso2/components/plugins/slf4j.log4j12_*.jar" />
-	    <include name="wso2/components/plugins/slf4j.api_*.jar" />
 	    <include name="wso2/components/plugins/joda-time_*.jar" />
         </fileset>
     </path>

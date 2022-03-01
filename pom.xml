@@ -234,11 +234,6 @@
                 <version>${libthrift.version}</version>
             </dependency>
             <dependency>
-                <groupId>slf4j.wso2</groupId>
-                <artifactId>slf4j</artifactId>
-                <version>${slf4j.wso2.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
                 <version>${carbon.commons.version}</version>
@@ -405,12 +400,6 @@
                 <type>mar</type>
                 <version>${rampart.wso2.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
@@ -1486,7 +1475,6 @@
         <version.geronimo.saaj.spec>1.0.1.wso2v2</version.geronimo.saaj.spec>
         <orbit.version.poi>3.17.0.wso2v1</orbit.version.poi>
         <orbit.version.poi.scratchpad>3.17.0.wso2v1</orbit.version.poi.scratchpad>
-        <slf4j.version>1.7.21</slf4j.version>
         <simple.slf4j.version>1.6.1</simple.slf4j.version>
         <version.log4j.core>2.17.1</version.log4j.core>
         <version.jaxb>2.2.5.wso2v1</version.jaxb>
@@ -1505,7 +1493,6 @@
         <commons-lang3.orbit.version>3.4.0.wso2v1</commons-lang3.orbit.version>
         <joda-time.version>2.9.4.wso2v1</joda-time.version>
         <libthrift.version>0.8.0.wso2v1</libthrift.version>
-        <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
         <axis2.mar.maven.plugin>1.5.2</axis2.mar.maven.plugin>
 
         <!--PAX Logging related dependency versions-->

@@ -26,8 +26,9 @@ import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.scp.ScpCommandFactory;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -59,7 +60,7 @@ public class SftpServerRunner {
 
     private class SftpServer implements Runnable {
 
-        private final Logger LOGGER = LoggerFactory.getLogger(SftpServer.class);
+        private final Log LOGGER = LogFactory.getLog(SftpServer.class);
         private SshServer sshd = SshServer.setUpDefaultServer();
 
         SftpServer(int port, String path, String ftpUser, String ftpPassword) {
@@ -82,7 +83,7 @@ public class SftpServerRunner {
         @Override
         public void run() {
             try {
-                LOGGER.info("Starting SFTP server on port {}", sshd.getPort());
+                LOGGER.info("Starting SFTP server on port {}" + sshd.getPort());
                 sshd.start();
             } catch (IOException e) {
                 LOGGER.error("Error starting SFTP server", e);
