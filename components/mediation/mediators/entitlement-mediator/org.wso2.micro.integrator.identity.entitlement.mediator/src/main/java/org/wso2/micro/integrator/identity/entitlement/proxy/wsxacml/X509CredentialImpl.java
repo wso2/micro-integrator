@@ -18,10 +18,11 @@
 
 package org.wso2.micro.integrator.identity.entitlement.proxy.wsxacml;
 
-import org.opensaml.xml.security.credential.Credential;
-import org.opensaml.xml.security.credential.CredentialContextSet;
-import org.opensaml.xml.security.credential.UsageType;
-import org.opensaml.xml.security.x509.X509Credential;
+import org.jetbrains.annotations.Nullable;
+import org.opensaml.security.credential.Credential;
+import org.opensaml.security.credential.CredentialContextSet;
+import org.opensaml.security.credential.UsageType;
+import org.opensaml.security.x509.X509Credential;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
@@ -95,11 +96,6 @@ public class X509CredentialImpl implements X509Credential {
     }
 
     @Override
-    public CredentialContextSet getCredentalContextSet() {
-        return null;
-    }
-
-    @Override
     public Class<? extends Credential> getCredentialType() {
         return null;
     }
@@ -121,6 +117,12 @@ public class X509CredentialImpl implements X509Credential {
 
     @Override
     public SecretKey getSecretKey() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public CredentialContextSet getCredentialContextSet() {
         return null;
     }
 

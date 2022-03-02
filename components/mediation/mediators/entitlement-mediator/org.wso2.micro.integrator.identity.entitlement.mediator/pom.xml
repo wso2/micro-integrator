@@ -72,6 +72,14 @@
             <groupId>org.wso2.orbit.org.opensaml</groupId>
             <artifactId>opensaml</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.saml.common</groupId>
+            <artifactId>org.wso2.carbon.identity.saml.common.util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -99,6 +107,10 @@
                             org.wso2.carbon.identity.entitlement.proxy.*,
                             org.wso2.carbon.identity.entitlement.stub.*;version="${carbon.identity.imp.pkg.version}",
                             org.wso2.carbon.authenticator.stub.*;version="${carbon.kernel.imp.pkg.version}",
+                            org.wso2.carbon.identity.saml.common.util.*; version="${saml.common.util.version.range}",
+                            javax.xml.crypto.*; version="${imp.pkg.version.xmlsec}",
+                            org.apache.xml.security.*; version="${imp.pkg.version.xmlsec}",
+                            org.jcp.xml.dsig.internal.*; version="${imp.pkg.version.xmlsec}",
                             *; resolution:=optional
                         </Import-Package>
                         <Fragment-Host>synapse-core</Fragment-Host>

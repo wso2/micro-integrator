@@ -34,39 +34,39 @@ import org.apache.xml.security.Init;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.apache.xml.security.signature.XMLSignature;
 import org.joda.time.DateTime;
-import org.opensaml.Configuration;
-import org.opensaml.DefaultBootstrap;
-import org.opensaml.saml2.core.Assertion;
-import org.opensaml.saml2.core.Issuer;
-import org.opensaml.saml2.core.Response;
-import org.opensaml.saml2.core.impl.IssuerBuilder;
+import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
+import org.opensaml.saml.saml2.core.Assertion;
+import org.opensaml.saml.saml2.core.Issuer;
+import org.opensaml.saml.saml2.core.Response;
+import org.opensaml.saml.saml2.core.impl.IssuerBuilder;
+import org.opensaml.security.x509.X509Credential;
 import org.opensaml.xacml.ctx.RequestType;
 import org.opensaml.xacml.ctx.ResponseType;
 import org.opensaml.xacml.profile.saml.XACMLAuthzDecisionQueryType;
 import org.opensaml.xacml.profile.saml.XACMLAuthzDecisionStatementType;
 import org.opensaml.xacml.profile.saml.impl.XACMLAuthzDecisionQueryTypeImplBuilder;
-import org.opensaml.xml.ConfigurationException;
-import org.opensaml.xml.XMLObject;
-import org.opensaml.xml.XMLObjectBuilder;
-import org.opensaml.xml.io.Marshaller;
-import org.opensaml.xml.io.MarshallerFactory;
-import org.opensaml.xml.io.Unmarshaller;
-import org.opensaml.xml.io.UnmarshallerFactory;
-import org.opensaml.xml.security.x509.BasicX509Credential;
-import org.opensaml.xml.security.x509.X509Credential;
-import org.opensaml.xml.signature.KeyInfo;
-import org.opensaml.xml.signature.Signature;
-import org.opensaml.xml.signature.SignatureValidator;
-import org.opensaml.xml.signature.Signer;
-import org.opensaml.xml.signature.X509Certificate;
-import org.opensaml.xml.signature.X509Data;
-import org.opensaml.xml.validation.ValidationException;
+import org.opensaml.core.config.InitializationException;
+import org.opensaml.core.xml.XMLObject;
+import org.opensaml.core.xml.XMLObjectBuilder;
+import org.opensaml.core.xml.io.Marshaller;
+import org.opensaml.core.xml.io.MarshallerFactory;
+import org.opensaml.core.xml.io.Unmarshaller;
+import org.opensaml.core.xml.io.UnmarshallerFactory;
+import org.opensaml.security.x509.BasicX509Credential;
+import org.opensaml.xmlsec.signature.KeyInfo;
+import org.opensaml.xmlsec.signature.Signature;
+import org.opensaml.xmlsec.signature.support.SignatureValidator;
+import org.opensaml.xmlsec.signature.support.Signer;
+import org.opensaml.xmlsec.signature.X509Certificate;
+import org.opensaml.xmlsec.signature.X509Data;
+import org.opensaml.xmlsec.signature.support.SignatureException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
+import org.wso2.carbon.identity.saml.common.util.SAMLInitializer;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.identity.entitlement.proxy.AbstractEntitlementServiceClient;
 import org.wso2.micro.integrator.identity.entitlement.proxy.Attribute;
@@ -127,9 +127,9 @@ public class WSXACMLEntitlementServiceClient extends AbstractEntitlementServiceC
 
         if (!isBootStrapped) {
             try {
-                DefaultBootstrap.bootstrap();
+                SAMLInitializer.doBootstrap();
                 isBootStrapped = true;
-            } catch (ConfigurationException e) {
+            } catch (InitializationException e) {
                 log.error("Error in bootstrapping the OpenSAML2 library", e);
             }
         }
@@ -158,7 +158,7 @@ public class WSXACMLEntitlementServiceClient extends AbstractEntitlementServiceC
      */
     private static Issuer createIssuer() {
 
-        IssuerBuilder issuer = (IssuerBuilder) org.opensaml.xml.Configuration.getBuilderFactory().
+        IssuerBuilder issuer = (IssuerBuilder) XMLObjectProviderRegistrySupport.getBuilderFactory().
                 getBuilder(Issuer.DEFAULT_ELEMENT_NAME);
         Issuer issuerObject = issuer.buildObject();
         issuerObject.setValue(ISSUER_URL);
@@ -318,10 +318,9 @@ public class WSXACMLEntitlementServiceClient extends AbstractEntitlementServiceC
         boolean isSignatureValid = false;
 
         try {
-            SignatureValidator validator = new SignatureValidator(getPublicX509CredentialImpl());
-            validator.validate(signature);
+            SignatureValidator.validate(signature, getPublicX509CredentialImpl());
             isSignatureValid = true;
-        } catch (ValidationException e) {
+        } catch (SignatureException e) {
             log.warn("Signature validation failed.", e);
         }
 
@@ -361,7 +360,7 @@ public class WSXACMLEntitlementServiceClient extends AbstractEntitlementServiceC
             log.error("Error occurred while unmarshalling the XACML Request!", e);
             throw new EntitlementProxyException("Error occurred while unmarshalling the XACML Request!", e);
         }
-        XACMLAuthzDecisionQueryTypeImplBuilder xacmlauthz = (XACMLAuthzDecisionQueryTypeImplBuilder) org.opensaml.xml.Configuration
+        XACMLAuthzDecisionQueryTypeImplBuilder xacmlauthz = (XACMLAuthzDecisionQueryTypeImplBuilder) XMLObjectProviderRegistrySupport
                 .getBuilderFactory().
                         getBuilder(XACMLAuthzDecisionQueryType.TYPE_NAME_XACML20);
 
@@ -463,7 +462,7 @@ public class WSXACMLEntitlementServiceClient extends AbstractEntitlementServiceC
             Document document = docBuilder
                     .parse(new ByteArrayInputStream(xmlString.trim().getBytes(Charset.forName("UTF-8"))));
             Element element = document.getDocumentElement();
-            UnmarshallerFactory unmarshallerFactory = Configuration.getUnmarshallerFactory();
+            UnmarshallerFactory unmarshallerFactory = XMLObjectProviderRegistrySupport.getUnmarshallerFactory();
             Unmarshaller unmarshaller = unmarshallerFactory.getUnmarshaller(element);
             return unmarshaller.unmarshall(element);
         } catch (Exception e) {
@@ -484,7 +483,7 @@ public class WSXACMLEntitlementServiceClient extends AbstractEntitlementServiceC
             doBootstrap();
             System.setProperty(DOCUMENT_BUILDER_FACTORY, DOCUMENT_BUILDER_FACTORY_IMPL);
 
-            MarshallerFactory marshallerFactory = org.opensaml.xml.Configuration.getMarshallerFactory();
+            MarshallerFactory marshallerFactory = XMLObjectProviderRegistrySupport.getMarshallerFactory();
             Marshaller marshaller = marshallerFactory.getMarshaller(xmlObject);
             Element element = marshaller.marshall(xmlObject);
 
@@ -546,7 +545,7 @@ public class WSXACMLEntitlementServiceClient extends AbstractEntitlementServiceC
             signatureList.add(signature);
 
             //Marshall and Sign
-            MarshallerFactory marshallerFactory = org.opensaml.xml.Configuration.getMarshallerFactory();
+            MarshallerFactory marshallerFactory = XMLObjectProviderRegistrySupport.getMarshallerFactory();
             Marshaller marshaller = marshallerFactory.getMarshaller(xacmlAuthzDecisionQueryType);
             marshaller.marshall(xacmlAuthzDecisionQueryType);
 
@@ -599,7 +598,7 @@ public class WSXACMLEntitlementServiceClient extends AbstractEntitlementServiceC
             log.error("Error in getting the private key.", e);
         }
 
-        BasicX509Credential basicCredential = new BasicX509Credential();
+        BasicX509Credential basicCredential = new BasicX509Credential((java.security.cert.X509Certificate) certificate);
         basicCredential.setEntityCertificate((java.security.cert.X509Certificate) certificate);
         basicCredential.setPrivateKey(issuerPK);
 
@@ -615,7 +614,7 @@ public class WSXACMLEntitlementServiceClient extends AbstractEntitlementServiceC
      */
     private XMLObject buildXMLObject(QName objectQName) throws EntitlementProxyException {
 
-        XMLObjectBuilder builder = org.opensaml.xml.Configuration.getBuilderFactory().getBuilder(objectQName);
+        XMLObjectBuilder builder = XMLObjectProviderRegistrySupport.getBuilderFactory().getBuilder(objectQName);
         if (builder == null) {
             throw new EntitlementProxyException("Unable to retrieve builder for object QName " + objectQName);
         }
