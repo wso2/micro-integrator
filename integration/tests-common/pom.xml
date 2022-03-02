@@ -237,7 +237,7 @@
         </dependency>
         <dependency>
             <groupId>org.opensaml</groupId>
-            <artifactId>opensaml</artifactId>
+            <artifactId>opensaml-saml-impl</artifactId>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
