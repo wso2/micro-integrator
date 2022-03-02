@@ -199,8 +199,8 @@
 <!--                                </bundleDef>-->
 
                                 <!--Log4j 2 packages -->
-                                <bundleDef>org.ops4j.pax.logging:pax-logging-api:${pax.logging.api.version}</bundleDef>
-                                <bundleDef>org.ops4j.pax.logging:pax-logging-log4j2:${pax.logging.log4j2.version}
+                                <bundleDef>org.wso2.org.ops4j.pax.logging:pax-logging-api:${pax.logging.api.version}</bundleDef>
+                                <bundleDef>org.wso2.org.ops4j.pax.logging:pax-logging-log4j2:${pax.logging.log4j2.version}
                                 </bundleDef>
                                 <bundleDef>org.wso2.ei:org.wso2.micro.integrator.log4j2.plugins:${project.version}
                                 </bundleDef>
