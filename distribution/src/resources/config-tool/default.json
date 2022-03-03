@@ -6,6 +6,7 @@
   "server.serverDetails": "WSO2 Micro Integrator 1.0.0",
   "server.synapse_config_file_path": "repository/deployment/server/synapse-configs",
   "server.hide_admin_service_wsdl": true,
+  "server.roles": ["EnterpriseIntegrator", "EnterpriseServiceBus", "DataServicesServer"],
   "server.enable_security_deployment_interceptor": true,
 
   "encryption.internal_crypto_provider": "org.wso2.micro.integrator.crypto.provider.KeyStoreBasedInternalCryptoProvider",

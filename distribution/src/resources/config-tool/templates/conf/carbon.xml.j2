@@ -73,9 +73,9 @@
     Ex : <Role>.*</Role> means this server can act any role
     -->
     <ServerRoles>
-        <Role>EnterpriseIntegrator</Role>
-        <Role>EnterpriseServiceBus</Role>
-        <Role>DataServicesServer</Role>
+        {% for role in server.roles %}
+        <Role>{{ role }}</Role>
+        {% endfor %}
     </ServerRoles>
 
     <!-- uncommnet this line to subscribe to a bam instance automatically -->
