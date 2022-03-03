@@ -104,6 +104,15 @@
     <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
     {% endfor %}
 
+    <!-- ================================================= -->
+    <!--                  Listeners                        -->
+    <!-- ================================================= -->
+
+    {% if server.enable_security_deployment_interceptor == true %}
+    <!-- To handle WS policies -->
+    <listener class="org.wso2.micro.integrator.security.deployment.SecurityDeploymentInterceptor"/>
+    {% endif %}
+
     <!-- To override repository/services you need to uncomment following parameter and value -->
     <!-- SHOULD be absolute file path. -->
     <!--<parameter name="ServicesDirectory" locked="false">service</parameter>-->
@@ -449,6 +458,14 @@
         {% endif %}
     </transportSender>
     {% endif %}
+    {% if transport.netty.http.sender.enable == true %}
+        <transportSender name="httpws" class="{{transport.netty.http.sender.class}}">
+            <parameter name="non-blocking" locked="false">true</parameter>
+            {% for parameter_key,parameter_value in transport.netty.http.sender.parameter.items() %}
+            <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+            {% endfor %}
+        </transportSender>
+    {% endif %}
     {% if transport.http.sender.secured_enable == true %}
     <transportSender name="https" class="{{transport.https.sender.class}}">
         <parameter name="non-blocking" locked="false">true</parameter>
@@ -507,6 +524,35 @@
         </parameter>
         {% endif %}
     </transportSender>
+    {% endif %}
+    {% if transport.netty.http.sender.secured_enable == true %}
+        <transportSender name="httpswss" class="{{transport.netty.https.sender.class}}">
+            <parameter name="non-blocking" locked="false">true</parameter>
+            {% for parameter_key,parameter_value in transport.netty.https.sender.parameter.items() %}
+            <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+            {% endfor %}
+            <parameter name="keystore" locked="false">
+                <KeyStore>
+                    <Location>{{transport.netty.https.sender.keystore.location}}</Location>
+                    <Type>{{transport.netty.https.sender.keystore.type}}</Type>
+                    <Password>{{transport.netty.https.sender.keystore.password}}</Password>
+                    <KeyPassword>{{transport.netty.https.sender.keystore.key_password}}</KeyPassword>
+                </KeyStore>
+            </parameter>
+            <parameter name="truststore" locked="false">
+                <TrustStore>
+                    <Location>{{transport.netty.https.sender.truststore.location}}</Location>
+                    <Type>{{transport.netty.https.sender.truststore.type}}</Type>
+                    <Password>{{transport.netty.https.sender.truststore.password}}</Password>
+                </TrustStore>
+            </parameter>
+            {% if transport.netty.http.sender.certificate_revocation_verifier_enable is defined %}
+            <parameter name="CertificateRevocationVerifier" enable="{{transport.netty.http.sender.certificate_revocation_verifier_enable}}">
+                <CacheSize>{{transport.netty.http.sender.certificate_revocation_cache_size}}</CacheSize>
+                <CacheDelay>{{transport.netty.http.sender.certificate_revocation_cache_delay}}</CacheDelay>
+            </parameter>
+            {% endif %}
+        </transportSender>
     {% endif %}
     {% if transport.jms.sender_enable is defined %}
         {% if transport.jms.sender_enable and transport.jms.sender|length==0 %}

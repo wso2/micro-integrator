@@ -44,13 +44,27 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
         </dependency>
+
+
         <dependency>
             <groupId>libthrift.wso2</groupId>
             <artifactId>libthrift</artifactId>
         </dependency>
         <dependency>
-            <groupId>slf4j.wso2</groupId>
-            <artifactId>slf4j</artifactId>
+            <groupId>org.wso2.carbon.identity.saml.common</groupId>
+            <artifactId>org.wso2.carbon.identity.saml.common.util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.xalan</groupId>
+            <artifactId>xalan</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.jsr105</groupId>
+            <artifactId>jsr105</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -83,7 +97,10 @@
                                 </bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.authenticator.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon.commons:org.wso2.carbon.identity.entitlement.stub</bundleDef>
-                                <bundleDef>slf4j.wso2:slf4j</bundleDef>
+                                <bundleDef>org.wso2.orbit.xalan:xalan</bundleDef>
+                                <bundleDef>org.apache.santuario:xmlsec</bundleDef>
+                                <bundleDef>org.wso2.carbon.identity.saml.common:org.wso2.carbon.identity.saml.common.util</bundleDef>
+                                <bundleDef>org.wso2.orbit.jsr105:jsr105</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.apache.synapse.wso2:compatible:${synapse.version}

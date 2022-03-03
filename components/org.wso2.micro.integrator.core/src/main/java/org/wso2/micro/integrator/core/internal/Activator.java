@@ -28,6 +28,7 @@ import org.osgi.framework.ServiceRegistration;
 import org.wso2.carbon.crypto.api.ExternalCryptoProvider;
 import org.wso2.micro.core.encryption.KeyStoreBasedExternalCryptoProvider;
 import org.wso2.micro.core.util.CoreServerInitializerHolder;
+import org.wso2.micro.integrator.core.UserStoreTemporaryService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
@@ -75,6 +76,13 @@ public class Activator implements BundleActivator {
 //            CarbonCoreDataHolder.getInstance().setBundleContext(bundleContext);
 
             initializeCarbonServerConfigurationService(bundleContext);
+
+            if (Boolean.parseBoolean(System.getProperty("NonUserCoreMode"))) {
+                log.debug("UserCore component activated in NonUserCoreMode Mode");
+                // Registering a TemporaryService so that app deployer service component can continue.
+                UserStoreTemporaryService userStoreTemporaryService = new UserStoreTemporaryService();
+                bundleContext.registerService(UserStoreTemporaryService.class.getName(), userStoreTemporaryService, null);
+            }
 
             // Initialize MI Server
             CoreServerInitializer coreServerInitializer =

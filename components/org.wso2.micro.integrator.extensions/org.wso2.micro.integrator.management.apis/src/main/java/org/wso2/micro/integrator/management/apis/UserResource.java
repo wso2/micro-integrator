@@ -24,20 +24,18 @@ import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.micro.core.util.AuditLogger;
+import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
-import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
-import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
-import static org.wso2.micro.integrator.management.apis.Constants.FORBIDDEN;
+import static org.wso2.micro.integrator.management.apis.Constants.DOMAIN;
 import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
 import static org.wso2.micro.integrator.management.apis.Constants.IS_ADMIN;
 import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
@@ -60,7 +58,6 @@ public class UserResource implements MiApiResource {
     protected Set<String> methods;
 
     public UserResource() {
-
         methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
         methods.add(Constants.HTTP_DELETE);
@@ -79,8 +76,8 @@ public class UserResource implements MiApiResource {
             LOG.debug("Handling " + httpMethod + "request.");
         }
 
-        if (SecurityUtils.isFileBasedUserStoreEnabled()) {
-            setInvalidUserStoreResponse(axis2MessageContext);
+        if (Boolean.TRUE.equals(SecurityUtils.isFileBasedUserStoreEnabled())) {
+            Utils.setInvalidUserStoreResponse(axis2MessageContext);
             return true;
         }
 
@@ -116,14 +113,18 @@ public class UserResource implements MiApiResource {
     }
 
     protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException, ResourceNotFoundException {
-        String user = getUserFromPathParam(messageContext);
+        String domain = Utils.getQueryParameter(messageContext, DOMAIN);
+        String user = getUserFromPathParam(messageContext, domain);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Requested details for the user: " + user);
+        }
+        String[] roles = Utils.getUserStore(domain).getRoleListOfUser(user);
+        if (!StringUtils.isEmpty(domain)) {
+            user = Utils.addDomainToName(user, domain);
         }
         JSONObject userObject = new JSONObject();
         userObject.put(USER_ID, user);
         userObject.put(IS_ADMIN, SecurityUtils.isAdmin(user));
-        String[] roles = getUserStore().getRoleListOfUser(user);
         JSONArray list = new JSONArray(roles);
         userObject.put(ROLES, list);
         return userObject;
@@ -131,21 +132,23 @@ public class UserResource implements MiApiResource {
 
     protected JSONObject handleDelete(MessageContext messageContext) throws UserStoreException, IOException,
             ResourceNotFoundException {
-        String user = getUserFromPathParam(messageContext);
+        String domain = Utils.getQueryParameter(messageContext, DOMAIN);
+        String user = getUserFromPathParam(messageContext, domain);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Request received to delete the user: " + user);
         }
         String userName = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
         if (Objects.isNull(userName)) {
             LOG.warn("Deleting a user without authenticating/authorizing the request sender. Adding "
-                     + "authentication and authorization handlers is recommended.");
+                    + "authentication and authorization handlers is recommended.");
         } else {
             if (userName.equals(user)) {
                 throw new IOException("Attempt to delete the logged in user. Operation not allowed. Please login "
-                                      + "from another user.");
+                        + "from another user.");
             }
         }
-        getUserStore().deleteUser(user);
+        UserStoreManager userStoreManager = Utils.getUserStore(domain);
+        userStoreManager.deleteUser(user);
         JSONObject jsonBody = new JSONObject();
         jsonBody.put(USER_ID, user);
         jsonBody.put(STATUS, "Deleted");
@@ -155,36 +158,23 @@ public class UserResource implements MiApiResource {
         return jsonBody;
     }
 
-    protected UserStoreManager getUserStore() throws UserStoreException {
-        return MicroIntegratorSecurityUtils.getUserStoreManager();
-    }
-
-    protected RealmConfiguration getRealmConfiguration() throws UserStoreException {
-        return MicroIntegratorSecurityUtils.getRealmConfiguration();
-    }
-
-    private String getUserFromPathParam(MessageContext messageContext) throws UserStoreException,
+    private String getUserFromPathParam(MessageContext messageContext, String domain) throws UserStoreException,
             ResourceNotFoundException {
         String userId = Utils.getPathParameter(messageContext, USER_ID);
+        String domainAwareUserName = Utils.addDomainToName(userId, domain);
         if (Objects.isNull(userId)) {
             throw new AssertionError("Incorrect path parameter used: " + USER_ID);
         }
-        String[] users = getUserStore().listUsers(userId, -1);
+        UserStoreManager userStoreManager = Utils.getUserStore(domain);
+        String[] users = userStoreManager.listUsers(userId, -1);
         if (null == users || 0 == users.length) {
             throw new ResourceNotFoundException("User: " + userId + " cannot be found.");
         }
         for (String user : users) {
-            if (userId.equals(user)) {
-                return user;
+            if (domainAwareUserName.equals(user)) {
+                return userId;
             }
         }
         throw new ResourceNotFoundException("User: " + userId + " cannot be found.");
-    }
-
-    protected void setInvalidUserStoreResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {
-        JSONObject response = Utils.createJsonError("User management is not supported with the file-based user store. " +
-                        "Please plug in a user store for the correct functionality",
-                axis2MessageContext, FORBIDDEN);
-        Utils.setJsonPayLoad(axis2MessageContext, response);
     }
 }

@@ -81,4 +81,20 @@ public class Constants {
     public static final String TRANSPORT_PORT = "port";
     public static final String SERVER_PORT_OFFSET = "portOffset";
 
+    // Security Constants
+    public static final String ALLOW_ROLES_PROXY_PARAM_NAME = "allowRoles";
+    public static final String ALLOWED_ROLES_PARAM_NAME = "org.wso2.carbon.security.allowedroles";
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String CARBON_SEC_CONFIG = "CarbonSecConfig";
+    public static final String CUSTOM_SECURITY_SCENARIO = "customScenario";
+    public static final String CUSTOM_SECURITY_SCENARIO_SUMMARY = "Custom security policy";
+    public static final String ENCRYPTED = "encrypted";
+    public static final String KERBEROS = "Kerberos";
+    public static final String NAME_LABEL = "name";
+    public static final String PROPERTY_LABEL = "property";
+    public static final String RAMPART_MODULE_NAME = "rampart";
+    public static final String SECURITY_NAMESPACE = "http://www.wso2.org/products/carbon/security";
+    public static final String TRUST = "Trust";
+    public static final String TRUST_MODULE = "rahas";
+
 }

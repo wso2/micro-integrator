@@ -41,8 +41,8 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketCl
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.net.ProtocolException;
@@ -59,7 +59,7 @@ import javax.net.ssl.SSLException;
  */
 public class WebSocketTestClient {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketTestClient.class);
+    private static final Log logger = LogFactory.getLog(WebSocketTestClient.class);
 
     private String url = null;
     private final String subProtocol;

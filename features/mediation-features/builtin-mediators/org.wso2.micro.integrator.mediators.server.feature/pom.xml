@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
+            <artifactId>velocity-engine-core</artifactId>
         </dependency>
         <dependency>
             <groupId>rhino.wso2</groupId>
@@ -91,7 +91,7 @@
                             </bundles>
                             <importBundles>
                                 <importBundleDef>rhino.wso2:js</importBundleDef>
-                                <importBundleDef>org.apache.velocity:velocity</importBundleDef>
+                                <importBundleDef>org.apache.velocity:velocity-engine-core</importBundleDef>
                                 <importBundleDef>org.apache.bsf.wso2:bsf-all</importBundleDef>
                             </importBundles>
                             <importFeatures>
