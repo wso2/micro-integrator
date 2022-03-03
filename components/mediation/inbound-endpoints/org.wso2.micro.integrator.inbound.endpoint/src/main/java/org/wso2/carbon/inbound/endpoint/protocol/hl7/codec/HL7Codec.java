@@ -47,6 +47,10 @@ public class HL7Codec {
 
     private volatile int state;
 
+    private volatile boolean firstTrailingCharacterFound = false;
+    private volatile boolean lastTrailingCharacterFound = false;
+    private volatile boolean addMissingCharacter = false;
+
     private int responseReadPosition = 0;
     private byte[] responseBytes = null;
 
@@ -81,7 +85,15 @@ public class HL7Codec {
 
             if (trailerIndex > -1) {
                 dst.limit(trailerIndex);
+            }
+            if (lastTrailingCharacterFound) {
                 this.state = READ_TRAILER;
+                this.lastTrailingCharacterFound = false;
+                this.firstTrailingCharacterFound = false;
+            }
+            if (this.addMissingCharacter) {
+                context.getRequestBuffer().append(MLLPConstants.HL7_TRAILER[0]);
+                this.addMissingCharacter = false;
             }
 
             context.getRequestBuffer().append(charsetDecoder.decode(dst).toString());
@@ -109,10 +121,23 @@ public class HL7Codec {
     }
 
     private int findTrailer(ByteBuffer dst) {
-        for (int i = 0; i < dst.limit(); i++) {
-            if (dst.get(i) == MLLPConstants.HL7_TRAILER[0]) {
-                if (dst.get(i + 1) == MLLPConstants.HL7_TRAILER[1]) {
-                    return i - 1;
+            if (firstTrailingCharacterFound) {
+                firstTrailingCharacterFound = false;
+                if (dst.get(0) == MLLPConstants.HL7_TRAILER[1]) {
+                    lastTrailingCharacterFound = true;
+                    return 0;
+                } else {
+                    addMissingCharacter = true;
+                }
+            }
+            for (int i = 0; i < dst.limit(); i++) {
+                if (dst.get(i) == MLLPConstants.HL7_TRAILER[0]) {
+                    if (i + 1 >= dst.limit()) {
+                        this.firstTrailingCharacterFound = true;
+                        return i - 1;
+                    } else if (dst.get(i + 1) == MLLPConstants.HL7_TRAILER[1]) {
+                        lastTrailingCharacterFound = true;
+                        return i - 1 < 0 ? 0 : i - 1;
                 }
             }
         }

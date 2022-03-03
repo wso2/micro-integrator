@@ -35,8 +35,10 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
+import javax.jms.Queue;
 import javax.jms.StreamMessage;
 import javax.jms.TextMessage;
+import javax.jms.Topic;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
@@ -317,7 +319,83 @@ public class JMSUtils {
      */
     public static Map<String, Object> getTransportHeaders(Message message, MessageContext msgContext) {
         // create a Map to hold transport headers
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        // correlation ID
+        try {
+            if (message.getJMSCorrelationID() != null) {
+                map.put(JMSConstants.JMS_COORELATION_ID, message.getJMSCorrelationID());
+            }
+        } catch (JMSException ignore) {
+        }
+
+        // set the delivery mode as persistent or not
+        try {
+            map.put(JMSConstants.JMS_DELIVERY_MODE, Integer.toString(message.getJMSDeliveryMode()));
+        } catch (JMSException ignore) {
+        }
+
+        // destination name
+        try {
+            if (message.getJMSDestination() != null) {
+                Destination dest = message.getJMSDestination();
+                map.put(JMSConstants.JMS_DESTINATION,
+                        dest instanceof Queue ?
+                                ((Queue) dest).getQueueName() : ((Topic) dest).getTopicName());
+            }
+        } catch (JMSException ignore) {
+        }
+
+        // expiration
+        try {
+            map.put(JMSConstants.JMS_EXPIRATION, Long.toString(message.getJMSExpiration()));
+        } catch (JMSException ignore) {
+        }
+
+        // if a JMS message ID is found
+        try {
+            if (message.getJMSMessageID() != null) {
+                map.put(JMSConstants.JMS_MESSAGE_ID, message.getJMSMessageID());
+            }
+        } catch (JMSException ignore) {
+        }
+
+        // priority
+        try {
+            map.put(JMSConstants.JMS_PRIORITY, Long.toString(message.getJMSPriority()));
+        } catch (JMSException ignore) {
+        }
+
+        // redelivered
+        try {
+            map.put(JMSConstants.JMS_REDELIVERED, Boolean.toString(message.getJMSRedelivered()));
+        } catch (JMSException ignore) {
+        }
+
+        // replyto destination name
+        try {
+            if (message.getJMSReplyTo() != null) {
+                Destination dest = message.getJMSReplyTo();
+                map.put(JMSConstants.JMS_REPLY_TO,
+                        dest instanceof Queue ?
+                                ((Queue) dest).getQueueName() : ((Topic) dest).getTopicName());
+            }
+        } catch (JMSException ignore) {
+        }
+
+        // priority
+        try {
+            map.put(JMSConstants.JMS_TIMESTAMP, Long.toString(message.getJMSTimestamp()));
+        } catch (JMSException ignore) {
+        }
+
+        // message type
+        try {
+            if (message.getJMSType() != null) {
+                map.put(JMSConstants.JMS_TYPE, message.getJMSType());
+            }
+        } catch (JMSException ignore) {
+        }
 
         try {
             Enumeration<?> propertyNamesEnm = message.getPropertyNames();

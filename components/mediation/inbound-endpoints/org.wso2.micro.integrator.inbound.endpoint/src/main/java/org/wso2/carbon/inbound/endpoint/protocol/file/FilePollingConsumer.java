@@ -878,6 +878,10 @@ public class FilePollingConsumer {
                     log.debug("Moving to file :" + VFSUtils.maskURLPassword(dest.getName().getURI()));
                 }
                 try {
+                    String updateLastModified = vfsProperties.getProperty(VFSConstants.UPDATE_LAST_MODIFIED);
+                    if (updateLastModified != null) {
+                        dest.setUpdateLastModified(Boolean.parseBoolean(updateLastModified));
+                    }
                     fileObject.moveTo(dest);
                 } catch (FileSystemException e) {
                     if (!VFSUtils.isFailRecord(fsManager, fileObject, fso)) {

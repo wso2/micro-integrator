@@ -24,6 +24,7 @@ import org.apache.axiom.om.OMProcessingInstruction;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.transport.passthru.PassThroughConstants;
@@ -76,7 +77,10 @@ public class HttpRequestHashGenerator implements DigestGenerator {
      * {@inheritDoc}
      */
     public String getDigest(MessageContext msgContext) throws CachingException {
-        boolean allHeaders = EXCLUDE_ALL_VAL.equals(headers[0]);
+        boolean allHeaders = false;
+        if (ArrayUtils.isNotEmpty(headers)) {
+            allHeaders = EXCLUDE_ALL_VAL.equals(headers[0]);
+        }
         String method = (String) msgContext.getProperty(Constants.Configuration.HTTP_METHOD);
         boolean isGet = msgContext.isDoingREST() && (PassThroughConstants.HTTP_GET.equals(method) ||
                 PassThroughConstants.HTTP_DELETE.equals(method) ||
@@ -525,11 +529,14 @@ public class HttpRequestHashGenerator implements DigestGenerator {
     @Override
     public void init(Map<String, Object> properties) {
         headers = (String[]) properties.get(CachingConstants.INCLUDED_HEADERS_PROPERTY);
-        if (headers[0].isEmpty()) {
+        if (headers == null || headers[0].isEmpty()) {
             // if include headers have not been explicitly defined
             // mode becomes exclude header
             isIncludeHeadersMode = false;
             headers = (String[]) properties.get(CachingConstants.EXCLUDED_HEADERS_PROPERTY);
+            if (headers == null) {
+                headers = new String[0];
+            }
         }
         permanentlyExcludedHeaders = (String[]) properties.get(CachingConstants.PERMANENTLY_EXCLUDED_HEADERS_STRING);
     }

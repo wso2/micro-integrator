@@ -36,6 +36,7 @@ import org.wso2.carbon.inbound.endpoint.protocol.hl7.core.HL7Processor;
 import org.wso2.carbon.inbound.endpoint.protocol.hl7.core.InboundHL7IOReactor;
 import org.wso2.carbon.inbound.endpoint.protocol.hl7.core.MLLPConstants;
 import org.wso2.carbon.inbound.endpoint.protocol.hl7.util.Axis2HL7Constants;
+import org.wso2.carbon.inbound.endpoint.protocol.hl7.util.HL7Configuration;
 
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
@@ -44,6 +45,8 @@ import java.util.Map;
 
 public class HL7EndpointManager extends AbstractInboundEndpointManager {
     private static final Log log = LogFactory.getLog(HL7EndpointManager.class);
+    private static final String HL7_BUFFER_SIZE_PROPERTY = "read_buffer_size";
+    private static final int DEFAULT_HL7_BUFFER_SIZE = 8 * 1024;
 
     private static HL7EndpointManager instance = new HL7EndpointManager();
 
@@ -61,8 +64,9 @@ public class HL7EndpointManager extends AbstractInboundEndpointManager {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(MLLPConstants.INBOUND_PARAMS, params);
+        int bufferSizeHL7 = HL7Configuration.getInstance().getIntProperty(HL7_BUFFER_SIZE_PROPERTY, DEFAULT_HL7_BUFFER_SIZE);
         parameters.put(MLLPConstants.INBOUND_HL7_BUFFER_FACTORY,
-                       new BufferFactory(8 * 1024, new HeapByteBufferAllocator(), 1024));
+                       new BufferFactory(bufferSizeHL7, new HeapByteBufferAllocator(), 1024));
         validateParameters(params, parameters);
 
         HL7Processor hl7Processor = new HL7Processor(parameters);

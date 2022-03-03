@@ -58,6 +58,7 @@ public class InboundWebsocketListener implements InboundRequestProcessor {
     @Override
     public void destroy() {
         int offsetPort = port + PersistenceUtils.getPortOffset(processorParams.getProperties());
+        WebsocketEndpointManager.getInstance().broadcastShutDownToSubscriber(name, processorParams);
         WebsocketEndpointManager.getInstance().closeEndpoint(offsetPort);
     }
 

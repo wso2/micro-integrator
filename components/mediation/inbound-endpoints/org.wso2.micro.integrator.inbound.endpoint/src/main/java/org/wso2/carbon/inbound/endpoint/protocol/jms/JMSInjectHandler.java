@@ -95,6 +95,13 @@ public class JMSInjectHandler {
             msgCtx.setProperty(SynapseConstants.ARTIFACT_NAME, SynapseConstants.FAIL_SAFE_MODE_INBOUND_ENDPOINT + name);
             msgCtx.setProperty(SynapseConstants.IS_INBOUND, true);
             InboundEndpoint inboundEndpoint = msgCtx.getConfiguration().getInboundEndpoint(name);
+
+            // Adding inbound endpoint parameters as synapse properties
+            Map<String, String> parametersMap = inboundEndpoint.getParametersMap();
+            for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
+                msgCtx.setProperty(entry.getKey(), entry.getValue());
+            }
+
             CustomLogSetter.getInstance().setLogAppender(inboundEndpoint.getArtifactContainerName());
             String contentType = null;
 
@@ -120,6 +127,12 @@ public class JMSInjectHandler {
             }
             MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
                     .getAxis2MessageContext();
+
+            String hyphenSupport = JMSConstants.DEFAULT_HYPHEN_SUPPORT;
+            if (inboundEndpoint.getParameter(JMSConstants.PARAM_JMS_HYPHEN_MODE) != null) {
+                hyphenSupport = inboundEndpoint.getParameter(JMSConstants.PARAM_JMS_HYPHEN_MODE);
+            }
+            axis2MsgCtx.setProperty(JMSConstants.PARAM_JMS_HYPHEN_MODE, hyphenSupport);
 
             //setting transport headers
             Map<String, Object> transportHeaders = JMSUtils.getTransportHeaders(msg, axis2MsgCtx);

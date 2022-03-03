@@ -80,8 +80,12 @@ public class WebsocketTransportSender extends AbstractTransportSender {
         if (msgCtx.getProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER) != null) {
             responseSender = (InboundResponseSender) msgCtx
                     .getProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER);
-            sourceIdentier = ((ChannelHandlerContext) msgCtx.
-                    getProperty(WebsocketConstants.WEBSOCKET_SOURCE_HANDLER_CONTEXT)).channel().toString();
+            if (msgCtx.getProperty(WebsocketConstants.WEBSOCKET_SOURCE_CHANNEL_IDENTIFIER) != null) {
+                sourceIdentier = msgCtx.getProperty(WebsocketConstants.WEBSOCKET_SOURCE_CHANNEL_IDENTIFIER).toString();
+            } else {
+                sourceIdentier = ((ChannelHandlerContext) msgCtx.
+                        getProperty(WebsocketConstants.WEBSOCKET_SOURCE_HANDLER_CONTEXT)).channel().toString();
+            }
         } else {
             sourceIdentier = WebsocketConstants.UNIVERSAL_SOURCE_IDENTIFIER;
         }
@@ -187,6 +191,8 @@ public class WebsocketTransportSender extends AbstractTransportSender {
                         LogUtil.printWebSocketFrame(log, frame, clientHandler.getChannelHandlerContext(), false);
                     }
                 }
+            } else if (Boolean.valueOf(true).equals(msgCtx.getProperty(WebsocketConstants.CONNECTION_TERMINATE))) {
+                clientHandler.getChannelHandlerContext().channel().flush();
             } else {
                 if (!handshakePresent) {
                     RelayUtils.buildMessage(msgCtx, false);

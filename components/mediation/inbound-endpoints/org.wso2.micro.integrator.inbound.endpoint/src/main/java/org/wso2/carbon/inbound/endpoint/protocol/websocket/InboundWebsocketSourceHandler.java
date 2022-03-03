@@ -56,7 +56,6 @@ import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.api.ApiConstants;
 import org.apache.synapse.api.inbound.InboundApiHandler;
-import org.apache.synapse.api.inbound.InboundApiHandler;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.MessageContextCreatorForAxis2;
 import org.apache.synapse.inbound.InboundEndpoint;
@@ -83,7 +82,7 @@ import static org.wso2.carbon.inbound.endpoint.common.Constants.TENANT_DOMAIN;
 
 public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter {
 
-    private static Log log = LogFactory.getLog(InboundWebsocketSourceHandler.class);
+    private static final Log log = LogFactory.getLog(InboundWebsocketSourceHandler.class);
 
     private InboundWebsocketChannelContext wrappedContext;
     private WebSocketServerHandshaker handshaker;
@@ -150,7 +149,8 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String endpointName = WebsocketEndpointManager.getInstance().getEndpointName(port, tenantDomain);
         if (endpointName == null) {
-            handleException("Endpoint not found for port : " + port + "" + " tenant domain : " + tenantDomain);
+            int portWithOffset = port + portOffset;
+            handleException("Endpoint not found for port : " + portWithOffset + "" + " tenant domain : " + tenantDomain);
         }
         WebsocketSubscriberPathManager.getInstance()
                 .addChannelContext(endpointName, subscriberPath.getPath(), wrappedContext);
@@ -196,7 +196,8 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
 
         String endpointName = WebsocketEndpointManager.getInstance().getEndpointName(port, tenantDomain);
         if (endpointName == null) {
-            handleException("Endpoint not found for port : " + port + "" + " tenant domain : " + tenantDomain);
+            int portWithOffset = port + portOffset;
+            handleException("Endpoint not found for port : " + portWithOffset + "" + " tenant domain : " + tenantDomain);
         }
 
         WebsocketSubscriberPathManager.getInstance()
@@ -374,7 +375,6 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
                     synCtx.setEnvelope(TransportUtils.createSOAPEnvelope(documentElement));
                     injectForMediation(synCtx, endpoint);
                 } else if (frame instanceof PingWebSocketFrame) {
-                    ctx.channel().writeAndFlush(new PongWebSocketFrame(frame.content().retain()));
                     PongWebSocketFrame pongWebSocketFrame = new PongWebSocketFrame(frame.content().retain());
                     ctx.channel().writeAndFlush(pongWebSocketFrame);
                     if (log.isDebugEnabled()) {
@@ -444,6 +444,10 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
         return wrappedContext;
     }
 
+    public URI getSubscriber() {
+        return subscriberPath;
+    }
+
     public String getSubscriberPath() {
         return subscriberPath.getPath();
     }
@@ -509,6 +513,11 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
         ((Axis2MessageContext) synCtx).getAxis2MessageContext()
                 .setProperty(InboundWebsocketConstants.WEBSOCKET_SOURCE_HANDLER_CONTEXT,
                              wrappedContext.getChannelHandlerContext());
+        synCtx.setProperty(InboundWebsocketConstants.WEBSOCKET_SOURCE_CHANNEL_IDENTIFIER,
+                wrappedContext.getChannelIdentifier());
+        ((Axis2MessageContext) synCtx).getAxis2MessageContext()
+                .setProperty(InboundWebsocketConstants.WEBSOCKET_SOURCE_CHANNEL_IDENTIFIER,
+                        wrappedContext.getChannelIdentifier());
         if (outflowDispatchSequence != null) {
             synCtx.setProperty(InboundWebsocketConstants.WEBSOCKET_OUTFLOW_DISPATCH_SEQUENCE, outflowDispatchSequence);
             ((Axis2MessageContext) synCtx).getAxis2MessageContext()
