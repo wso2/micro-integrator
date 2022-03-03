@@ -767,7 +767,15 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                 if (file.renameTo(renamedFile)) {
                     renamedFile.deleteOnExit();
                 } else {
-                    handleException("Cannot delete the resource: " + file.getName());
+                    if (file.exists()) {
+                        log.warn("Seems that the file still exists but unable to delete the resource: "
+                                + file.getName() + "could be due to another process is trying to delete the file");
+                    } else {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Unable to delete the resource as " +
+                                    file.getName() + " does not exist.");
+                        }
+                    }
                 }
             }
         }
