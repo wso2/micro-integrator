@@ -3,7 +3,7 @@ hostname = "localhost"
 
 [[server.get_request_processor]]    # hidden property
 item = "swagger.json"
-class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerYamlProcessor"
+class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerJsonProcessor"
 
 [[server.get_request_processor]]    # hidden property
 item = "swagger.yaml"
