@@ -18,8 +18,6 @@
 
 package org.wso2.micro.integrator.security.internal;
 
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +33,6 @@ import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.SecurityConstants;
-import org.wso2.micro.integrator.security.callback.DefaultPasswordCallback;
 import org.wso2.micro.integrator.security.config.RealmConfigXMLProcessor;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
@@ -76,12 +73,6 @@ public class ServiceComponent {
 
     private void engagePoxSecurity() {
         try {
-            AxisConfiguration axisConfig = DataHolder.getInstance().getConfigCtx().getAxisConfiguration();
-            Parameter passwordCallbackParam = new Parameter();
-            DefaultPasswordCallback passwordCallbackClass = new DefaultPasswordCallback();
-            passwordCallbackParam.setName("passwordCallbackRef");
-            passwordCallbackParam.setValue(passwordCallbackClass);
-            axisConfig.addParameter(passwordCallbackParam);
             String enablePoxSecurity = CarbonServerConfigurationService.getInstance()
                     .getFirstProperty("EnablePoxSecurity");
             if (enablePoxSecurity == null || "true".equals(enablePoxSecurity)) {

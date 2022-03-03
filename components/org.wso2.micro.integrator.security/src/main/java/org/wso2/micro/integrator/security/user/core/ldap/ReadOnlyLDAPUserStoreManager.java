@@ -273,7 +273,16 @@ public class ReadOnlyLDAPUserStoreManager extends AbstractUserStoreManager {
 
         this.connectionSource = new LDAPConnectionContext(realmConfig);
 
-        hybridRoleManager = new HybridRoleManager(tenantId, realmConfig, userRealm);
+        try {
+            this.dataSource = DatabaseUtil.getRealmDataSource(realmConfig);
+        } catch (Exception ex) {
+            // datasource is not configured
+            if (log.isDebugEnabled()) {
+                log.debug("Datasource is not configured for LDAP user store");
+            }
+        }
+        hybridRoleManager =
+                new HybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
     }
 
     /**
@@ -3582,7 +3591,7 @@ public class ReadOnlyLDAPUserStoreManager extends AbstractUserStoreManager {
     }
 
     private void addAllRolesToUserRolesCache(String userName, List<String> roleList) throws UserStoreException {
-        String[] internalRoleList = doGetDefaultInternalRoleList();
+        String[] internalRoleList = doGetInternalRoleListOfUser(userName, "*");
         String[] combinedRoleList = UserCoreUtil.combineArrays((roleList.toArray(new String[roleList.size()])), internalRoleList);
         addToUserRolesCache(getTenantId(), userName, combinedRoleList);
     }

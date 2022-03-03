@@ -18,6 +18,8 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+
 import javax.xml.namespace.QName;
 
 public class Constants {
@@ -47,11 +49,19 @@ public class Constants {
     public static final String PREFIX_SERVER_DATA = "/server";
     public static final String PREFIX_LOG_FILES = "/logs";
     public static final String PREFIX_TRANSACTION = "/transactions";
+    public static final String PREFIX_DATA_SOURCES = "/data-sources";
+    public static final String PREFIX_ROLES = "/roles";
+    public static final String PATH_PARAM_ROLE = "/" + "{role}";
     public static final String PATH_PARAM_TRANSACTION = "/" + "{param}";
     public static final String ROOT_CONTEXT = "/";
 
     public static final String COUNT = "count";
+    public static final String TOTAL_COUNT = "totalCount";
     public static final String LIST = "list";
+    public static final String ACTIVE_COUNT = "activeCount";
+    public static final String ACTIVE_LIST = "activeList";
+    public static final String FAULTY_COUNT = "faultyCount";
+    public static final String FAULTY_LIST = "faultyList";
     public static final String NAME = "name";
     public static final String STATUS = "status";
     public static final String URL = "url";
@@ -70,6 +80,7 @@ public class Constants {
     public static final String COMPONENT_NAME = "componentName";
     public static final String LOGGING_LEVEL = "loggingLevel";
     public static final String ROOT_LOGGER = "rootLogger";
+    public static final String ANONYMOUS_USER = "anonymous";
 
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     public static final String HTTP_STATUS_CODE = "HTTP_SC";
@@ -81,9 +92,12 @@ public class Constants {
     public static final String MESSAGE_TYPE = "messageType";
     public static final String CONTENT_TYPE = "ContentType";
 
+    public static final String MEDIA_TYPE_APPLICATION_OCTET_STREAM = "application/octet-stream";
+
     public static final String HTTP_METHOD_PROPERTY = "HTTP_METHOD";
     public static final String HTTP_POST = "POST";
     public static final String HTTP_GET = "GET";
+    public static final String HTTP_PUT = "PUT";
     public static final String HTTP_DELETE = "DELETE";
 
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
@@ -104,6 +118,8 @@ public class Constants {
 
     // Constants used for the users resource
     public static final String USER_ID = "userId";
+    public static final String USERS = "users";
+    public static final String DOMAIN = "domain";
     public static final String ROLES = "roles";
     public static final String ROLE = "role";
     public static final String PASSWORD = "password";
@@ -129,4 +145,40 @@ public class Constants {
 
     // toml properties
     public static String FILE_BASED_USER_STORE_ENABLE = "internal_apis.file_user_store.enable";
+
+    public static final String AUDIT_LOG_TYPE_ENDPOINT = "endpoint";
+    public static final String AUDIT_LOG_TYPE_USER = "user";
+    public static final String AUDIT_LOG_TYPE_PROXY_SERVICE = "proxy_service";
+    public static final String AUDIT_LOG_TYPE_LOG_LEVEL = "log_level";
+    public static final String AUDIT_LOG_TYPE_ROOT_LOG_LEVEL = "root_log_level";
+    public static final String AUDIT_LOG_TYPE_MESSAGE_PROCESSOR = "message_processor";
+    public static final String AUDIT_LOG_TYPE_CARBON_APPLICATION = "carbon_application";
+    public static final String AUDIT_LOG_TYPE_CONNECTOR = "connector";
+
+    public static final String AUDIT_LOG_TYPE_API_TRACE = "api_trace";
+    public static final String AUDIT_LOG_TYPE_PROXY_SERVICE_TRACE = "proxy_service_trace";
+    public static final String AUDIT_LOG_TYPE_INBOUND_ENDPOINT_TRACE = "inbound_endpoint_trace";
+    public static final String AUDIT_LOG_TYPE_SEQUENCE_TEMPLATE_TRACE = "sequence_template_trace";
+    public static final String AUDIT_LOG_TYPE_SEQUENCE_TRACE = "sequence_trace";
+    public static final String AUDIT_LOG_TYPE_ENDPOINT_TRACE = "endpoint_trace";
+
+    public static final String AUDIT_LOG_ACTION_ENABLE = "enabled";
+    public static final String AUDIT_LOG_ACTION_DISABLED = "disabled";
+    public static final String AUDIT_LOG_ACTION_CREATED = "created";
+    public static final String AUDIT_LOG_ACTION_DELETED = "deleted";
+    public static final String AUDIT_LOG_ACTION_UPDATED = "updated";
+
+    public static final String DOMAIN_SEPARATOR;
+
+    static {
+        String userDomainSeparator = CarbonServerConfigurationService.getInstance().getFirstProperty("UserDomainSeparator");
+        if (userDomainSeparator != null && !userDomainSeparator.trim().isEmpty()) {
+            DOMAIN_SEPARATOR = userDomainSeparator.trim();
+        } else {
+            DOMAIN_SEPARATOR = "/";
+        }
+    }
+
+
+    static final String SERVICE_PID = "service.pid";
 }

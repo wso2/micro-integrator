@@ -125,7 +125,7 @@ public abstract class AuthenticationHandlerAdapter extends SecurityHandlerAdapte
      * Processes authentication request with basic auth and in memory user store
      *
      * @param messageContext synapse message context
-     * @param token extracted basic auth token
+     * @param token          extracted basic auth token
      * @return boolean if successfully authenticated
      */
     boolean processAuthRequestWithFileBasedUserStore(MessageContext messageContext, String token) {
@@ -134,17 +134,12 @@ public abstract class AuthenticationHandlerAdapter extends SecurityHandlerAdapte
         if (userDetails.length == 0) {
             return false;
         }
-        if (!usersList.isEmpty()) {
-            for (String userNameFromStore : usersList.keySet()) {
-                if (userNameFromStore.equals(userDetails[0])) {
-                    String passwordFromStore = String.valueOf(usersList.get(userNameFromStore));
-                    if (isValid(passwordFromStore) && passwordFromStore.equals(userDetails[1])) {
-                        messageContext.setProperty(USERNAME_PROPERTY, userDetails[0]);
-                        LOG.info("User " + userDetails[0] + " logged in successfully");
-                        return true;
-                    }
-                }
-            }
+        boolean isAuthenticated = FileBasedUserStoreManager.getUserStoreManager().authenticate(userDetails[0],
+                userDetails[1]);
+        if (isAuthenticated) {
+            messageContext.setProperty(USERNAME_PROPERTY, userDetails[0]);
+            LOG.info("User " + userDetails[0] + " logged in successfully");
+            return true;
         }
         return false;
     }
@@ -157,15 +152,5 @@ public abstract class AuthenticationHandlerAdapter extends SecurityHandlerAdapte
             return new String[] {};
         }
         return new String[] { usernamePasswordArray[0], usernamePasswordArray[1] };
-    }
-
-    /**
-     * Checks if a given value is not null and not empty.
-     *
-     * @param value String value
-     */
-    private Boolean isValid(String value) {
-
-        return (Objects.nonNull(value) && !value.isEmpty());
     }
 }

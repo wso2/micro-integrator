@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
@@ -58,7 +60,11 @@ public class DataSourceUtils {
 	private static Log log = LogFactory.getLog(DataSourceUtils.class);
 	
 	private static SecretResolver secretResolver;
-    private static final String XML_DECLARATION = "xml-declaration";
+	private static final String PWD_MASKED_VALUE = "*****";
+	private static final String PWD_ELEMENT = "password";
+	private static final String URL_ELEMENT = "url";
+	private static final Pattern PASSWORD_PATTERN = Pattern.compile(":(?:[^/]+)@");
+	private static final String XML_DECLARATION = "xml-declaration";
 	private static final int ENTITY_EXPANSION_LIMIT = 0;
 	private static final DocumentBuilderFactory dbf;
 
@@ -141,7 +147,33 @@ public class DataSourceUtils {
 		}
 		return lhs.equals(rhs);
 	}
-	
+
+	/**
+	 * This method will return the serialized Data source with passwords masked.
+	 *
+	 * @param element Data Source Configuration
+	 * @return String Serialized Data source
+	 */
+	public static String elementToStringWithMaskedPasswords(Element element) {
+
+		if (element == null) {
+			/* return an empty string because, the other way around works the same,
+			where if we give a empty string as the XML, we get a null element
+			from "stringToElement" */
+			return "";
+		}
+		Element updatedElement = (Element) element.cloneNode(true);
+		for (Node child = updatedElement.getFirstChild(); child != null; child = child.getNextSibling()) {
+			if (child instanceof Element && PWD_ELEMENT.equals(child.getNodeName())) {
+				child.getFirstChild().setNodeValue(PWD_MASKED_VALUE);
+			}
+			if (child instanceof Element && URL_ELEMENT.equals(child.getNodeName())) {
+				child.getFirstChild().setNodeValue(maskURLPassword(child.getFirstChild().getNodeValue()));
+			}
+		}
+		return elementToString(updatedElement);
+	}
+
 	public static String elementToString(Element element) {
 		try {
 			if (element == null) {
@@ -281,4 +313,16 @@ public class DataSourceUtils {
 		} 
 		return element;
     }
+
+	/**
+	 * Mask the password of the connection url with ***
+	 *
+	 * @param url the actual url
+	 * @return the masked url
+	 */
+	public static String maskURLPassword(String url) {
+
+		final Matcher pwdMatcher = PASSWORD_PATTERN.matcher(url);
+		return pwdMatcher.replaceFirst(":***@");
+	}
 }

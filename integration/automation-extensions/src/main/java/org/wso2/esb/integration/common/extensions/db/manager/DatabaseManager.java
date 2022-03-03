@@ -56,6 +56,7 @@ public class DatabaseManager extends ExecutionListenerExtension {
     private String scriptSuffix;
     private String delimiter;
     private String dbClearScripts;
+    private boolean createSecondary = false;
 
     private static final String ALLOW_MULTIPLE_QUERIES = "allowMultiQueries=true";
     private static final String MY_SQL = "mysql";
@@ -69,6 +70,7 @@ public class DatabaseManager extends ExecutionListenerExtension {
     private static final String DEFAULT_DB_USER = "root";
     private static final String DEFAULT_DB_PWD = "root";
     private static final String DEFAULT_DRIVER = "com.mysql.jdbc.Driver";
+    private static final String SECONDARY_DB = "secondaryDb";
 
     @Override
     public void initiate() throws AutomationFrameworkException {
@@ -174,6 +176,14 @@ public class DatabaseManager extends ExecutionListenerExtension {
         schema.add("use " + dbName + ";");
         schema.add(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
         executeUpdate(dbUrl, String.join("", schema));
+        if (createSecondary) {
+            schema = new ArrayList<>();
+            schema.add("drop database if exists " + SECONDARY_DB + ";");
+            schema.add("create database " + SECONDARY_DB + " character set latin1;");
+            schema.add("use " + SECONDARY_DB + ";");
+            schema.add(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+            executeUpdate(dbUrl, String.join("", schema));
+        }
     }
 
     @Override
@@ -243,6 +253,9 @@ public class DatabaseManager extends ExecutionListenerExtension {
                 break;
             case "db-clear-scripts-base-dir":
                 dbClearScripts = value;
+                break;
+            case "create-secondary":
+                createSecondary = Boolean.parseBoolean(value);
                 break;
             default:
                 logger.error("Unknown property : " + key);

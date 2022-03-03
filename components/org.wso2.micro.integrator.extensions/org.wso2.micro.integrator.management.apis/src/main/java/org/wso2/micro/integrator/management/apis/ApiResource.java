@@ -96,8 +96,15 @@ public class ApiResource extends APIResource {
                 String apiName = payload.get(Constants.NAME).getAsString();
                 SynapseConfiguration configuration = msgCtx.getConfiguration();
                 API api = configuration.getAPI(apiName);
+                String performedBy = Constants.ANONYMOUS_USER;
+                if (msgCtx.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                    performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+                }
+                JSONObject info = new JSONObject();
+                info.put(API_NAME, apiName);
                 if (api != null) {
-                    response = Utils.handleTracing(api.getAspectConfiguration(), apiName, axisMsgCtx);
+                    response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_API_TRACE, info,
+                                                   api.getAspectConfiguration(), apiName, axisMsgCtx);
                 } else {
                     response = Utils.createJsonError("Specified API ('" + apiName + "') not found", axisMsgCtx,
                             Constants.BAD_REQUEST);

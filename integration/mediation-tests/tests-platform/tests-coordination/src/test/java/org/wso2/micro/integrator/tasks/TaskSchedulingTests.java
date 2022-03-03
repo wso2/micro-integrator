@@ -33,6 +33,7 @@ import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.wso2.micro.integrator.TestUtils.deployArtifacts;
@@ -81,7 +82,7 @@ public class TaskSchedulingTests extends ESBIntegrationTest {
      * Starts two nodes as coordinator and member. Schedule the task-1 in the member node.
      * Then schedule the task-1 in coordinator node and checks task is scheduling in both nodes.
      *
-     * @exception Exception throws exception
+     * @throws Exception throws exception
      */
     @Test
     void testSameTaskSchedulingInBothNodes() throws Exception {
@@ -92,17 +93,16 @@ public class TaskSchedulingTests extends ESBIntegrationTest {
         boolean taskScheduledInNode2 = reader2.checkForLog(deploymentLog(TASK_1), DEPLOYMENT_TIMEOUT);
         log.info(TASK_1 + " is" + (taskScheduledInNode2 ? " " : " not ") + "scheduled in node 2.");
 
+        TimeUnit.SECONDS.sleep(30); // creating deployment delay artificially
         // deploy the task in coordinator node
         deployArtifacts(getServerDeploymentDirectory(serverManager.getServerHomes().get(0)),
                 Utils.ArtifactType.TASK, TASK_1);
         boolean taskScheduledInNode1 = reader1.checkForLog(deploymentLog(TASK_1), DEPLOYMENT_TIMEOUT);
         log.info(TASK_1 + " is" + (taskScheduledInNode1 ? " " : " not ") + "scheduled in node 1.");
 
-        // if task is scheduled in node-2 then task is not scheduled in node-1
-        if (taskScheduledInNode2) {
-            Assert.assertFalse(taskScheduledInNode1);
-        } else {
-            Assert.fail(TASK_1 + " should schedule in in node 2 and not in node 1");
+        log.info("node 1" + taskScheduledInNode1 + " node2 " + taskScheduledInNode2);
+        if (taskScheduledInNode1 == taskScheduledInNode2) {
+            Assert.fail(TASK_1 + " is scheduled in both nodes or none.");
         }
     }
 

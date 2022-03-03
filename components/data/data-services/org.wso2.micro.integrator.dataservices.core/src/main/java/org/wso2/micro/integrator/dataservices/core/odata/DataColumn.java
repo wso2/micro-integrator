@@ -129,6 +129,10 @@ public class DataColumn {
         return maxLength;
     }
 
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
+    }
+
     public void setPrecision(int precision) {
         this.precision = precision;
     }

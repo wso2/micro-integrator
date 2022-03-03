@@ -6,6 +6,7 @@ offset  = 0     # inferred
 hide_admin_service_wsdl = true #inferred
 proxy_context_path = "" # empty by default
 hot_deployment = true # true by default
+enable_security_deployment_interceptor = true # true by default. To handle WS policies
 
 # axis2.xml file
 enable_mtom = false # optional  default: false

@@ -19,22 +19,38 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.OMText;
 import org.apache.axiom.soap.SOAPBody;
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.apache.synapse.transport.passthru.util.RelayConstants;
+import org.apache.synapse.transport.passthru.util.StreamingOnRequestDataSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.Artifact;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
+import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,6 +60,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import javax.activation.DataHandler;
+import javax.mail.util.ByteArrayDataSource;
 import javax.xml.namespace.QName;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
@@ -54,6 +72,7 @@ public class CarbonAppResource extends APIResource {
     private static final Log log = LogFactory.getLog(CarbonAppResource.class);
     private static final String MULTIPART_FORMDATA_DATA_TYPE = "multipart/form-data";
     private static final String CAPP_NAME = "name";
+    private static final String CAPP_FILE_NAME = "cAppFileName";
     // HTTP method types supported by the resource
     private Set<String> methods;
 
@@ -83,24 +102,33 @@ public class CarbonAppResource extends APIResource {
         if (log.isDebugEnabled()) {
             log.debug("Handling " + httpMethod + " request.");
         }
-
+        String performedBy = Constants.ANONYMOUS_USER;
+        if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+            performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
+        }
         switch (httpMethod) {
             case Constants.HTTP_GET: {
                 String param = Utils.getQueryParameter(messageContext, "carbonAppName");
 
                 if (Objects.nonNull(param)) {
-                    populateCarbonAppData(messageContext, param);
+                    String acceptHeader = (String) SecurityUtils.getHeaders(axis2MessageContext)
+                                                                .get(HTTPConstants.HEADER_ACCEPT);
+                    if (acceptHeader.equalsIgnoreCase(Constants.MEDIA_TYPE_APPLICATION_OCTET_STREAM)) {
+                        populateFileContent(messageContext, param);
+                    } else {
+                        populateCarbonAppData(messageContext, param);
+                    }
                 } else {
                     populateCarbonAppList(messageContext);
                 }
                 break;
             }
             case Constants.HTTP_POST: {
-                handlePost(axis2MessageContext);
+                handlePost(performedBy, axis2MessageContext);
                 break;
             }
             case Constants.HTTP_DELETE: {
-                handleDelete(messageContext, axis2MessageContext);
+                handleDelete(performedBy, messageContext, axis2MessageContext);
                 break;
             }
             default: {
@@ -115,7 +143,73 @@ public class CarbonAppResource extends APIResource {
         return true;
     }
 
-    private void handlePost(org.apache.axis2.context.MessageContext axisMsgCtx) {
+    /**
+     * Populate file content.
+     * @param synCtx message context
+     * @param cAppName carbon application name
+     */
+    private void populateFileContent(MessageContext synCtx, String cAppName) {
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) synCtx).getAxis2MessageContext();
+
+        DataHandler dataHandler = createDataHandler(cAppName);
+        if (dataHandler != null) {
+            try {
+                InputStream fileInput = dataHandler.getInputStream();
+                SOAPFactory factory = OMAbstractFactory.getSOAP12Factory();
+                SOAPEnvelope env = factory.getDefaultEnvelope();
+                OMNamespace ns =
+                        factory.createOMNamespace(RelayConstants.BINARY_CONTENT_QNAME.getNamespaceURI(), "ns");
+                OMElement omEle = factory.createOMElement(RelayConstants.BINARY_CONTENT_QNAME.getLocalPart(), ns);
+                StreamingOnRequestDataSource ds = new StreamingOnRequestDataSource(fileInput);
+                dataHandler = new DataHandler(ds);
+                OMText textData = factory.createOMText(dataHandler, true);
+                omEle.addChild(textData);
+                env.getBody().addChild(omEle);
+                synCtx.setEnvelope(env);
+                axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+                axis2MessageContext.setProperty(Constants.MESSAGE_TYPE, Constants.MEDIA_TYPE_APPLICATION_OCTET_STREAM);
+                axis2MessageContext.setProperty(Constants.CONTENT_TYPE, Constants.MEDIA_TYPE_APPLICATION_OCTET_STREAM);
+            } catch (AxisFault e) {
+                log.error("Error occurred while creating the response", e);
+                sendFaultResponse(axis2MessageContext);
+            } catch (IOException e) {
+                log.error("Error occurred while reading the input stream", e);
+                sendFaultResponse(axis2MessageContext);
+            }
+        }
+        else {
+            sendFaultResponse(axis2MessageContext);
+        }
+    }
+
+    /**
+     * Create a data-handler for carbon application.
+     * @param cAppName carbon application name
+     * @return datahandler
+     */
+    private DataHandler createDataHandler(String cAppName) {
+        ByteArrayDataSource bytArrayDS;
+        Path cAppPath = Paths.get(Utils.getCAppPath(), cAppName);
+        File file = new File(cAppPath.toString());
+        if (file.exists() && !file.isDirectory()) {
+            try (InputStream is = new BufferedInputStream(new FileInputStream(cAppPath.toString()))) {
+                bytArrayDS = new ByteArrayDataSource(is, Constants.MEDIA_TYPE_APPLICATION_OCTET_STREAM);
+                return new DataHandler(bytArrayDS);
+            } catch (FileNotFoundException e) {
+                log.error("Could not find the requested file : " + cAppName + " in : " + cAppPath.toString(), e);
+                return null;
+            } catch (IOException e) {
+                log.error("Error occurred while reading the file : " + cAppName + " in : " + cAppPath.toString(), e);
+                return null;
+            }
+        } else {
+            log.error("Could not find the requested file : " + cAppName + " in : " + cAppPath.toString());
+            return null;
+        }
+    }
+
+    private void handlePost(String performedBy, org.apache.axis2.context.MessageContext axisMsgCtx) {
         JSONObject jsonResponse = new JSONObject();
         String contentType = axisMsgCtx.getProperty(Constants.CONTENT_TYPE).toString();
         if (!contentType.contains(MULTIPART_FORMDATA_DATA_TYPE)) {
@@ -143,6 +237,10 @@ public class CarbonAppResource extends APIResource {
                                 jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully added Carbon Application "
                                         + fileName);
                                 Utils.setJsonPayLoad(axisMsgCtx, jsonResponse);
+                                JSONObject info = new JSONObject();
+                                info.put(CAPP_FILE_NAME, fileName);
+                                AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_CARBON_APPLICATION,
+                                                            Constants.AUDIT_LOG_ACTION_CREATED, info);
                             } catch (IOException e) {
                                 String errorMessage = "Error when deploying the Carbon Application ";
                                 log.error(errorMessage + fileName, e);
@@ -175,7 +273,7 @@ public class CarbonAppResource extends APIResource {
         }
     }
 
-    private void handleDelete(MessageContext messageContext, org.apache.axis2.context.MessageContext axisMsgCtx) {
+    private void handleDelete(String performedBy, MessageContext messageContext, org.apache.axis2.context.MessageContext axisMsgCtx) {
         String cAppName = Utils.getPathParameter(messageContext, CAPP_NAME);
         JSONObject jsonResponse = new JSONObject();
         if (!Objects.isNull(cAppName)) {
@@ -199,6 +297,10 @@ public class CarbonAppResource extends APIResource {
                     log.info(cApp.getName() + " file deleted from " + cAppsDirectoryPath + " directory");
                     jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Successfully removed Carbon Application " +
                             "named " + cAppName);
+                    JSONObject info = new JSONObject();
+                    info.put(CAPP_FILE_NAME, cAppName);
+                    AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_CARBON_APPLICATION,
+                                                Constants.AUDIT_LOG_ACTION_DELETED, info);
                 } else {
                     jsonResponse = Utils.createJsonError("Cannot remove the Carbon Application." +
                             cAppName + " does not exist", axisMsgCtx, NOT_FOUND);
@@ -224,17 +326,28 @@ public class CarbonAppResource extends APIResource {
         List<CarbonApplication> appList
                 = CappDeployer.getCarbonApps();
 
-        JSONObject jsonBody = Utils.createJSONList(appList.size());
+        List<CarbonApplication> faultyAppList = CappDeployer.getFaultyCAppObjects();
+
+        JSONObject jsonBody = Utils.createCAppJSONList(appList.size(), faultyAppList.size());
 
         for (CarbonApplication app: appList) {
 
             JSONObject appObject = new JSONObject();
-
             appObject.put(Constants.NAME, app.getAppName());
             appObject.put(Constants.VERSION, app.getAppVersion());
 
-            jsonBody.getJSONArray(Constants.LIST).put(appObject);
+            jsonBody.getJSONArray(Constants.ACTIVE_LIST).put(appObject);
         }
+
+        for (CarbonApplication faultyApp: faultyAppList) {
+
+            JSONObject appObject = new JSONObject();
+            appObject.put(Constants.NAME, faultyApp.getAppName());
+            appObject.put(Constants.VERSION, faultyApp.getAppVersion());
+
+            jsonBody.getJSONArray(Constants.FAULTY_LIST).put(appObject);
+        }
+
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
@@ -302,5 +415,10 @@ public class CarbonAppResource extends APIResource {
             artifactListObject.put(artifactObject);
         }
         return appObject;
+    }
+
+    private void sendFaultResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {
+        axis2MessageContext.setProperty(Constants.NO_ENTITY_BODY, true);
+        axis2MessageContext.setProperty(SynapseConstants.HTTP_SC, 500);
     }
 }

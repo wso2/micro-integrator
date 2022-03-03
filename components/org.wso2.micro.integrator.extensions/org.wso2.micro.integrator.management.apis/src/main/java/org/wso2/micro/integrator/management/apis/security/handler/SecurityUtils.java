@@ -25,6 +25,8 @@ import org.apache.synapse.commons.crypto.CryptoConstants;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.management.apis.Constants;
+import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecureVaultException;
 
@@ -101,5 +103,21 @@ public class SecurityUtils {
             return Boolean.valueOf(fileUserStore.toString());
         }
         return false;
+    }
+
+    /**
+     * Method to assert if a user is an admin.
+     *
+     * @param username the user to be validated as an admin
+     * @return true if the admin role is assigned to the user
+     * @throws UserStoreException if any error occurs while retrieving the user store manager or reading the user realm
+     *                            configuration
+     */
+    public static boolean isAdmin(String username) throws UserStoreException {
+        if (isFileBasedUserStoreEnabled()) {
+            return FileBasedUserStoreManager.getUserStoreManager().isAdmin(username);
+        } else {
+            return MicroIntegratorSecurityUtils.isAdmin(username);
+        }
     }
 }

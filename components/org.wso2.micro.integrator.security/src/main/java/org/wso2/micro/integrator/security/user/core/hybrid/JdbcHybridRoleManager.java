@@ -19,6 +19,7 @@ package org.wso2.micro.integrator.security.user.core.hybrid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.micro.core.util.DatabaseCreator;
 import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
@@ -39,6 +40,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants.ErrorMessages.ERROR_CODE_DUPLICATE_WHILE_ADDING_A_HYBRID_ROLE;
+import static org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants.ErrorMessages.ERROR_CODE_DUPLICATE_WHILE_WRITING_TO_DATABASE;
+
 public class JdbcHybridRoleManager extends HybridRoleManager {
 
     private static Log log = LogFactory.getLog(JDBCUserStoreManager.class);
@@ -53,7 +57,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
 
     public JdbcHybridRoleManager(DataSource dataSource, int tenantId, RealmConfiguration realmConfig,
                                  UserRealm realm) throws UserStoreException {
-        super(tenantId, realmConfig, realm);
+        super(dataSource, tenantId, realmConfig, realm);
         this.dataSource = dataSource;
         this.isCascadeDeleteEnabled = realmConfig.getRealmProperty(UserCoreDBConstants.CASCADE_DELETE_ENABLED);
         //persist internal domain
@@ -71,7 +75,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
     public void addHybridRole(String roleName, String[] userList) throws UserStoreException {
         UserCoreUtil.logUnsupportedOperation();
         // TODO Revisit and decide whether we need this for MI
-        /*Connection dbConnection = null;
+        Connection dbConnection = null;
         try {
 
             // ########### Domain-less Roles and Domain-aware Users from here onwards #############
@@ -130,7 +134,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
             throw new UserStoreException(errorMessage, e);
         } finally {
             DatabaseUtil.closeAllConnections(dbConnection);
-        }*/
+        }
     }
 
     /**
@@ -578,7 +582,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
             throws UserStoreException {
         UserCoreUtil.logUnsupportedOperation();
         // TODO Revisit and decide whether we need this for MI
-        /*String sqlStmt1 = HybridJDBCConstants.REMOVE_ROLE_FROM_USER_SQL;
+        String sqlStmt1 = HybridJDBCConstants.REMOVE_ROLE_FROM_USER_SQL;
         String sqlStmt2 = HybridJDBCConstants.ADD_ROLE_TO_USER_SQL;
         if(!isCaseSensitiveUsername()){
             sqlStmt1 = HybridJDBCConstants.REMOVE_ROLE_FROM_USER_SQL_CASE_INSENSITIVE;
@@ -647,7 +651,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
         // Authorization cache of user should also be updated if deleted roles are involved
         if (deletedRoles != null && deletedRoles.length > 0) {
             userRealm.getAuthorizationManager().clearUserAuthorization(user);
-        }*/
+        }
     }
 
     /**

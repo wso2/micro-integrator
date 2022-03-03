@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>mi-component-parent</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -128,7 +128,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -137,13 +136,33 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Bundle-Activator>
+                            org.wso2.micro.integrator.security.user.core.internal.Activator
+                        </Bundle-Activator>
                         <Private-Package>
+                            org.wso2.micro.integrator.security.user.core.internal,
+                            org.wso2.micro.integrator.security.user.core.jdbc.caseinsensitive,
+                            org.wso2.micro.integrator.security.user.core.constants,
+                            org.wso2.micro.integrator.security.user.core.claim.inmemory,
                             org.wso2.micro.integrator.security.internal
                         </Private-Package>
                         <Export-Package>
+                            !org.wso2.micro.integrator.security.user.core.internal,
+                            !org.wso2.micro.integrator.security.user.core.jdbc.caseinsensitive,
+                            org.wso2.micro.integrator.security.user.core.*,
                             org.wso2.micro.integrator.security.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>
+                            !javax.xml.namespace,
+                            org.wso2.carbon.utils.*,
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
+                            javax.sql.*,
+                            org.apache.commons.logging.*; version="${import.package.version.commons.logging}",
+                            org.apache.commons.lang.*;
+                            javax.naming.*,
+                            javax.xml.stream.*; version="1.0.1",
+                            javax.xml.namespace; version=0.0.0,
+                            *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>wso2-micro-integrator-parent</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -197,6 +197,11 @@
                                 <!-- DSS -->
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.dataservices.server.feature:${project.version}
+                                </featureArtifactDef>
+
+                                <!-- Transport HTTP-Netty -->
+                                <featureArtifactDef>
+                                    org.wso2.transport.http:org.wso2.transport.http.netty.feature:${transport.http.netty.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -407,6 +412,11 @@
                                 <feature>
                                     <id>org.wso2.micro.integrator.dataservices.server.feature.group</id>
                                     <version>${project.version}</version>
+                                </feature>
+                                <!-- Transport HTTP-Netty -->
+                                <feature>
+                                    <id>org.wso2.transport.http.netty.feature.group</id>
+                                    <version>${transport.http.netty.version}</version>
                                 </feature>
                             </features>
                         </configuration>

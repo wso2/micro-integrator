@@ -41,10 +41,11 @@ public class Constants {
     public static final String ENABLE = "enable";
     public static final String USER_NAME = "username";
     public static final String PASSWORD = "password";
+    public static final String SERVICE_CATALOG_EXECUTOR_THREADS = "executor_threads";
 
-    public static final String SERVICE_CATALOG_PUBLISH_ENDPOINT = "api/am/service-catalog/v0/services/import?overwrite" +
+    public static final String SERVICE_CATALOG_PUBLISH_ENDPOINT = "api/am/service-catalog/v1/services/import?overwrite" +
             "=true";
-    public static final String SERVICE_CATALOG_GET_SERVICES_ENDPOINT = "api/am/service-catalog/v0/services";
+    public static final String SERVICE_CATALOG_GET_SERVICES_ENDPOINT = "api/am/service-catalog/v1/services";
 
     // creating the payload.zip related constants
     public static final String SERVICE_CATALOG = "ServiceCatalog";
@@ -58,12 +59,22 @@ public class Constants {
     public static final String ZIP_FOLDER_NAME = "payload.zip";
     public static final String METADATA_FILE_NAME = "metadata.yaml";
     public static final String SWAGGER_FILE_NAME = "definition.yaml";
+    public static final String WSDL_FILE_NAME = "definition.wsdl";
     public static final String YAML_FILE_EXTENSION = ".yaml";
+    public static final String PROXY_SERVICE_SUFFIX = "_proxy";
+    public static final String PATH_SEPARATOR = "/";
+    public static final String WSDL_URL_PATH = "?wsdl";
 
     // constants related to retry mechanism
     public static final int INTERVAL_BETWEEN_RETRIES = 2000;
     public static final int RETRY_COUNT = 3;
 
     public static final int UNAUTHENTICATED = 401;
+
+    // constants related to config parser
+    public static final String SERVER_HOSTNAME = "server.hostname";
+    public static final String HTTPS_LISTENER_PORT = "transport.https.listener.parameter.port";
+    public static final String HTTP_LISTENER_PORT = "transport.http.listener.parameter.port";
+    public static final String SERVER_PORT_OFFSET = "portOffset";
 
 }

@@ -95,7 +95,20 @@ public class RabbitMQConsumer implements Consumer {
         // declaring queue, exchange and binding
         queueName = rabbitMQProperties.get(RabbitMQConstants.QUEUE_NAME);
         String exchangeName = rabbitMQProperties.get(RabbitMQConstants.EXCHANGE_NAME);
-        RabbitMQUtils.declareQueuesExchangesAndBindings(channel, queueName, exchangeName, rabbitMQProperties);
+
+        try {
+            RabbitMQUtils.declareQueue(channel, queueName, rabbitMQProperties);
+        } catch (IOException ex) {
+            channel = RabbitMQUtils.checkAndIgnoreInEquivalentParamException(connection, ex,
+                    org.apache.axis2.transport.rabbitmq.RabbitMQConstants.QUEUE, queueName);
+        }
+        try {
+            RabbitMQUtils.declareExchange(channel, exchangeName, rabbitMQProperties);
+        } catch (IOException ex) {
+            channel = RabbitMQUtils.checkAndIgnoreInEquivalentParamException(connection, ex,
+                    org.apache.axis2.transport.rabbitmq.RabbitMQConstants.EXCHANGE, exchangeName);
+        }
+        RabbitMQUtils.bindQueueToExchange(channel, queueName, exchangeName, rabbitMQProperties);
 
         // get max dead-lettered count
         maxDeadLetteredCount =

@@ -24,27 +24,39 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.aspects.AspectConfiguration;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.rest.RESTConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.ops4j.pax.logging.PaxLoggingConstants;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.wso2.micro.core.util.StringUtils;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
+import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
+import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
+import org.wso2.micro.integrator.security.user.api.UserStoreManager;
+import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
+import org.wso2.micro.integrator.security.user.core.common.AbstractUserStoreManager;
 import org.wso2.micro.service.mgt.ServiceAdmin;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
+import static org.wso2.micro.integrator.management.apis.Constants.FORBIDDEN;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
 public class Utils {
@@ -67,9 +79,8 @@ public class Utils {
      * @return the resolved value from the url. Returns null if not present.
      */
     public static String getPathParameter(MessageContext messageContext, String key){
-        String pathParameter = messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key).toString();
-        if (Objects.nonNull(pathParameter)) {
-            return pathParameter;
+        if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key))) {
+            return messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key).toString();
         }
         return null;
     }
@@ -116,8 +127,8 @@ public class Utils {
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
     }
 
-    static JSONObject handleTracing(AspectConfiguration config, String artifactName,
-                                    org.apache.axis2.context.MessageContext axisMsgCtx) {
+    static JSONObject handleTracing(String performedBy, String type, JSONObject info, AspectConfiguration config,
+                                    String artifactName, org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject payload = new JSONObject(JsonUtil.jsonPayloadToString(axisMsgCtx));
         JSONObject response = new JSONObject();
@@ -128,10 +139,12 @@ public class Utils {
                 config.enableTracing();
                 msg = "Enabled tracing for ('" + artifactName + "')";
                 response.put(Constants.MESSAGE, msg);
+                AuditLogger.logAuditMessage(performedBy, type, Constants.AUDIT_LOG_ACTION_ENABLE, info);
             } else if (Constants.DISABLE.equalsIgnoreCase(traceState)) {
                 config.disableTracing();
                 msg = "Disabled tracing for ('" + artifactName + "')";
                 response.put(Constants.MESSAGE, msg);
+                AuditLogger.logAuditMessage(performedBy, type, Constants.AUDIT_LOG_ACTION_DISABLED, info);
             } else {
                 msg = "Invalid value for state " + Constants.TRACE;
                 response = createJsonError(msg, axisMsgCtx, Constants.BAD_REQUEST);
@@ -150,6 +163,23 @@ public class Utils {
         JSONArray list = new JSONArray();
         jsonBody.put(Constants.COUNT, count);
         jsonBody.put(Constants.LIST, list);
+        return jsonBody;
+    }
+
+    /**
+     * Create a json list to list down carbon applications
+     * @param activeCount active cApp count
+     * @param faultyCount faulty cApp count
+     * @return json object
+     */
+    public static JSONObject createCAppJSONList(int activeCount, int faultyCount) {
+
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put(Constants.TOTAL_COUNT, activeCount + faultyCount);
+        jsonBody.put(Constants.ACTIVE_COUNT, activeCount);
+        jsonBody.put(Constants.ACTIVE_LIST, new JSONArray());
+        jsonBody.put(Constants.FAULTY_COUNT, faultyCount);
+        jsonBody.put(Constants.FAULTY_LIST, new JSONArray());
         return jsonBody;
     }
 
@@ -240,7 +270,24 @@ public class Utils {
         ConfigurationAdmin configurationAdmin = ConfigurationHolder.getInstance().getConfigAdminService();
         Configuration configuration =
                 configurationAdmin.getConfiguration(Constants.PAX_LOGGING_CONFIGURATION_PID, "?");
-        configuration.update();
+        Dictionary properties = new Hashtable<>();
+        properties.put(Constants.SERVICE_PID, PaxLoggingConstants.LOGGING_CONFIGURATION_PID);
+        Hashtable paxLoggingProperties = getPaxLoggingProperties();
+        paxLoggingProperties.forEach(properties::put);
+        configuration.update(properties);
+    }
+
+    private static Hashtable getPaxLoggingProperties() throws IOException {
+        String paxPropertiesFileLocation = System.getProperty("org.ops4j.pax.logging.property.file");
+        if (StringUtils.isNotEmpty(paxPropertiesFileLocation)) {
+            File file = new File(paxPropertiesFileLocation);
+            if (file.exists()) {
+                Properties properties = new Properties();
+                properties.load(new FileInputStream(file));
+                return properties;
+            }
+        }
+        return new Hashtable();
     }
 
     /**
@@ -278,6 +325,15 @@ public class Utils {
             }
         }
         return carbonLogsPath;
+    }
+
+    /**
+     * This method will return the path to cApps directory.
+     *
+     * @return path as string.
+     */
+    public static String getCAppPath() {
+        return Paths.get(getCarbonHome(), "repository", "deployment", "server", "carbonapps").toString();
     }
 
     /**
@@ -346,5 +402,40 @@ public class Utils {
         defaultLogFileInfoList.add(new LogFileInfo("NO_LOG_FILES", "---"));
         return defaultLogFileInfoList;
     }
+    protected static void setInvalidUserStoreResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {
+        JSONObject response =
+                Utils.createJsonError("User management is not supported with the file-based user store. " +
+                                "Please plug in a user store for the correct functionality",
+                        axis2MessageContext, FORBIDDEN);
+        Utils.setJsonPayLoad(axis2MessageContext, response);
+    }
 
+    protected static UserStoreManager getUserStore(String domain) throws UserStoreException {
+        UserStoreManager userStoreManager = MicroIntegratorSecurityUtils.getUserStoreManager();
+        if (!StringUtils.isEmpty(domain) && userStoreManager instanceof AbstractUserStoreManager &&
+                !UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME.equalsIgnoreCase(domain)) {
+            userStoreManager = ((AbstractUserStoreManager) userStoreManager).getSecondaryUserStoreManager(domain);
+            if (userStoreManager == null) {
+                throw new UserStoreException("Could not find a user-store for the given domain " + domain);
+            }
+        }
+        return userStoreManager;
+    }
+
+    protected static RealmConfiguration getRealmConfiguration() throws UserStoreException {
+        return MicroIntegratorSecurityUtils.getRealmConfiguration();
+    }
+    public static String addDomainToName(String name, String domainName) {
+        if (domainName != null && name != null && !name.contains(Constants.DOMAIN_SEPARATOR) &&
+                !"PRIMARY".equalsIgnoreCase(domainName)) {
+            if (!"Internal".equalsIgnoreCase(domainName) && !"Workflow".equalsIgnoreCase(domainName) &&
+                    !"Application".equalsIgnoreCase(domainName)) {
+                name = domainName.toUpperCase() + Constants.DOMAIN_SEPARATOR + name;
+            } else {
+                name = domainName.substring(0, 1).toUpperCase() + domainName.substring(1).toLowerCase() +
+                        Constants.DOMAIN_SEPARATOR + name;
+            }
+        }
+        return name;
+    }
 }

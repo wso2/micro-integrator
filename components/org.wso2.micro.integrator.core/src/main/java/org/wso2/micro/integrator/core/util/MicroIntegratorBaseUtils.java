@@ -18,6 +18,7 @@
 
 package org.wso2.micro.integrator.core.util;
 
+import com.google.gson.Gson;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.util.base64.Base64Utils;
 import org.apache.axis2.AxisFault;
@@ -33,6 +34,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.commons.resolvers.ResolverException;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.xerces.util.SecurityManager;
 import org.w3c.dom.Document;
@@ -46,20 +48,24 @@ import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.lang.management.ManagementPermission;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -80,11 +86,13 @@ public class MicroIntegratorBaseUtils {
     private static Log log = LogFactory.getLog(MicroIntegratorBaseUtils.class);
 
     private static final String REPOSITORY = "repository";
+    private static final String UPDATES = "updates";
     private static boolean isServerConfigInitialized;
     private static OMElement axis2Config;
     private static final String TRUE = "true";
     private static final int ENTITY_EXPANSION_LIMIT = 0;
     private static CarbonAxisConfigurator carbonAxisConfigurator;
+    private static CarbonServerConfigurationService serverConfigurationService;
 
     public static String getServerXml() {
 
@@ -97,6 +105,28 @@ public class MicroIntegratorBaseUtils {
             return getCarbonConfigDirPath() + File.separator + "carbon.xml";
         }
         return carbonXML + File.separator + "carbon.xml";
+    }
+
+    public static String getUpdateLevel() {
+        String defaultUpdateLevel = "-";
+        String carbonHome = getCarbonHome();
+        if (carbonHome != null) {
+            String configFilePath = carbonHome + File.separator + UPDATES + File.separator + "config.json";
+            File configFile = new File(configFilePath);
+            if (configFile.exists()) {
+                Gson gsonParser = new Gson();
+                try {
+                    Reader configFileReader = Files.newBufferedReader(Paths.get(configFilePath));
+                    Map<?, ?> configMap = gsonParser.fromJson(configFileReader, Map.class);
+                    return (String) configMap.get("update-level");
+                } catch (Exception e) {
+                    return defaultUpdateLevel;
+                }
+            } else {
+                return defaultUpdateLevel;
+            }
+        }
+        return defaultUpdateLevel;
     }
 
     public static String getCarbonConfigDirPath() {
@@ -560,6 +590,15 @@ public class MicroIntegratorBaseUtils {
     }
 
     /**
+     * This is to set the serverConfigurationService instance.
+     *
+     * @param serverConfiguration server configuration service
+     */
+    public static void setServerConfigurationService(CarbonServerConfigurationService serverConfiguration) {
+        serverConfigurationService = serverConfiguration;
+    }
+
+    /**
      * This is to get the carbonAxisConfigurator instance.
      */
     public static CarbonAxisConfigurator getCarbonAxisConfigurator() {
@@ -579,4 +618,46 @@ public class MicroIntegratorBaseUtils {
         return (SynapseEnvironment) synapseEnvironmentParatemer.getValue();
     }
 
+    /**
+     * Gets Server hostname.
+     *
+     * @return server hostname
+     */
+    public static String getServerHostName() {
+        return serverConfigurationService.getFirstProperty("HostName");
+    }
+
+    /**
+     * Gets Server http listener port.
+     *
+     * @return http port
+     * @throws ResolverException exception
+     */
+    public static int getServerHTTPListenerPort() throws ResolverException {
+        try {
+            return Integer.parseInt(carbonAxisConfigurator.getAxisConfiguration().getTransportsIn()
+                    .get(org.wso2.micro.core.Constants.HTTP_TRANSPORT)
+                    .getParameter(org.wso2.micro.core.Constants.TRANSPORT_PORT).getValue().toString())
+                    + Integer.parseInt(System.getProperty(org.wso2.micro.core.Constants.SERVER_PORT_OFFSET));
+        } catch (AxisFault e) {
+            throw new ResolverException("Error in getting server default http listener port", e);
+        }
+    }
+
+    /**
+     * Gets Server https listener port.
+     *
+     * @return https port
+     * @throws ResolverException exception
+     */
+    public static int getServerHTTPSListenerPort() throws ResolverException {
+        try {
+            return Integer.parseInt(carbonAxisConfigurator.getAxisConfiguration().getTransportsIn()
+                    .get(org.wso2.micro.core.Constants.HTTPS_TRANSPORT)
+                    .getParameter(org.wso2.micro.core.Constants.TRANSPORT_PORT).getValue().toString())
+                    + Integer.parseInt(System.getProperty(org.wso2.micro.core.Constants.SERVER_PORT_OFFSET));
+        } catch (AxisFault e) {
+            throw new ResolverException("Error in getting server default https listener port", e);
+        }
+    }
 }

@@ -67,7 +67,7 @@ public class ExposeSOAPasSOAPTest extends ScenarioTestBase {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_3_Proxy_SimpleLogForwardTemplate"));
     }
 
-    @Test(description = "4.1.1.1.4")
+    @Test(description = "4.1.1.1.4", enabled = false)
     public void testWSDLTemplate() throws IOException, XMLStreamException {
         invokeSOAPProxyAndAssert(getProxyServiceURLHttp("4_1_1_1_4_Proxy_SimpleWSDLProxyTemplate"));
     }
@@ -96,7 +96,7 @@ public class ExposeSOAPasSOAPTest extends ScenarioTestBase {
                 wsdlDoc, "WSDL from the proxy differ from expected");
     }
 
-    @Test(description = "4.1.1.1.8")
+    @Test(description = "4.1.1.1.8", enabled = false)
     public void testPublishingWSDLFromURL() throws IOException, XMLStreamException {
         String wsdlDoc = "SimpleStockQuoteService";
         String url = getProxyServiceURLHttp("4_1_1_1_8_Proxy_PublishWSDLFromURL");

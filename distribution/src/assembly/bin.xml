@@ -313,12 +313,6 @@
             </excludes>
         </fileSet>
 
-        <!-- Copying the in-place update tools-->
-        <fileSet>
-            <directory>target/update/</directory>
-            <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
-            <fileMode>744</fileMode>
-        </fileSet>
         <fileSet>
             <directory>src/resources/security</directory>
             <outputDirectory>wso2mi-${pom.version}/repository/resources/security</outputDirectory>
@@ -470,6 +464,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>src/conf/netty.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>netty.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>src/conf/synapse.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>synapse.properties</destName>
@@ -617,7 +618,6 @@
                 <include>com.fasterxml.jackson.core:jackson-annotations:jar</include>
                 <include>commons-codec:commons-codec:jar</include>
                 <include>com.hubspot.jinjava:jinjava:jar</include>
-                <include>org.slf4j:slf4j-api:jar</include>
                 <include>commons-lang.wso2:commons-lang:jar</include>
                 <include>org.apache.commons:commons-lang3:jar</include>
                 <include>org.wso2.config.mapper:config-mapper:jar</include>
@@ -625,6 +625,7 @@
                 <include>org.apache.logging.log4j:log4j-core:jar</include>
                 <include>org.apache.logging.log4j:log4j-jcl:jar</include>
                 <include>org.slf4j:slf4j-simple:jar</include>
+                <include>com.lmax:disruptor:jar</include>
                 <!--
                 javax jms-api need to be in class path for axis2
                 ( needs javax.jms.JMSException )

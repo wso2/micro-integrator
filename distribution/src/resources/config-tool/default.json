@@ -7,6 +7,7 @@
   "server.synapse_config_file_path": "repository/deployment/server/synapse-configs",
   "server.hide_admin_service_wsdl": true,
   "server.roles": ["EnterpriseIntegrator", "EnterpriseServiceBus", "DataServicesServer"],
+  "server.enable_security_deployment_interceptor": true,
 
   "encryption.internal_crypto_provider": "org.wso2.micro.integrator.crypto.provider.KeyStoreBasedInternalCryptoProvider",
   "encryption.key": "SECRET_KEY",
@@ -21,6 +22,11 @@
       "isCascadeDeleteEnabled": true
     }
   },
+
+  "authorization_manager.class" : "org.wso2.micro.integrator.security.user.core.authorization.JDBCAuthorizationManager",
+  "authorization_manager.properties.AdminRoleManagementPermissions" : "/permission",
+  "authorization_manager.properties.AuthorizationCacheEnabled" : true,
+  "authorization_manager.properties.GetAllRolesOfUserEnabled" : false,
 
   "synapse_properties.'synapse.threads.core'": "20",
   "synapse_properties.'synapse.threads.max'": "100",
@@ -98,6 +104,19 @@
   "transport.http.sender.truststore.type": "$ref{truststore.type}",
   "transport.http.sender.truststore.password": "$ref{truststore.password}",
   "transport.http.sender.ssl_profile.read_interval": "600000",
+
+  "transport.netty.http.sender.enable": true,
+  "transport.netty.http.sender.class": "org.apache.synapse.transport.netty.sender.Axis2HttpTransportSender",
+  "transport.netty.http.sender.secured_enable": true,
+  "transport.netty.https.sender.class": "org.apache.synapse.transport.netty.sender.Axis2HttpSSLTransportSender",
+  "transport.netty.https.sender.keystore.location": "$ref{keystore.primary.file_name}",
+  "transport.netty.https.sender.keystore.type": "$ref{keystore.primary.type}",
+  "transport.netty.https.sender.keystore.password": "$ref{keystore.primary.password}",
+  "transport.netty.https.sender.keystore.key_password": "$ref{keystore.primary.key_password}",
+  "transport.netty.https.sender.truststore.location": "$ref{truststore.file_name}",
+  "transport.netty.https.sender.truststore.type": "$ref{truststore.type}",
+  "transport.netty.https.sender.truststore.password": "$ref{truststore.password}",
+  "transport.netty.https.sender.ssl_profile.read_interval": "600000",
 
   "transport.blocking.http.listener.enable": true,
   "transport.blocking.http.listener.parameter.port": "8200",
@@ -448,7 +467,8 @@
   "internal_apis.users": [
     {
       "user.name": "admin",
-      "user.password": "admin"
+      "user.password": "admin",
+      "user.is_admin": true
     }
   ],
 

@@ -17,6 +17,7 @@
  */
 package org.wso2.carbon.inbound.endpoint.protocol.file;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.vfs2.FileContent;
@@ -41,6 +42,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -61,8 +63,8 @@ public class FilePollingConsumer {
     private int lastCycle;
     private FileInjectHandler injectHandler;
     private Long waitTimeBeforeRead;
+    private double fileSizeLimit = VFSConstants.DEFAULT_TRANSPORT_FILE_SIZE_LIMIT;
 
-    private String fileURI;
     private FileObject fileObject;
     private Integer iFileProcessingInterval = null;
     private Integer iFileProcessingCount = null;
@@ -76,6 +78,23 @@ public class FilePollingConsumer {
     private Long distributedLockTimeout;
     private FileSystemOptions fso;
     private boolean isClosed;
+
+    private boolean readSubDirectories = false;
+    private String fileURI;
+
+    private String actionAfterProcess;
+    private boolean moveProcessedFilesToSubDirectories = false;
+    private String moveFileURI;
+
+    private String actionAfterFailure;
+    private boolean moveFailureFilesToSubDirectories = false;
+    private String moveFailureFileURI;
+
+    // The symbol to include sub directories will be either '/*' or '\*' depending on the Operating system.
+    private final int INCLUDE_SUB_DIR_SYMBOL_LENGTH = 2;
+
+    private final String MOVE = "MOVE";
+    private final String RELATIVE_PATH = "RELATIVE_PATH";
 
     public FilePollingConsumer(Properties vfsProperties, String name, SynapseEnvironment synapseEnvironment,
                                long scanInterval) {
@@ -295,7 +314,40 @@ public class FilePollingConsumer {
      */
     private void setupParams() {
 
-        fileURI = vfsProperties.getProperty(VFSConstants.TRANSPORT_FILE_FILE_URI);
+        ResolvedFileUri inFileUri = extractFileUri(VFSConstants.TRANSPORT_FILE_FILE_URI);
+        if (Objects.nonNull(inFileUri)) {
+            readSubDirectories = inFileUri.supportSubDirectories;
+            fileURI = inFileUri.resolvedUri;
+        } else {
+            log.error("Invalid file url. Check the inbound endpoint configuration. Endpoint Name : "
+                    + name + ", File URL : " + VFSUtils.maskURLPassword(fileURI));
+        }
+
+        actionAfterProcess = vfsProperties.getProperty(VFSConstants.TRANSPORT_FILE_ACTION_AFTER_PROCESS);
+        if (MOVE.equals(actionAfterProcess)) {
+            ResolvedFileUri outFileUri = extractFileUri(VFSConstants.TRANSPORT_FILE_MOVE_AFTER_PROCESS);
+            if (Objects.nonNull(outFileUri)) {
+                moveProcessedFilesToSubDirectories = outFileUri.supportSubDirectories;
+                moveFileURI = outFileUri.resolvedUri;
+            } else {
+                log.error(VFSConstants.TRANSPORT_FILE_MOVE_AFTER_PROCESS + " undefined with "
+                        + VFSConstants.TRANSPORT_FILE_ACTION_AFTER_PROCESS
+                        + "=MOVE. Files will be deleted after processing");
+            }
+        }
+
+        actionAfterFailure = vfsProperties.getProperty(VFSConstants.TRANSPORT_FILE_ACTION_AFTER_FAILURE);
+        if (MOVE.equals(actionAfterFailure)) {
+            ResolvedFileUri failFileUri = extractFileUri(VFSConstants.TRANSPORT_FILE_MOVE_AFTER_FAILURE);
+            if (Objects.nonNull(failFileUri)) {
+                moveFailureFilesToSubDirectories = failFileUri.supportSubDirectories;
+                moveFailureFileURI = failFileUri.resolvedUri;
+            } else {
+                log.error(VFSConstants.TRANSPORT_FILE_MOVE_AFTER_FAILURE + " undefined with "
+                        + VFSConstants.TRANSPORT_FILE_ACTION_AFTER_FAILURE
+                        + "=MOVE. Files will be deleted after failure");
+            }
+        }
 
         String strFileLock = vfsProperties.getProperty(VFSConstants.TRANSPORT_FILE_LOCKING);
         if (strFileLock != null && strFileLock.toLowerCase().equals(VFSConstants.TRANSPORT_FILE_LOCKING_DISABLED)) {
@@ -416,6 +468,15 @@ public class FilePollingConsumer {
                          e);
             }
         }
+
+        String strFileSizeLimit = vfsProperties.getProperty(VFSConstants.TRANSPORT_FILE_SIZE_LIMIT);
+        try {
+            fileSizeLimit = Objects.nonNull(strFileSizeLimit)
+                    ? Double.parseDouble(strFileSizeLimit) : VFSConstants.DEFAULT_TRANSPORT_FILE_SIZE_LIMIT;
+        } catch (NumberFormatException e) {
+            log.warn("VFS " + VFSConstants.TRANSPORT_FILE_SIZE_LIMIT + "is not set properly. Current value is: "
+                    + strFileSizeLimit + ", using default: unlimited");
+        }
     }
 
     /**
@@ -475,9 +536,29 @@ public class FilePollingConsumer {
             boolean isFailedRecord = VFSUtils.isFailRecord(fsManager, child, fso);
             boolean isReadyToRead = VFSUtils.isReadyToRead(child, waitTimeBeforeRead);
 
+            if (readSubDirectories && child.isFolder()) {
+                // If file/folder found proceed to the processing stage
+                if (child.exists() && child.isReadable()) {
+                    FileObject[] childrenOfChild;
+                    childrenOfChild = child.getChildren();
+                    if (null != childrenOfChild && 0 != childrenOfChild.length) {
+                        directoryHandler(childrenOfChild);
+                    }
+                } else {
+                    log.warn("Unable to access or read file or directory : " + VFSUtils.maskURLPassword(fileURI)
+                            + ". Reason: "
+                            + (child.exists() ? (child.isReadable() ? "Unknown reason" : "The file can not be read!")
+                            : "The file does not exists!"));
+                }
+            }
+            //Skip processing sub directories if not specified
+            else if (child.isFolder()){
+                continue;
+            }
+
             // child's file name matches the file name pattern or process all
             // files now we try to get the lock and process
-            if ((strFilePattern == null || child.getName().getBaseName().matches(strFilePattern)) && !isFailedRecord
+            else if ((strFilePattern == null || child.getName().getBaseName().matches(strFilePattern)) && !isFailedRecord
                     && isReadyToRead) {
 
                 if (log.isDebugEnabled()) {
@@ -680,12 +761,18 @@ public class FilePollingConsumer {
      *
      * @param file
      * @return
-     * @throws synapseException
+     * @throws SynapseException
      */
     private FileObject processFile(FileObject file) throws SynapseException {
         try {
             FileContent content = file.getContent();
             String fileName = file.getName().getBaseName();
+            if (fileSizeLimit >= 0 && (content.getSize() > fileSizeLimit)) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Ignoring file: " + fileName + " size: " + content.getSize() + " since it exceeds file size limit: " + fileSizeLimit);
+                }
+                return null;
+            }
             String filePath = file.getName().getPath();
             String fileURI = file.getName().getURI();
 
@@ -694,6 +781,13 @@ public class FilePollingConsumer {
                 transportHeaders.put(VFSConstants.FILE_PATH, filePath);
                 transportHeaders.put(VFSConstants.FILE_NAME, fileName);
                 transportHeaders.put(VFSConstants.FILE_URI, fileURI);
+                if (readSubDirectories) {
+                    try {
+                        transportHeaders.put(RELATIVE_PATH, extractRelativePath(file));
+                    } catch (FileSystemException e) {
+                        log.warn("Unable to extract the relative path of the file.", e);
+                    }
+                }
 
                 try {
                     transportHeaders.put(VFSConstants.FILE_LENGTH, content.getSize());
@@ -722,40 +816,26 @@ public class FilePollingConsumer {
      * Do the post processing actions
      *
      * @param fileObject
-     * @throws synapseException
+     * @throws SynapseException
      */
     private void moveOrDeleteAfterProcessing(FileObject fileObject) throws SynapseException {
 
         String moveToDirectoryURI = null;
+        boolean supportSubDirectory = false;
         try {
             switch (lastCycle) {
             case 1:
-                if ("MOVE".equals(vfsProperties.getProperty(VFSConstants.TRANSPORT_FILE_ACTION_AFTER_PROCESS))) {
-                    moveToDirectoryURI = vfsProperties.getProperty(VFSConstants.TRANSPORT_FILE_MOVE_AFTER_PROCESS);
-                    //Postfix the date given timestamp format
-                    String strSubfoldertimestamp = vfsProperties.getProperty(VFSConstants.SUBFOLDER_TIMESTAMP);
-                    if (strSubfoldertimestamp != null) {
-                        try {
-                            SimpleDateFormat sdf = new SimpleDateFormat(strSubfoldertimestamp);
-                            String strDateformat = sdf.format(new Date());
-                            int iIndex = moveToDirectoryURI.indexOf("?");
-                            if (iIndex > -1) {
-                                moveToDirectoryURI =
-                                        moveToDirectoryURI.substring(0, iIndex) + strDateformat + moveToDirectoryURI
-                                                .substring(iIndex, moveToDirectoryURI.length());
-                            } else {
-                                moveToDirectoryURI += strDateformat;
-                            }
-                        } catch (Exception e) {
-                            log.warn("Error generating subfolder name with date", e);
-                        }
-                    }
+                if (MOVE.equals(actionAfterProcess)) {
+                    supportSubDirectory = moveProcessedFilesToSubDirectories;
+                    moveToDirectoryURI = optionallyAppendDateToUri(moveFileURI);
                 }
                 break;
 
             case 2:
-                if ("MOVE".equals(vfsProperties.getProperty(VFSConstants.TRANSPORT_FILE_ACTION_AFTER_FAILURE))) {
-                    moveToDirectoryURI = vfsProperties.getProperty(VFSConstants.TRANSPORT_FILE_MOVE_AFTER_FAILURE);
+                if (MOVE.equals(actionAfterFailure)) {
+                    supportSubDirectory = moveFailureFilesToSubDirectories;
+                    //Postfix the date given timestamp format
+                    moveToDirectoryURI = optionallyAppendDateToUri(moveFailureFileURI);
                 }
                 break;
 
@@ -764,6 +844,9 @@ public class FilePollingConsumer {
             }
 
             if (moveToDirectoryURI != null) {
+                if (supportSubDirectory) {
+                    moveToDirectoryURI = resolveActualOutUrl(fileObject, moveToDirectoryURI);
+                }
                 // This handles when file needs to move to a different file-system
                 FileSystemOptions destinationFSO = null;
                 try {
@@ -784,9 +867,9 @@ public class FilePollingConsumer {
                 }
 
                 //Forcefully create the folder(s) if does not exists
-                String strForceCreateFolder = vfsProperties.getProperty(VFSConstants.FORCE_CREATE_FOLDER);
-                if (strForceCreateFolder != null && strForceCreateFolder.toLowerCase().equals("true")
-                        && !moveToDirectory.exists()) {
+                boolean createFolder
+                        = Boolean.parseBoolean(vfsProperties.getProperty(VFSConstants.FORCE_CREATE_FOLDER));
+                if ((supportSubDirectory || createFolder) && !moveToDirectory.exists()) {
                     moveToDirectory.createFolder();
                 }
 
@@ -826,6 +909,28 @@ public class FilePollingConsumer {
                         .maskURLPassword(moveToDirectoryURI), e);
             }
         }
+    }
+
+    private String optionallyAppendDateToUri(String moveToDirectoryURI) {
+        String strSubfoldertimestamp = vfsProperties
+                .getProperty(VFSConstants.SUBFOLDER_TIMESTAMP);
+        if (strSubfoldertimestamp != null) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(strSubfoldertimestamp);
+                String strDateformat = sdf.format(new Date());
+                int iIndex = moveToDirectoryURI.indexOf("?");
+                if (iIndex > -1) {
+                    moveToDirectoryURI = moveToDirectoryURI.substring(0, iIndex)
+                            + strDateformat
+                            + moveToDirectoryURI.substring(iIndex);
+                }else{
+                    moveToDirectoryURI += strDateformat;
+                }
+            } catch (Exception e) {
+                log.warn("Error generating subfolder name with date", e);
+            }
+        }
+        return moveToDirectoryURI;
     }
 
     /**
@@ -904,5 +1009,66 @@ public class FilePollingConsumer {
     void destroy() {
         fsManager.close();
         isClosed = true;
+    }
+
+    private String sanitizeFileUriWithSub(String originalFileUri) {
+        String[] splitUri = originalFileUri.split("\\?");
+        splitUri[0] = splitUri[0].substring(0, splitUri[0].length() - INCLUDE_SUB_DIR_SYMBOL_LENGTH);
+        return splitUri.length == 1 ? splitUri[0] : splitUri[0] + "?" + splitUri[1];
+    }
+
+    private boolean supportSubDirectory(String originalFileUri) {
+        String[] splitUri = originalFileUri.split("\\?");
+
+        // The symbol to include sub directories will be either '/*' or '\*' depending on the Operating system.
+        return splitUri[0].endsWith("/*") || splitUri[0].endsWith("\\*");
+    }
+
+    private static class ResolvedFileUri {
+        String resolvedUri;
+        boolean supportSubDirectories;
+
+        ResolvedFileUri(String fileUri, boolean supportSubDirectories) {
+            this.resolvedUri = fileUri;
+            this.supportSubDirectories = supportSubDirectories;
+        }
+    }
+
+    private ResolvedFileUri extractFileUri(String propertyForUri) {
+        String definedFileUri = vfsProperties.getProperty(propertyForUri);
+        if (StringUtils.isNotEmpty(definedFileUri)) {
+            if (supportSubDirectory(definedFileUri)) {
+                return new ResolvedFileUri(sanitizeFileUriWithSub(definedFileUri), true);
+            } else {
+                return new ResolvedFileUri(definedFileUri, false);
+            }
+        }
+        return null;
+    }
+
+    private String resolveActualOutUrl(FileObject fileObject, String definedOutUrl) {
+        String pathRelativeToInDirectory;
+        try {
+            pathRelativeToInDirectory = extractRelativePath(fileObject);
+        } catch (FileSystemException e) {
+            throw new SynapseException("Error accessing parent directory of processed file.", e);
+        }
+
+        String[] splitUri = definedOutUrl.split("\\?");
+        if (splitUri.length == 1) {
+            return (pathRelativeToInDirectory.isEmpty() ? definedOutUrl : definedOutUrl + pathRelativeToInDirectory);
+        } else {
+            return (pathRelativeToInDirectory.isEmpty() ? definedOutUrl :
+                    splitUri[0] + pathRelativeToInDirectory + "?" + splitUri[1]);
+        }
+    }
+
+    private String extractRelativePath(FileObject fileObject) throws FileSystemException {
+        
+        String parentPath = fileObject.getParent().getPublicURIString();
+        // Escape the meta characters . [ ] { } ( ) \ ^ $ | ? * +
+        String path = this.fileObject.getPublicURIString().replaceAll("([\\Q{}()[]^$|?*+&$\\E])",  "\\\\$1");
+        String pathRelativeToInDirectory = parentPath.replaceFirst(path, "");
+        return pathRelativeToInDirectory;
     }
 }

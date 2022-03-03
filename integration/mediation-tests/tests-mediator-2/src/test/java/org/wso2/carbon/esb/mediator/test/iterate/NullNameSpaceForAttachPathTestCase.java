@@ -29,6 +29,7 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import java.io.File;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * This tests Iterator Mediator, when no name space is specified for 'attachPath' field  and mediate the messages and
@@ -59,7 +60,7 @@ public class NullNameSpaceForAttachPathTestCase extends ESBIntegrationTest {
             // expected
         } catch (AxisFault message) {
             System.out.print(message.getReason());
-            assertEquals(message.getReason(), ESBTestConstant.UNEXPECTED_SENDING_OUT,
+            assertTrue(message.getReason().contains(ESBTestConstant.UNEXPECTED_SENDING_OUT),
                     "Iterator mediator worked even with an null name space for 'attachPath' field.");
         }
 

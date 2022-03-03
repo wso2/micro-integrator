@@ -44,6 +44,8 @@ public class InboundEndpointResource extends APIResource {
 
     private static Log LOG = LogFactory.getLog(InboundEndpointResource.class);
 
+    private static final String INBOUND_ENDPOINT_NAME = "inboundEndpointName";
+
     public InboundEndpointResource(String urlTemplate){
         super(urlTemplate);
     }
@@ -86,7 +88,14 @@ public class InboundEndpointResource extends APIResource {
                 SynapseConfiguration configuration = msgCtx.getConfiguration();
                 InboundEndpoint inboundEndpoint = configuration.getInboundEndpoint(inboundName);
                 if (inboundEndpoint != null) {
-                    response = Utils.handleTracing(inboundEndpoint.getAspectConfiguration(), inboundName, axisMsgCtx);
+                    String performedBy = Constants.ANONYMOUS_USER;
+                    if (msgCtx.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
+                        performedBy = msgCtx.getProperty(Constants.USERNAME_PROPERTY).toString();
+                    }
+                    JSONObject info = new JSONObject();
+                    info.put(INBOUND_ENDPOINT_NAME, inboundName);
+                    response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_INBOUND_ENDPOINT_TRACE, info,
+                                                   inboundEndpoint.getAspectConfiguration(), inboundName, axisMsgCtx);
                 } else {
                     response = Utils.createJsonError("Specified inbound endpoint ('" + inboundName + "') not found",
                             axisMsgCtx, Constants.BAD_REQUEST);

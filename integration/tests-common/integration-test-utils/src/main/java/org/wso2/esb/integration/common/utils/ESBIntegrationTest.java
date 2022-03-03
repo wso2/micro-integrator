@@ -109,7 +109,7 @@ public abstract class ESBIntegrationTest {
     private List<String> priorityExecutorList = null;
     private List<String[]> scheduledTaskList = null;
     private List<String> inboundEndpointList = null;
-    protected static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
+    public static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
     protected String hostName = null;
     protected int portOffset;
     protected final int DEFAULT_TIMEOUT = 60;
@@ -940,6 +940,11 @@ public abstract class ESBIntegrationTest {
         return deployCarbonApplicationUsingManagementApi("applications", carbonApp);
     }
 
+    protected String deployCarbonApplication(File carbonApp, Map<String, String> header) throws IOException {
+
+        return deployCarbonApplicationUsingManagementApi("applications", carbonApp, header);
+    }
+
     protected String unDeployCarbonApplication(String carbonApp) throws IOException {
 
         return unDeployCarbonApplicationUsingManagementApi("applications", carbonApp);
@@ -1027,6 +1032,20 @@ public abstract class ESBIntegrationTest {
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + artifactType;
         HttpResponse response = client.doPostWithMultipart(endpoint, cabonApp);
+        return client.getResponsePayload(response);
+    }
+
+    private String deployCarbonApplicationUsingManagementApi(String artifactType, File cabonApp, Map<String, String> header) throws IOException {
+        if (!isManagementApiAvailable) {
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).
+                    atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+                              until(isManagementApiAvailable());
+        }
+        SimpleHttpClient client = new SimpleHttpClient();
+
+        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
+                          + artifactType;
+        HttpResponse response = client.doPostWithMultipart(endpoint, cabonApp, header);
         return client.getResponsePayload(response);
     }
 

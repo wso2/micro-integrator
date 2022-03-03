@@ -49,6 +49,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.KeyStore;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -63,6 +64,8 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
 
     private static final String FAULTY_CAPP = "invalidCompositeApplication_1.0.0.car";
     private static final String CAPP_WITH_META_AND_ENV = "blaCompositeExporter_1.0.0-SNAPSHOT.car";
+    private static final String CAPP_WITH_PROXY_META = "proxyCompositeExporter_1.0.0-SNAPSHOT.car";
+    private static final String CAPP_WITHOUT_META = "HelloWorldWithoutMetadataCompositeExporter_1.0.0-SNAPSHOT.car";
     private static final String NEW_CAPP_NAME = "demoCompositeExporter_1.0.0-SNAPSHOT.car";
     private static final String MODIFIED_NEW_CAPP_NAME = "changed_demoCompositeExporter_1.0.0-SNAPSHOT.car";
     private static final String SH_FILE_NAME = "micro-integrator.sh";
@@ -118,10 +121,10 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
             }
         };
 
-        httpsServer.createContext("/api/am/service-catalog/v0/services", new FirstController());
-        httpsServer.createContext("/second/api/am/service-catalog/v0/services", new SecondController());
-        httpsServer.createContext("/third/api/am/service-catalog/v0/services", new ThirdController());
-        httpsServer.createContext("/fourth/api/am/service-catalog/v0/services", new FourthController());
+        httpsServer.createContext("/api/am/service-catalog/v1/services", new FirstController());
+        httpsServer.createContext("/second/api/am/service-catalog/v1/services", new SecondController());
+        httpsServer.createContext("/third/api/am/service-catalog/v1/services", new ThirdController());
+        httpsServer.createContext("/fourth/api/am/service-catalog/v1/services", new FourthController());
         httpsServer.setExecutor(Executors.newCachedThreadPool());
         httpsServer.setHttpsConfigurator(httpsConfigurator);
         httpsServer.start();
@@ -142,12 +145,42 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
         serverConfigurationManager.removeFromCarbonapps(FAULTY_CAPP);
         serverConfigurationManager.restartMicroIntegrator();
         assertTrue(Utils.checkForLog(carbonLogReader,
-                "Could not find metadata to upload, aborting the service-catalog uploader", 10),
+                "Metadata not included, hence not publishing to Service Catalog", 10),
                 "Did not receive the expected info log");
     }
 
     @Test(groups = {"wso2.esb"},
-            description = "Test service catalog without setting env variables", priority = 3)
+            description = "Test service catalog by hot deploying CAapp without Metadata)", priority = 3)
+    public void testServiceCatalogHotDeploymentWithoutMetaData()
+            throws IOException, URISyntaxException, AutomationUtilException, InterruptedException {
+        carbonLogReader.clearLogs();
+        File metadataCAPP = new File(
+                getESBResourceLocation() + File.separator + SERVICE_CATALOG_FOLDER + File.separator +
+                        CAPP_WITHOUT_META);
+        serverConfigurationManager.copyToCarbonapps(metadataCAPP);
+        assertTrue(Utils.checkForLog(carbonLogReader,
+                        "Metadata not included, hence not publishing to Service Catalog", 20),
+                "Did not receive the expected info log");
+        serverConfigurationManager.removeFromCarbonapps(CAPP_WITHOUT_META);
+    }
+
+    @Test(groups = {"wso2.esb"},
+            description = "Test service catalog by hot deploying CAapp with Metadata)", priority = 4)
+    public void testServiceCatalogHotDeploymentWithMetaData()
+            throws IOException, URISyntaxException, AutomationUtilException, InterruptedException {
+        carbonLogReader.clearLogs();
+        File metadataCAPP = new File(
+                getESBResourceLocation() + File.separator + SERVICE_CATALOG_FOLDER + File.separator +
+                        CAPP_WITH_META_AND_ENV);
+        serverConfigurationManager.copyToCarbonapps(metadataCAPP);
+        assertTrue(Utils.checkForLog(carbonLogReader,
+                        "Successfully updated the service catalog", 20),
+                "Did not receive the expected info log");
+        serverConfigurationManager.removeFromCarbonapps(CAPP_WITH_META_AND_ENV);
+    }
+
+    @Test(groups = {"wso2.esb"},
+            description = "Test service catalog without setting env variables", priority = 5)
     public void testServiceCatalogMetadataWithoutEnv()
             throws IOException, AutomationUtilException, InterruptedException {
         File metadataCAPP = new File(
@@ -156,11 +189,11 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
         serverConfigurationManager.copyToCarbonapps(metadataCAPP);
         serverConfigurationManager.restartMicroIntegrator();
         assertTrue(Utils.checkForLog(carbonLogReader,
-                "Environment variables are not configured correctly", 10), "Did not receive the expected info log");
+                "Successfully updated the service catalog", 10), "Did not receive the expected info log");
     }
 
     @Test(groups = {"wso2.esb"},
-            description = "Test service catalog after setting env variables", priority = 4)
+            description = "Test service catalog after setting env variables", priority = 6)
     public void testServiceCatalogMetadataWithEnv()
             throws IOException, AutomationUtilException, InterruptedException {
 
@@ -184,7 +217,7 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {"wso2.esb"},
-            description = "Test the ZIP file created by the service catalog", priority = 5)
+            description = "Test the ZIP file created by the service catalog", priority = 7)
     public void testServiceCatalogZipFile() throws CarbonException, FileNotFoundException {
         File extracted = chekAndExtractPayloadZip();
         assertTrue(extracted.exists(), "Error occurred while extracting the ZIP");
@@ -200,7 +233,7 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {"wso2.esb"},
-            description = "Test MI is uploading only newly added APIs", priority = 6)
+            description = "Test MI is uploading only newly added APIs", priority = 8)
     public void testUploadOnlyNewAPIs()
             throws CarbonException, IOException, AutomationUtilException, InterruptedException {
         File newCAPP = new File(
@@ -222,7 +255,7 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {"wso2.esb"},
-            description = "Test MI is uploading only modified APIs", priority = 7)
+            description = "Test MI is uploading only modified APIs", priority = 9)
     public void testUploadOnlyModifiedAPIs()
             throws CarbonException, IOException, AutomationUtilException, URISyntaxException, InterruptedException {
         // remove CAPP and add the modified one
@@ -246,7 +279,7 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {"wso2.esb"},
-            description = "Test restart MI without any CAPP changes", priority = 8)
+            description = "Test restart MI without any CAPP changes", priority = 10)
     public void testMIRestart() throws IOException, AutomationUtilException, InterruptedException {
         serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + SERVICE_CATALOG_FOLDER + File.separator + "FourthAPI" +
@@ -258,6 +291,37 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
                 "Did not receive the expected info log");
         File zipFile = new File(payloadZipPath);
         assertFalse(zipFile.exists(), "Payload.zip file should not be created");
+    }
+
+    @Test(groups = {"wso2.esb"}, description = "Test service catalog with proxy services", priority = 11)
+    public void testServiceCatalogProxyServiceMetadata()
+            throws CarbonException, IOException, AutomationUtilException, InterruptedException {
+        File metadataCAPP = new File(getESBResourceLocation() + File.separator
+                + SERVICE_CATALOG_FOLDER + File.separator + CAPP_WITH_PROXY_META);
+        serverConfigurationManager.copyToCarbonapps(metadataCAPP);
+        // replace server startup scripts
+        String shFile = CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + SH_FILE_NAME;
+        String batFile = CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + BAT_FILE_NAME;
+        File oldShFile = new File( shFile + ".backup");
+        File newShFile = new File(shFile);
+        if (new File(shFile).delete() && oldShFile.renameTo(newShFile)) {
+            assertTrue(newShFile.exists(), "Error while replacing default sh script");
+        }
+        File oldBatFile = new File( batFile + ".backup");
+        File newBatFile = new File(batFile);
+        if (new File(batFile).delete() && oldBatFile.renameTo(newBatFile)) {
+            assertTrue(newBatFile.exists(), "Error while replacing default bat script");
+        }
+        serverConfigurationManager.restartMicroIntegrator();
+        assertTrue(Utils.checkForLog(carbonLogReader,
+                "Successfully updated the service catalog", 10), "Did not receive the expected info log");
+        File extracted = chekAndExtractPayloadZip();
+        assertTrue(extracted.exists(), "Error occurred while extracting the ZIP");
+        File metadataFile = new File(extracted, "SampleProxyService_proxy_v1.0.0");
+        File yamlFile = new File(metadataFile, "metadata.yaml");
+        assertTrue(yamlFile.exists(), "Could not find the metadata yaml file");
+        File wsdlFile = new File(metadataFile, "definition.wsdl");
+        assertTrue(wsdlFile.exists(), "Could not find the definition wsdl file");
     }
 
     private static File chekAndExtractPayloadZip() throws CarbonException {

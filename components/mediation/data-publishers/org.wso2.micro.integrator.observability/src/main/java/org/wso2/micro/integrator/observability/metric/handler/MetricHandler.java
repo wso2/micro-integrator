@@ -17,6 +17,7 @@
  */
 package org.wso2.micro.integrator.observability.metric.handler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.AbstractExtendedSynapseHandler;
@@ -30,6 +31,7 @@ import org.apache.synapse.rest.RESTUtils;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.observability.metric.handler.prometheus.reporter.PrometheusReporter;
 import org.wso2.micro.integrator.observability.util.MetricConstants;
 
@@ -56,12 +58,16 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
     private static final String JAVA_HOME = System.getProperty(MetricConstants.JAVA_HOME);
     private int internalHttpApiPort = getInternalHttpApiPort();
 
+
     @Override
     public boolean handleServerInit() {
         metricReporterInstance = this.getMetricReporter();
+        CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
+        String miVersion = serverConfig.getServerVersion();
+        String updateLevel = System.getProperty(MetricConstants.UPDATE_LEVEL);
         metricReporterInstance.initMetrics();
-
         metricReporterInstance.serverUp(HOST, PORT, JAVA_HOME, JAVA_VERSION);
+        metricReporterInstance.serverVersion(miVersion, updateLevel);
         return true;
     }
 
@@ -128,12 +134,19 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
 
             if ((serviceInvokePort != internalHttpApiPort) && (null !=
                     axis2MessageContext.getProperty(MetricConstants.SERVICE_PREFIX))) {
-                String context = axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).
+                String url = axis2MessageContext.getProperty(MetricConstants.TRANSPORT_IN_URL).
                         toString();
-                String apiInvocationUrl = axis2MessageContext.getProperty(MetricConstants.SERVICE_PREFIX).
-                        toString() + context.replaceFirst(DELIMITER, EMPTY);
-                String apiName = getApiName(context, synCtx);
+                String apiName = getApiName(url, synCtx);
                 if (apiName != null) {
+                    String context = "";
+                    if (synCtx.getConfiguration() != null) {
+                        API api = synCtx.getConfiguration().getAPI(apiName);
+                        if (api != null) {
+                            context = api.getContext();
+                        }
+                    }
+                    String apiInvocationUrl = axis2MessageContext.getProperty(MetricConstants.SERVICE_PREFIX).
+                            toString() + context.replaceFirst(DELIMITER, EMPTY);
                     incrementAPICount(apiName, apiInvocationUrl);
                     startTimers(synCtx, apiName, SynapseConstants.FAIL_SAFE_MODE_API, apiInvocationUrl);
                 }
@@ -345,11 +358,12 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         for (API api : synCtx.getEnvironment().getSynapseConfiguration().getAPIs()) {
             if (RESTUtils.matchApiPath(contextPath, api.getContext())) {
                 apiName = api.getName();
-                if (api.getVersionStrategy().getVersion() != null && !"".equals(api.getVersionStrategy().
-                        getVersion())) {
-                    apiName = apiName + ":v" + api.getVersionStrategy().getVersion();
+                synCtx.setProperty(RESTConstants.PROCESSED_API, api);
+                // if we match to a versioned API, search should stop.
+                // else check other API's to see if there is a match
+                if (StringUtils.isNotEmpty(api.getVersion())) {
+                    break;
                 }
-                 synCtx.setProperty(RESTConstants.PROCESSED_API, api);
             }
         }
         return apiName;
