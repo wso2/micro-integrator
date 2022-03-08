@@ -113,7 +113,7 @@ public class CarbonAppResource extends APIResource {
                 if (Objects.nonNull(param)) {
                     String acceptHeader = (String) SecurityUtils.getHeaders(axis2MessageContext)
                                                                 .get(HTTPConstants.HEADER_ACCEPT);
-                    if (acceptHeader.equalsIgnoreCase(Constants.MEDIA_TYPE_APPLICATION_OCTET_STREAM)) {
+                    if (Constants.MEDIA_TYPE_APPLICATION_OCTET_STREAM.equals(acceptHeader)) {
                         populateFileContent(messageContext, param);
                     } else {
                         populateCarbonAppData(messageContext, param);
