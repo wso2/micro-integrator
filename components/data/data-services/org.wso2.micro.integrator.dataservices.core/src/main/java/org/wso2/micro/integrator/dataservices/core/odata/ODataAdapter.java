@@ -1100,6 +1100,12 @@ public class ODataAdapter implements ServiceHandler {
         errorResponse.writeError(oDataServerError);
     }
 
+    @Override
+    public void apply(DataRequest dataRequest, ODataResponse oDataResponse) 
+            throws ODataLibraryException, ODataApplicationException {
+        oDataResponse.setStatusCode(HttpStatusCode.NOT_IMPLEMENTED.getStatusCode());
+    }
+
     /**
      * Returns entity collection from the data entry list to use in olingo.  .
      *

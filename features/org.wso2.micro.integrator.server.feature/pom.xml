@@ -169,7 +169,7 @@
                                 <bundleDef>
                                     org.wso2.orbit.commons-httpclient:commons-httpclient:${orbit.version.commons.httpclient}
                                 </bundleDef>
-                                <bundleDef>commons-io.wso2:commons-io:${orbit.version.commons.io}</bundleDef>
+                                <bundleDef>commons-io:commons-io:${commons-io.version}</bundleDef>
 <!--                                org.apache.commons.collections.bidimap-->
                                 <bundleDef>
                                     org.wso2.orbit.commons-collections:commons-collections:${orbit.version.commons.collection}
