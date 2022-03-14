@@ -619,6 +619,7 @@
                 <include>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar</include>
                 <include>commons-codec:commons-codec:jar</include>
                 <include>com.hubspot.jinjava:jinjava:jar</include>
+                <include>org.slf4j:slf4j-api:jar</include>
                 <include>commons-lang.wso2:commons-lang:jar</include>
                 <include>org.apache.commons:commons-lang3:jar</include>
                 <include>org.wso2.config.mapper:config-mapper:jar</include>
