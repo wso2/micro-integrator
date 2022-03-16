@@ -164,7 +164,7 @@ public class DataSourceUtils {
 		}
 		Element updatedElement = (Element) element.cloneNode(true);
 		for (Node child = updatedElement.getFirstChild(); child != null; child = child.getNextSibling()) {
-			if (child instanceof Element && PWD_ELEMENT.equals(child.getNodeName())) {
+			if (child instanceof Element && PWD_ELEMENT.equals(child.getNodeName()) && child.getFirstChild() != null) {
 				child.getFirstChild().setNodeValue(PWD_MASKED_VALUE);
 			}
 			if (child instanceof Element && URL_ELEMENT.equals(child.getNodeName())) {
