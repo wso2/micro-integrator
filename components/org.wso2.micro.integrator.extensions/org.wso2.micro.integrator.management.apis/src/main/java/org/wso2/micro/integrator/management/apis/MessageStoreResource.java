@@ -170,8 +170,6 @@ public class MessageStoreResource implements MiApiResource {
         jsonObject.put(Constants.NAME, messageStore.getName());
         jsonObject.put(CONTAINER_ATTRIBUTE, messageStore.getArtifactContainerName());
         jsonObject.put(FILE_NAME_ATTRIBUTE, messageStore.getFileName());
-        jsonObject.put(CONSUMER_ATTRIBUTE, messageStore.getConsumer());
-        jsonObject.put(PRODUCER_ATTRIBUTE, messageStore.getProducer());
         Map<String, Object> parameters = new HashMap<>(messageStore.getParameters());
         parameters.replaceAll((name, value) -> {
             if (name.contains(PASSWORD)) {
