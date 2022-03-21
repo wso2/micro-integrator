@@ -19,6 +19,8 @@ package org.wso2.micro.integrator.initializer.dashboard;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Manages deployed and undeployed artifacts in micro integrator to notify the dashboard.
@@ -28,16 +30,25 @@ public class ArtifactDeploymentListener {
     private ArtifactDeploymentListener() {
 
     }
+    private static final Log log = LogFactory.getLog(ArtifactDeploymentListener.class);
 
     private static JsonArray deployedArtifacts = new JsonArray();
     private static JsonArray undeployedArtifacts = new JsonArray();
 
     public static void addToDeployedArtifactsQueue(JsonObject deployedArtifact) {
-        deployedArtifacts.add(deployedArtifact);
+        if (HeartBeatComponent.isDashboardConfigured()) {
+            log.debug("Adding " + deployedArtifact.get("type").toString() + " " +
+                      deployedArtifact.get("name").toString() + " to deployed artifacts queue.");
+            deployedArtifacts.add(deployedArtifact);
+        }
     }
 
     public static void addToUndeployedArtifactsQueue(JsonObject undeployedArtifact) {
-        undeployedArtifacts.add(undeployedArtifact);
+        if (HeartBeatComponent.isDashboardConfigured()) {
+            log.debug("Adding " + undeployedArtifact.get("type").toString() + " " +
+                      undeployedArtifact.get("name").toString() + " to undeployed artifacts queue.");
+            undeployedArtifacts.add(undeployedArtifact);
+        }
     }
 
     public static JsonArray getDeployedArtifacts() {

@@ -162,6 +162,13 @@ public class Constants {
     public static final String AUDIT_LOG_TYPE_SEQUENCE_TRACE = "sequence_trace";
     public static final String AUDIT_LOG_TYPE_ENDPOINT_TRACE = "endpoint_trace";
 
+    public static final String PROXY_SERVICES = "proxy-services";
+    public static final String APIS = "apis";
+    public static final String INBOUND_ENDPOINTS = "inbound-endpoints";
+    public static final String SEQUENCE_TEMPLATE = "templates_sequence";
+    public static final String SEQUENCES = "sequences";
+    public static final String ENDPOINTS = "endpoints";
+
     public static final String AUDIT_LOG_ACTION_ENABLE = "enabled";
     public static final String AUDIT_LOG_ACTION_DISABLED = "disabled";
     public static final String AUDIT_LOG_ACTION_CREATED = "created";
