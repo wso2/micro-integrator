@@ -94,7 +94,8 @@ public class InboundEndpointResource extends APIResource {
                     }
                     JSONObject info = new JSONObject();
                     info.put(INBOUND_ENDPOINT_NAME, inboundName);
-                    response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_INBOUND_ENDPOINT_TRACE, info,
+                    response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_INBOUND_ENDPOINT_TRACE,
+                                                   Constants.INBOUND_ENDPOINTS, info,
                                                    inboundEndpoint.getAspectConfiguration(), inboundName, axisMsgCtx);
                 } else {
                     response = Utils.createJsonError("Specified inbound endpoint ('" + inboundName + "') not found",

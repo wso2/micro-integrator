@@ -127,8 +127,9 @@ public class TemplateResource extends APIResource {
             JSONObject info = new JSONObject();
             info.put(SEQUENCE_NAME, seqTempName);
             info.put(SEQUENCE_TYPE, SEQUENCE_TEMPLATE_TYPE);
-            response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_SEQUENCE_TEMPLATE_TRACE, info,
-                                           sequenceTemplate.getAspectConfiguration(), seqTempName, axisMsgCtx);
+            response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_SEQUENCE_TEMPLATE_TRACE,
+                                           Constants.SEQUENCE_TEMPLATE, info, sequenceTemplate.getAspectConfiguration(),
+                                           seqTempName, axisMsgCtx);
         } else {
             response = Utils.createJsonError("Specified sequence template ('" + seqTempName + "') not found",
                     axisMsgCtx, Constants.BAD_REQUEST);

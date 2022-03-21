@@ -117,8 +117,9 @@ public class EndpointResource implements MiApiResource {
                 AspectConfiguration aspectConfiguration = ((AbstractEndpoint) endpoint).getDefinition().getAspectConfiguration();
                 JSONObject info = new JSONObject();
                 info.put(ENDPOINT_NAME, endpointName);
-                response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_ENDPOINT_TRACE, info,
-                                               aspectConfiguration, endpointName, axisMsgCtx);
+                response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_ENDPOINT_TRACE,
+                                               Constants.ENDPOINTS, info, aspectConfiguration, endpointName,
+                                               axisMsgCtx);
             } else {
                 response = Utils.createJsonError("Specified endpoint ('" + endpointName + "') not found", axisMsgCtx,
                         Constants.BAD_REQUEST);

@@ -76,6 +76,7 @@ public class HeartBeatComponent {
     private static final String CHANGE_NOTIFICATION = "changeNotification";
     private static final String DEPLOYED_ARTIFACTS = "deployedArtifacts";
     private static final String UNDEPLOYED_ARTIFACTS = "undeployedArtifacts";
+    private static final String STATE_CHANGED_ARTIFACTS = "stateChangedArtifacts";
     public static void invokeHeartbeatExecutorService() {
 
         String heartbeatApiUrl = configs.get(DASHBOARD_CONFIG_URL)  + "/heartbeat";
@@ -115,8 +116,11 @@ public class HeartBeatComponent {
                                                                     .get(DEPLOYED_ARTIFACTS).getAsJsonArray().size();
                     int undeployedArtifactsCount = heartbeatPayload.get(CHANGE_NOTIFICATION).getAsJsonObject()
                                                                     .get(UNDEPLOYED_ARTIFACTS).getAsJsonArray().size();
+                    int updatedArtifactsCount = heartbeatPayload.get(CHANGE_NOTIFICATION).getAsJsonObject()
+                                                                .get(STATE_CHANGED_ARTIFACTS).getAsJsonArray().size();
                     ArtifactDeploymentListener.removeFromUndeployedArtifactsQueue(undeployedArtifactsCount);
                     ArtifactDeploymentListener.removeFromDeployedArtifactsQueue(deployedArtifactsCount);
+                    ArtifactUpdateListener.removeFromUpdatedArtifactQueue(updatedArtifactsCount);
                 }
             } catch (IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
                 log.debug("Error occurred while sending heartbeat request to dashboard.");
@@ -188,8 +192,10 @@ public class HeartBeatComponent {
         JsonObject changeNotification = new JsonObject();
         JsonArray deployedArtifacts = ArtifactDeploymentListener.getDeployedArtifacts();
         JsonArray undeployedArtifacts = ArtifactDeploymentListener.getUndeployedArtifacts();
+        JsonArray stateChangedArtifacts = ArtifactUpdateListener.getStateChangedArtifacts();
         changeNotification.add(DEPLOYED_ARTIFACTS, deployedArtifacts);
         changeNotification.add(UNDEPLOYED_ARTIFACTS, undeployedArtifacts);
+        changeNotification.add(STATE_CHANGED_ARTIFACTS, stateChangedArtifacts);
         return changeNotification;
     }
 
