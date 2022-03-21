@@ -74,7 +74,7 @@ algorithm = "AES"
 
 # [[transport.phase_order]]
 # Entire phase_order list can be found under 'Axis2 Phases' in <MI_HOME>/repository/resources/conf/deployment-full.toml.
-# If an Axis2 phase needs to added/removed, please include all of the
+# If an Axis2 phase needs to added/removed, include all of the
 # Inflow, OutFlow & OutFaultFlow phases found in the deployment-full.toml and change them as needed.
 
 # [system.parameter]

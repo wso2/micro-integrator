@@ -1126,7 +1126,7 @@ dashboard_url = "https://localhost:9743/dashboard/api/"
 
 #################### Axis2 Phases ##########################################
 
-# If you want to add/remove an Axis2 phase, please include all of the following
+# If you want to add/remove an Axis2 phase, include all of the following
 # Inflow, OutFlow & OutFaultFlow phases in the deployment.toml and change them as needed.
 
 #====== InFlow phase ==========#
