@@ -1104,15 +1104,272 @@ user.password = "pwd-2"
 [internal_apis.file_user_store]
 enable = false
 
-####################Transaction Counter Handler ############################
+#################### Transaction Counter Handler ############################
 [transaction_counter]
 enable = true
 data_source = "WSO2_COORDINATION_DB"
 update_interval = 2
 
-#################### Service Catalog ############################
+
+#################### Service Catalog #######################################
 [[service_catalog]]
 apim_host = "https://127.0.0.1:9443"
 enable = true
 username = "admin"
 password = "admin"
+
+
+#################### MI Dashboard #########################################
+[dashboard_config]
+dashboard_url = "https://localhost:9743/dashboard/api/"
+
+
+#################### Axis2 Phases ##########################################
+
+# If you want to add/remove an Axis2 phase, include all of the following
+# Inflow, OutFlow & OutFaultFlow phases in the deployment.toml and change them as needed.
+
+#====== InFlow phase ==========#
+[[transport.phase_order]]
+phase_type = "InFlow"
+
+[[transport.phase_order.phases]]
+phase_name = "MsgInObservation"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.synapse.transport.passthru.util.TraceMessageBuilderDispatchHandler"
+handler_name = "TraceMessageBuilderDispatchHandler"
+
+[[transport.phase_order.phases]]
+phase_name = "Validation"
+
+[[transport.phase_order.phases]]
+phase_name = "Transport"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"
+handler_name = "IntegratorStatefulHandler"
+handler_order_phase = "Transport"
+
+[[transport.phase_order.phases.handlers.handler_handlers]]
+handler_name="JSONMessageHandler"
+handler_class="org.apache.axis2.json.gson.JSONMessageHandler"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"
+handler_name = "RelaySecuirtyMessageBuilderDispatchandler"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"
+handler_name = "SOAPActionBasedDispatcher"
+handler_order_phase = "Transport"
+
+[[transport.phase_order.phases]]
+phase_name = "Addressing"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.AddressingBasedDispatcher"
+handler_name = "AddressingBasedDispatcher"
+handler_order_phase = "Addressing"
+
+[[transport.phase_order.phases]]
+phase_name = "Security"
+
+[[transport.phase_order.phases]]
+phase_name = "PreDispatch"
+
+[[transport.phase_order.phases]]
+phase_name = "Dispatch"
+phase_class = "org.apache.axis2.engine.DispatchPhase"
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"
+handler_name = "IntegratorStatefulHandler"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.json.gson.JSONMessageHandler"
+handler_name = "JSONMessageHandler"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"
+handler_name = "SOAPActionBasedDispatcher"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.RequestURIOperationDispatcher"
+handler_name = "RequestURIOperationDispatcher"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher"
+handler_name = "SOAPMessageBodyBasedDispatcher"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"
+handler_name = "HTTPLocationBasedDispatcher"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.synapse.core.axis2.SynapseDispatcher"
+handler_name = "SynapseDispatcher"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.synapse.core.axis2.SynapseMustUnderstandHandler"
+handler_name = "SynapseMustUnderstandHandler"
+
+[[transport.phase_order.phases]]
+phase_name = "RMPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "OpPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "AuthPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "MUPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "OperationInPhase"
+
+#====== OutFlow phase ==========#
+[[transport.phase_order]]
+phase_type = "OutFlow"
+
+[[transport.phase_order.phases]]
+phase_name = "UEPPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "RMPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "MUPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "OpPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "OperationOutPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "PolicyDetermination"
+
+[[transport.phase_order.phases]]
+phase_name = "PTSecurityOutPhase"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"
+handler_name = "RelaySecuirtyMessageBuilderDispatchandler"
+
+[[transport.phase_order.phases]]
+phase_name = "MessageOut"
+
+[[transport.phase_order.phases]]
+phase_name = "Security"
+
+[[transport.phase_order.phases]]
+phase_name = "MsgOutObservation"
+
+#====== InFaultFlow phase ==========#
+[[transport.phase_order]]
+phase_type = "InFaultFlow"
+
+[[transport.phase_order.phases]]
+phase_name = "MsgInObservation"
+
+[[transport.phase_order.phases]]
+phase_name = "Validation"
+
+[[transport.phase_order.phases]]
+phase_name = "Transport"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"
+handler_name = "IntegratorStatefulHandler"
+handler_order_phase = "Transport"
+
+[[transport.phase_order.phases.handlers.handler_handlers]]
+handler_name="JSONMessageHandlerCarbon"
+handler_class="org.apache.axis2.json.gson.JSONMessageHandler"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"
+handler_name = "SOAPActionBasedDispatcher"
+handler_order_phase = "Transport"
+
+[[transport.phase_order.phases]]
+phase_name = "Addressing"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.AddressingBasedDispatcher"
+handler_name = "AddressingBasedDispatcher"
+handler_order_phase = "Addressing"
+
+[[transport.phase_order.phases]]
+phase_name = "Security"
+
+[[transport.phase_order.phases]]
+phase_name = "PreDispatch"
+
+[[transport.phase_order.phases]]
+phase_name = "Dispatch"
+phase_class = "org.apache.axis2.engine.DispatchPhase"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"
+handler_name = "IntegratorStatefulHandler"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"
+handler_name = "SOAPActionBasedDispatcher"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.RequestURIOperationDispatcher"
+handler_name = "RequestURIOperationDispatcher"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher"
+handler_name = "SOAPMessageBodyBasedDispatcher"
+
+[[transport.phase_order.phases.handlers]]
+handler_class = "org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"
+handler_name = "HTTPLocationBasedDispatcher"
+
+[[transport.phase_order.phases]]
+phase_name = "RMPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "OpPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "MUPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "OperationInFaultPhase"
+
+#====== OutFaultFlow phase ==========#
+[[transport.phase_order]]
+phase_type = "OutFaultFlow"
+
+[[transport.phase_order.phases]]
+phase_name = "UEPPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "RMPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "MUPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "OperationOutFaultPhase"
+
+[[transport.phase_order.phases]]
+phase_name = "PolicyDetermination"
+
+[[transport.phase_order.phases]]
+phase_name = "MessageOut"
+
+[[transport.phase_order.phases]]
+phase_name = "Security"
+
+[[transport.phase_order.phases]]
+phase_name = "Transport"
+
+[[transport.phase_order.phases]]
+phase_name = "MsgOutObservation"
