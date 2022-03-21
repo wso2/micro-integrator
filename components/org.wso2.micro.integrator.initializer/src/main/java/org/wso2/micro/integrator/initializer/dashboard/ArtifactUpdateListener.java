@@ -20,6 +20,8 @@ package org.wso2.micro.integrator.initializer.dashboard;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Manages updated artifacts in micro integrator using the management api to notify the dashboard.
@@ -30,12 +32,17 @@ public class ArtifactUpdateListener {
 
     }
 
+    private static final Log log = LogFactory.getLog(ArtifactUpdateListener.class);
+
     private static JsonArray stateChangedArtifacts = new JsonArray();
     
     public static void addToUpdatedArtifactsQueue(String artifactType, String name) {
-
-        JsonObject updatedArtifact = getUpdatedArtifact(artifactType, name);
-        stateChangedArtifacts.add(updatedArtifact);
+        if (HeartBeatComponent.isDashboardConfigured()) {
+            JsonObject updatedArtifact = getUpdatedArtifact(artifactType, name);
+            log.debug("Adding " + updatedArtifact.get("type").toString() + " " + updatedArtifact.get("name").toString() +
+                     " to state changed artifacts queue.");
+            stateChangedArtifacts.add(updatedArtifact);
+        }
     }
 
     public static JsonArray getStateChangedArtifacts() {
