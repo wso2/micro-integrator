@@ -1472,10 +1472,10 @@
         <axis2.wso2.integration.test.version>1.6.1-wso2v64</axis2.wso2.integration.test.version>
         <imp.pkg.version.axis2>[1.6.1, 1.7.0)</imp.pkg.version.axis2>
 
-        <carbon.analytics.common.version>5.2.38</carbon.analytics.common.version>
+        <carbon.analytics.common.version>5.2.41</carbon.analytics.common.version>
         <carbon.analytics.common.imp.pkg.version>[5.2.0, 6.0.0)</carbon.analytics.common.imp.pkg.version>
         <fasterxml.jackson.version>2.13.1</fasterxml.jackson.version>
-        <carbon.commons.version>4.7.45</carbon.commons.version>
+        <carbon.commons.version>4.7.49</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
         <wss4j.version>1.6.0-wso2v2</wss4j.version>
