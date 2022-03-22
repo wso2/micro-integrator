@@ -23,7 +23,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
-        <title>WSO2 MI v@product.version@ Released - April 2021</title>
+        <title>WSO2 MI v@product.version@ Released - March 2022</title>
     </head>
     <body>
         <div id="header">
@@ -95,18 +95,12 @@
             <h2>What's new in this release</h2>
             <p>WSO2 MI @product.version@ is shipped with the following new features:</p>
             <ul>
-                <li>Data Service Call Mediator to invoke data services directly via JVM</li>
-                <li>Enhanced Micro Integrator Dashboard for monitoring and managing multiple MI instances</li>
-                <li>OAuth support for HTTP Endpoints</li>
-                <li>Support to Integrate with Hashicorp Secure Vault</li>
-                <li>Support for OpenAPI 3.0 swagger definition</li>
-                <li>Improved json-eval function to evaluate against a property</li>
-                <li>Improvements to Call mediator</li>
-                <li>FreeMarker support for PayloadFactory mediator</li>
-                <li>Service Catalog to make integration services discoverable to the API Management Layer</li>
+                <li>SOAP/Proxy Services support in Service Catalog</li>
+                <li>Audit log capability for Micro Integrator</li>
+                <li>Secondary user store support for the Micro Integrator runtime</li>
             </ul>
 
-            <p>View the full list of bug fixes and improvements <a href="https://github.com/wso2/micro-integrator/issues?q=is%3Aissue+closed%3A2020-07-20..2021-04-12+">here</a></p>
+            <p>View the full list of bug fixes and improvements <a href="https://github.com/wso2/micro-integrator/issues?q=is%3Aissue+closed%3A2021-04-12..2022-03-22+">here</a></p>
 
             <h2>Known Issues</h2>
             <p>
@@ -128,7 +122,7 @@
             </p>
             <ul>
                 <li>
-                    User Forum: <a href="https://ei-slack.wso2.com/">Slack Channel</a>
+                    User Forum: <a href="https://wso2-apim.slack.com/">Slack Channel</a>
                 </li>
                 <li>
                     User Forum: <a href="https://stackoverflow.com/questions/tagged/wso2mi">StackOverflow</a>
