@@ -495,6 +495,12 @@
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.event.core</artifactId>
                 <version>${carbon.commons.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ops4j.pax.logging</groupId>
+                        <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.quartz-scheduler.wso2</groupId>
@@ -510,6 +516,12 @@
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.event.server.feature</artifactId>
                 <version>${carbon.commons.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ops4j.pax.logging</groupId>
+                        <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -725,6 +737,12 @@
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
                 <version>${carbon.analytics.common.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ops4j.pax.logging</groupId>
+                        <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
@@ -785,6 +803,12 @@
                 <groupId>org.wso2.carbon.crypto</groupId>
                 <artifactId>org.wso2.carbon.crypto.api</artifactId>
                 <version>${carbon.crypto.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ops4j.pax.logging</groupId>
+                        <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
