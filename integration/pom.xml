@@ -50,6 +50,10 @@
                         <groupId>org.wso2.carbon.identity.framework</groupId>
                         <artifactId>org.wso2.carbon.security.mgt</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.ops4j.pax.logging</groupId>
+                        <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -61,6 +65,12 @@
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
                 <version>${carbon.deployment.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ops4j.pax.logging</groupId>
+                        <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.automation</groupId>
@@ -72,6 +82,12 @@
                 <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
                 <version>${automation.framework.utils.version}</version>
                 <scope>compile</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ops4j.pax.logging</groupId>
+                        <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.automationutils</groupId>
@@ -123,6 +139,12 @@
                 <artifactId>org.wso2.carbon.aarservices.stub</artifactId>
                 <version>${carbon.deployment.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ops4j.pax.logging</groupId>
+                        <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.mediation</groupId>
@@ -384,6 +406,12 @@
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
                 <version>${carbon.analytics.common.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ops4j.pax.logging</groupId>
+                        <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
