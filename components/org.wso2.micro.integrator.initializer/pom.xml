@@ -101,7 +101,7 @@
             <artifactId>org.wso2.carbon.mediation.library</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-io.wso2</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
     </dependencies>
