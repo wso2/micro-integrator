@@ -89,7 +89,7 @@ org.eclipse.equinox.p2.director_2.3.100.v20140224-1921.jar                      
 org.eclipse.osgi.compatibility.state_1.0.200.v20160504-1419.jar                                     bundle         epl1
 tomcat-jsp-api_9.0.58.wso2v1.jar                                                                    bundle         apache2
 org.apache.commons.commons-io_2.11.0.jar                                                            bundle         apache2
-org.ops4j.pax.logging.pax-logging-api_2.1.0.wso2v3.jar                                              bundle         apache2
+org.ops4j.pax.logging.pax-logging-api_2.1.0.wso2v4.jar                                              bundle         apache2
 odata-server_4.4.0.wso2v3.jar                                                                       bundle         apache2
 org.eclipse.ecf.filetransfer_5.0.0.v20130604-1622.jar                                               bundle         epl1
 org.wso2.micro.integrator.dataservices.common_4.1.0.jar                                             bundle         apache2
@@ -107,7 +107,7 @@ swagger-core-1.6.5.jar                                                          
 swagger-models-2.1.12.jar                                                                           jarinbundle    apache2
 org.eclipse.core.expressions_3.4.500.v20130515-1343.jar                                             bundle         epl1
 commons-collections4_4.4.0.wso2v1.jar                                                               bundle         apache2
-org.ops4j.pax.logging.pax-logging-log4j2_2.1.0.wso2v3.jar                                           bundle         apache2
+org.ops4j.pax.logging.pax-logging-log4j2_2.1.0.wso2v4.jar                                           bundle         apache2
 org.wso2.carbon.osgi.security_4.6.3.jar                                                             bundle         apache2
 stax2-api_3.1.4.jar                                                                                 bundle         bsd
 net.minidev.accessors-smart_2.4.7.jar                                                               bundle         apache2
