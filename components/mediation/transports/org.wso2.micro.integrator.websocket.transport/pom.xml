@@ -97,5 +97,9 @@
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.inbound.endpoint</artifactId>
+        </dependency>
     </dependencies>
 </project>
