@@ -47,6 +47,7 @@ import org.wso2.micro.integrator.websocket.transport.utils.LogUtil;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -223,21 +224,24 @@ public class WebsocketTransportSender extends AbstractTransportSender {
             }
         } catch (URISyntaxException e) {
             log.error("Error parsing the WS endpoint url", e);
+        } catch (ConnectException e) {
+            handleClientConnectionError(responseSender, e);
         } catch (IOException e) {
-            handleClientConnectionError(responseSender, e);
+            log.error("Error writing to the websocket channel", e);
         } catch (InterruptedException e) {
-            handleClientConnectionError(responseSender, e);
+            log.error("Error writing to the websocket channel", e);
         } catch (XMLStreamException e) {
             handleException("Error while building message", e);
         }
     }
 
     private void handleClientConnectionError(InboundResponseSender responseSender, Exception e) {
+
         log.error("Error writing to the websocket channel", e);
         // we will close the client connection and notify with close frame
         InboundWebsocketSourceHandler sourceHandler = ((InboundWebsocketResponseSender) responseSender).getSourceHandler();
         CloseWebSocketFrame closeWebSocketFrame = new CloseWebSocketFrame(WebsocketConstants.WEBSOCKET_UPSTREAM_ERROR_SC,
-                WebsocketConstants.WEBSOCKET_CONNECTION_ERROR);
+                e.getMessage());
         try {
             sourceHandler.handleClientWebsocketChannelTermination(closeWebSocketFrame);
         } catch (AxisFault fault) {
