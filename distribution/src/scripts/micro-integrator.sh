@@ -328,6 +328,8 @@ do
     -DenableReadinessProbe=true \
     -DenableManagementApi=true \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
+    -Dorg.ops4j.pax.logging.logReaderEnabled=false \
+    -Dorg.ops4j.pax.logging.eventAdminEnabled=false \
     $NODE_PARAMS \
     -Dorg.apache.activemq.SERIALIZABLE_PACKAGES="*" \
     org.wso2.micro.integrator.bootstrap.Bootstrap $*
