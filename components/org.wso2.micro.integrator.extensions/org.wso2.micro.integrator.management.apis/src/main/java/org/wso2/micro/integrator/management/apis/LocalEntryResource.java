@@ -18,6 +18,7 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
@@ -32,6 +33,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 /**
  * This class provides mechanisms to monitor local entries deployed.
  */
@@ -45,6 +48,8 @@ public class LocalEntryResource implements MiApiResource {
     private static final String TYPE_ATTRIBUTE= "type";
     private static final String VALUE_ATTRIBUTE= "value";
     private static final String DESCRIPTION_ATTRIBUTE= "description";
+    private static final String PWD_MASKED_VALUE = "*****";
+    private static final String PWD_ELEMENT = "password";
 
     public LocalEntryResource() {
         methods = new HashSet<>(1);
@@ -169,8 +174,29 @@ public class LocalEntryResource implements MiApiResource {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(Constants.NAME, localEntry.getKey());
         jsonObject.put(TYPE_ATTRIBUTE, getEntryType(localEntry));
-        jsonObject.put(VALUE_ATTRIBUTE, localEntry.getValue());
+        jsonObject.put(VALUE_ATTRIBUTE, hasPasswordElement(localEntry) ? maskPasswordElement(localEntry) :
+                localEntry.getValue());
         jsonObject.put(DESCRIPTION_ATTRIBUTE, localEntry.getDescription());
         return jsonObject;
+    }
+
+    private boolean hasPasswordElement(Entry localEntry) {
+
+        if (localEntry.getValue() instanceof OMElement) {
+            OMElement element = (OMElement) localEntry.getValue();
+            OMElement password = element.getFirstChildWithName(new QName(
+                    SynapseConstants.SYNAPSE_NAMESPACE, PWD_ELEMENT));
+            return password != null;
+        }
+        return false;
+    }
+
+    private OMElement maskPasswordElement(Entry localEntry) {
+
+        OMElement element = ((OMElement) localEntry.getValue()).cloneOMElement();
+        OMElement password = element.getFirstChildWithName(new QName(
+                SynapseConstants.SYNAPSE_NAMESPACE, PWD_ELEMENT));
+        password.setText(PWD_MASKED_VALUE);
+        return element;
     }
 }
