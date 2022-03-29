@@ -55,4 +55,6 @@ public class WebsocketConstants {
     public static final String WEBSOCKET_CUSTOM_HEADER_CONFIG = "ws.custom.header";
 
     public static final String CONNECTION_TERMINATE = "connection.terminate";
+
+    public static final int WEBSOCKET_UPSTREAM_ERROR_SC = 1014;
 }

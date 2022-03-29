@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.websocket.transport;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.apache.axiom.om.OMOutputFormat;
@@ -39,11 +40,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.inbound.InboundEndpointConstants;
 import org.apache.synapse.inbound.InboundResponseSender;
 import org.apache.synapse.transport.passthru.util.RelayUtils;
+import org.wso2.carbon.inbound.endpoint.protocol.websocket.InboundWebsocketResponseSender;
+import org.wso2.carbon.inbound.endpoint.protocol.websocket.InboundWebsocketSourceHandler;
 import org.wso2.micro.integrator.websocket.transport.utils.LogUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -220,12 +224,28 @@ public class WebsocketTransportSender extends AbstractTransportSender {
             }
         } catch (URISyntaxException e) {
             log.error("Error parsing the WS endpoint url", e);
+        } catch (ConnectException e) {
+            handleClientConnectionError(responseSender, e);
         } catch (IOException e) {
-            log.error("Error writting to the websocket channel", e);
+            log.error("Error writing to the websocket channel", e);
         } catch (InterruptedException e) {
-            log.error("Error writting to the websocket channel", e);
+            log.error("Error writing to the websocket channel", e);
         } catch (XMLStreamException e) {
             handleException("Error while building message", e);
+        }
+    }
+
+    private void handleClientConnectionError(InboundResponseSender responseSender, Exception e) {
+
+        log.error("Error writing to the websocket channel", e);
+        // we will close the client connection and notify with close frame
+        InboundWebsocketSourceHandler sourceHandler = ((InboundWebsocketResponseSender) responseSender).getSourceHandler();
+        CloseWebSocketFrame closeWebSocketFrame = new CloseWebSocketFrame(WebsocketConstants.WEBSOCKET_UPSTREAM_ERROR_SC,
+                e.getMessage());
+        try {
+            sourceHandler.handleClientWebsocketChannelTermination(closeWebSocketFrame);
+        } catch (AxisFault fault) {
+            log.error("Error occurred while sending close frames", fault);
         }
     }
 }
