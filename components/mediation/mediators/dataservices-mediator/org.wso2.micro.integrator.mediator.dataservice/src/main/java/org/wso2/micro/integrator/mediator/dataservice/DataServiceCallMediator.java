@@ -152,7 +152,7 @@ public class DataServiceCallMediator extends AbstractMediator {
             if (rootOperation.equals(DataServiceCallMediatorConstants.JSON_OBJECT)) {
                 return handleJsonObject(operationElement, axis2MessageContext);
             } else {
-                AxisOperation axisOperation = axis2MessageContext.getAxisMessage().getAxisOperation();
+                AxisOperation axisOperation = axis2MessageContext.getAxisOperation();
                 QName rootOpQName = new QName(rootOperation);
                 axisOperation.setName(rootOpQName);
             }
