@@ -25,11 +25,11 @@
     <payloadFactory media-type="xml">
         <format>
             <addEmployee>
-                <EmployeeNumber>555</EmployeeNumber>
-                <Firstname>Abby</Firstname>
-                <LastName>Anderson</LastName>
-                <Email>anderson@wso2.com</Email>
-                <Salary>5000</Salary>
+                <EmployeeNumber>8765</EmployeeNumber>
+                <Firstname>James</Firstname>
+                <LastName>Clark</LastName>
+                <Email>james@wso2.com</Email>
+                <Salary>4000</Salary>
             </addEmployee>
         </format>
         <args/>
