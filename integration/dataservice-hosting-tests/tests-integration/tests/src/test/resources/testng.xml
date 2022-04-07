@@ -279,6 +279,7 @@
 
     <test name="DSSCallMediatorTests" preserve-order="true">
         <classes>
+            <class name="org.wso2.ei.dataservice.integration.test.dssCallMediator.DSSCallWithInboundEPTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.dssCallMediator.InlineConfigTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.dssCallMediator.SourceTypeBodyTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.dssCallMediator.JsonPayloadTestCase"/>
