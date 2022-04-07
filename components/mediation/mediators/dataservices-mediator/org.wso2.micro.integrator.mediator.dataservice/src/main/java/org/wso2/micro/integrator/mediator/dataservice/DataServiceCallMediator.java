@@ -152,7 +152,7 @@ public class DataServiceCallMediator extends AbstractMediator {
             if (rootOperation.equals(DataServiceCallMediatorConstants.JSON_OBJECT)) {
                 return handleJsonObject(operationElement, axis2MessageContext);
             } else {
-                AxisOperation axisOperation = axis2MessageContext.getAxisMessage().getAxisOperation();
+                AxisOperation axisOperation = axis2MessageContext.getAxisOperation();
                 QName rootOpQName = new QName(rootOperation);
                 axisOperation.setName(rootOpQName);
             }
@@ -171,7 +171,7 @@ public class DataServiceCallMediator extends AbstractMediator {
      * @return axis2MessageContext with jsonObject omitted payload
      */
     private org.apache.axis2.context.MessageContext handleJsonObject(OMElement jsonElement, org.apache.axis2.context.MessageContext axis2MessageContext) {
-        AxisOperation axisOperation = axis2MessageContext.getAxisMessage().getAxisOperation();
+        AxisOperation axisOperation = axis2MessageContext.getAxisOperation();
         OMElement operationElement = jsonElement.getFirstElement();
         QName rootOpQName = new QName(operationElement.getLocalName());
         axisOperation.setName(rootOpQName);
@@ -202,7 +202,7 @@ public class DataServiceCallMediator extends AbstractMediator {
             }
         }
         QName rootOpQName = new QName(rootOpName);
-        axis2MessageContext.getAxisMessage().getAxisOperation().setName(rootOpQName);
+        axis2MessageContext.getAxisOperation().setName(rootOpQName);
         OMElement payload = fac.createOMElement(rootOpName, omNamespace);
         addOperations(rootOperations, payload, messageContext);
         return payload;
