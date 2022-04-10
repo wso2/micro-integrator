@@ -123,7 +123,14 @@ public class Utils {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
             LOG.error("Error occurred while setting json payload", axisFault);
         }
-        axis2MessageContext.setProperty("messageType", Constants.HEADER_VALUE_APPLICATION_JSON);
+
+        if (axis2MessageContext.getConfigurationContext().getAxisConfiguration().
+                getMessageFormatter(Constants.MANAGEMENT_APPLICATION_JSON) != null) {
+            axis2MessageContext.setProperty("messageType", Constants.MANAGEMENT_APPLICATION_JSON);
+        } else {
+            axis2MessageContext.setProperty("messageType", Constants.HEADER_VALUE_APPLICATION_JSON);
+        }
+
         axis2MessageContext.setProperty("ContentType", Constants.HEADER_VALUE_APPLICATION_JSON);
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
     }

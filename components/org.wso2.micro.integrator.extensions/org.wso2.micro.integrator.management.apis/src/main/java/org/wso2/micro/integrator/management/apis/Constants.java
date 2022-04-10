@@ -101,6 +101,7 @@ public class Constants {
     public static final String HTTP_DELETE = "DELETE";
 
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
+    public static final String MANAGEMENT_APPLICATION_JSON = "application/json+management";
     public static final String MESSAGE_JSON_ATTRIBUTE = "Message";
 
     // Json attribute in response for synapse configuration
