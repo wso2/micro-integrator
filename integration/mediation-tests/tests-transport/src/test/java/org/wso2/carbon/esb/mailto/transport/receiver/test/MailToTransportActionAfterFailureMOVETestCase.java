@@ -83,6 +83,6 @@ public class MailToTransportActionAfterFailureMOVETestCase extends ESBIntegratio
     public void deleteService() throws Exception {
         carbonLogReader.stop();
         Utils.undeploySynapseConfiguration("MailToTransportActionAfterFailureMoveTestCase",
-                "proxy-services");
+                "proxy-services", false);
     }
 }

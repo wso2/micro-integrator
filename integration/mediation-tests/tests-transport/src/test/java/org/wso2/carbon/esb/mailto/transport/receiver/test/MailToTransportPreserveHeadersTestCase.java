@@ -81,7 +81,7 @@ public class MailToTransportPreserveHeadersTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
-        Utils.undeploySynapseConfiguration("MailTransportPreserveHeader","proxy-services");
+        Utils.undeploySynapseConfiguration("MailTransportPreserveHeader","proxy-services", false);
         carbonLogReader.stop();
     }
 

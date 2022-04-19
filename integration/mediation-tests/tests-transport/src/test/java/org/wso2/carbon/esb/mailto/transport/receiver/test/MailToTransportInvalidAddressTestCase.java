@@ -67,6 +67,6 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
         carbonLogReader.stop();
-        Utils.undeploySynapseConfiguration("MailTransportInvalidAddress","proxy-services");
+        Utils.undeploySynapseConfiguration("MailTransportInvalidAddress","proxy-services", false);
     }
 }
