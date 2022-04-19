@@ -79,7 +79,7 @@ public class MailToTransportActionAfterProcessDeleteTestCase extends ESBIntegrat
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
-        Utils.undeploySynapseConfiguration("MailTransportProtocolDelete","proxy-services");
+        Utils.undeploySynapseConfiguration("MailTransportProtocolDelete","proxy-services", false);
         carbonLogReader.stop();
     }
 }

@@ -62,7 +62,7 @@ public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
-        Utils.undeploySynapseConfiguration("MailTransportInvalidFolder","proxy-services");
+        Utils.undeploySynapseConfiguration("MailTransportInvalidFolder","proxy-services", false);
         carbonLogReader.stop();
     }
 
