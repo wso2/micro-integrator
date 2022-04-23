@@ -40,7 +40,7 @@
 
                     <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m</argLine>
                     <disableXmlReport>false</disableXmlReport>
-                    <parallel>false</parallel>
+                    <parallel>classes</parallel>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
@@ -74,6 +74,7 @@
                         <classpathDependencyExclude>org.wso2.org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
                     </classpathDependencyExcludes>
                     <workingDirectory>${basedir}/target</workingDirectory>
+                	<useUnlimitedThreads>true</useUnlimitedThreads>
                 </configuration>
             </plugin>
             <plugin>

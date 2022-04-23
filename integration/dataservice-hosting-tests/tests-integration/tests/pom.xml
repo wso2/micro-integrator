@@ -40,7 +40,7 @@
                     <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
                     <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m</argLine>
                     <disableXmlReport>false</disableXmlReport>
-                    <parallel>false</parallel>
+                    <parallel>classes</parallel>
                     <suiteXmlFiles>
                         <suiteXmlFile>${testng.suiteXml.location}</suiteXmlFile>
                     </suiteXmlFiles>
@@ -75,6 +75,7 @@
                         <classpathDependencyExclude>org.wso2.org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
                     </classpathDependencyExcludes>
                     <workingDirectory>${basedir}/target</workingDirectory>
+                	<useUnlimitedThreads>true</useUnlimitedThreads>
                 </configuration>
             </plugin>
 
