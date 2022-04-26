@@ -913,10 +913,10 @@ public abstract class ESBIntegrationTest {
         return response.contains(endpoinName);
     }
 
-    private boolean checkInboundEndpointExistence(String inboundEndpoinName) throws IOException {
+    protected boolean checkInboundEndpointExistence(String inboundEndpointName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("inbound-endpoints");
-        return response.contains(inboundEndpoinName);
+        return response.contains(inboundEndpointName);
     }
 
     protected int getNoOfArtifacts(String artifactType) throws IOException {
