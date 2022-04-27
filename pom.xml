@@ -1715,7 +1715,7 @@
         <commons-text.orbit.version>1.6.wso2v1</commons-text.orbit.version>
         <commons-lang3.orbit.version>3.4.0.wso2v1</commons-lang3.orbit.version>
 
-        <esapi.version>2.0.1</esapi.version>
+        <esapi.version>2.3.0.0</esapi.version>
         <axis.jaxws.version>1.6.2</axis.jaxws.version>
 
         <!-- Axiom Version -->
