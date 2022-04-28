@@ -97,7 +97,7 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
         mediatorList.add("TestEndpointStatProxy@4:RespondMediator");
 
         //Checking whether all the mediators are present in the event
-        Assert.assertEquals(eventList.size(), 5, "Four configuration events are required");
+        Assert.assertEquals(eventList.size(), 5, "Five configuration events are required");
 
         for (String mediatorId : mediatorList) {
             Assert.assertTrue(allMediatorEventIds.contains(mediatorId), "Mediator not found");
