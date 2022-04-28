@@ -152,7 +152,7 @@ public class DataServiceCallMediator extends AbstractMediator {
             if (rootOperation.equals(DataServiceCallMediatorConstants.JSON_OBJECT)) {
                 return handleJsonObject(operationElement, axis2MessageContext);
             } else {
-                AxisOperation axisOperation = axis2MessageContext.getAxisMessage().getAxisOperation();
+                AxisOperation axisOperation = axis2MessageContext.getAxisOperation();
                 QName rootOpQName = new QName(rootOperation);
                 axisOperation.setName(rootOpQName);
             }
@@ -171,7 +171,7 @@ public class DataServiceCallMediator extends AbstractMediator {
      * @return axis2MessageContext with jsonObject omitted payload
      */
     private org.apache.axis2.context.MessageContext handleJsonObject(OMElement jsonElement, org.apache.axis2.context.MessageContext axis2MessageContext) {
-        AxisOperation axisOperation = axis2MessageContext.getAxisMessage().getAxisOperation();
+        AxisOperation axisOperation = axis2MessageContext.getAxisOperation();
         OMElement operationElement = jsonElement.getFirstElement();
         QName rootOpQName = new QName(operationElement.getLocalName());
         axisOperation.setName(rootOpQName);
@@ -184,7 +184,7 @@ public class DataServiceCallMediator extends AbstractMediator {
                                        MessageContext messageContext) {
         Operations rootOperations = getOperations();
         String rootOpName;
-        switch (rootOperations.getType().toString()) {
+        switch (rootOperations.getType()) {
             case DataServiceCallMediatorConstants.OperationsType.REQUEST_BOX: {
                 rootOpName = DataServiceCallMediatorConstants.REQUEST_BOX;
                 break;
@@ -202,9 +202,9 @@ public class DataServiceCallMediator extends AbstractMediator {
             }
         }
         QName rootOpQName = new QName(rootOpName);
-        axis2MessageContext.getAxisMessage().getAxisOperation().setName(rootOpQName);
+        axis2MessageContext.getAxisOperation().setName(rootOpQName);
         OMElement payload = fac.createOMElement(rootOpName, omNamespace);
-        addOperations(rootOperations, payload, messageContext);
+        addOperations(rootOperations, payload, messageContext, rootOperations.getType());
         return payload;
     }
 
@@ -261,17 +261,26 @@ public class DataServiceCallMediator extends AbstractMediator {
         }
     }
 
-    private void addOperations(Operations operations, OMElement payload, MessageContext msgCtx) {
+    private void addOperations(Operations operations, OMElement payload, MessageContext msgCtx, String operationsType) {
 
         for (Object operationObj : operations.getOperations()) {
             if (operationObj instanceof Operation) {
                 Operation nestedOperation = (Operation) operationObj;
                 String operationName = nestedOperation.getOperationName();
-                OMElement nestedPayload = fac.createOMElement(operationName, omNamespace);
-                for (Param param : nestedOperation.getParams()) {
-                    addParams(param, nestedPayload, msgCtx);
+                if (DataServiceCallMediatorConstants.OperationsType.SINGLE.equals(operationsType)) {
+                    // If Single Operation is defined, no need for a separate root element
+                    for (Param param : nestedOperation.getParams()) {
+                        addParams(param, payload, msgCtx);
+                    }
+                } else {
+                    // Root Element is already defined (Eg: REQUEST_BOX, BATCH). Need to add nested payload as child
+                    OMElement nestedPayload = fac.createOMElement(operationName, omNamespace);
+                    for (Param param : nestedOperation.getParams()) {
+                        addParams(param, nestedPayload, msgCtx);
+                    }
+                    // Need to add the new Operation payload as a child
+                    payload.addChild(nestedPayload);
                 }
-                payload.addChild(nestedPayload);
             } else if (operationObj instanceof Operations) {
                 Operations rootOperations = (Operations) operationObj;
                 String rootOpName;
@@ -282,7 +291,7 @@ public class DataServiceCallMediator extends AbstractMediator {
                     rootOpName = rootOperations.getType().toString().toLowerCase();
                 }
                 OMElement nestedOpEle = fac.createOMElement(rootOpName, omNamespace);
-                addOperations(rootOperations, nestedOpEle, msgCtx);
+                addOperations(rootOperations, nestedOpEle, msgCtx, operationsType);
                 payload.addChild(nestedOpEle);
             }
         }

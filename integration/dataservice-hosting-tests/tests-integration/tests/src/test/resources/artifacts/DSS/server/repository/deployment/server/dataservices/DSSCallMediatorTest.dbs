@@ -20,6 +20,12 @@
       </result>
       <param name="EmployeeNumber" sqlType="STRING"/>
    </query>
+   <query id="getEmptyEmployeeListQuery" useConfig="01">
+         <sql>select NAME from EMPLOYEESWITHEMPTYDATA</sql>
+         <result element="Entries" rowName="Entry">
+               <element name="NAME" column="NAME" xsdType="string" />
+         </result>
+      </query>
    <query id="addEmployeeQuery" useConfig="01">
       <sql>insert into Employees (EmployeeNumber, FirstName, LastName, Email, Salary) values(:EmployeeNumber,:FirstName,:LastName,:Email,:Salary)</sql>
       <param name="EmployeeNumber" sqlType="STRING"/>
@@ -41,6 +47,10 @@
       <call-query href="getEmployeeByNumberQuery">
          <with-param name="EmployeeNumber" query-param="EmployeeNumber"/>
       </call-query>
+   </operation>
+   <operation name="getEmptyEmployeeList">
+         <call-query href="getEmptyEmployeeListQuery">
+         </call-query>
    </operation>
    <resource method="GET" path="Employee/{EmployeeNumber}">
       <call-query href="getEmployeeByNumberQuery">

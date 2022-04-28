@@ -61,6 +61,13 @@ public class InlineConfigTestCase extends ESBIntegrationTest {
                 "Error performing request box operation.");
     }
 
+    @Test(groups = {"wso2.esb"}, description = "Test DSSCall mediator inline configuration which returns empty results")
+    public void testInlineSingleRequestWithEmptyResults() {
+        String responsePayload = sendGetRequest("dssCallMediatorInlineSingleRequestWithEmptyResultsProxy");
+        assertTrue(responsePayload.contains("Entries"),
+                "Empty Response is received. Empty Entries array should be returned");
+    }
+
     @AfterClass
     public void cleanUp() throws Exception {
         super.cleanup();
