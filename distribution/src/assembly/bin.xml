@@ -638,6 +638,7 @@
                 to run in jdk 11
                 -->
                 <include>javax.xml.bind:jaxb-api:jar</include>
+                <include>io.netty:netty-tcnative-boringssl-static</include>
             </includes>
         </dependencySet>
         <dependencySet>

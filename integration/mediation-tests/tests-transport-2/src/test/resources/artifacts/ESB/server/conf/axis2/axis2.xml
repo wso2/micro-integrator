@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~   Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~    WSO2 Inc. licenses this file to you under the Apache License,
+  ~    Version 2.0 (the "License"); you may not use this file except
+  ~    in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~   Unless required by applicable law or agreed to in writing,
+  ~   software distributed under the License is distributed on an
+  ~   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~   KIND, either express or implied.  See the License for the
+  ~   specific language governing permissions and limitations
+  ~   under the License.
+  ~
+  -->
+
+<axisconfig name="AxisJava2.0" xmlns:svns="http://org.wso2.securevault/configuration">
+
+    <!-- ================================================= -->
+    <!--                  Parameters                       -->
+    <!-- ================================================= -->
+
+    <!-- Change this to true if you want to enable hot deployment of services -->
+    <parameter name="hotdeployment" locked="false">true</parameter>
+
+    <!-- Change this to true if you want to enable MTOM -->
+    <parameter name="enableMTOM" locked="false">false</parameter>
+
+    <!-- Change this to true if you want to enable SwA -->
+    <parameter name="enableSwA" locked="false">false</parameter>
+
+    <!-- If you want to enable file caching for attachments change this to true -->
+    <parameter name="cacheAttachments" locked="false">false</parameter>
+    <!-- Attachment file caching location relative to CARBON_HOME -->
+    <parameter name="attachmentDIR" locked="false">work/mtom</parameter>
+    <!-- Attachment file cache threshold size -->
+    <parameter name="sizeThreshold" locked="false">4000</parameter>
+
+    <!-- Completely disable REST handling in Axis2/Synapse if the value is true -->
+    <parameter name="disableREST" locked="false">false</parameter>
+
+    <!-- Sandesha2 persistance storage manager -->
+    <parameter name="Sandesha2StorageManager" locked="false">inmemory</parameter>
+
+    <!-- Our HTTP endpoints can handle both REST and SOAP under the following service path. In -->
+    <!-- case of a servlet container, if you change this you have to manually change the -->
+    <!-- settings of your servlet container to map this context path to proper Axis2 servlets -->
+    <parameter name="servicePath" locked="false">services</parameter>
+
+    <!--the directory in which .aar services are deployed inside axis2 repository-->
+    <parameter name="ServicesDirectory">axis2services</parameter>
+
+    <!--If turned on with use the Accept header of the request to determine the contentType of the
+    response-->
+    <parameter name="httpContentNegotiation">true</parameter>
+
+    <!--the directory in which modules are deployed inside axis2 repository-->
+    <parameter name="ModulesDirectory">axis2modules</parameter>
+
+    <!-- User agent and the server details to be used in the http communication -->
+    <parameter name="userAgent" locked="true">WSO2 Micro Integrator 1.0.0</parameter>
+    <parameter name="server" locked="true">WSO2 Micro Integrator 1.0.0</parameter>
+
+    <!-- During a fault, stacktrace can be sent with the fault message. The following flag -->
+    <!-- will control that behaviour -->
+    <parameter name="sendStacktraceDetailsWithFaults" locked="false">false</parameter>
+
+    <!-- If there aren't any information available to find out the fault reason, we set the -->
+    <!-- message of the exception as the faultreason/Reason. But when a fault is thrown from -->
+    <!-- a service or some where, it will be wrapped by different levels. Due to this the -->
+    <!-- initial exception message can be lost. If this flag is set then, Axis2 tries to get -->
+    <!-- the first exception and set its message as the faultreason/Reason. -->
+    <parameter name="DrillDownToRootCauseForFaultReason" locked="false">false</parameter>
+
+    <!-- Set the flag to true if you want to enable transport level session management -->
+    <parameter name="manageTransportSession" locked="false">true</parameter>
+
+    <!-- This will give out the timout of the configuration contexts, in milliseconds -->
+    <parameter name="ConfigContextTimeoutInterval" locked="false">30000</parameter>
+
+    <!-- Synapse Configuration file location relative to CARBON_HOME -->
+    <parameter name="SynapseConfig.ConfigurationFile" locked="false">repository/deployment/server/synapse-configs
+    </parameter>
+    <!-- Synapse Home parameter -->
+    <parameter name="SynapseConfig.HomeDirectory" locked="false">.</parameter>
+    <!-- Resolve root used to resolve synapse references like schemas inside a WSDL -->
+    <parameter name="SynapseConfig.ResolveRoot" locked="false">.</parameter>
+    <!-- Synapse Server name parameter -->
+    <parameter name="SynapseConfig.ServerName" locked="false">localhost</parameter>
+    <!-- Returns 401 for UT secured scenario with incorrect/missing credentials -->
+    <parameter name="enableBasicAuth" locked="false">true</parameter>
+
+
+    <!-- ================================================= -->
+    <!--                  Listeners                        -->
+    <!-- ================================================= -->
+
+    <!-- To handle WS policies -->
+    <listener class="org.wso2.micro.integrator.security.deployment.SecurityDeploymentInterceptor"/>
+
+    <!-- To override repository/services you need to uncomment following parameter and value -->
+    <!-- SHOULD be absolute file path. -->
+    <!--<parameter name="ServicesDirectory" locked="false">service</parameter>-->
+
+    <!-- To override repository/modules you need to uncomment following parameter and value -->
+    <!-- SHOULD be absolute file path. -->
+    <!--<parameter name="ModulesDirectory" locked="false">modules</parameter>-->
+
+    <!-- If you have a frontend host which exposes this webservice using a different public URL -->
+    <!-- use this parameter to override autodetected url -->
+    <!--<parameter name="httpFrontendHostUrl" locked="false">https://someotherhost/context</parameter>-->
+
+    <!-- ================================================= -->
+    <!--                Message Receivers                  -->
+    <!-- ================================================= -->
+
+    <!-- This is the set of default Message Receivers for the system, if you want to have -->
+    <!-- message receivers for any of the other Message exchange Patterns (MEP) implement it -->
+    <!-- and add the implementation class to here, so that you can refer from any operation -->
+    <!-- Note : You can override this for particular service by adding this same element to the -->
+    <!-- services.xml with your preferences -->
+    <messageReceivers>
+        <messageReceiver mep="http://www.w3.org/ns/wsdl/in-only"
+                         class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+        <messageReceiver mep="http://www.w3.org/ns/wsdl/robust-in-only"
+                         class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+        <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out"
+                         class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+    </messageReceivers>
+
+    <!-- ================================================= -->
+    <!--                Message Formatters                 -->
+    <!-- ================================================= -->
+
+    <!-- Following content type to message formatter mapping can be used to implement support -->
+    <!-- for different message format serializations in Axis2. These message formats are -->
+    <!-- expected to be resolved based on the content type. -->
+    <messageFormatters>
+        <messageFormatter contentType="application/x-www-form-urlencoded"
+                          class="org.apache.synapse.commons.formatters.XFormURLEncodedFormatter"/>
+        <messageFormatter contentType="multipart/form-data"
+                          class="org.apache.axis2.transport.http.MultipartFormDataFormatter"/>
+        <messageFormatter contentType="application/xml"
+                          class="org.apache.axis2.transport.http.ApplicationXMLFormatter"/>
+        <messageFormatter contentType="text/xml"
+                          class="org.apache.axis2.transport.http.SOAPMessageFormatter"/>
+        <messageFormatter contentType="application/soap+xml"
+                          class="org.apache.axis2.transport.http.SOAPMessageFormatter"/>
+        <messageFormatter contentType="text/plain"
+                          class="org.apache.axis2.format.PlainTextFormatter"/>
+        <messageFormatter contentType="application/json"
+                          class="org.wso2.micro.integrator.core.json.JsonStreamFormatter"/>
+        <messageFormatter contentType="application/json/badgerfish"
+                          class="org.apache.axis2.json.JSONBadgerfishMessageFormatter"/>
+        <messageFormatter contentType="text/javascript"
+                          class="org.apache.axis2.json.JSONMessageFormatter"/>
+        <messageFormatter contentType="application/octet-stream"
+                          class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
+        <messageFormatter contentType="application/binary"
+                          class="org.apache.axis2.format.BinaryFormatter"/>
+    </messageFormatters>
+
+    <!-- ================================================= -->
+    <!--                Message Builders                   -->
+    <!-- ================================================= -->
+
+    <!-- Following content type to builder mapping can be used to implement support for -->
+    <!-- different message formats in Axis2. These message formats are expected to be -->
+    <!-- resolved based on the content type. -->
+    <messageBuilders>
+        <messageBuilder contentType="application/xml"
+                        class="org.apache.axis2.builder.ApplicationXMLBuilder"/>
+        <messageBuilder contentType="application/x-www-form-urlencoded"
+                        class="org.apache.synapse.commons.builders.XFormURLEncodedBuilder"/>
+        <messageBuilder contentType="multipart/form-data"
+                        class="org.apache.axis2.builder.MultipartFormDataBuilder"/>
+        <messageBuilder contentType="application/json"
+                        class="org.wso2.micro.integrator.core.json.JsonStreamBuilder"/>
+        <messageBuilder contentType="application/json/badgerfish"
+                        class="org.apache.axis2.json.JSONBadgerfishOMBuilder"/>
+        <messageBuilder contentType="text/javascript"
+                        class="org.apache.axis2.json.JSONBuilder"/>
+        <messageBuilder contentType="text/plain"
+                        class="org.apache.axis2.format.PlainTextBuilder"/>
+        <messageBuilder contentType="application/octet-stream"
+                        class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
+        <messageBuilder contentType="application/binary"
+                        class="org.apache.axis2.format.BinaryBuilder"/>
+    </messageBuilders>
+
+    <!-- ================================================= -->
+    <!--             Transport Ins (Listeners)             -->
+    <!-- ================================================= -->
+
+    <transportReceiver name="http" class="org.apache.synapse.transport.passthru.PassThroughHttpListener">
+        <parameter name="port" locked="false">8280</parameter>
+        <parameter name="httpGetProcessor" locked="false">
+            org.wso2.micro.integrator.transport.handlers.PassThroughNHttpGetProcessor
+        </parameter>
+    </transportReceiver>
+
+    <transportReceiver name="https" class="org.apache.synapse.transport.passthru.PassThroughHttpSSLListener">
+        <parameter name="httpGetProcessor" locked="false">
+            org.wso2.micro.integrator.transport.handlers.PassThroughNHttpGetProcessor
+        </parameter>
+        <parameter name="port" locked="false">8243</parameter>
+        <parameter name="HttpsProtocols" locked="false">TLSv1,TLSv1.1,TLSv1.2</parameter>
+        <parameter name="keystore" locked="false">
+            <KeyStore>
+                <Location>repository/resources/security/wso2carbon.jks</Location>
+                <Type>JKS</Type>
+                <Password>wso2carbon</Password>
+                <KeyPassword>wso2carbon</KeyPassword>
+            </KeyStore>
+        </parameter>
+        <parameter name="truststore" locked="false">
+            <TrustStore>
+                <Location>repository/resources/security/client-truststore.jks</Location>
+                <Type>JKS</Type>
+                <Password>wso2carbon</Password>
+            </TrustStore>
+        </parameter>
+
+    </transportReceiver>
+
+    <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener">
+        <parameter locked="false" name="keystore.identity.location">repository/resources/security/wso2carbon.jks
+        </parameter>
+        <parameter locked="false" name="keystore.identity.type">JKS</parameter>
+        <parameter locked="false" name="keystore.identity.store.password">wso2carbon</parameter>
+        <parameter locked="false" name="keystore.identity.key.password">wso2carbon</parameter>
+        <parameter locked="false" name="keystore.identity.alias">wso2carbon</parameter>
+    </transportReceiver>
+    <!-- SAP Transport Listeners -->
+
+    <!-- ================================================= -->
+    <!--             Transport Outs (Senders)              -->
+    <!-- ================================================= -->
+
+    <transportSender name="http" class="org.apache.synapse.transport.passthru.PassThroughHttpSender">
+        <parameter name="non-blocking" locked="false">true</parameter>
+    </transportSender>
+    <transportSender name="httpws" class="org.apache.synapse.transport.netty.sender.Axis2HttpTransportSender">
+        <parameter name="non-blocking" locked="false">true</parameter>
+        <parameter name="protocolVersion">2.0</parameter>
+    </transportSender>
+    <transportSender name="https" class="org.apache.synapse.transport.passthru.PassThroughHttpSSLSender">
+        <parameter name="non-blocking" locked="false">true</parameter>
+        <parameter name="keystore" locked="false">
+            <KeyStore>
+                <Location>repository/resources/security/wso2carbon.jks</Location>
+                <Type>JKS</Type>
+                <Password>wso2carbon</Password>
+                <KeyPassword>wso2carbon</KeyPassword>
+            </KeyStore>
+        </parameter>
+        <parameter name="truststore" locked="false">
+            <TrustStore>
+                <Location>repository/resources/security/client-truststore.jks</Location>
+                <Type>JKS</Type>
+                <Password>wso2carbon</Password>
+            </TrustStore>
+        </parameter>
+    </transportSender>
+    <transportSender name="httpswss" class="org.apache.synapse.transport.netty.sender.Axis2HttpSSLTransportSender">
+        <parameter name="non-blocking" locked="false">true</parameter>
+        <parameter name="keystore" locked="false">
+            <KeyStore>
+                <Location>repository/resources/security/wso2carbon.jks</Location>
+                <Type>JKS</Type>
+                <Password>wso2carbon</Password>
+                <KeyPassword>wso2carbon</KeyPassword>
+            </KeyStore>
+        </parameter>
+        <parameter name="novalidatecert">true</parameter>
+    </transportSender>
+    <transportSender name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportSender">
+    </transportSender>
+    <!-- SAP Transport Senders -->
+    <!-- ================================================= -->
+    <!--             Global Engaged Modules                -->
+    <!-- ================================================= -->
+
+    <!-- Comment this out to disable Addressing -->
+    <module ref="addressing"/>
+
+    <!-- ================================================= -->
+    <!--                   Transactions                    -->
+    <!-- ================================================= -->
+
+    <!--
+        Uncomment and configure the following section to enable transactions support
+    -->
+    <!--<transaction timeout="30000">
+        <parameter name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
+        <parameter name="java.naming.provider.url">tcp://localhost:61616</parameter>
+        <parameter name="UserTransactionJNDIName">UserTransaction</parameter>
+        <parameter name="TransactionManagerJNDIName">TransactionManager</parameter>
+    </transaction>-->
+
+    <!-- ================================================= -->
+    <!--                    Phases                         -->
+    <!-- ================================================= -->
+    <phaseOrder type="InFlow">
+        <phase name="MsgInObservation">
+            <handler name="TraceMessageBuilderDispatchHandler"
+                     class="org.apache.synapse.transport.passthru.util.TraceMessageBuilderDispatchHandler">
+            </handler>
+        </phase>
+        <phase name="Validation">
+        </phase>
+        <phase name="Transport">
+            <handler name="IntegratorStatefulHandler"
+                     class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
+                <order phase="Transport"/>
+            </handler>
+            <handler name="RelaySecuirtyMessageBuilderDispatchandler"
+                     class="org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler">
+            </handler>
+            <handler name="SOAPActionBasedDispatcher" class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
+                <order phase="Transport"/>
+            </handler>
+        </phase>
+        <phase name="Addressing">
+            <handler name="AddressingBasedDispatcher" class="org.apache.axis2.dispatchers.AddressingBasedDispatcher">
+                <order phase="Addressing"/>
+            </handler>
+        </phase>
+        <phase name="Security">
+        </phase>
+        <phase name="PreDispatch">
+        </phase>
+        <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
+            <handler name="IntegratorStatefulHandler"
+                     class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
+            </handler>
+            <handler name="JSONMessageHandler" class="org.apache.axis2.json.gson.JSONMessageHandler">
+            </handler>
+            <handler name="SOAPActionBasedDispatcher" class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
+            </handler>
+            <handler name="RequestURIOperationDispatcher"
+                     class="org.apache.axis2.dispatchers.RequestURIOperationDispatcher">
+            </handler>
+            <handler name="SOAPMessageBodyBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher">
+            </handler>
+            <handler name="HTTPLocationBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher">
+            </handler>
+            <handler name="SynapseDispatcher" class="org.apache.synapse.core.axis2.SynapseDispatcher">
+            </handler>
+            <handler name="SynapseMustUnderstandHandler"
+                     class="org.apache.synapse.core.axis2.SynapseMustUnderstandHandler">
+            </handler>
+        </phase>
+        <phase name="RMPhase">
+        </phase>
+        <phase name="OpPhase">
+        </phase>
+        <phase name="AuthPhase">
+        </phase>
+        <phase name="MUPhase">
+        </phase>
+        <phase name="OperationInPhase">
+        </phase>
+    </phaseOrder>
+    <phaseOrder type="OutFlow">
+        <phase name="UEPPhase">
+        </phase>
+        <phase name="RMPhase">
+        </phase>
+        <phase name="MUPhase">
+        </phase>
+        <phase name="OpPhase">
+        </phase>
+        <phase name="OperationOutPhase">
+        </phase>
+        <phase name="PolicyDetermination">
+        </phase>
+        <phase name="PTSecurityOutPhase">
+            <handler name="RelaySecuirtyMessageBuilderDispatchandler"
+                     class="org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler">
+            </handler>
+        </phase>
+        <phase name="MessageOut">
+        </phase>
+        <phase name="Security">
+        </phase>
+        <phase name="MsgOutObservation">
+        </phase>
+    </phaseOrder>
+    <phaseOrder type="InFaultFlow">
+        <phase name="MsgInObservation">
+        </phase>
+        <phase name="Validation">
+        </phase>
+        <phase name="Transport">
+            <handler name="IntegratorStatefulHandler"
+                     class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
+                <order phase="Transport"/>
+            </handler>
+            <handler name="SOAPActionBasedDispatcher" class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
+                <order phase="Transport"/>
+            </handler>
+        </phase>
+        <phase name="Addressing">
+            <handler name="AddressingBasedDispatcher" class="org.apache.axis2.dispatchers.AddressingBasedDispatcher">
+                <order phase="Addressing"/>
+            </handler>
+        </phase>
+        <phase name="Security">
+        </phase>
+        <phase name="PreDispatch">
+        </phase>
+        <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
+            <handler name="IntegratorStatefulHandler"
+                     class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
+            </handler>
+            <handler name="SOAPActionBasedDispatcher" class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
+            </handler>
+            <handler name="RequestURIOperationDispatcher"
+                     class="org.apache.axis2.dispatchers.RequestURIOperationDispatcher">
+            </handler>
+            <handler name="SOAPMessageBodyBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher">
+            </handler>
+            <handler name="HTTPLocationBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher">
+            </handler>
+        </phase>
+        <phase name="RMPhase">
+        </phase>
+        <phase name="OpPhase">
+        </phase>
+        <phase name="MUPhase">
+        </phase>
+        <phase name="OperationInFaultPhase">
+        </phase>
+    </phaseOrder>
+    <phaseOrder type="OutFaultFlow">
+        <phase name="UEPPhase">
+        </phase>
+        <phase name="RMPhase">
+        </phase>
+        <phase name="MUPhase">
+        </phase>
+        <phase name="OperationOutFaultPhase">
+        </phase>
+        <phase name="PolicyDetermination">
+        </phase>
+        <phase name="MessageOut">
+        </phase>
+        <phase name="Security">
+        </phase>
+        <phase name="Transport">
+        </phase>
+        <phase name="MsgOutObservation">
+        </phase>
+    </phaseOrder>
+</axisconfig>
