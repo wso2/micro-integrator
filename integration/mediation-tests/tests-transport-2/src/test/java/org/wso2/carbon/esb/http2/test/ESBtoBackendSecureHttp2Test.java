@@ -111,7 +111,7 @@ public class ESBtoBackendSecureHttp2Test extends ESBIntegrationTest {
         server.start();
     }
 
-    @Test(enabled = true)
+    @Test(description = "Test secure HTTP/2 (HTTPS) request-response between the ESB and backend")
     public void testSecureHttp2RequestESBtoBackend() throws Exception {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();

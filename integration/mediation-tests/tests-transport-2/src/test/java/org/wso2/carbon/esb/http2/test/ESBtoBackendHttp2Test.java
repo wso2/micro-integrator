@@ -90,7 +90,7 @@ public class ESBtoBackendHttp2Test extends ESBIntegrationTest {
         server.start();
     }
 
-    @Test(enabled = true)
+    @Test(description = "Test HTTP/2 request-response between the ESB and backend")
     public void testHttp2RequestESBtoBackend() throws Exception {
 
         OkHttpClient client =
