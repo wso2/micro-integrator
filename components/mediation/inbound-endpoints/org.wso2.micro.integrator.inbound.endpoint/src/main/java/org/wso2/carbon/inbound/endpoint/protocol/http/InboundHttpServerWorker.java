@@ -414,6 +414,8 @@ public class InboundHttpServerWorker extends ServerWorker {
                 axis2MessageCtx.setProperty(PassThroughConstants.HTTP_SC, "404");
             }
         }
-        Axis2Sender.sendBack(synCtx);
+        InboundHttpResponseSender responseSender = (InboundHttpResponseSender) synCtx
+                .getProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER);
+        responseSender.sendBack(synCtx);
     }
 }
