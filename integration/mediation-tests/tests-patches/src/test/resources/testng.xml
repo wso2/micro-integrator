@@ -37,6 +37,7 @@
     <test name="API-Test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.api.test.ESBJAVA3751UriTemplateReservedCharacterEncodingTest"/>
+            <class name="org.wso2.carbon.esb.api.test.ESBJAVA4176MethodNotAllowedTest"/>
             <class name="org.wso2.carbon.esb.api.apidefinition.ESBJAVA4907SwaggerGenerationTestCase"/>
             <class name="org.wso2.carbon.esb.api.apidefinition.ESBJAVA4936SwaggerGenerationJsonYamlTestCase"/>
             <class name="org.wso2.carbon.esb.api.apidefinition.CustomSwaggerWithSpecialCharactersTestCase"/>
@@ -100,6 +101,7 @@
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA3336HostHeaderValuePortCheckTestCase"/>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ForceMessageValidationTestCase" />
             <!--<class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4931PreserveContentTypeHeaderCharSetTestCase"/>-->
+            <class name="org.wso2.carbon.esb.passthru.transport.test.PreserveResponseHeaderTestCase"/>
         </classes>
     </test>
 
@@ -148,6 +150,7 @@
         <classes>
             <class name="org.wso2.carbon.esb.message.processor.test.ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_and_202_TestCase" />
             <class name="org.wso2.carbon.esb.message.processor.test.ESBJAVA3650_CustomHeaderPreserved_MessageProcessorOutMessage_TestCase" />
+            <class name="org.wso2.carbon.esb.message.processor.test.MessageProcessorWithoutIntervalParamTestCase" />
         </classes>
     </test>
 

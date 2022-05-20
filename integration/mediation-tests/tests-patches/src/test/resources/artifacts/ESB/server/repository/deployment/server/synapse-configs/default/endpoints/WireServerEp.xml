@@ -1,0 +1,3 @@
+<endpoint xmlns="http://ws.apache.org/ns/synapse" name="WireServerEp">
+    <address uri="http://localhost:9500/"/>
+</endpoint>

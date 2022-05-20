@@ -23,13 +23,27 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
+
+import java.io.File;
+
+import static org.testng.Assert.assertTrue;
 
 public class EndpointErrorTest extends ESBIntegrationTest {
+
+    private CarbonLogReader logReader;
+    private final String SOURCE_DIR =
+            TestConfigurationProvider.getResourceLocation(ESBTestConstant.ESB_PRODUCT_GROUP) + File.separator
+                    + "proxyconfig" + File.separator + "proxy" + File.separator + "customProxy" + File.separator;
+
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("EndpointErrorTestProxy");
+        logReader = new CarbonLogReader();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Introduction to Proxy Services")
@@ -39,6 +53,19 @@ public class EndpointErrorTest extends ESBIntegrationTest {
 
         Assert.assertTrue(response.toString().contains("RightErrorSequence Fault Handler Called"),
                 "Wrong fault sequence executed");
+    }
+
+    @Test(groups = {"wso2.esb"}, description = "Faulty Proxy Services with unavailable WSDL Endpoint")
+    public void testWSDLEndpointError() throws Exception {
+
+        logReader.start();
+        log.info("Copying the corrupted WSDL endpoint proxy service file...");
+        deployProxyService("WSDLEndpointErrorTestProxy", SOURCE_DIR);
+        Thread.sleep(15000);
+
+        assertTrue(logReader.assertIfLogExists("proxy-services/WSDLEndpointErrorTestProxy.xml : Failed"),
+                "Faulty WSDL endpoint deployment was not failed!");
+        logReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
