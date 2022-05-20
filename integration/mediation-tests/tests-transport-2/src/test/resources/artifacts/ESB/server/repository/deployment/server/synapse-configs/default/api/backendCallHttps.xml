@@ -22,7 +22,7 @@
         <inSequence>
             <call>
                 <endpoint>
-                    <http method="get" uri-template="https://localhost:8444/http2">
+                    <http method="get" uri-template="https://localhost:8080">
                         <suspendOnFailure>
                             <initialDuration>-1</initialDuration>
                             <progressionFactor>-1</progressionFactor>

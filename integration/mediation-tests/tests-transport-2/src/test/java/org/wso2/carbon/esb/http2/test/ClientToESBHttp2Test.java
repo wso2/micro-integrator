@@ -40,7 +40,7 @@ public class ClientToESBHttp2Test extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(description = "Test HTTP/2 request-response between the client and ESB")
+    @Test(enabled = false,description = "Test HTTP/2 request-response between the client and ESB")
     public void testClientToESBHttp2Request() throws IOException {
 
         OkHttpClient client =
