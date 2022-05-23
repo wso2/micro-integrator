@@ -171,7 +171,7 @@ public class HttpWebsocketEndpointManager extends AbstractInboundEndpointManager
         String hostname = params.getProperties()
                 .getProperty(InboundHttpWebSocketConstants.INBOUND_ENDPOINT_PARAMETER_HOSTNAME);
         String protocolVersion = params.getProperties()
-                .getProperty(InboundHttpWebSocketConstants.INBOUND_ENDPOINT_PARAMETER_HTTP_PROTOCOL_VERSION);
+                .getProperty(InboundHttpWebSocketConstants.INBOUND_ENDPOINT_PARAMETER_HTTP_PROTOCOL_VERSIONS);
 
         HttpWebSocketInboundEndpointConfiguration configuration = new HttpWebSocketInboundEndpointConfiguration(port,
                 hostname, name, protocolVersion, params.getHandlers());

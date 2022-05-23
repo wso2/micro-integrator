@@ -32,6 +32,6 @@ public class InboundHttpWebSocketConstants {
     /**
      * String representing http protocol version of the InboundEndpoint.
      */
-    public static final String INBOUND_ENDPOINT_PARAMETER_HTTP_PROTOCOL_VERSION = "protocolVersion";
+    public static final String INBOUND_ENDPOINT_PARAMETER_HTTP_PROTOCOL_VERSIONS = "protocolVersions";
 
 }
