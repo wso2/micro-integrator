@@ -21,15 +21,14 @@ package org.wso2.carbon.esb.http2.test;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.handler.codec.http.DefaultHttpContent;
 import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.CharsetUtil;
-import io.netty.util.internal.NativeLibraryLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerManager;
 import org.wso2.transport.http.netty.contract.HttpConnectorListener;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
@@ -47,9 +46,13 @@ import java.util.HashMap;
 
 public class BackendServer {
 
-    static Logger log = LoggerFactory.getLogger(BackendServer.class);
+    private static final Log log = LogFactory.getLog(BackendServer.class);
+
     HttpWsConnectorFactory httpWsConnectorFactory = new DefaultHttpWsConnectorFactory();
     private ServerConnector serverConnector;
+    private static final String HOST = "localhost";
+    private static final int PORT = 8080;
+    private static final String VERSION = "2.0";
 
     public BackendServer() {
 
@@ -67,12 +70,13 @@ public class BackendServer {
         try {
             serverConnectorFuture.sync();
         } catch (InterruptedException e) {
+            log.error("Error while starting the server");
         }
     }
 
     public void startSSLServer() throws URISyntaxException {
 
-        ListenerConfiguration listenerConfiguration=initSSLListenerConfiguration();
+        ListenerConfiguration listenerConfiguration = initSSLListenerConfiguration();
         this.serverConnector =
                 httpWsConnectorFactory.createServerConnector(new ServerBootstrapConfiguration(new HashMap<>()),
                         listenerConfiguration);
@@ -81,6 +85,7 @@ public class BackendServer {
         try {
             serverConnectorFuture.sync();
         } catch (InterruptedException e) {
+            log.error("Error while starting SSL server");
         }
     }
 
@@ -90,28 +95,25 @@ public class BackendServer {
         try {
             httpWsConnectorFactory.shutdown();
         } catch (InterruptedException e) {
+            log.error("Error while shutting down the server");
         }
     }
 
     private ListenerConfiguration initListenerConfiguration() {
 
         ListenerConfiguration listenerConfiguration = new ListenerConfiguration();
-        listenerConfiguration.setPort(8080);
-        listenerConfiguration.setHost("localhost");
-        listenerConfiguration.setVersion("2.0");
+        listenerConfiguration.setPort(PORT);
+        listenerConfiguration.setHost(HOST);
+        listenerConfiguration.setVersion(VERSION);
         return listenerConfiguration;
     }
 
     private ListenerConfiguration initSSLListenerConfiguration() throws URISyntaxException {
-//        System.load(String.valueOf(Paths.get(System.getProperty("java.library.path")+"/netty-tcnative-boringssl-static-2.0.47.Final" +
-//                ".jar")));
-//        System.load("/home/thuva/Downloads/netty-tcnative-boringssl-static-2.0.47.Final.jar");
-//        System.loadLibrary("io.netty.netty-tcnative-boringssl-static");
-//        log.info(System.getProperty("java.library.path"));
 
         ListenerConfiguration listenerConfiguration = initListenerConfiguration();
         listenerConfiguration.setScheme("https");
-        listenerConfiguration.setKeyStoreFile(Paths.get(getClass().getResource("/").toURI()).getParent() + "/test-classes/keystores/products/wso2carbon.jks");
+        listenerConfiguration.setKeyStoreFile(Paths.get(getClass().getResource("/").toURI()).getParent() + "/test" +
+                "-classes/keystores/products/wso2carbon.jks");
         listenerConfiguration.setKeyStorePass("wso2carbon");
         listenerConfiguration.setValidateCertEnabled(false);
         return listenerConfiguration;
@@ -119,9 +121,8 @@ public class BackendServer {
 
     private class DefaultHttpConnectorListener implements HttpConnectorListener {
 
-
         public void onMessage(HttpCarbonMessage httpCarbonMessage) {
-            log.info("Message received");
+
             ByteBuf RESPONSE_BYTES =
                     Unpooled.unreleasableBuffer(Unpooled.copiedBuffer(httpCarbonMessage.getHttpVersion(),
                             CharsetUtil.UTF_8));
@@ -130,18 +131,19 @@ public class BackendServer {
             response.setHeaders(httpCarbonMessage.getHeaders());
             response.setHttpStatusCode(200);
             response.setKeepAlive(false);
-            response.setHeader("content-length", httpCarbonMessage.getHttpVersion().length());
+            response.setHeader("Content-Type", "text/plain");
+            response.setHeader("Content-Length", httpCarbonMessage.getHttpVersion().length());
             response.addHttpContent(new DefaultLastHttpContent(RESPONSE_BYTES));
             try {
                 httpCarbonMessage.respond(response);
             } catch (ServerConnectorException e) {
-                log.error("Cannot respond to message",e);
+                log.error("ServerConnectorException", e);
             }
         }
 
         public void onError(Throwable throwable) {
 
-            System.out.println("Error");
+            log.error("Error while reading message", throwable);
         }
     }
 }

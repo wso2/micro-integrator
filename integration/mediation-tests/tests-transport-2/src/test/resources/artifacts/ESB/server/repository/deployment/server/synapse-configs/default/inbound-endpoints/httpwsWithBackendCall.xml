@@ -20,8 +20,7 @@
 
 <inboundEndpoint xmlns="http://ws.apache.org/ns/synapse"
                  name="httpWebsocketInboundEndpointForBackendCallAPI"
-                 protocol="httpws"
-                 suspend="false">
+                 protocol="httpws">
     <parameters>
         <parameter name="port">5056</parameter>
         <parameter name="protocolVersion">2.0</parameter>

@@ -34,7 +34,10 @@
                     </http>
                 </endpoint>
             </call>
+            <log level="full"/>
             <respond/>
         </inSequence>
+        <outSequence/>
+        <faultSequence/>
     </resource>
 </api>

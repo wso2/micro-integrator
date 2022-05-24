@@ -56,6 +56,56 @@
                 </executions>
             </plugin>
             <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-jacoco-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
+                            <includeTypes>jar</includeTypes>
+                            <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-mar-jks</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.ei</groupId>
+                                    <artifactId>wso2mi</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
+                                    <includes>**/*.jks</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-jar-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/artifacts/ESB/server/lib</outputDirectory>
+                            <includeTypes>jar</includeTypes>
+                            <includeArtifactIds>h2</includeArtifactIds>
+                            <excludeTransitive>true</excludeTransitive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
                 <executions>
@@ -79,27 +129,6 @@
                             </resources>
                         </configuration>
                     </execution>
-<!--                    <execution>-->
-<!--                        <id>copy-addressing-client-module</id>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>copy-resources</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <outputDirectory>${basedir}/src/test/resources/client/modules-->
-<!--                            </outputDirectory>-->
-<!--                            <resources>-->
-<!--                                <resource>-->
-<!--                                    <directory>-->
-<!--                                        ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/deployment/client/modules/-->
-<!--                                    </directory>-->
-<!--                                    <includes>-->
-<!--                                        <include>**/*.mar</include>-->
-<!--                                    </includes>-->
-<!--                                </resource>-->
-<!--                            </resources>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
                     <execution>
                         <id>copy-resources-jks</id>
                         <phase>compile</phase>
@@ -156,10 +185,6 @@
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemProperties>
-<!--                        <property>-->
-<!--                            <name>java.library.path</name>-->
-<!--                            <value>${project.build.directory}/test-classes/lib</value>-->
-<!--                        </property>-->
                         <property>
                             <name>framework.resource.location</name>
                             <value>
@@ -183,7 +208,6 @@
                         </carbon.zip>
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
-                        <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
                     </systemProperties>
                     <classpathDependencyExcludes>
                         <classpathDependencyExclude>org.wso2.org.ops4j.pax.logging:pax-logging-api
@@ -192,56 +216,6 @@
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-jacoco-dependencies</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
-                            <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unpack-mar-jks</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.ei</groupId>
-                                    <artifactId>wso2mi</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>zip</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
-                                    <includes>**/*.jks</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-jar-dependencies</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/src/test/resources/artifacts/ESB/server/lib</outputDirectory>
-                            <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>h2</includeArtifactIds>
-                            <excludeTransitive>true</excludeTransitive>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
@@ -249,15 +223,22 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <jetty.version>11.0.9</jetty.version>
-        <io.netty.version>4.1.76.Final</io.netty.version>
+        <io.netty.version>4.1.77.Final</io.netty.version>
+        <io.netty.tcnative.version>2.0.52.Final</io.netty.tcnative.version>
     </properties>
+
 
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative-classes</artifactId>
+            <version>${io.netty.tcnative.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
             <artifactId>netty-tcnative-boringssl-static</artifactId>
-            <version>2.0.52.Final</version>
-            <scope>test</scope>
+            <version>${io.netty.tcnative.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
@@ -296,52 +277,6 @@
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.agent</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty</groupId>-->
-<!--            <artifactId>jetty-client</artifactId>-->
-<!--            <version>11.0.9</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty</groupId>-->
-<!--            <artifactId>jetty-server</artifactId>-->
-<!--            <version>${jetty.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty.http2</groupId>-->
-<!--            <artifactId>http2-server</artifactId>-->
-<!--            <version>${jetty.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty</groupId>-->
-<!--            <artifactId>jetty-servlet</artifactId>-->
-<!--            <version>${jetty.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty.http2</groupId>-->
-<!--            <artifactId>http2-http-client-transport</artifactId>-->
-<!--            <version>${jetty.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty</groupId>-->
-<!--            <artifactId>jetty-util</artifactId>-->
-<!--            <version>${jetty.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty</groupId>-->
-<!--            <artifactId>jetty-io</artifactId>-->
-<!--            <version>${jetty.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty</groupId>-->
-<!--            <artifactId>jetty-alpn-server</artifactId>-->
-<!--            <version>${jetty.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty</groupId>-->
-<!--            <artifactId>jetty-alpn-java-server</artifactId>-->
-<!--            <version>${jetty.version}</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-transport</artifactId>

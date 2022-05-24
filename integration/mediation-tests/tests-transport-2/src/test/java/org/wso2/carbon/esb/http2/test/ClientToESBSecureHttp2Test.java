@@ -39,7 +39,7 @@ public class ClientToESBSecureHttp2Test extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(enabled = false,description = "Test the secure HTTP/2 (HTTPS) request-response between the client and ESB")
+    @Test(description = "Test the secure HTTP/2 (HTTPS) request-response between the client and ESB")
     public void testSecureHttp2RequestClientToESB() throws IOException {
 
         OkHttpClient client = new OkHttpClient.Builder().build();

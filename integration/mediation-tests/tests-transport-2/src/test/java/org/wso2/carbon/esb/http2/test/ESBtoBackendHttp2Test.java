@@ -23,6 +23,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.synapse.transport.netty.BridgeConstants;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -34,13 +35,13 @@ import java.util.Collections;
 
 public class ESBtoBackendHttp2Test extends ESBIntegrationTest {
 
-        final BackendServer server=new BackendServer();
+    final BackendServer server = new BackendServer();
+
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
 
         super.init();
         server.startServer();
-
     }
 
     @Test(description = "Test HTTP/2 request-response between the ESB and backend")
@@ -49,11 +50,8 @@ public class ESBtoBackendHttp2Test extends ESBIntegrationTest {
         OkHttpClient client =
                 new OkHttpClient.Builder().protocols(Collections.singletonList(Protocol.H2_PRIOR_KNOWLEDGE)).connectTimeout(Duration.ofSeconds(1000)).build();
         Request request = new Request.Builder().url("http://localhost:5056/http2BackendCall").get().build();
-//        Request request = new Request.Builder().url("http://localhost:8080").get().build();
-
         Response response = client.newCall(request).execute();
-        Assert.assertEquals(response.protocol(), Protocol.H2_PRIOR_KNOWLEDGE);
-        Assert.assertEquals(response.body().string(), "2.0");
+        Assert.assertEquals(response.body().string(), BridgeConstants.HTTP_2_0_VERSION);
     }
 
     @AfterClass(alwaysRun = true)
