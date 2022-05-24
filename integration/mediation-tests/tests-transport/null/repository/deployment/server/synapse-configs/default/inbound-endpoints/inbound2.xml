@@ -1,6 +1,0 @@
-<inboundEndpoint xmlns="http://ws.apache.org/ns/synapse" name="inbound2" protocol="http" suspend="false">
-   <parameters>
-      <parameter name="dispatch.filter.pattern">.*</parameter>
-      <parameter name="inbound.http.port">9091</parameter>
-   </parameters>
-</inboundEndpoint>
