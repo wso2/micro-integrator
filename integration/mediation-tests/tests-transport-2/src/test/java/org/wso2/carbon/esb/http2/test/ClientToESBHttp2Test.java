@@ -40,14 +40,15 @@ public class ClientToESBHttp2Test extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(description = "Test HTTP/2 request-response between the client and ESB")
+    @Test(description = "Verify HTTP/2 protocol used in request-response between the client and ESB")
     public void testClientToESBHttp2Request() throws IOException {
 
         OkHttpClient client =
                 new OkHttpClient.Builder().protocols(Collections.singletonList(Protocol.H2_PRIOR_KNOWLEDGE)).build();
         Request request = new Request.Builder().url("http://localhost:5055/noBackendCall").get().build();
         Response response = client.newCall(request).execute();
-        Assert.assertEquals(response.protocol(), Protocol.H2_PRIOR_KNOWLEDGE);
+        Assert.assertEquals(response.protocol(), Protocol.H2_PRIOR_KNOWLEDGE, "HTTP/2 protocol is not used between " +
+                "the client and ESB communication");
     }
 
     @AfterClass(alwaysRun = true)

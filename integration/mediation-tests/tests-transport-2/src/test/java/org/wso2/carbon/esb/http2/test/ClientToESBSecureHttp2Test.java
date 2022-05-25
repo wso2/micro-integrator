@@ -39,13 +39,14 @@ public class ClientToESBSecureHttp2Test extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(description = "Test the secure HTTP/2 (HTTPS) request-response between the client and ESB")
+    @Test(description = "Verify secure HTTP/2 protocol used in request-response between the client and ESB")
     public void testSecureHttp2RequestClientToESB() throws IOException {
 
         OkHttpClient client = new OkHttpClient.Builder().build();
         Request request = new Request.Builder().url("https://localhost:5100/noBackendCall").get().build();
         Response response = client.newCall(request).execute();
-        Assert.assertEquals(response.protocol(), Protocol.HTTP_2);
+        Assert.assertEquals(response.protocol(), Protocol.HTTP_2, "HTTP/2 protocol is not used between the client and" +
+                " ESB secure communication");
     }
 
     @AfterClass(alwaysRun = true)

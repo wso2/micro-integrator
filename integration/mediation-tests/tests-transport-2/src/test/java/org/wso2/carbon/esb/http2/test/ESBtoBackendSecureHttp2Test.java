@@ -43,7 +43,7 @@ public class ESBtoBackendSecureHttp2Test extends ESBIntegrationTest {
         server.startSSLServer();
     }
 
-    @Test(description = "Test secure HTTP/2 (HTTPS) request-response between the ESB and backend")
+    @Test(description = "Verify secure HTTP/2 protocol used in request-response between the ESB and backend")
     public void testSecureHttp2RequestESBtoBackend() throws Exception {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -51,7 +51,8 @@ public class ESBtoBackendSecureHttp2Test extends ESBIntegrationTest {
         OkHttpClient client = builder.build();
         Request request = new Request.Builder().url("https://localhost:5101/secureHttp2BackendCall").get().build();
         Response response = client.newCall(request).execute();
-        Assert.assertEquals(response.body().string(), BridgeConstants.HTTP_2_0_VERSION);
+        Assert.assertEquals(response.body().string(), BridgeConstants.HTTP_2_0_VERSION, "HTTP/2 protocol is not used "
+                + "between the ESB and backend secure communication");
     }
 
     @AfterClass(alwaysRun = true)

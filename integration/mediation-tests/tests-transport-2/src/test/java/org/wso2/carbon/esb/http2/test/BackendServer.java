@@ -61,7 +61,6 @@ public class BackendServer {
     public void startServer() {
 
         ListenerConfiguration listenerConfiguration = initListenerConfiguration();
-
         this.serverConnector =
                 httpWsConnectorFactory.createServerConnector(new ServerBootstrapConfiguration(new HashMap<>()),
                         listenerConfiguration);
@@ -70,7 +69,7 @@ public class BackendServer {
         try {
             serverConnectorFuture.sync();
         } catch (InterruptedException e) {
-            log.error("Error while starting the server");
+            log.error("Error while starting the server", e);
         }
     }
 
@@ -85,17 +84,19 @@ public class BackendServer {
         try {
             serverConnectorFuture.sync();
         } catch (InterruptedException e) {
-            log.error("Error while starting SSL server");
+            log.error("Error while starting SSL server", e);
         }
     }
 
     public void stop() {
 
-        serverConnector.stop();
+        if (serverConnector != null) {
+            serverConnector.stop();
+        }
         try {
             httpWsConnectorFactory.shutdown();
         } catch (InterruptedException e) {
-            log.error("Error while shutting down the server");
+            log.error("Error while shutting down the server", e);
         }
     }
 
