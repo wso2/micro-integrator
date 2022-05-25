@@ -39,14 +39,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>${wso2.maven.compiler.source}</source>
+                    <target>${wso2.maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>${maven.jar.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -107,7 +107,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
+                <version>${maven.resources.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>copy-samples</id>
@@ -175,7 +175,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.4</version>
+                <version>${maven.surefire.plugin.version}</version>
                 <inherited>false</inherited>
                 <configuration>
                     <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m</argLine>
@@ -219,25 +219,14 @@
         </plugins>
     </build>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <jetty.version>11.0.9</jetty.version>
-        <io.netty.version>4.1.77.Final</io.netty.version>
-        <io.netty.tcnative.version>2.0.52.Final</io.netty.tcnative.version>
-    </properties>
-
-
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-tcnative-classes</artifactId>
-            <version>${io.netty.tcnative.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-tcnative-boringssl-static</artifactId>
-            <version>${io.netty.tcnative.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -271,7 +260,6 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.jacoco</groupId>
@@ -280,37 +268,30 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-transport</artifactId>
-            <version>${io.netty.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-handler</artifactId>
-            <version>${io.netty.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec</artifactId>
-            <version>${io.netty.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http</artifactId>
-            <version>${io.netty.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http2</artifactId>
-            <version>${io.netty.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-common</artifactId>
-            <version>${io.netty.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-buffer</artifactId>
-            <version>${io.netty.version}</version>
         </dependency>
     </dependencies>
 </project>
