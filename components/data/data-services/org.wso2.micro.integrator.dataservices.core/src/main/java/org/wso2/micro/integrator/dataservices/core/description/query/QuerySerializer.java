@@ -106,7 +106,7 @@ public class QuerySerializer {
 
 	private static void serializeAdvancedProps(Query query, OMElement queryEl, OMFactory fac) {
 		Map<String, String> props = query.getAdvancedProperties();
-		if (props.size() > 0) {
+		if (props != null && props.size() > 0) {
 			OMElement propsEl = fac.createOMElement(new QName(DBSFields.PROPERTIES));
 			OMElement propEl;
 			for (Entry<String, String> entry : props.entrySet()) {
