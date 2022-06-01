@@ -47,7 +47,7 @@
             </CertificateRevocationVerifier>
         </p:parameter>
         <p:parameter name="SSLProtocol">TLS</p:parameter>
-        <p:parameter name="HttpsProtocols">TLSv1.2,TLSv1.3</p:parameter>
+        <p:parameter name="HttpsProtocols">TLSv1.2,TLSv1.1</p:parameter>
         <p:parameter name="PreferredCiphers">
             TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
         </p:parameter>
