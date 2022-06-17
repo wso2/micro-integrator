@@ -54,6 +54,7 @@ public class Constants {
     public static final String PATH_PARAM_ROLE = "/" + "{role}";
     public static final String PATH_PARAM_TRANSACTION = "/" + "{param}";
     public static final String ROOT_CONTEXT = "/";
+    public static final String PREFIX_CONFIGS = "/configs";
 
     public static final String COUNT = "count";
     public static final String TOTAL_COUNT = "totalCount";
