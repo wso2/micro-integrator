@@ -56,6 +56,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SERVER_
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TASKS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TEMPLATES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TRANSACTION;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CONFIGS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_USERS;
 import static org.wso2.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
 import static org.wso2.micro.integrator.management.apis.Constants.ROOT_CONTEXT;
@@ -100,6 +101,7 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ApiResourceAdapter(PREFIX_DATA_SOURCES, new DataSourceResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_ROLES, new RolesResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_ROLES + PATH_PARAM_ROLE, new RoleResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_CONFIGS, new ConfigsResource()));
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);
     }
