@@ -85,7 +85,6 @@ public class ConfigsResource implements MiApiResource {
             }
 
         } catch (ConfigNotFoundException e) {
-            LOG.warn("Error when parsing the request :", e);
             response = Utils.createJsonError(" Error : ", e, axis2MessageContext, Constants.BAD_REQUEST);
         } catch (IOException e) {
             LOG.error("Error when parsing JSON payload", e);
