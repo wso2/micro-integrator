@@ -50,12 +50,15 @@ public class ConfigsResource implements MiApiResource {
         methods.add(Constants.HTTP_PUT);
     }
 
-    @Override public Set<String> getMethods() {
+    @Override
+    public Set<String> getMethods() {
+
         return methods;
     }
 
-    @Override public boolean invoke(MessageContext messageContext,
-            org.apache.axis2.context.MessageContext axis2MessageContext, SynapseConfiguration synapseConfiguration) {
+    @Override
+    public boolean invoke(MessageContext messageContext,
+                          org.apache.axis2.context.MessageContext axis2MessageContext, SynapseConfiguration synapseConfiguration) {
 
         String httpMethod = axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY) != null ?
                 axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString() :
@@ -68,20 +71,20 @@ public class ConfigsResource implements MiApiResource {
         JSONObject response;
         try {
             switch (httpMethod) {
-            case Constants.HTTP_GET: {
-                response = handleGet(messageContext);
-                break;
-            }
-            case Constants.HTTP_PUT: {
-                response = handlePut(axis2MessageContext);
-                break;
-            }
-            default: {
-                response = Utils.createJsonError(
-                        "Unsupported HTTP method, " + httpMethod + ". Only GET and " + "PUT methods are supported",
-                        axis2MessageContext, Constants.BAD_REQUEST);
-                break;
-            }
+                case Constants.HTTP_GET: {
+                    response = handleGet(messageContext);
+                    break;
+                }
+                case Constants.HTTP_PUT: {
+                    response = handlePut(axis2MessageContext);
+                    break;
+                }
+                default: {
+                    response = Utils.createJsonError(
+                            "Unsupported HTTP method, " + httpMethod + ". Only GET and " + "PUT methods are supported",
+                            axis2MessageContext, Constants.BAD_REQUEST);
+                    break;
+                }
             }
 
         } catch (ConfigNotFoundException e) {
@@ -108,47 +111,48 @@ public class ConfigsResource implements MiApiResource {
         }
         configName = payload.get(CONFIG_NAME).getAsString();
         switch (configName) {
-        case CORRELATION: {
-            JsonObject configs;
-            if (!payload.has(CONFIGS)) {
-                throw new ConfigNotFoundException("Missing Required Field: " + CONFIGS);
+            case CORRELATION: {
+                JsonObject configs;
+                if (!payload.has(CONFIGS)) {
+                    throw new ConfigNotFoundException("Missing Required Field: " + CONFIGS);
+                }
+                configs = payload.get(CONFIGS).getAsJsonObject();
+                if (!configs.has(ENABLED)) {
+                    throw new ConfigNotFoundException("Missing Required Field: " + ENABLED);
+                }
+                String enabledAsaString = configs.get(ENABLED).getAsString();
+                boolean enabled = Boolean.parseBoolean(enabledAsaString);
+                PassThroughCorrelationConfigDataHolder.setEnable(enabled);
+                JSONObject response = new JSONObject();
+                response.put(Constants.MESSAGE, "Successfully Updated Correlation Logs Status");
+                return response;
             }
-            configs = payload.get(CONFIGS).getAsJsonObject();
-            if (!configs.has(ENABLED)) {
-                throw new ConfigNotFoundException("Missing Required Field: " + ENABLED);
+            default: {
+                throw new ConfigNotFoundException(configName + " configName not found");
             }
-            String enabledAsaString = configs.get(ENABLED).getAsString();
-            boolean enabled = Boolean.parseBoolean(enabledAsaString);
-            PassThroughCorrelationConfigDataHolder.setEnable(enabled);
-            JSONObject response = new JSONObject();
-            response.put(Constants.MESSAGE, "Successfully Updated Correlation Logs Status");
-            return response;
-        }
-        default: {
-            throw new ConfigNotFoundException(configName + " configName not found");
-        }
         }
     }
 
     private JSONObject handleGet(MessageContext messageContext) throws ConfigNotFoundException {
+
         String configName = Utils.getQueryParameter(messageContext, CONFIG_NAME);
         if (configName == null) {
             throw new ConfigNotFoundException("Missing Required Query Parameter : configName");
         }
         JSONObject response;
         switch (configName) {
-        case CORRELATION: {
-            JSONObject configs = new JSONObject();
-            Boolean correlationEnabled = PassThroughCorrelationConfigDataHolder.isEnable();
-            configs.put(ENABLED, correlationEnabled);
-            response = new JSONObject();
-            response.put(CONFIG_NAME, configName);
-            response.put(CONFIGS, configs);
-            break;
-        }
-        default: {
-            throw new ConfigNotFoundException(configName + " configName not found");
-        }
+            case CORRELATION: {
+                JSONObject configs = new JSONObject();
+                Boolean correlationEnabled = PassThroughCorrelationConfigDataHolder.isEnable();
+                configs.put(ENABLED, correlationEnabled);
+                response = new JSONObject();
+                response.put(CONFIG_NAME, configName);
+                response.put(CONFIGS, configs);
+                break;
+            }
+            default: {
+                throw new ConfigNotFoundException(configName + " configName not found");
+            }
         }
         return response;
     }
