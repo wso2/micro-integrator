@@ -469,6 +469,9 @@
     {% if transport.http.sender.secured_enable == true %}
     <transportSender name="https" class="{{transport.https.sender.class}}">
         <parameter name="non-blocking" locked="false">true</parameter>
+        {% if transport.http.sender.secured_non_proxy_hosts is defined %}
+        <parameter name="http.nonProxyHosts" locked="false">{% for parameter_value in transport.http.sender.secured_non_proxy_hosts %}{{parameter_value}}{% if loop.index < transport.http.sender.secured_non_proxy_hosts|length %}|{% endif %}{% endfor %}</parameter>
+        {% endif %}
         {% for parameter_key,parameter_value in transport.https.sender.parameter.items() %}
         <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
         {% endfor %}
