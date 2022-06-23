@@ -96,6 +96,7 @@
             <outputDirectory>wso2mi-${pom.version}</outputDirectory>
             <excludes>
                 <exclude>**/dbscripts/**</exclude>
+                <exclude>repository/database/**</exclude>
                 <exclude>**/*.aar</exclude>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/wso2</exclude>
