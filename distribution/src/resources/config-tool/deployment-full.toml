@@ -1124,6 +1124,18 @@ password = "admin"
 dashboard_url = "https://localhost:9743/dashboard/api/"
 
 
+#################### Analytics #########################################
+[analytics]
+enabled = false
+id = "$ref{server.hostname}"
+prefix = "SYNAPSE_ANALYTICS_DATA"
+api_analytics.enabled = true
+proxy_service_analytics.enabled = true
+sequence_analytics.enabled = true
+endpoint_analytics.enabled = true
+inbound_endpoint_analytics.enabled = true
+
+
 #################### Axis2 Phases ##########################################
 
 # If you want to add/remove an Axis2 phase, include all of the following

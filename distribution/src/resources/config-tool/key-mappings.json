@@ -104,6 +104,15 @@
   "mediation.internal_http_api_port": "synapse_properties.'internal.http.api.port'",
   "mediation.internal_https_api_port": "synapse_properties.'internal.https.api.port'",
 
+  "analytics.enabled" : "synapse_properties.'analytics.enabled'",
+  "analytics.prefix" : "synapse_properties.'analytics.prefix'",
+  "analytics.id" : "synapse_properties.'analytics.id'",
+  "analytics.api_analytics.enabled" : "synapse_properties.'analytics.api_analytics.enabled'",
+  "analytics.proxy_service_analytics.enabled" : "synapse_properties.'analytics.proxy_service_analytics.enabled'",
+  "analytics.sequence_analytics.enabled" : "synapse_properties.'analytics.sequence_analytics.enabled'",
+  "analytics.endpoint_analytics.enabled" : "synapse_properties.'analytics.endpoint_analytics.enabled'",
+  "analytics.inbound_endpoint_analytics.enabled" : "synapse_properties.'analytics.inbound_endpoint_analytics.enabled'",
+
   "opentracing.enable": "synapse_properties.'opentracing.enable'",
   "opentracing.jaeger.sampler.manager_host": "synapse_properties.'jaeger.sampler.manager.host'",
   "opentracing.jaeger.sampler.manager_port": "synapse_properties.'jaeger.sampler.manager.port'",
