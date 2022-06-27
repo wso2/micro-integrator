@@ -146,11 +146,15 @@
   "transport.http.sender.warn_on_http_500": "transport.http.sender.parameter.'warnOnHTTP500'",
   "transport.http.sender.proxy_host": "transport.http.sender.parameter.'http.proxyHost'",
   "transport.http.sender.proxy_port": "transport.http.sender.parameter.'http.proxyPort'",
+  "transport.http.sender.proxy_username": "transport.http.sender.parameter.'http.proxy.username'",
+  "transport.http.sender.proxy_password": "transport.http.sender.parameter.'http.proxy.password'",
 
   "transport.http.sender.hostname_verifier": "transport.https.sender.parameter.'HostnameVerifier'",
   "transport.http.sender.secured_protocols": "transport.https.sender.parameter.HttpsProtocols",
   "transport.http.sender.secured_proxy_host": "transport.https.sender.parameter.'http.proxyHost'",
   "transport.http.sender.secured_proxy_port": "transport.https.sender.parameter.'http.proxyPort'",
+  "transport.http.sender.secured_proxy_username": "transport.https.sender.parameter.'http.proxy.username'",
+  "transport.http.sender.secured_proxy_password": "transport.https.sender.parameter.'http.proxy.password'",
 
   "transport.blocking.http.listener.port": "transport.blocking.http.listener.parameter.port",
   "transport.blocking.http.listener.hostname": "transport.blocking.http.listener.parameter.hostname",
