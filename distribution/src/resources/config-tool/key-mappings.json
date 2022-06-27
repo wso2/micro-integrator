@@ -171,16 +171,12 @@
   "transport.blocking.http.sender.default_connections_per_host": "transport.blocking.http.sender.parameter.defaultMaxConnectionsPerHost",
   "transport.blocking.http.sender.omit_soap12_action": "transport.blocking.http.sender.parameter.OmitSOAP12Action",
   "transport.blocking.http.sender.so_timeout": "transport.blocking.http.sender.parameter.SO_TIMEOUT",
-  "transport.blocking.http.sender.proxy_host": "transport.blocking.http.sender.parameter.'http.proxyHost'",
-  "transport.blocking.http.sender.proxy_port": "transport.blocking.http.sender.parameter.'http.proxyPort'",
 
   "transport.blocking.http.sender.secured_enable_client_caching": "transport.blocking.https.sender.parameter.cacheHttpClient",
   "transport.blocking.http.sender.secured_transfer_encoding": "transport.blocking.https.sender.parameter.Transfer-Encoding",
   "transport.blocking.http.sender.secured_default_connections_per_host": "transport.blocking.https.sender.parameter.defaultMaxConnectionsPerHost",
   "transport.blocking.http.sender.secured_omit_soap12_action": "transport.blocking.https.sender.parameter.OmitSOAP12Action",
   "transport.blocking.http.sender.secured_so_timeout": "transport.blocking.https.sender.parameter.SO_TIMEOUT",
-  "transport.blocking.http.sender.secured_proxy_host": "transport.blocking.https.sender.parameter.'http.proxyHost'",
-  "transport.blocking.http.sender.secured_proxy_port": "transport.blocking.https.sender.parameter.'http.proxyPort'",
 
   "transport.mail.sender:parameter.hostname": "transport.mail.sender:parameter.'mail.smtp.host'",
   "transport.mail.sender:parameter.port": "transport.mail.sender:parameter.'mail.smtp.port'",
