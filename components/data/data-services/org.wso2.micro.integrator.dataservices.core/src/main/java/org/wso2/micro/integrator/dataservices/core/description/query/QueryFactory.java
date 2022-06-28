@@ -809,9 +809,9 @@ public class QueryFactory {
 
         private String dataType;
 
-		private String requiredRoles;
+        private String requiredRoles;
 
-		private String isOptional;
+        private String isOptional;
 
         public ResultEntryColumnInfo(String value) throws DataServiceFault {
             // {"name":"$jack(type:integer;requiredRoles:admin,role1)"
