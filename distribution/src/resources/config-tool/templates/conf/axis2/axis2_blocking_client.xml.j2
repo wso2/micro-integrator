@@ -21,13 +21,17 @@
     <!-- Parameters -->
     <!-- ================================================= -->
 
-    {% if transport.blocking.proxy is defined %}
+    {% if transport.blocking.http.sender.proxy_host is defined %}
     <parameter name="Proxy">
         <parameters>
-            <ProxyHost>{{transport.blocking.proxy.host}}</ProxyHost>
-            <ProxyPort>{{transport.blocking.proxy.port}}</ProxyPort>
-            <ProxyUser>{{transport.blocking.proxy.username}}</ProxyUser>
-            <ProxyPassword>{{transport.blocking.proxy.password}}</ProxyPassword>
+            <ProxyHost>{{transport.blocking.http.sender.proxy_host}}</ProxyHost>
+            <ProxyPort>{{transport.blocking.http.sender.proxy_port}}</ProxyPort>
+            {% if transport.blocking.http.sender.proxy_username is defined %}
+            <ProxyUser>{{transport.blocking.http.sender.proxy_username}}</ProxyUser>
+            {% endif %}
+            {% if transport.blocking.http.sender.proxy_password is defined %}
+            <ProxyPassword>{{transport.blocking.http.sender.proxy_password}}</ProxyPassword>
+            {% endif %}
         </parameters>
     </parameter>
     {% endif %}
