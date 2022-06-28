@@ -20,6 +20,22 @@
     <!-- ================================================= -->
     <!-- Parameters -->
     <!-- ================================================= -->
+
+    {% if transport.blocking.http.sender.proxy_host is defined %}
+    <parameter name="Proxy">
+        <parameters>
+            <ProxyHost>{{transport.blocking.http.sender.proxy_host}}</ProxyHost>
+            <ProxyPort>{{transport.blocking.http.sender.proxy_port}}</ProxyPort>
+            {% if transport.blocking.http.sender.proxy_username is defined %}
+            <ProxyUser>{{transport.blocking.http.sender.proxy_username}}</ProxyUser>
+            {% endif %}
+            {% if transport.blocking.http.sender.proxy_password is defined %}
+            <ProxyPassword>{{transport.blocking.http.sender.proxy_password}}</ProxyPassword>
+            {% endif %}
+        </parameters>
+    </parameter>
+    {% endif %}
+
     <parameter name="hotdeployment">true</parameter>
     <parameter name="hotupdate">false</parameter>
     <parameter name="enableMTOM">{{server.enableMTOM}}</parameter>
