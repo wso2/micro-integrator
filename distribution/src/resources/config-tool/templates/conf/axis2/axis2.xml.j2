@@ -33,32 +33,32 @@
     <parameter name="enableSwA" locked="false">{{server.enableSwA}}</parameter>
 
     <!-- If you want to enable file caching for attachments change this to true -->
-    <parameter name="cacheAttachments" locked="false">false</parameter>
+    <parameter name="cacheAttachments" locked="false">{{server.cache_attachments}}</parameter>
     <!-- Attachment file caching location relative to CARBON_HOME -->
-    <parameter name="attachmentDIR" locked="false">work/mtom</parameter>
+    <parameter name="attachmentDIR" locked="false">{{server.attachment_dir}}</parameter>
     <!-- Attachment file cache threshold size -->
-    <parameter name="sizeThreshold" locked="false">4000</parameter>
+    <parameter name="sizeThreshold" locked="false">{{server.size_threshold}}</parameter>
 
     <!-- Completely disable REST handling in Axis2/Synapse if the value is true -->
-    <parameter name="disableREST" locked="false">false</parameter>
+    <parameter name="disableREST" locked="false">{{server.disable_rest}}</parameter>
 
     <!-- Sandesha2 persistance storage manager -->
-    <parameter name="Sandesha2StorageManager" locked="false">inmemory</parameter>
+    <parameter name="Sandesha2StorageManager" locked="false">{{server.sandesha2_storage_manager}}</parameter>
 
     <!-- Our HTTP endpoints can handle both REST and SOAP under the following service path. In -->
     <!-- case of a servlet container, if you change this you have to manually change the -->
     <!-- settings of your servlet container to map this context path to proper Axis2 servlets -->
-    <parameter name="servicePath" locked="false">services</parameter>
+    <parameter name="servicePath" locked="false">{{server.service_path}}</parameter>
 
     <!--the directory in which .aar services are deployed inside axis2 repository-->
-    <parameter name="ServicesDirectory">axis2services</parameter>
+    <parameter name="ServicesDirectory">{{server.services_directory}}</parameter>
 
     <!--If turned on with use the Accept header of the request to determine the contentType of the
     response-->
     <parameter name="httpContentNegotiation">{{server.http_content_negotiation | default('true')}}</parameter>
 
     <!--the directory in which modules are deployed inside axis2 repository-->
-    <parameter name="ModulesDirectory">axis2modules</parameter>
+    <parameter name="ModulesDirectory">{{server.modules_directory}}</parameter>
 
     <!-- User agent and the server details to be used in the http communication -->
     <parameter name="userAgent" locked="true">{{server.userAgent}}</parameter>
@@ -66,31 +66,31 @@
 
     <!-- During a fault, stacktrace can be sent with the fault message. The following flag -->
     <!-- will control that behaviour -->
-    <parameter name="sendStacktraceDetailsWithFaults" locked="false">false</parameter>
+    <parameter name="sendStacktraceDetailsWithFaults" locked="false">{{server.send_stacktrace_details_with_faults}}</parameter>
 
     <!-- If there aren't any information available to find out the fault reason, we set the -->
     <!-- message of the exception as the faultreason/Reason. But when a fault is thrown from -->
     <!-- a service or some where, it will be wrapped by different levels. Due to this the -->
     <!-- initial exception message can be lost. If this flag is set then, Axis2 tries to get -->
     <!-- the first exception and set its message as the faultreason/Reason. -->
-    <parameter name="DrillDownToRootCauseForFaultReason" locked="false">false</parameter>
+    <parameter name="DrillDownToRootCauseForFaultReason" locked="false">{{server.drill_down_to_root_cause_for_fault_reason}}</parameter>
 
     <!-- Set the flag to true if you want to enable transport level session management -->
-    <parameter name="manageTransportSession" locked="false">true</parameter>
+    <parameter name="manageTransportSession" locked="false">{{server.manage_transport_session}}</parameter>
 
     <!-- This will give out the timout of the configuration contexts, in milliseconds -->
-    <parameter name="ConfigContextTimeoutInterval" locked="false">30000</parameter>
+    <parameter name="ConfigContextTimeoutInterval" locked="false">{{server.config_context_timeout_interval}}</parameter>
 
     <!-- Synapse Configuration file location relative to CARBON_HOME -->
     <parameter name="SynapseConfig.ConfigurationFile" locked="false">{{server.synapse_config_file_path}}</parameter>
     <!-- Synapse Home parameter -->
-    <parameter name="SynapseConfig.HomeDirectory" locked="false">.</parameter>
+    <parameter name="SynapseConfig.HomeDirectory" locked="false">{{server.synapse_config_home_directory}}</parameter>
     <!-- Resolve root used to resolve synapse references like schemas inside a WSDL -->
-    <parameter name="SynapseConfig.ResolveRoot" locked="false">.</parameter>
+    <parameter name="SynapseConfig.ResolveRoot" locked="false">{{server.synapse_config_resolve_root}}</parameter>
     <!-- Synapse Server name parameter -->
-    <parameter name="SynapseConfig.ServerName" locked="false">localhost</parameter>
+    <parameter name="SynapseConfig.ServerName" locked="false">{{server.synapse_config_server_name}}</parameter>
     <!-- Returns 401 for UT secured scenario with incorrect/missing credentials -->
-    <parameter name="enableBasicAuth" locked="false">true</parameter>
+    <parameter name="enableBasicAuth" locked="false">{{server.enable_basic_auth}}</parameter>
 
     {% if transport.default_content_type is defined %}
     <parameter name="defaultContentType" locked="false">"{{transport.default_content_type}}"</parameter>

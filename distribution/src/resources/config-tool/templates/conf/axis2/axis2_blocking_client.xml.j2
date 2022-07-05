@@ -36,8 +36,8 @@
     </parameter>
     {% endif %}
 
-    <parameter name="hotdeployment">true</parameter>
-    <parameter name="hotupdate">false</parameter>
+    <parameter name="hotdeployment">{{server.blocking.hot_deployment}}</parameter>
+    <parameter name="hotupdate">{{server.blocking.hot_update}}</parameter>
     <parameter name="enableMTOM">{{server.enableMTOM}}</parameter>
     <parameter name="enableSwA">{{server.enableSwA}}</parameter>
 
@@ -47,20 +47,20 @@
     <parameter name="sizeThreshold">4000</parameter-->
 
     <!--This will give out the timout of the configuration contexts, in milliseconds-->
-    <parameter name="ConfigContextTimeoutInterval">30000</parameter>
+    <parameter name="ConfigContextTimeoutInterval">{{server.blocking.config_context_timeout_interval}}</parameter>
 
     <!--During a fault, stacktrace can be sent with the fault message. The following flag will control -->
     <!--that behavior.-->
-    <parameter name="sendStacktraceDetailsWithFaults">false</parameter>
+    <parameter name="sendStacktraceDetailsWithFaults">{{server.blocking.send_stacktrace_details_with_faults}}</parameter>
 
     <!--If there aren't any information available to find out the fault reason, we set the message of the exception-->
     <!--as the faultreason/Reason. But when a fault is thrown from a service or some where, it will be -->
     <!--wrapped by different levels. Due to this the initial exception message can be lost. If this flag-->
     <!--is set, then Axis2 tries to get the first exception and set its message as the faultreason/Reason.-->
-    <parameter name="DrillDownToRootCauseForFaultReason">false</parameter>
+    <parameter name="DrillDownToRootCauseForFaultReason">{{server.blocking.drill_down_to_root_cause_for_fault_reason}}</parameter>
 
-    <parameter name="userName">admin</parameter>
-    <parameter name="password">axis2</parameter>
+    <parameter name="userName">{{server.blocking.username}}</parameter>
+    <parameter name="password">{{server.blocking.password}}</parameter>
 
     <!--To override repository/services you need to uncomment following parameter and value SHOULD be absolute file path.-->
     <!--ServicesDirectory only works on the following cases-->
@@ -82,11 +82,11 @@
     <!--Our HTTP endpoints can handle both REST and SOAP. Following parameters can be used to distinguiush those endpoints-->
     <!--In case of a servlet, if you change this you have to manually change the settings of your servlet container to map this -->
     <!--context path to proper Axis2 servlets-->
-    <parameter name="servicePath" locked="false">services</parameter>
-    <parameter name="restPath" locked="false">rest</parameter>
+    <parameter name="servicePath" locked="false">{{server.blocking.service_path}}</parameter>
+    <parameter name="restPath" locked="false">{{server.blocking.rest_path}}</parameter>
 
     <!-- Following parameter will completely disable REST handling in Axis2-->
-    <parameter name="disableREST" locked="true">false</parameter>
+    <parameter name="disableREST" locked="true">{{server.blocking.disable_rest}}</parameter>
 
     <!--POJO deployer , this will alow users to drop .class file and make that into a service-->
     <deployer extension=".class" directory="pojo" class="org.apache.axis2.deployment.POJODeployer"/>
