@@ -807,7 +807,7 @@
         <netty.version>4.1.77.Final</netty.version>
         <netty.tcnative.version>2.0.52.Final</netty.tcnative.version>
         <org.eclipse.paho.version>1.2.0</org.eclipse.paho.version>
-        <activemq.version>5.9.1</activemq.version>
+        <activemq.version>5.15.9</activemq.version>
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
         <cglib.version>2.2</cglib.version>
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
