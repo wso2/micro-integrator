@@ -81,6 +81,10 @@
                             org.wso2.micro.integrator.management.apis.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>
+                            com.nimbusds.jose;version="${nimbus-jose.orbit.imp.pkg.version}",
+                            com.nimbusds.jose.jwk;version="${nimbus-jose.orbit.imp.pkg.version}",
+                            com.nimbusds.jose.crypto;version="${nimbus-jose.orbit.imp.pkg.version}",
+                            com.nimbusds.jwt;version="${nimbus-jose.orbit.imp.pkg.version}",
                             org.osgi.service.cm;version="${version.eclipse.equinox.cm}",
                             org.apache.commons.configuration;version="${commons.configuration.version}",
                             *;resolution:=optional
