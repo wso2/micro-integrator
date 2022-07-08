@@ -503,9 +503,9 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.quartz-scheduler.wso2</groupId>
+                <groupId>org.wso2.orbit.org.quartz-scheduler</groupId>
                 <artifactId>quartz</artifactId>
-                <version>2.1.1.wso2v1</version>
+                <version>2.3.2.wso2v1</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>

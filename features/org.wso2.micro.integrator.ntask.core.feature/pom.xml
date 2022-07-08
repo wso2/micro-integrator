@@ -45,7 +45,7 @@
             <artifactId>org.wso2.micro.integrator.ntask.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.quartz-scheduler.wso2</groupId>
+            <groupId>org.wso2.orbit.org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
         </dependency>
 
@@ -80,7 +80,7 @@
                                     org.wso2.ei:org.wso2.micro.integrator.ntask.core
                                 </bundleDef>
                                 <bundleDef>org.wso2.ei:org.wso2.micro.integrator.coordination</bundleDef>
-                                <bundleDef>org.quartz-scheduler.wso2:quartz</bundleDef>
+                                <bundleDef>org.wso2.orbit.org.quartz-scheduler:quartz</bundleDef>
                             </bundles>
                         </configuration>
                     </execution>
