@@ -31,6 +31,7 @@ public class Constants {
     public static final String PREFIX_ENDPOINTS = "/endpoints";
     public static final String PREFIX_INBOUND_ENDPOINTS = "/inbound-endpoints";
     public static final String PREFIX_PROXY_SERVICES = "/proxy-services";
+    public static final String PREFIX_REGISTRY_RESOURCES = "/registry-resources";
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
     public static final String PREFIX_LOGGING = "/logging";
@@ -179,7 +180,8 @@ public class Constants {
     public static final String DOMAIN_SEPARATOR;
 
     static {
-        String userDomainSeparator = CarbonServerConfigurationService.getInstance().getFirstProperty("UserDomainSeparator");
+        String userDomainSeparator = CarbonServerConfigurationService.getInstance()
+                .getFirstProperty("UserDomainSeparator");
         if (userDomainSeparator != null && !userDomainSeparator.trim().isEmpty()) {
             DOMAIN_SEPARATOR = userDomainSeparator.trim();
         } else {
@@ -187,6 +189,24 @@ public class Constants {
         }
     }
 
-
     static final String SERVICE_PID = "service.pid";
+
+    //Constants for RegistryResource
+    public static final String REGISTRY_PATH = "registryPath";
+    public static final String META_DATA = "metadata";
+    public static final String FETCH_TYPE = "type";
+    public static final String EXPAND_PARAM = "expand";
+    public static final String VALUE_TRUE = "true";
+    public static final String VALUE_FALSE = "false";
+    public static final String PROPERTIES = "properties";
+    public static final String CONTENT = "content";
+    public static final String PROPERTY_NAME = "propertyName";
+    public static final String PROPERTY_VALUE = "propertyValue";
+    public static final String REGISTRY_ROOT_PATH = "registry";
+    public static final String ERROR_KEY = "error";
+    public static final String CONFIGURATION_REGISTRY_PATH = "registry/config";
+    public static final String CONFIGURATION_REGISTRY_PREFIX = "conf:";
+    public static final String GOVERNANCE_REGISTRY_PATH = "registry/governance";
+    public static final String GOVERNANCE_REGISTRY_PREFIX = "gov:";
+    public static final String URL_SEPARATOR = "/";
 }
