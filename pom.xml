@@ -1551,7 +1551,7 @@
         <commons-text.orbit.version>1.6.wso2v1</commons-text.orbit.version>
         <commons-lang3.orbit.version>3.4.0.wso2v1</commons-lang3.orbit.version>
         <joda-time.version>2.9.4.wso2v1</joda-time.version>
-        <libthrift.version>0.8.0.wso2v1</libthrift.version>
+        <libthrift.version>0.16.0.wso2v1</libthrift.version>
         <axis2.mar.maven.plugin>1.5.2</axis2.mar.maven.plugin>
 
         <!--PAX Logging related dependency versions-->
