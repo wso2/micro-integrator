@@ -1570,7 +1570,7 @@
         <netty.version>4.1.73.Final</netty.version>
         <netty.tcnative.version>2.0.47.Final</netty.tcnative.version>
         <jacoco.agent.version>0.8.2</jacoco.agent.version>
-        <activemq.version>5.2.0</activemq.version>
+        <activemq.version>5.6.0</activemq.version>
         <activemq.broker.version>5.15.2</activemq.broker.version>
         <aries.version>1.1.0</aries.version>
         <aries.proxy.version>1.0.1</aries.proxy.version>
