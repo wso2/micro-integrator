@@ -42,6 +42,7 @@ import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportOutDescription;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.inbound.InboundResponseSender;
 import org.wso2.micro.integrator.websocket.transport.utils.SSLUtil;
 
 import java.net.URI;
@@ -85,16 +86,28 @@ public class WebsocketConnectionFactory {
     public WebSocketClientHandler getChannelHandler(final URI uri, final String sourceIdentifier,
                                                     final boolean handshakePresent, final String dispatchSequence,
                                                     final String dispatchErrorSequence, final String contentType,
-                                                    final Map<String, Object> headers) throws InterruptedException {
-        WebSocketClientHandler channelHandler;
-        if (handshakePresent) {
-            channelHandler = cacheNewConnection(uri, sourceIdentifier, dispatchSequence, dispatchErrorSequence,
-                                                contentType, headers);
-        } else {
-            channelHandler = getChannelHandlerFromPool(sourceIdentifier, getClientHandlerIdentifier(uri));
-            if (channelHandler == null) {
-                channelHandler = cacheNewConnection(uri, sourceIdentifier, dispatchSequence, dispatchErrorSequence,
-                                                    contentType, headers);
+                                                    final boolean isConnectionTerminate,
+                                                    final Map<String, Object> headers,
+                                                    final InboundResponseSender inboundResponseSender,
+                                                    final String responseDispatchSequence,
+                                                    final String responseErrorSequence) throws InterruptedException {
+        WebSocketClientHandler channelHandler = getChannelHandlerFromPool(sourceIdentifier,
+                                                                          getClientHandlerIdentifier(uri));
+        if (channelHandler == null) {
+            synchronized (sourceIdentifier.intern()) {
+                channelHandler = getChannelHandlerFromPool(sourceIdentifier, getClientHandlerIdentifier(uri));
+                if (channelHandler == null) {
+                    if (isConnectionTerminate) {
+                        return null;
+                    }
+                    if (log.isDebugEnabled()) {
+                        log.debug("Caching new connection with sourceIdentifier " + sourceIdentifier + " in the Thread,"
+                                          + "ID: " + Thread.currentThread().getName() + "," + Thread.currentThread().getId());
+                    }
+                    channelHandler = cacheNewConnection(uri, sourceIdentifier, dispatchSequence,
+                                                        dispatchErrorSequence, contentType, headers, inboundResponseSender,
+                                                        responseDispatchSequence, responseErrorSequence);
+                }
             }
         }
         channelHandler.handshakeFuture().sync();
@@ -110,7 +123,10 @@ public class WebsocketConnectionFactory {
 
     public WebSocketClientHandler cacheNewConnection(final URI uri, final String sourceIdentifier,
                                                      String dispatchSequence, String dispatchErrorSequence,
-                                                     String contentType, Map<String, Object> headers) {
+                                                     String contentType, Map<String, Object> headers,
+                                                     InboundResponseSender inboundResponseSender,
+                                                     String responseDispatchSequence,
+                                                     String responseErrorSequence) {
         if (log.isDebugEnabled()) {
             log.debug("Creating a Connection for the specified WS endpoint.");
         }
@@ -193,6 +209,11 @@ public class WebsocketConnectionFactory {
                                                                  SubprotocolBuilderUtil
                                                                          .contentTypeToSyanapeSubprotocol(contentType) :
                                                                  null, false, defaultHttpHeaders));
+            if (!(WebsocketConstants.UNIVERSAL_SOURCE_IDENTIFIER).equals(sourceIdentifier)) {
+                handler.registerWebsocketResponseSender(inboundResponseSender);
+                handler.setDispatchSequence(responseDispatchSequence);
+                handler.setDispatchErrorSequence(responseErrorSequence);
+            }
             Bootstrap b = new Bootstrap();
             b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
                 @Override
@@ -210,6 +231,12 @@ public class WebsocketConnectionFactory {
             ch.closeFuture().addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                    if (log.isDebugEnabled()) {
+                        log.debug("OperationComplete ChannelFuture triggered on sourceIdentifier: " + sourceIdentifier
+                                          + ", clientIdentifier: " + getClientHandlerIdentifier(uri)
+                                          + ", in the Thread,ID: " + Thread.currentThread().getName() + ","
+                                          + Thread.currentThread().getId());
+                    }
                     group.shutdownGracefully();
                     removeChannelHandler(sourceIdentifier, getClientHandlerIdentifier(uri));
                 }
@@ -235,6 +262,11 @@ public class WebsocketConnectionFactory {
 
     public void addChannelHandler(String sourceIdentifier, String clientIdentifier,
                                   WebSocketClientHandler clientHandler) {
+        if (log.isDebugEnabled()) {
+            log.debug("Adding channel for on sourceIdentifier: " + sourceIdentifier + ", clientIdentifier: "
+                              + clientIdentifier + ", in the Thread,ID: " + Thread.currentThread().getName() + ","
+                              + Thread.currentThread().getId());
+        }
         ConcurrentHashMap<String, WebSocketClientHandler> handlerMap = channelHandlerPool.get(sourceIdentifier);
         if (handlerMap == null) {
             handlerMap = new ConcurrentHashMap<String, WebSocketClientHandler>();
@@ -246,6 +278,11 @@ public class WebsocketConnectionFactory {
     }
 
     public WebSocketClientHandler getChannelHandlerFromPool(String sourceIdentifier, String clientIdentifier) {
+        if (log.isDebugEnabled()) {
+            log.debug("Fetching channel for on sourceIdentifier: " + sourceIdentifier + ", clientIdentifier: "
+                              + clientIdentifier + ", in the Thread,ID: " + Thread.currentThread().getName() + ","
+                              + Thread.currentThread().getId());
+        }
         ConcurrentHashMap<String, WebSocketClientHandler> handlerMap = channelHandlerPool.get(sourceIdentifier);
         if (handlerMap == null) {
             return null;
@@ -255,8 +292,17 @@ public class WebsocketConnectionFactory {
     }
 
     public void removeChannelHandler(String sourceIdentifier, String clientIdentifier) {
+        if (log.isDebugEnabled()) {
+            log.debug("Removing channel for on sourceIdentifier: " + sourceIdentifier + ", clientIdentifier: "
+                              + clientIdentifier + ", in the Thread,ID: " + Thread.currentThread().getName() + ","
+                              + Thread.currentThread().getId());
+        }
         ConcurrentHashMap<String, WebSocketClientHandler> handlerMap = channelHandlerPool.get(sourceIdentifier);
         handlerMap.remove(clientIdentifier);
+        if (handlerMap.isEmpty()) {
+            handlerMap.clear();
+            channelHandlerPool.remove(sourceIdentifier);
+        }
     }
 
 }
