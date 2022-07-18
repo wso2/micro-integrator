@@ -29,3 +29,6 @@ synapse.sal.endpoints.sesssion.timeout.default=600000
 synapse.carbon.ext.tenant.info=org.wso2.micro.integrator.initializer.handler.MITenantInfoConfigurator
 mediation.flow.statistics.event.consume.interval=1000
 mediation.flow.statistics.event.clean.interval=15000
+{%for property in opentelemetry.otlp.header_properties %}
+opentelemetry.otlp.header_properties.{{property.name}} = {{property.value}}
+{% endfor %}

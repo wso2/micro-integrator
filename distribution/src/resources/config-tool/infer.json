@@ -178,6 +178,9 @@
     },
     "log": {
       "synapse_properties.'opentelemetry.class'": "org.apache.synapse.aspects.flow.statistics.tracing.opentelemetry.management.LogTelemetryManager"
+    },
+    "otlp": {
+      "synapse_properties.'opentelemetry.class'": "org.apache.synapse.aspects.flow.statistics.tracing.opentelemetry.management.OTLPTelemetryManager"
     }
   }
 
