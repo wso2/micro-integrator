@@ -18,6 +18,7 @@ set -o xtrace
 
 HOME=`pwd`
 TEST_SCRIPT=test.sh
+MVNSTATE=1
 
 function usage()
 {
@@ -101,12 +102,13 @@ do
   value=${tokens[1]}
   if [ "$key" = "ProductVersion" ]; then
     productVersion=${tokens[1]}
-    case ${productVersion} in
-        MI-1.2.0)
-            echo "Executing tests for the product version: $productVersion"
+    productName=${product}-${productVersion}
+    case ${productName} in
+        mi-1.2.0)
+            echo "Executing tests for the product version: $productName"
             runTestProfile profile_general ;;
         *)
-            echo "ERROR: Unknown product version: " ${productVersion} "read from deployment.properties. Aborting the execution.";;
+            echo "ERROR: Unknown product : " ${productName} "read from deployment.properties. Aborting the execution.";;
     esac
     PRODUCT_VERSION_FOUND=true
     break
@@ -117,6 +119,8 @@ if ! $PRODUCT_VERSION_FOUND ; then
     echo "deployment.properties file does not contain the product version. Executing the default suite ."
     runTestProfile profile_general
 fi
+
+MVNSTATE=$?
 
 #=============== Copy Surefire Reports ===========================================
 echo
