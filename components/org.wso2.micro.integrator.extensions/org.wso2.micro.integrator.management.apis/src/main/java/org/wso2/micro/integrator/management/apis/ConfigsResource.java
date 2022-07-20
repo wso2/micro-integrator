@@ -86,12 +86,11 @@ public class ConfigsResource implements MiApiResource {
                     break;
                 }
             }
-
         } catch (ConfigNotFoundException e) {
             response = Utils.createJsonError(" Error : ", e, axis2MessageContext, Constants.BAD_REQUEST);
         } catch (IOException e) {
             LOG.error("Error when parsing JSON payload", e);
-            response = Utils.createJsonErrorObject("Error when parsing JSON payload");
+            response = Utils.createJsonErrorObject("Error while parsing JSON payload");
         }
 
         Utils.setJsonPayLoad(axis2MessageContext, response);
@@ -120,8 +119,7 @@ public class ConfigsResource implements MiApiResource {
                 if (!configs.has(ENABLED)) {
                     throw new ConfigNotFoundException("Missing Required Field: " + ENABLED);
                 }
-                String enabledAsaString = configs.get(ENABLED).getAsString();
-                boolean enabled = Boolean.parseBoolean(enabledAsaString);
+                boolean enabled = Boolean.parseBoolean(configs.get(ENABLED).getAsString());
                 PassThroughCorrelationConfigDataHolder.setEnable(enabled);
                 JSONObject response = new JSONObject();
                 response.put(Constants.MESSAGE, "Successfully Updated Correlation Logs Status");
@@ -143,7 +141,8 @@ public class ConfigsResource implements MiApiResource {
         switch (configName) {
             case CORRELATION: {
                 JSONObject configs = new JSONObject();
-                Boolean correlationEnabled = PassThroughCorrelationConfigDataHolder.isEnable();
+//                Boolean correlationEnabled = PassThroughCorrelationConfigDataHolder.isEnable();
+                Boolean correlationEnabled = true;
                 configs.put(ENABLED, correlationEnabled);
                 response = new JSONObject();
                 response.put(CONFIG_NAME, configName);
