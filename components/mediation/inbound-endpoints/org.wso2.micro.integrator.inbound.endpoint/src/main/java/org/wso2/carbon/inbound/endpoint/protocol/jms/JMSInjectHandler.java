@@ -157,7 +157,9 @@ public class JMSInjectHandler {
                                     msg.getBooleanProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED));
             // set the JMS Message ID as the Message ID of the MessageContext
             try {
-                msgCtx.setMessageID(msg.getJMSMessageID());
+                if (msg.getJMSMessageID() != null) {
+                    msgCtx.setMessageID(msg.getJMSMessageID());
+                }
                 String jmsCorrelationID = msg.getJMSCorrelationID();
                 if (jmsCorrelationID != null && !jmsCorrelationID.isEmpty()) {
                     msgCtx.setProperty(JMSConstants.JMS_COORELATION_ID, jmsCorrelationID);

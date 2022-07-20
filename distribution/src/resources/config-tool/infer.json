@@ -168,6 +168,17 @@
       "transport.http.sender.certificate_revocation_cache_size": "1024",
       "transport.http.sender.certificate_revocation_cache_delay": "1000"
     }
+  },
+  "opentelemetry.type": {
+    "jaeger": {
+      "synapse_properties.'opentelemetry.class'": "org.apache.synapse.aspects.flow.statistics.tracing.opentelemetry.management.JaegerTelemetryManager"
+    },
+    "zipkin": {
+      "synapse_properties.'opentelemetry.class'": "org.apache.synapse.aspects.flow.statistics.tracing.opentelemetry.management.ZipkinTelemetryManager"
+    },
+    "log": {
+      "synapse_properties.'opentelemetry.class'": "org.apache.synapse.aspects.flow.statistics.tracing.opentelemetry.management.LogTelemetryManager"
+    }
   }
 
 }

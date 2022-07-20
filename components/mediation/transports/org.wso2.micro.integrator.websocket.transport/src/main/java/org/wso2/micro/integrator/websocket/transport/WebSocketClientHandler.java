@@ -105,7 +105,15 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         this.ctx = ctx;
+        if (log.isDebugEnabled()) {
+            log.debug("Initiating handshake on channel: " + ctx.channel().toString() + ", in the Thread,ID: "
+                              + Thread.currentThread().getName() + "," + Thread.currentThread().getId());
+        }
         this.handshaker.handshake(ctx.channel());
+        if (log.isDebugEnabled()) {
+            log.debug("Handshake completed on channel: " + ctx.channel().toString() + ", in the Thread,ID: "
+                              + Thread.currentThread().getName() + "," + Thread.currentThread().getId());
+        }
     }
 
     @Override
@@ -122,7 +130,9 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ctx.channel(), (FullHttpResponse) msg);
             if (log.isDebugEnabled()) {
-                log.debug("WebSocket client connected to remote WS endpoint on context id : " + ctx.channel().toString());
+                log.debug("WebSocket client connected to remote WS endpoint on channel: " + ctx.channel().toString()
+                                  + ", in the Thread,ID: " + Thread.currentThread().getName() + ","
+                                  + Thread.currentThread().getId());
             }
             handshakeFuture.setSuccess();
             return;
@@ -136,6 +146,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                     org.apache.synapse.MessageContext synCtx = getSynapseMessageContext(tenantDomain);
                     synCtx.setProperty(WebsocketConstants.WEBSOCKET_TARGET_HANDSHAKE_PRESENT, true);
                     synCtx.setProperty(WebsocketConstants.WEBSOCKET_TARGET_HANDLER_CONTEXT, ctx);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Handshake acknowledge being injected to sequence on channel: "
+                                          + ctx.channel().toString() + ", in the Thread,ID: "
+                                          + Thread.currentThread().getName() + "," + Thread.currentThread().getId());
+                    }
                     injectToSequence(synCtx, dispatchSequence, dispatchErrorSequence);
                 }
             }
@@ -145,6 +160,10 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     public void handleTargetWebsocketChannelTermination(WebSocketFrame frame) throws AxisFault {
+        if (log.isDebugEnabled()) {
+            log.debug("Closing Target Websocket channel: " + ctx.channel().toString() + ", in the Thread,ID: "
+                              + Thread.currentThread().getName() + "," + Thread.currentThread().getId());
+        }
         handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain()).addListener(ChannelFutureListener.CLOSE);
     }
 
@@ -152,6 +171,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         org.apache.synapse.MessageContext synCtx = getSynapseMessageContext(tenantDomain);
         synCtx.setProperty(WebsocketConstants.WEBSOCKET_BINARY_FRAME_PRESENT, true);
         synCtx.setProperty(WebsocketConstants.WEBSOCKET_BINARY_FRAME, frame);
+        if (log.isDebugEnabled()) {
+            log.debug("BinaryWebsocketFrame being injected to sequence on channel: " + ctx.channel().toString()
+                              + ", in the Thread,ID: "
+                              + Thread.currentThread().getName() + "," + Thread.currentThread().getId());
+        }
         injectToSequence(synCtx, dispatchSequence, dispatchErrorSequence);
     }
 
@@ -159,6 +183,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         org.apache.synapse.MessageContext synCtx = getSynapseMessageContext(tenantDomain);
         synCtx.setProperty(WebsocketConstants.WEBSOCKET_TEXT_FRAME_PRESENT, true);
         synCtx.setProperty(WebsocketConstants.WEBSOCKET_TEXT_FRAME, frame);
+        if (log.isDebugEnabled()) {
+            log.debug("PassthroughTextWebsocketFrame being injected to sequence on channel: " + ctx.channel().toString()
+                              + ", in the Thread,ID: "
+                              + Thread.currentThread().getName() + "," + Thread.currentThread().getId());
+        }
         injectToSequence(synCtx, dispatchSequence, dispatchErrorSequence);
     }
 
@@ -171,6 +200,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             if (handshaker.isHandshakeComplete()) {
 
                 if (frame instanceof CloseWebSocketFrame) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("CloseWebSocketFrame received on channel: " + ctx.channel().toString()
+                                          + ", in the Thread,ID: " + Thread.currentThread().getName() + ","
+                                          + Thread.currentThread().getId());
+                    }
                     handleTargetWebsocketChannelTermination(frame);
                     return;
                 } else if ((frame instanceof BinaryWebSocketFrame) && ((handshaker.actualSubprotocol() == null) || (
@@ -181,7 +215,17 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                 } else if ((frame instanceof PingWebSocketFrame) && ((handshaker.actualSubprotocol() == null) ||
                         ((handshaker.actualSubprotocol() != null) &&
                                 !handshaker.actualSubprotocol().contains(WebsocketConstants.SYNAPSE_SUBPROTOCOL_PREFIX)))) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("PingWebSocketFrame received on channel: " + ctx.channel().toString()
+                                          + ", in the Thread,ID: " + Thread.currentThread().getName() + ","
+                                          + Thread.currentThread().getId());
+                    }
                     ctx.channel().writeAndFlush(new PongWebSocketFrame(frame.content().retain()));
+                    if (log.isDebugEnabled()) {
+                        log.debug("PongWebSocketFrame sent on channel: " + ctx.channel().toString()
+                                          + ", in the Thread,ID: " + Thread.currentThread().getName() + ","
+                                          + Thread.currentThread().getId());
+                    }
                     return;
                 } else if ((frame instanceof TextWebSocketFrame) && ((handshaker.actualSubprotocol() == null) || (
                         (handshaker.actualSubprotocol() != null) && !handshaker.actualSubprotocol()
@@ -239,8 +283,17 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpResponse) {
+            if (log.isDebugEnabled()) {
+                log.debug("Connection upgrade request received on channel: " + ctx.channel().toString()
+                                  + ", in the Thread,ID: " + Thread.currentThread().getName() + ","
+                                  + Thread.currentThread().getId());
+            }
             handleHandshake(ctx, (FullHttpResponse) msg);
         } else if (msg instanceof WebSocketFrame) {
+            if (log.isDebugEnabled()) {
+                log.debug("WebsocketFrame received on channel: " + ctx.channel().toString() + ", in the Thread,ID: "
+                                  + Thread.currentThread().getName() + "," + Thread.currentThread().getId());
+            }
             handleWebSocketFrame(ctx, (WebSocketFrame) msg);
         }
     }
@@ -300,7 +353,9 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         MediatorFaultHandler mediatorFaultHandler = new MediatorFaultHandler(faultSequence);
         synCtx.pushFaultHandler(mediatorFaultHandler);
         if (log.isDebugEnabled()) {
-            log.debug("injecting message to sequence : " + dispatchSequence);
+            log.debug("Injecting message to sequence: " + dispatchSequence + " on channel: " + ctx.channel().toString()
+                              + ", in the Thread,ID: "
+                              + Thread.currentThread().getName() + "," + Thread.currentThread().getId());
         }
         synCtx.getEnvironment().injectMessage(synCtx, injectingSequence);
     }

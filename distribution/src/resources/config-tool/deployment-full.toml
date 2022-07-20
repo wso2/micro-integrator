@@ -883,17 +883,11 @@ internal_http_api_enable = true     # inferred  true by default
 internal_http_api_port = 9191       # inferred 9191 by default
 internal_https_api_port = 9154      # inferred 9154 by default
 
-[opentracing]
+[opentelemetry]
 enable = false
-jaeger.sampler.manager_host="localhost"
-jaeger.sampler.manager_port="5778"
-jaeger.sender.agent_host="localhost"
-jaeger.sender.agent_port="6831"
-jaeger.reporter.log_spans=false
-jaeger.reporter.max_queue_size="100"
-jaeger.reporter.flush_interval="1000"
-zipkin.enable = false
-zipkin.backend.url = "http://localhost:9411/api/v2/spans"
+host="localhost"
+port="14250"
+class="org.apache.synapse.aspects.flow.statistics.tracing.opentelemetry.management.JaegerTelemetryManager"
 
 ###################################   Database configurations   ###################################
 [[datasource]]
