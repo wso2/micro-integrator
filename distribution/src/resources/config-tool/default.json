@@ -65,7 +65,6 @@
   "synapse_properties.'analytics.inbound_endpoint_analytics.enabled'": true,
   "synapse_properties.'analytics.sequence_analytics.named_only'": false,
 
-
   "passthru_properties.'http.socket.timeout'": "180000",
   "passthru_properties.'worker_pool_size_core'": "400",
   "passthru_properties.'worker_pool_size_max'": "400",
