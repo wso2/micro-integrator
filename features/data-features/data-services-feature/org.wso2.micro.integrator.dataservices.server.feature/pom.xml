@@ -80,6 +80,7 @@
                                 <bundleDef>io.netty:netty-handler</bundleDef>
                                 <bundleDef>io.netty:netty-buffer</bundleDef>
                                 <bundleDef>io.netty:netty-transport</bundleDef>
+                                <bundleDef>io.netty:netty-transport-native-unix-common</bundleDef>
                                 <bundleDef>io.netty:netty-codec</bundleDef>
                                 <bundleDef>io.netty:netty-common</bundleDef>
                                 <bundleDef>org.mongodb:mongo-java-driver</bundleDef>
