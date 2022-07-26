@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2022, WSO2 LLC. (http://www.wso2.com) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -44,7 +44,6 @@ public class ConfigsResource implements MiApiResource {
     Set<String> methods;
 
     public ConfigsResource() {
-
         methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
         methods.add(Constants.HTTP_PUT);
@@ -52,22 +51,18 @@ public class ConfigsResource implements MiApiResource {
 
     @Override
     public Set<String> getMethods() {
-
         return methods;
     }
 
     @Override
     public boolean invoke(MessageContext messageContext,
                           org.apache.axis2.context.MessageContext axis2MessageContext, SynapseConfiguration synapseConfiguration) {
-
         String httpMethod = axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY) != null ?
                 axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString() :
                 "method undefined";
-
         if (LOG.isDebugEnabled()) {
             LOG.debug("Handling" + httpMethod + "request");
         }
-
         JSONObject response;
         try {
             switch (httpMethod) {
@@ -92,14 +87,12 @@ public class ConfigsResource implements MiApiResource {
             LOG.error("Error when parsing JSON payload", e);
             response = Utils.createJsonErrorObject("Error while parsing JSON payload");
         }
-
         Utils.setJsonPayLoad(axis2MessageContext, response);
         return true;
     }
 
     private JSONObject handlePut(org.apache.axis2.context.MessageContext axis2MessageContext)
             throws ConfigNotFoundException, IOException {
-
         if (!JsonUtil.hasAJsonPayload(axis2MessageContext)) {
             return Utils.createJsonErrorObject("JSON payload is missing");
         }
@@ -132,7 +125,6 @@ public class ConfigsResource implements MiApiResource {
     }
 
     private JSONObject handleGet(MessageContext messageContext) throws ConfigNotFoundException {
-
         String configName = Utils.getQueryParameter(messageContext, CONFIG_NAME);
         if (configName == null) {
             throw new ConfigNotFoundException("Missing Required Query Parameter : configName");
@@ -141,8 +133,7 @@ public class ConfigsResource implements MiApiResource {
         switch (configName) {
             case CORRELATION: {
                 JSONObject configs = new JSONObject();
-//                Boolean correlationEnabled = PassThroughCorrelationConfigDataHolder.isEnable();
-                Boolean correlationEnabled = true;
+                Boolean correlationEnabled = PassThroughCorrelationConfigDataHolder.isEnable();
                 configs.put(ENABLED, correlationEnabled);
                 response = new JSONObject();
                 response.put(CONFIG_NAME, configName);
@@ -155,5 +146,4 @@ public class ConfigsResource implements MiApiResource {
         }
         return response;
     }
-
 }
