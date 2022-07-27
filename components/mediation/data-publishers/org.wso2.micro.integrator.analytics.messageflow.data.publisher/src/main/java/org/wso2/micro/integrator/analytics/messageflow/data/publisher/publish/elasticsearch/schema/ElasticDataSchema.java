@@ -19,6 +19,7 @@
 package org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.elasticsearch.schema;
 
 import com.google.gson.JsonObject;
+import org.apache.synapse.ServerConfigurationInformation;
 import org.apache.synapse.config.SynapsePropertiesLoader;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.elasticsearch.ElasticConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusInitializer;
@@ -43,11 +44,18 @@ public class ElasticDataSchema {
     }
 
     public static void init() {
-        hostname = ServiceBusInitializer.getConfigurationInformation().getHostName();
-        serverName = ServiceBusInitializer.getConfigurationInformation().getServerName();
-        ipAddress = ServiceBusInitializer.getConfigurationInformation().getIpAddress();
         publisherId = SynapsePropertiesLoader.getPropertyValue(
                 ElasticConstants.SynapseConfigKeys.IDENTIFIER, hostname);
+        ServerConfigurationInformation config = ServiceBusInitializer.getConfigurationInformation();
+        if (config != null) {
+            setupServerMetadata(config);
+        }
+    }
+
+    public static void setupServerMetadata(ServerConfigurationInformation config) {
+        hostname = config.getHostName();
+        serverName = config.getServerName();
+        ipAddress = config.getIpAddress();
     }
 
     public void setPayload(ElasticDataSchemaElement payload) {

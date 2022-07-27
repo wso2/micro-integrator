@@ -50,10 +50,10 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
     private boolean analyticsDisabledForProxyServices;
     private boolean analyticsDisabledForEndpoints;
     private boolean analyticsDisabledForInboundEndpoints;
-    private boolean enabled = false;
+    protected boolean enabled = false;
     private String analyticsDataPrefix;
 
-    private ElasticStatisticsPublisher() {
+    protected ElasticStatisticsPublisher() {
         ElasticDataSchema.init();
         loadConfigurations();
     }
@@ -107,7 +107,7 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
         });
     }
 
-    private void publishAnalytic(ElasticDataSchemaElement payload) {
+    void publishAnalytic(ElasticDataSchemaElement payload) {
         ElasticDataSchema dataSchemaInst = new ElasticDataSchema(payload);
         log.info(String.format("%s %s", analyticsDataPrefix, dataSchemaInst.getJsonString()));
     }
@@ -192,17 +192,7 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
 
         ElasticDataSchemaElement analyticsPayload = generateAnalyticsObject(event, Endpoint.class);
         ElasticDataSchemaElement endpointDetails = new ElasticDataSchemaElement();
-        String endpointName;
-        boolean isAnonymous = false;
-        if ((endpoint instanceof AbstractEndpoint) &&
-                ((AbstractEndpoint) endpoint).isAnonymous()) {
-            endpointName = SynapseConstants.ANONYMOUS_ENDPOINT;
-            isAnonymous = true;
-        } else {
-            endpointName = endpoint.getName();
-        }
-        endpointDetails.setAttribute(ElasticConstants.EnvelopDef.ENDPOINT_NAME, endpointName);
-        endpointDetails.setAttribute(ElasticConstants.EnvelopDef.ENDPOINT_IS_ANONYMOUS, isAnonymous);
+        endpointDetails.setAttribute(ElasticConstants.EnvelopDef.ENDPOINT_NAME, endpoint.getName());
         analyticsPayload.setAttribute(ElasticConstants.EnvelopDef.ENDPOINT_DETAILS, endpointDetails);
 
         publishAnalytic(analyticsPayload);
@@ -240,6 +230,7 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.LATENCY, event.getDuration());
 
         ElasticDataSchemaElement metadata = new ElasticDataSchemaElement();
+        analyticPayload.setAttribute(ElasticConstants.EnvelopDef.METADATA, metadata);
         Axis2MessageContext axis2mc = (Axis2MessageContext) synCtx;
         if (axis2mc.getAnalyticsMetadata() == null) {
             return analyticPayload;
@@ -252,7 +243,6 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
             metadata.setAttribute(entry.getKey(), entry.getValue());
         }
 
-        analyticPayload.setAttribute(ElasticConstants.EnvelopDef.METADATA, metadata);
         return analyticPayload;
     }
 

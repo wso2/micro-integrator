@@ -117,7 +117,6 @@ public class ElasticConstants {
         public static final String PROXY_SERVICE_DETAILS = "proxyServiceDetails";
 
         public static final String ENDPOINT_NAME = "name";
-        public static final String ENDPOINT_IS_ANONYMOUS = "isAnonymous";
         public static final String ENDPOINT_DETAILS = "endpointDetails";
 
         public static final String INBOUND_ENDPOINT_NAME = "name";
