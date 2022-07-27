@@ -20,11 +20,13 @@ package org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.e
 
 import com.google.gson.JsonObject;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ElasticDataSchemaElement {
     private final Map<String, Object> attributes = new HashMap<>();
+    private long startTime;
 
     public void setAttribute(String key, Object value) {
         attributes.put(key, value);
@@ -40,6 +42,14 @@ public class ElasticDataSchemaElement {
         } catch (ClassCastException e) {
             return defaultValue;
         }
+    }
+
+    public String getStartTime() {
+        return Instant.ofEpochMilli(startTime).toString();
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
     }
 
     public JsonObject toJsonObject() {

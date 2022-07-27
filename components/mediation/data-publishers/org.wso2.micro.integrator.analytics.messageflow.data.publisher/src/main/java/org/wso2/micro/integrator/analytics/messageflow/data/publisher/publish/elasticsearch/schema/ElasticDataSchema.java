@@ -30,11 +30,11 @@ public class ElasticDataSchema {
     private static String serverName;
     private static String ipAddress;
     private static String publisherId;
-    private final Instant timestamp;
+    private final String timestamp;
     private ElasticDataSchemaElement payload;
 
     public ElasticDataSchema(ElasticDataSchemaElement payload) {
-        this.timestamp = Instant.now();
+        this.timestamp = payload.getStartTime();
         this.setPayload(payload);
     }
 
@@ -63,7 +63,7 @@ public class ElasticDataSchema {
         serverMetadata.addProperty(ElasticConstants.ServerMetadataFieldDef.PUBLISHER_ID, publisherId);
 
         exportingAnalytic.add(ElasticConstants.EnvelopDef.SERVER_INFO, serverMetadata);
-        exportingAnalytic.addProperty(ElasticConstants.EnvelopDef.TIMESTAMP, timestamp.toString());
+        exportingAnalytic.addProperty(ElasticConstants.EnvelopDef.TIMESTAMP, timestamp);
         exportingAnalytic.addProperty(ElasticConstants.EnvelopDef.SCHEMA_VERSION,
                 ElasticConstants.SynapseConfigKeys.SCHEMA_VERSION);
         exportingAnalytic.add(ElasticConstants.EnvelopDef.PAYLOAD, payload.toJsonObject());

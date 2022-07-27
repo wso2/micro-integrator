@@ -229,9 +229,11 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
     private ElasticDataSchemaElement generateAnalyticsObject(PublishingEvent event, Class<?> entityClass) {
         MessageContext synCtx = event.getMessageContext();
         ElasticDataSchemaElement analyticPayload = new ElasticDataSchemaElement();
+        analyticPayload.setStartTime(event.getStartTime());
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.ENTITY_TYPE, entityClass.getSimpleName());
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.ENTITY_CLASS_NAME, entityClass.getName());
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.FAULT_RESPONSE, synCtx.isFaultResponse());
+        analyticPayload.setAttribute(ElasticConstants.EnvelopDef.FAILURE, event.getFaultCount() != 0);
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.MESSAGE_ID, synCtx.getMessageID());
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.CORRELATION_ID,
                 synCtx.getProperty(CorrelationConstants.CORRELATION_ID));

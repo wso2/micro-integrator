@@ -90,6 +90,7 @@ public class ElasticConstants {
         public static final String ENTITY_TYPE = "entityType";
         public static final String ENTITY_CLASS_NAME = "entityClassName";
         public static final String FAULT_RESPONSE = "faultResponse";
+        public static final String FAILURE = "failure";
         public static final String CORRELATION_ID = "correlation_id";
         public static final String MESSAGE_ID = "messageId";
         public static final String LATENCY = "latency";
