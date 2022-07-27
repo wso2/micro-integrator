@@ -55,6 +55,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
      */
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
+
         super.init();
         offset = portOffset + 10;
     }
@@ -67,8 +68,8 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
      * @throws IOException                  the io exception
      * @throws AutomationFrameworkException the automation framework exception
      */
-    @Test(groups = { "wso2.esb" }, description = "Test get configs resource for correlation")
-    public void testRetrieveCorrelationConfigs() throws IOException, AutomationFrameworkException{
+    @Test(groups = {"wso2.esb"}, description = "Test get configs resource for correlation")
+    public void testRetrieveCorrelationConfigs() throws IOException, AutomationFrameworkException {
 
         startNewServer(false);
         sendGetRequest(offset, false);
@@ -80,16 +81,16 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
     }
 
     /**
-     * Test update correlation configs. This will update the correlation configs using the
+     * Test update correlation configs. This will enable the correlation configs using the
      * management API. It will check whether the update was successful by retrieving the
      * correlation logs status from the management API and reading the correlation log file
      * for logs.
      *
      * @throws IOException the io exception
      */
-    @Test(groups = { "wso2.esb" }, dependsOnMethods = {"testRetrieveCorrelationConfigs"},
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = {"testRetrieveCorrelationConfigs"},
             description = "Test get configs resource for correlation")
-    public void testUpdateCorrelationConfigs() throws IOException {
+    public void testUpdateCorrelationConfigsEnable() throws IOException {
 
         sendPutRequest(offset, true);
         sendGetRequest(offset, true);
@@ -106,23 +107,17 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
     }
 
     /**
-     * Test retrieve correlation configs with system parameter. This will start up the server
-     * with the enableCorrelationLogs flag. It will check whether the GET request of correlation
-     * config retrieves the proper status which is 'true'. It will check whether a PUT request
-     * will override the setting from the system property. ( Should not be able to override ).
-     * This is confirmed by reading the correlation log file again.
+     * Test update correlation configs disable. This will disable the correlation logs using the
+     * Management API. It will check whether the update was successful by retrieving the correlation
+     * logs status from the management API and checking the correlation log file for no logs.
      *
-     * @throws IOException                  the io exception
-     * @throws AutomationFrameworkException the automation framework exception
+     * @throws IOException the io exception
      */
-    @Test(groups = { "wso2.esb" }, dependsOnMethods = {"testUpdateCorrelationConfigs"},
-            description = "Test get configs resource for correlation with system parameter")
-    public void testRetrieveCorrelationConfigsWithSystemParameter() throws IOException, AutomationFrameworkException{
-        stopServer();
-        startNewServer(true);
-        sendGetRequest(offset, true);
-        sendPutRequest(offset, false);
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = {"testUpdateCorrelationConfigsEnable"},
+            description = "Test get configs resource for correlation")
+    public void testUpdateCorrelationConfigsDisable() throws IOException {
 
+        sendPutRequest(offset, false);
 
         String apiLogFilePath = carbonHome + File.separator + "repository"
                 + File.separator + "logs" + File.separator + "correlation.log";
@@ -134,7 +129,41 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
                     logLine.contains("ROUND-TRIP LATENCY") || logLine.contains("Thread switch latency"));
         }
 
-        sendGetRequest(offset,true);
+        sendGetRequest(offset, false);
+        logLine = bufferedReader.readLine();
+        Assert.assertNull(logLine);
+    }
+
+    /**
+     * Test retrieve correlation configs with system parameter. This will start up the server
+     * with the enableCorrelationLogs flag. It will check whether the GET request of correlation
+     * config retrieves the proper status which is 'true'. It will check whether a PUT request
+     * will override the setting from the system property. ( Should not be able to override ).
+     * This is confirmed by reading the correlation log file again.
+     *
+     * @throws IOException                  the io exception
+     * @throws AutomationFrameworkException the automation framework exception
+     */
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = {"testUpdateCorrelationConfigsDisable"},
+            description = "Test get configs resource for correlation with system parameter")
+    public void testRetrieveCorrelationConfigsWithSystemParameter() throws IOException, AutomationFrameworkException {
+
+        stopServer();
+        startNewServer(true);
+        sendGetRequest(offset, true);
+        sendPutRequest(offset, false);
+
+        String apiLogFilePath = carbonHome + File.separator + "repository"
+                + File.separator + "logs" + File.separator + "correlation.log";
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(apiLogFilePath));
+        String logLine = bufferedReader.readLine();
+        Assert.assertNotNull(logLine);
+        while ((logLine = bufferedReader.readLine()) != null) {
+            Assert.assertTrue(logLine.contains("HTTP State Transition") ||
+                    logLine.contains("ROUND-TRIP LATENCY") || logLine.contains("Thread switch latency"));
+        }
+
+        sendGetRequest(offset, true);
 
         while ((logLine = bufferedReader.readLine()) != null) {
             Assert.assertTrue(logLine.contains("HTTP State Transition") ||
@@ -144,10 +173,12 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
 
     /**
      * Start a new server.
+     *
      * @throws IOException
      * @throws AutomationFrameworkException
      */
     private void startNewServer(boolean enableCorrelationLogs) throws IOException, AutomationFrameworkException {
+
         HashMap<String, String> startupParameterMap = new HashMap<>();
         startupParameterMap.put("-DportOffset", String.valueOf(offset));
         startupParameterMap.put("-DenableCorrelationLogs", String.valueOf(enableCorrelationLogs));
@@ -161,11 +192,13 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
         Assert.assertNotNull(carbonHome);
     }
 
-    private void stopServer() throws AutomationFrameworkException{
+    private void stopServer() throws AutomationFrameworkException {
+
         server.stopServer();
     }
 
     private void sendGetRequest(int offset, boolean correlationConfigStatus) throws IOException {
+
         String accessToken = TokenUtil.getAccessToken(hostName, offset);
         Assert.assertNotNull(accessToken);
 
@@ -191,6 +224,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
     }
 
     private void sendPutRequest(int offset, boolean correlationConfigEnabled) throws IOException {
+
         String accessToken = TokenUtil.getAccessToken(hostName, offset);
         Assert.assertNotNull(accessToken);
 
@@ -218,17 +252,21 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
 
     /**
      * Return if the management api is available.
+     *
      * @return
      */
     public Callable<Boolean> isManagementApiAvailable() {
+
         return this::checkIfManagementApiAvailable;
     }
 
     /**
      * Check if the management api is available
+     *
      * @return
      */
     private boolean checkIfManagementApiAvailable() {
+
         try (Socket socket = new Socket(hostName, DEFAULT_INTERNAL_API_HTTPS_PORT + offset)) {
             return true;
         } catch (Exception e) {
@@ -243,6 +281,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
      */
     @AfterClass(alwaysRun = true)
     public void cleanState() throws Exception {
+
         stopServer();
         System.setProperty("port.offset", String.valueOf(portOffset));
         System.setProperty("enableCorrelationLogs", String.valueOf(false));
