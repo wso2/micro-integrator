@@ -1750,7 +1750,7 @@
         <antlr4.runtime.version>4.5.1.wso2v1</antlr4.runtime.version>
 
         <atomikos.version>3.8.0.wso2v1</atomikos.version>
-        <saxon.wso2.version>9.5.1-8</saxon.wso2.version>
+        <saxon.wso2.version>10.8</saxon.wso2.version>
         <xercesImpl.orbit.version>2.12.2.wso2v1</xercesImpl.orbit.version>
         <commons-logging.version>1.2</commons-logging.version>
         <mockito.version>2.23.4</mockito.version>

@@ -308,7 +308,7 @@ org.wso2.ciphertool-1.1.15.jar                                                  
 antlr4-runtime-4.7.1.jar                                                                            bundle         bsd
 slf4j-simple-1.7.36.jar                                                                             bundle         mit
 slf4j-api-1.7.36.jar                                                                                bundle         mit
-Saxon-HE-9.5.1-8.jar                                                                                jar            mpl20
+Saxon-HE-10.8.jar                                                                                   jar            mpl20
 commons-logging-1.2.jar                                                                             bundle         apache2
 org.wso2.micro.integrator.bootstrap-4.1.0.jar                                                       bundle         apache2
 tomcat-juli-9.0.58.jar                                                                              bundle         apache2
