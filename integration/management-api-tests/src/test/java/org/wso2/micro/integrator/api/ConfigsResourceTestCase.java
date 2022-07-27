@@ -77,7 +77,6 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(apiLogFilePath));
         String logLine = bufferedReader.readLine();
         Assert.assertNull(logLine);
-
     }
 
     /**
@@ -135,15 +134,12 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
                     logLine.contains("ROUND-TRIP LATENCY") || logLine.contains("Thread switch latency"));
         }
 
-
         sendGetRequest(offset,true);
 
         while ((logLine = bufferedReader.readLine()) != null) {
             Assert.assertTrue(logLine.contains("HTTP State Transition") ||
                     logLine.contains("ROUND-TRIP LATENCY") || logLine.contains("Thread switch latency"));
         }
-
-
     }
 
     /**
@@ -165,12 +161,9 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
         Assert.assertNotNull(carbonHome);
     }
 
-
     private void stopServer() throws AutomationFrameworkException{
         server.stopServer();
     }
-
-
 
     private void sendGetRequest(int offset, boolean correlationConfigStatus) throws IOException {
         String accessToken = TokenUtil.getAccessToken(hostName, offset);
@@ -197,7 +190,6 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
         Assert.assertEquals(responseConfigs.get("enabled"), correlationConfigStatus);
     }
 
-
     private void sendPutRequest(int offset, boolean correlationConfigEnabled) throws IOException {
         String accessToken = TokenUtil.getAccessToken(hostName, offset);
         Assert.assertNotNull(accessToken);
@@ -215,7 +207,6 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
         payload.put("configName", "correlation");
         payload.put("configs", payloadConfigs);
 
-
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPut(endpoint, headers, payload.toString(), "application/json");
         String responsePayload = client.getResponsePayload(response);
@@ -231,15 +222,6 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
      */
     public Callable<Boolean> isManagementApiAvailable() {
         return this::checkIfManagementApiAvailable;
-    }
-
-    /**
-     * return if the management api is unavailable.
-     *
-     * @return callable callable
-     */
-    public Callable<Boolean> isManagementApiUnAvailable() {
-        return () -> !checkIfManagementApiAvailable();
     }
 
     /**
@@ -266,5 +248,4 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
         System.setProperty("enableCorrelationLogs", String.valueOf(false));
         super.cleanup();
     }
-
 }
