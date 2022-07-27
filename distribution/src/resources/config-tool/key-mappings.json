@@ -104,15 +104,6 @@
   "mediation.internal_http_api_port": "synapse_properties.'internal.http.api.port'",
   "mediation.internal_https_api_port": "synapse_properties.'internal.https.api.port'",
 
-  "analytics.enabled" : "synapse_properties.'analytics.enabled'",
-  "analytics.prefix" : "synapse_properties.'analytics.prefix'",
-  "analytics.id" : "synapse_properties.'analytics.id'",
-  "analytics.api_analytics.enabled" : "synapse_properties.'analytics.api_analytics.enabled'",
-  "analytics.proxy_service_analytics.enabled" : "synapse_properties.'analytics.proxy_service_analytics.enabled'",
-  "analytics.sequence_analytics.enabled" : "synapse_properties.'analytics.sequence_analytics.enabled'",
-  "analytics.endpoint_analytics.enabled" : "synapse_properties.'analytics.endpoint_analytics.enabled'",
-  "analytics.inbound_endpoint_analytics.enabled" : "synapse_properties.'analytics.inbound_endpoint_analytics.enabled'",
-
   "opentracing.enable": "synapse_properties.'opentracing.enable'",
   "opentracing.jaeger.sampler.manager_host": "synapse_properties.'jaeger.sampler.manager.host'",
   "opentracing.jaeger.sampler.manager_port": "synapse_properties.'jaeger.sampler.manager.port'",
@@ -513,5 +504,14 @@
   "custom_transport.sender:parameter.proxy_host": "custom_transport.sender:parameter.'http.proxyHost'",
   "custom_transport.sender:parameter.proxy_port": "custom_transport.sender:parameter.'http.proxyPort'",
   "custom_transport.sender:parameter.non_proxy_host": "custom_transport.sender:parameter.'http.nonProxyHosts'",
-  "custom_transport.sender:parameter.non_blocking": "custom_transport.sender:parameter.non-blocking"
+  "custom_transport.sender:parameter.non_blocking": "custom_transport.sender:parameter.non-blocking",
+
+  "synapse_properties.'analytics.enabled'": false,
+  "synapse_properties.'analytics.prefix'": "SYNAPSE_ANALYTICS_DATA",
+  "synapse_properties.'analytics.id'": "$ref{server.hostname}",
+  "synapse_properties.'analytics.api_analytics.enabled'": true,
+  "synapse_properties.'analytics.proxy_service_analytics.enabled'": true,
+  "synapse_properties.'analytics.sequence_analytics.enabled'": true,
+  "synapse_properties.'analytics.endpoint_analytics.enabled'": true,
+  "synapse_properties.'analytics.inbound_endpoint_analytics.enabled'": true
 }
