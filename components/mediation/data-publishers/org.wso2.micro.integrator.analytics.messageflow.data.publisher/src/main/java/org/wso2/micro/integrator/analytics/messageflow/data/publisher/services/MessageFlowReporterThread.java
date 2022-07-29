@@ -149,8 +149,8 @@ public class MessageFlowReporterThread extends Thread {
                     statisticsLog.setParentIndex(getParent(messageFlowLogs, parentIndex));
                 }
 
-                if (dataUnit.getMessageContext() != null) {
-                    statisticsLog.setMessageContext(dataUnit.getMessageContext());
+                if (dataUnit.getElasticMetadata() != null) {
+                    statisticsLog.setElasticMetadata(dataUnit.getElasticMetadata());
                 }
 
                 if (statisticsLog.getHashCode() == null) {

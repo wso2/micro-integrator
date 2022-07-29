@@ -20,17 +20,15 @@ package org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.e
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.api.API;
+import org.apache.synapse.aspects.flow.statistics.elasticsearch.ElasticMetadata;
 import org.apache.synapse.aspects.flow.statistics.publishing.PublishingEvent;
 import org.apache.synapse.aspects.flow.statistics.publishing.PublishingFlow;
 import org.apache.synapse.aspects.flow.statistics.util.StatisticsConstants;
 import org.apache.synapse.commons.CorrelationConstants;
 import org.apache.synapse.config.SynapsePropertiesLoader;
-import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.ProxyService;
-import org.apache.synapse.endpoints.AbstractEndpoint;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.inbound.InboundEndpoint;
 import org.apache.synapse.mediators.base.SequenceMediator;
@@ -45,12 +43,12 @@ import java.util.Map;
 public class ElasticStatisticsPublisher implements StatisticsPublisher {
     private static ElasticStatisticsPublisher instance = null;
     private final Log log = LogFactory.getLog(ElasticStatisticsPublisher.class);
+    protected boolean enabled = false;
     private boolean analyticsDisabledForAPI;
     private boolean analyticsDisabledForSequences;
     private boolean analyticsDisabledForProxyServices;
     private boolean analyticsDisabledForEndpoints;
     private boolean analyticsDisabledForInboundEndpoints;
-    protected boolean enabled = false;
     private String analyticsDataPrefix;
 
     protected ElasticStatisticsPublisher() {
@@ -89,7 +87,7 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
         }
 
         publishingFlow.getEvents().forEach(event -> {
-            if (event.getMessageContext() == null) {
+            if (event.getElasticMetadata() == null || !event.getElasticMetadata().isValid()) {
                 return;
             }
 
@@ -117,22 +115,22 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
             return;
         }
 
-        MessageContext synCtx = event.getMessageContext();
         ElasticDataSchemaElement analyticPayload = generateAnalyticsObject(event, API.class);
 
+        ElasticMetadata metadata = event.getElasticMetadata();
         ElasticDataSchemaElement apiDetails = new ElasticDataSchemaElement();
         apiDetails.setAttribute(ElasticConstants.EnvelopDef.API,
-                synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
+                metadata.getProperty(RESTConstants.SYNAPSE_REST_API));
         apiDetails.setAttribute(ElasticConstants.EnvelopDef.SUB_REQUEST_PATH,
-                synCtx.getProperty(RESTConstants.REST_SUB_REQUEST_PATH));
+                metadata.getProperty(RESTConstants.REST_SUB_REQUEST_PATH));
         apiDetails.setAttribute(ElasticConstants.EnvelopDef.API_CONTEXT,
-                synCtx.getProperty(RESTConstants.REST_API_CONTEXT));
+                metadata.getProperty(RESTConstants.REST_API_CONTEXT));
         apiDetails.setAttribute(ElasticConstants.EnvelopDef.METHOD,
-                synCtx.getProperty(RESTConstants.REST_METHOD));
+                metadata.getProperty(RESTConstants.REST_METHOD));
         apiDetails.setAttribute(ElasticConstants.EnvelopDef.TRANSPORT,
-                synCtx.getProperty(SynapseConstants.TRANSPORT_IN_NAME));
+                metadata.getProperty(SynapseConstants.TRANSPORT_IN_NAME));
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.API_DETAILS, apiDetails);
-        attachHttpProperties(analyticPayload, synCtx);
+        attachHttpProperties(analyticPayload, metadata);
 
         publishAnalytic(analyticPayload);
     }
@@ -142,8 +140,7 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
             return;
         }
 
-        MessageContext synCtx = event.getMessageContext();
-        SequenceMediator sequence = (SequenceMediator) synCtx.getSequence(event.getComponentName());
+        SequenceMediator sequence = event.getElasticMetadata().getSequence(event.getComponentName());
 
         if (sequence == null) {
             return;
@@ -161,19 +158,19 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
             return;
         }
 
-        MessageContext synCtx = event.getMessageContext();
         ElasticDataSchemaElement analyticsPayload = generateAnalyticsObject(event, ProxyService.class);
+        ElasticMetadata metadata = event.getElasticMetadata();
         analyticsPayload.setAttribute(ElasticConstants.EnvelopDef.PROXY_SERVICE_TRANSPORT,
-                synCtx.getProperty(SynapseConstants.TRANSPORT_IN_NAME));
+                metadata.getProperty(SynapseConstants.TRANSPORT_IN_NAME));
         analyticsPayload.setAttribute(ElasticConstants.EnvelopDef.PROXY_SERVICE_IS_DOING_REST,
-                synCtx.getProperty(SynapseConstants.IS_CLIENT_DOING_REST));
+                metadata.getProperty(SynapseConstants.IS_CLIENT_DOING_REST));
         analyticsPayload.setAttribute(ElasticConstants.EnvelopDef.PROXY_SERVICE_IS_DOING_SOAP11,
-                synCtx.getProperty(SynapseConstants.IS_CLIENT_DOING_SOAP11));
+                metadata.getProperty(SynapseConstants.IS_CLIENT_DOING_SOAP11));
 
         ElasticDataSchemaElement proxyServiceDetails = new ElasticDataSchemaElement();
         proxyServiceDetails.setAttribute(ElasticConstants.EnvelopDef.PROXY_SERVICE_NAME, event.getComponentName());
         analyticsPayload.setAttribute(ElasticConstants.EnvelopDef.PROXY_SERVICE_DETAILS, proxyServiceDetails);
-        attachHttpProperties(analyticsPayload, synCtx);
+        attachHttpProperties(analyticsPayload, metadata);
 
         publishAnalytic(analyticsPayload);
     }
@@ -183,8 +180,7 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
             return;
         }
 
-        MessageContext synCtx = event.getMessageContext();
-        Endpoint endpoint = synCtx.getEndpoint(event.getComponentName());
+        Endpoint endpoint = event.getElasticMetadata().getEndpoint(event.getComponentName());
 
         if (endpoint == null) {
             return;
@@ -203,7 +199,6 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
             return;
         }
 
-        MessageContext synCtx = event.getMessageContext();
         ElasticDataSchemaElement analyticsPayload = generateAnalyticsObject(event, InboundEndpoint.class);
 
         ElasticDataSchemaElement inboundEndpointDetails = new ElasticDataSchemaElement();
@@ -211,53 +206,49 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
                 ElasticConstants.EnvelopDef.INBOUND_ENDPOINT_NAME, event.getComponentName());
         analyticsPayload.setAttribute(
                 ElasticConstants.EnvelopDef.INBOUND_ENDPOINT_DETAILS, inboundEndpointDetails);
-        attachHttpProperties(analyticsPayload, synCtx);
+        attachHttpProperties(analyticsPayload, event.getElasticMetadata());
 
         publishAnalytic(analyticsPayload);
     }
 
     private ElasticDataSchemaElement generateAnalyticsObject(PublishingEvent event, Class<?> entityClass) {
-        MessageContext synCtx = event.getMessageContext();
         ElasticDataSchemaElement analyticPayload = new ElasticDataSchemaElement();
+        ElasticMetadata metadata = event.getElasticMetadata();
         analyticPayload.setStartTime(event.getStartTime());
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.ENTITY_TYPE, entityClass.getSimpleName());
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.ENTITY_CLASS_NAME, entityClass.getName());
-        analyticPayload.setAttribute(ElasticConstants.EnvelopDef.FAULT_RESPONSE, synCtx.isFaultResponse());
+        analyticPayload.setAttribute(ElasticConstants.EnvelopDef.FAULT_RESPONSE,
+                metadata.isFaultResponse());
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.FAILURE, event.getFaultCount() != 0);
-        analyticPayload.setAttribute(ElasticConstants.EnvelopDef.MESSAGE_ID, synCtx.getMessageID());
+        analyticPayload.setAttribute(ElasticConstants.EnvelopDef.MESSAGE_ID,
+                metadata.getMessageId());
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.CORRELATION_ID,
-                synCtx.getProperty(CorrelationConstants.CORRELATION_ID));
+                metadata.getProperty(CorrelationConstants.CORRELATION_ID));
         analyticPayload.setAttribute(ElasticConstants.EnvelopDef.LATENCY, event.getDuration());
 
-        ElasticDataSchemaElement metadata = new ElasticDataSchemaElement();
-        analyticPayload.setAttribute(ElasticConstants.EnvelopDef.METADATA, metadata);
-        Axis2MessageContext axis2mc = (Axis2MessageContext) synCtx;
-        if (axis2mc.getAnalyticsMetadata() == null) {
+        ElasticDataSchemaElement metadataElement = new ElasticDataSchemaElement();
+        analyticPayload.setAttribute(ElasticConstants.EnvelopDef.METADATA, metadataElement);
+        if (metadata.getAnalyticsMetadata() == null) {
             return analyticPayload;
         }
 
-        for (Map.Entry<String, Object> entry : axis2mc.getAnalyticsMetadata().entrySet()) {
+        for (Map.Entry<String, Object> entry : metadata.getAnalyticsMetadata().entrySet()) {
             if (entry.getValue() == null) {
                 continue; // Logstash fails at null
             }
-            metadata.setAttribute(entry.getKey(), entry.getValue());
+            metadataElement.setAttribute(entry.getKey(), entry.getValue());
         }
 
         return analyticPayload;
     }
 
-    private void attachHttpProperties(ElasticDataSchemaElement payload, MessageContext synCtx) {
-        org.apache.axis2.context.MessageContext axisCtx = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
-        if (axisCtx == null) {
-            return;
-        }
-
+    private void attachHttpProperties(ElasticDataSchemaElement payload, ElasticMetadata metadata) {
         payload.setAttribute(ElasticConstants.EnvelopDef.REMOTE_HOST,
-                axisCtx.getProperty(BridgeConstants.REMOTE_HOST));
+                metadata.getProperty(BridgeConstants.REMOTE_HOST));
         payload.setAttribute(ElasticConstants.EnvelopDef.CONTENT_TYPE,
-                axisCtx.getProperty(BridgeConstants.CONTENT_TYPE_HEADER));
+                metadata.getProperty(BridgeConstants.CONTENT_TYPE_HEADER));
         payload.setAttribute(ElasticConstants.EnvelopDef.HTTP_METHOD,
-                axisCtx.getProperty(BridgeConstants.HTTP_METHOD));
+                metadata.getProperty(BridgeConstants.HTTP_METHOD));
     }
 
 }

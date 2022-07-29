@@ -25,8 +25,13 @@ import junit.framework.TestCase;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMDocument;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axiom.om.util.StAXUtils;
+import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.engine.AxisConfiguration;
@@ -38,9 +43,12 @@ import org.apache.synapse.api.API;
 import org.apache.synapse.api.Resource;
 import org.apache.synapse.api.rest.RestRequestHandler;
 import org.apache.synapse.aspects.ComponentType;
+import org.apache.synapse.aspects.flow.statistics.elasticsearch.ElasticMetadata;
 import org.apache.synapse.aspects.flow.statistics.publishing.PublishingEvent;
 import org.apache.synapse.aspects.flow.statistics.publishing.PublishingFlow;
 import org.apache.synapse.aspects.flow.statistics.util.StatisticsConstants;
+import org.apache.synapse.commons.json.JsonUtil;
+import org.apache.synapse.config.Entry;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.endpoints.HTTPEndpointFactory;
@@ -56,8 +64,12 @@ import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.elasticsearch.schema.ElasticDataSchema;
 
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import java.io.FileInputStream;
+import java.io.StringReader;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
+import java.util.Map;
 
 public class ElasticStatisticsTest extends TestCase {
     private static final String SERVER_INFO_SERVER_NAME = "wso2.dev";
@@ -87,46 +99,41 @@ public class ElasticStatisticsTest extends TestCase {
     private Axis2SynapseEnvironment synapseEnvironment = null;
 
     private static MessageContext createSynapseMessageContext(
-            SynapseConfiguration config) throws Exception {
+            SynapseConfiguration testConfig) throws Exception {
 
-        org.apache.axis2.context.MessageContext mc =
-                new org.apache.axis2.context.MessageContext();
-        AxisConfiguration axisConfig = config.getAxisConfiguration();
-        if (axisConfig == null) {
-            axisConfig = new AxisConfiguration();
-            config.setAxisConfiguration(axisConfig);
-        }
-        ConfigurationContext cfgCtx = new ConfigurationContext(axisConfig);
-        SynapseEnvironment env = new Axis2SynapseEnvironment(cfgCtx, config);
-        MessageContext synMc = new Axis2MessageContext(mc, config, env);
-        SOAPEnvelope envelope =
-                OMAbstractFactory.getSOAP11Factory().getDefaultEnvelope();
-        OMDocument omDoc =
-                OMAbstractFactory.getSOAP11Factory().createOMDocument();
+        SynapseEnvironment synEnv
+                = new Axis2SynapseEnvironment(new ConfigurationContext(new AxisConfiguration()),
+                testConfig);
+        Axis2MessageContext synCtx;
+        org.apache.axis2.context.MessageContext mc = new org.apache.axis2.context.MessageContext();
+        mc.setIncomingTransportName(TEST_API_PROTOCOL);
+        synCtx = new Axis2MessageContext(mc, testConfig, synEnv);
+
+        XMLStreamReader parser = StAXUtils.createXMLStreamReader(new StringReader("<test>value</test>"));
+
+        SOAPEnvelope envelope;
+        envelope = OMAbstractFactory.getSOAP11Factory().getDefaultEnvelope();
+        OMDocument omDoc = OMAbstractFactory.getSOAP11Factory().createOMDocument();
         omDoc.addChild(envelope);
 
-        envelope.getBody().addChild(SynapseConfigUtils.stringToOM("<foo/>"));
+        SOAPBody body = envelope.getBody();
+        StAXOMBuilder builder = new StAXOMBuilder(parser);
+        OMElement bodyElement = builder.getDocumentElement();
+        body.addChild(bodyElement);
+        synCtx.setEnvelope(envelope);
 
-        synMc.setEnvelope(envelope);
-        return synMc;
-    }
+        String url = TEST_API_URL;
 
-    private void oneTimeSetup() throws Exception {
-        if (oneTimeSetupComplete) {
-            return;
-        }
+        synCtx.setProperty(Constants.Configuration.HTTP_METHOD, TEST_API_METHOD);
+        synCtx.setProperty(BridgeConstants.REMOTE_HOST, TEST_REMOTE_HOST);
+        synCtx.setProperty(BridgeConstants.CONTENT_TYPE_HEADER, TEST_CONTENT_TYPE);
+        synCtx.setProperty(NhttpConstants.REST_URL_POSTFIX, url.substring(1));
 
-        sysConfig = new ServerConfigurationInformation();
-        sysConfig.setServerName(SERVER_INFO_SERVER_NAME);
-        sysConfig.setHostName(SERVER_INFO_HOST_NAME);
-        sysConfig.setIpAddress(SERVER_INFO_IP_ADDRESS);
-        ElasticDataSchema.setPublisherId(SERVER_INFO_PUBLISHER_ID);
-        ElasticDataSchema.setupServerMetadata(sysConfig);
-        ConfigurationContext axis2ConfigurationContext = new ConfigurationContext(new AxisConfiguration());
-        axis2ConfigurationContext.getAxisConfiguration().addParameter(SynapseConstants.SYNAPSE_ENV, synapseEnvironment);
-        synapseEnvironment = new Axis2SynapseEnvironment(axis2ConfigurationContext, new SynapseConfiguration());
-        messageContext = (Axis2MessageContext) getMessageContext();
-        oneTimeSetupComplete = true;
+        Axis2MessageContext axisCtx = synCtx;
+        axisCtx.getAxis2MessageContext().setProperty(Constants.Configuration.HTTP_METHOD, TEST_API_METHOD);
+        axisCtx.getAxis2MessageContext().setProperty(
+                Constants.Configuration.TRANSPORT_IN_URL, "https://" + SERVER_INFO_HOST_NAME + url);
+        return synCtx;
     }
 
     private void setupSynapseConfig(SynapseConfiguration synapseConfig) throws XMLStreamException {
@@ -156,21 +163,24 @@ public class ElasticStatisticsTest extends TestCase {
         synapseConfig.addProxyService(TEST_PROXY_SERVICE, proxyService);
     }
 
-    protected MessageContext getMessageContext() throws Exception {
-        String url = TEST_API_URL;
-        SynapseConfiguration synapseConfig = new SynapseConfiguration();
-        setupSynapseConfig(synapseConfig);
-        MessageContext synCtx = createSynapseMessageContext(synapseConfig);
-        org.apache.axis2.context.MessageContext msgCtx = ((Axis2MessageContext) synCtx).
-                getAxis2MessageContext();
-        msgCtx.setIncomingTransportName(TEST_API_PROTOCOL);
-        msgCtx.setProperty(Constants.Configuration.HTTP_METHOD, TEST_API_METHOD);
-        msgCtx.setProperty(Constants.Configuration.TRANSPORT_IN_URL, url);
-        msgCtx.setProperty(BridgeConstants.REMOTE_HOST, TEST_REMOTE_HOST);
-        msgCtx.setProperty(BridgeConstants.CONTENT_TYPE_HEADER, TEST_CONTENT_TYPE);
-        msgCtx.setProperty(NhttpConstants.REST_URL_POSTFIX, url.substring(1));
-        msgCtx.setConfigurationContext(new ConfigurationContext(new AxisConfiguration()));
-        return synCtx;
+    private void oneTimeSetup() throws Exception {
+        if (oneTimeSetupComplete) {
+            return;
+        }
+
+        sysConfig = new ServerConfigurationInformation();
+        sysConfig.setServerName(SERVER_INFO_SERVER_NAME);
+        sysConfig.setHostName(SERVER_INFO_HOST_NAME);
+        sysConfig.setIpAddress(SERVER_INFO_IP_ADDRESS);
+        ElasticDataSchema.setPublisherId(SERVER_INFO_PUBLISHER_ID);
+        ElasticDataSchema.setupServerMetadata(sysConfig);
+        ConfigurationContext axis2ConfigurationContext = new ConfigurationContext(new AxisConfiguration());
+        axis2ConfigurationContext.getAxisConfiguration().addParameter(SynapseConstants.SYNAPSE_ENV, synapseEnvironment);
+        SynapseConfiguration config = new SynapseConfiguration();
+        synapseEnvironment = new Axis2SynapseEnvironment(axis2ConfigurationContext, config);
+        setupSynapseConfig(config);
+        messageContext = (Axis2MessageContext) createSynapseMessageContext(config);
+        oneTimeSetupComplete = true;
     }
 
     @Override
@@ -241,7 +251,8 @@ public class ElasticStatisticsTest extends TestCase {
         event.setDuration(event.getEndTime() - event.getStartTime());
         event.setEntryPoint("EP");
         event.setFaultCount(0);
-        event.setMessageContext(messageContext);
+        ElasticMetadata elasticMetadata = new ElasticMetadata(messageContext);
+        event.setElasticMetadata(elasticMetadata);
         return event;
     }
 
