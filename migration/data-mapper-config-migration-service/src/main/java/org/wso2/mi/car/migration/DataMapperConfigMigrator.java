@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2022, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -35,9 +35,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-public class CAppMigrator {
+public class DataMapperConfigMigrator {
 
-    private static final Logger logger = Logger.getLogger(CAppMigrator.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DataMapperConfigMigrator.class.getName());
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     public static void main(String[] args) {
@@ -69,29 +69,30 @@ public class CAppMigrator {
         String[] tmpCAppsList = new File(tmpDirectory).list();
         if (null != tmpCAppsList) {
             for (String file : tmpCAppsList) {
-                String carFileDir = tmpDirectory + File.separator + file;
-                String cAppFolder = unzipFile(carFileDir);
+                String carFile = tmpDirectory + File.separator + file;
+                String cAppFolder = unzipFile(carFile);
                 ArrayList<String> styleSheetList = getXsltStyleSheets(cAppFolder);
                 if (styleSheetList.size() > 0) {
-                    logger.info("xsltStyleSheet file is available in " +  file + ". Hence performing migration");
-                    deleteFile(carFileDir);
+                    LOGGER.info(styleSheetList.size() + " xsltStyleSheet file/s are available in " +  file
+                            + ". Hence performing migration");
+                    deleteFile(carFile);
                     for (String styleSheetPath : styleSheetList) {
                         replaceText(styleSheetPath);
                     }
                     zipFile(cAppFolder.endsWith(File.separator) ?
-                            cAppFolder.substring(0, cAppFolder.lastIndexOf(File.separator)) : cAppFolder, carFileDir);
-                    copyFileToDirectory(carFileDir, migratedCAppFolder);
+                            cAppFolder.substring(0, cAppFolder.lastIndexOf(File.separator)) : cAppFolder, carFile);
+                    copyFileToDirectory(carFile, migratedCAppFolder);
                 } else {
-                    logger.info("An xsltStyleSheet file is unavailable in  " + file + ". " +
+                    LOGGER.info("An xsltStyleSheet file is unavailable in  " + file + ". " +
                             "Hence skipping migration for " + file + ".");
-                    copyFileToDirectory(carFileDir, migratedCAppFolder);
+                    copyFileToDirectory(carFile, migratedCAppFolder);
                 }
-                logger.info("Migration is completed for " + file);
+                LOGGER.info("Migration is completed for " + file);
             }
         }
 
         deleteDirectory(tmpDirectory);
-        logger.info("Migration completed successfully. Migrated carbon applications are available in "
+        LOGGER.info("Migration completed successfully. Migrated carbon applications are available in "
                 + migratedCAppFolder);
     }
 
@@ -351,8 +352,8 @@ public class CAppMigrator {
      * @param msg the error log message
      */
     private static void exitWithError(String msg) {
-        logger.severe(msg);
-        logger.info("Migration failed.");
+        LOGGER.severe(msg);
+        LOGGER.info("Migration failed.");
         System.exit(1);
     }
 }
