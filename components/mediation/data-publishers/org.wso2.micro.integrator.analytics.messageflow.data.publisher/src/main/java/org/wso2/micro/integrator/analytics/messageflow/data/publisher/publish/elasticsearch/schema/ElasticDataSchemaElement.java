@@ -45,6 +45,9 @@ public class ElasticDataSchemaElement {
     }
 
     public String getStartTime() {
+        if (startTime == 0) {
+            return Instant.now().toString();
+        }
         return Instant.ofEpochMilli(startTime).toString();
     }
 
