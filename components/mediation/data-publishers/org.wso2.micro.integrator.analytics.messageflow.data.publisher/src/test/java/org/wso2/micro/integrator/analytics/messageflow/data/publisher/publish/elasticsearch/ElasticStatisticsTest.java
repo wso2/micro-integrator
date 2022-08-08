@@ -214,6 +214,11 @@ public class ElasticStatisticsTest extends TestCase {
         publisher.process(flow, TENANT_ID);
         assertEquals(1, publisher.getAnalyticsCount());
         verifySchema(publisher.getAnalyticData(), AnalyticPayloadType.SEQUENCE);
+
+        for (int i = 0; i < 100; ++i) {
+            publisher.process(flow, TENANT_ID);
+        }
+        assertEquals(100, publisher.getAnalyticsCount());
     }
 
     public void testApiResourceAnalytics() {
@@ -224,6 +229,11 @@ public class ElasticStatisticsTest extends TestCase {
         publisher.process(flow, TENANT_ID);
         assertEquals(1, publisher.getAnalyticsCount());
         verifySchema(publisher.getAnalyticData(), AnalyticPayloadType.API);
+
+        for (int i = 0; i < 100; ++i) {
+            publisher.process(flow, TENANT_ID);
+        }
+        assertEquals(100, publisher.getAnalyticsCount());
     }
 
     public void testEndpointAnalytics() {
@@ -232,6 +242,11 @@ public class ElasticStatisticsTest extends TestCase {
         publisher.process(flow, TENANT_ID);
         assertEquals(1, publisher.getAnalyticsCount());
         verifySchema(publisher.getAnalyticData(), AnalyticPayloadType.ENDPOINT);
+
+        for (int i = 0; i < 100; ++i) {
+            publisher.process(flow, TENANT_ID);
+        }
+        assertEquals(100, publisher.getAnalyticsCount());
     }
 
     public void testProxyServiceAnalytics() {
@@ -239,6 +254,11 @@ public class ElasticStatisticsTest extends TestCase {
         flow.addEvent(createPublishingEvent(ComponentType.PROXYSERVICE, TEST_PROXY_SERVICE));
         publisher.process(flow, TENANT_ID);
         verifySchema(publisher.getAnalyticData(), AnalyticPayloadType.PROXY_SERVICE);
+
+        for (int i = 0; i < 100; ++i) {
+            publisher.process(flow, TENANT_ID);
+        }
+        assertEquals(100, publisher.getAnalyticsCount());
     }
 
     private PublishingEvent createPublishingEvent(ComponentType componentType, String componentName) {
