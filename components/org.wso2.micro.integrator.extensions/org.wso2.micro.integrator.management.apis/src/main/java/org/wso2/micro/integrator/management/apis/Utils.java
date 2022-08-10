@@ -20,6 +20,8 @@ package org.wso2.micro.integrator.management.apis;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.axiom.om.OMNode;
+import org.apache.axiom.om.impl.llom.OMTextImpl;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
@@ -45,6 +47,7 @@ import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
 import org.wso2.micro.integrator.security.user.core.common.AbstractUserStoreManager;
 import org.wso2.micro.service.mgt.ServiceAdmin;
 
+import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -52,6 +55,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -69,7 +73,6 @@ import static org.wso2.micro.integrator.management.apis.Constants.LOCAL_REGISTRY
 import static org.wso2.micro.integrator.management.apis.Constants.LOCAL_REGISTRY_PREFIX;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_ROOT_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
-import static org.wso2.micro.integrator.management.apis.Constants.fileTypes;
 
 public class Utils {
 
@@ -480,7 +483,7 @@ public class Utils {
             File registryRootFile = new File(registryRoot);
             if (!validatedPathFile.getCanonicalPath().startsWith(registryRootFile.getCanonicalPath())) {
                 JSONObject jsonBody = Utils.createJsonError("The registry path  '" + registryPath
-                                + "' is illegal which points to a location outside the registry", axis2MessageContext,
+                                + "' is illegal", axis2MessageContext,
                         BAD_REQUEST);
                 Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
                 return null;
@@ -561,7 +564,7 @@ public class Utils {
      * @param axis2MessageContext Axis2 message context
      * @return A string containing file content
      */
-    public static String getPayloadAsString(org.apache.axis2.context.MessageContext axis2MessageContext) {
+    public static String getPayload(org.apache.axis2.context.MessageContext axis2MessageContext) {
 
         try {
             InputStream inputStream = getInputStream(axis2MessageContext, true);
@@ -570,6 +573,7 @@ public class Utils {
             return null;
         }
     }
+
     private static InputStream getInputStream(org.apache.axis2.context.MessageContext messageContext, boolean reset) {
         if (messageContext == null) {
             return null;
@@ -592,27 +596,28 @@ public class Utils {
     }
 
     /**
+     * This method returns a byte array containing file content.
+     *
+     * @param messageContext    Synapse message context
+     * @return                  A byte array containing file content
+     */
+    public static byte[] getPayloadFromMultipart(MessageContext messageContext) {
+
+        try {
+            OMNode fileOmNode = messageContext.getEnvelope().getBody().getFirstElement()
+                    .getFirstChildWithName(new QName("file")).getFirstOMChild();
+            return Base64.getDecoder().decode(((OMTextImpl) fileOmNode).getText());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * Sends unauthorized fault response.
      * @param axis2MessageContext   AXIS2 message context
      */
     public static void sendForbiddenFaultResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {
         axis2MessageContext.setProperty(Constants.NO_ENTITY_BODY, true);
         axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, 403);
-    }
-
-    /**
-     * This method validates the file type of the registry.
-     * @param registryPath  Registry path
-     * @return              Boolean output to indicate the validation of the file type
-     */
-    public static boolean isValidFileType(String registryPath) {
-        boolean valid = false;
-        for (String fileType : fileTypes) {
-            if (registryPath.endsWith(fileType)) {
-                valid = true;
-                break;
-            }
-        }
-        return valid;
     }
 }

@@ -21,8 +21,6 @@ package org.wso2.micro.integrator.management.apis;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 import javax.xml.namespace.QName;
-import java.util.Arrays;
-import java.util.List;
 
 public class Constants {
     //Constants for the API resource prefixes
@@ -195,18 +193,10 @@ public class Constants {
     }
 
     static final String SERVICE_PID = "service.pid";
-
-    //Constants for RegistryResource
     public static final String REGISTRY_PATH = "path";
-    public static final String META_DATA = "metadata";
-    public static final String FETCH_TYPE = "type";
     public static final String EXPAND_PARAM = "expand";
     public static final String VALUE_TRUE = "true";
-    public static final String VALUE_FALSE = "false";
-    public static final String PROPERTIES = "properties";
-    public static final String CONTENT = "content";
-    public static final String PROPERTY_NAME = "propertyName";
-    public static final String PROPERTY_VALUE = "propertyValue";
+    public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "multipart/form-data";
     public static final String REGISTRY_ROOT_PATH = "registry";
     public static final String ERROR_KEY = "error";
     public static final String CONFIGURATION_REGISTRY_PATH = "registry/config";
@@ -219,5 +209,5 @@ public class Constants {
     public static final String MEDIA_TYPE_KEY = "mediaType";
     public static final String PROPERTY_EXTENSION = ".properties";
     public static final String VALUE_KEY = "value";
-    public static final List<String> fileTypes = Arrays.asList(".txt", ".xml", ".json", ".dmc", ".xslt");
+
 }

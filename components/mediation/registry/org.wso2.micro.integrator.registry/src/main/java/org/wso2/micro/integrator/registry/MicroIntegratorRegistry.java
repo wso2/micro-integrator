@@ -38,6 +38,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -1507,6 +1508,62 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             writeProperties(parentFile, fileName, properties);
         } else {
             log.warn("Updating remote registry is NOT SUPPORTED. Unable to update: " + path);
+        }
+    }
+
+    /**
+     * Add content to a registry resource.
+     *
+     * @param path             registry resource path
+     * @param mediaType        media type of the registry resource
+     * @param content          content of the registry resource
+     */
+    public void addMultipartResource(String path, String mediaType, byte[] content) {
+        if (registryType == MicroIntegratorRegistryConstants.LOCAL_HOST_REGISTRY) {
+            String targetPath = resolveRegistryURI(path);
+
+            String parent = getParentPath(targetPath, false);
+            try {
+                File parentFile = new File(new URI(parent));
+                String fileName = getResourceName(targetPath);
+                Properties metadata = null;
+                if (mediaType != null) {
+                    metadata = new Properties();
+                    metadata.setProperty(METADATA_KEY_MEDIA_TYPE, mediaType);
+                }
+                writeToBinaryFile(parentFile, fileName, content, metadata);
+            } catch (Exception e) {
+                handleException("Error when adding a new resource", e);
+            }
+        } else {
+            log.warn("Creating new resource in remote registry is NOT SUPPORTED. Unable to create: " + path);
+        }
+    }
+
+    /**
+     * Function to write to file, create if not exists including directory structure.
+     *
+     * @param parent             parent file
+     * @param newFileName        new file name to be created
+     * @param content            content to be included in the new file
+     * @param metadata           metadata of the new file
+     */
+    private void writeToBinaryFile(File parent, String newFileName, byte[] content, Properties metadata) {
+        if (!parent.exists() && !parent.mkdirs()) {
+            handleException("Unable to create parent directory: " + parent.getPath());
+        }
+        File newFile = new File(parent, newFileName);
+        try (FileOutputStream fos = new FileOutputStream(newFile)) {
+            fos.write(content);
+            if (metadata != null) {
+                writeMetadata(parent, newFileName, metadata);
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("Successfully content written to file : " + parent.getPath() + URL_SEPARATOR + newFileName);
+            }
+        } catch (IOException e) {
+            handleException("Couldn't write to registry resource: "
+                    + parent.getPath() + URL_SEPARATOR + newFileName, e);
         }
     }
 }

@@ -48,7 +48,6 @@ import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPE
 import static org.wso2.micro.integrator.management.apis.Constants.VALUE_KEY;
 import static org.wso2.micro.integrator.management.apis.Utils.getRegistryPathPrefix;
 import static org.wso2.micro.integrator.management.apis.Utils.isRegistryExist;
-import static org.wso2.micro.integrator.management.apis.Utils.isValidFileType;
 import static org.wso2.micro.integrator.management.apis.Utils.validatePath;
 
 /**
@@ -229,28 +228,22 @@ public class RegistryPropertiesResource implements MiApiResource {
         String validatedPath;
         JSONObject jsonBody;
         if (Objects.nonNull(registryPath)) {
-            if (isValidFileType(registryPath)) {
-                validatedPath = validatePath(registryPath, axis2MessageContext);
-                if (Objects.nonNull(validatedPath)) {
-                    String pathWithPrefix = getRegistryPathPrefix(validatedPath);
-                    if (Objects.nonNull(pathWithPrefix)) {
-                        if (isRegistryExist(validatedPath) && isRegistryExist(validatedPath + PROPERTY_EXTENSION)) {
-                            jsonBody = postRegistryProperties(axis2MessageContext, pathWithPrefix);
-                        } else if (isRegistryExist(validatedPath)) {
-                            jsonBody = postNewRegistryProperties(axis2MessageContext, pathWithPrefix);
-                        } else {
-                            jsonBody = postEmptyRegistryProperties(axis2MessageContext, pathWithPrefix);
-                        }
+            validatedPath = validatePath(registryPath, axis2MessageContext);
+            if (Objects.nonNull(validatedPath)) {
+                String pathWithPrefix = getRegistryPathPrefix(validatedPath);
+                if (Objects.nonNull(pathWithPrefix)) {
+                    if (isRegistryExist(validatedPath) && isRegistryExist(validatedPath + PROPERTY_EXTENSION)) {
+                        jsonBody = postRegistryProperties(axis2MessageContext, pathWithPrefix);
+                    } else if (isRegistryExist(validatedPath)) {
+                        jsonBody = postNewRegistryProperties(axis2MessageContext, pathWithPrefix);
                     } else {
-                        jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
-                                BAD_REQUEST);
+                        jsonBody = postEmptyRegistryProperties(axis2MessageContext, pathWithPrefix);
                     }
-                    axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
-                    Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+                } else {
+                    jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
+                            BAD_REQUEST);
                 }
-            } else {
-                jsonBody = Utils.createJsonError("File type of the registry is not supported", axis2MessageContext,
-                        BAD_REQUEST);
+                axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
                 Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
             }
         } else {

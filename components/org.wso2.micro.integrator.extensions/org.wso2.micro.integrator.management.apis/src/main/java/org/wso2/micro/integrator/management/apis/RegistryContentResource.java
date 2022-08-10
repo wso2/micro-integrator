@@ -48,6 +48,8 @@ import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
+import static org.wso2.micro.integrator.management.apis.Constants.CONTENT_TYPE;
+import static org.wso2.micro.integrator.management.apis.Constants.CONTENT_TYPE_MULTIPART_FORM_DATA;
 import static org.wso2.micro.integrator.management.apis.Constants.DEFAULT_MEDIA_TYPE;
 import static org.wso2.micro.integrator.management.apis.Constants.HTTP_DELETE;
 import static org.wso2.micro.integrator.management.apis.Constants.HTTP_GET;
@@ -59,10 +61,10 @@ import static org.wso2.micro.integrator.management.apis.Constants.NO_ENTITY_BODY
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 import static org.wso2.micro.integrator.management.apis.Utils.formatPath;
-import static org.wso2.micro.integrator.management.apis.Utils.getPayloadAsString;
+import static org.wso2.micro.integrator.management.apis.Utils.getPayload;
+import static org.wso2.micro.integrator.management.apis.Utils.getPayloadFromMultipart;
 import static org.wso2.micro.integrator.management.apis.Utils.getRegistryPathPrefix;
 import static org.wso2.micro.integrator.management.apis.Utils.isRegistryExist;
-import static org.wso2.micro.integrator.management.apis.Utils.isValidFileType;
 import static org.wso2.micro.integrator.management.apis.Utils.validatePath;
 
 /**
@@ -245,24 +247,18 @@ public class RegistryContentResource implements MiApiResource {
         JSONObject jsonBody;
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         if (Objects.nonNull(registryPath)) {
-            if (isValidFileType(registryPath)) {
-                validatedPath = validatePath(registryPath, axis2MessageContext);
-                if (Objects.nonNull(validatedPath)) {
-                    String pathWithPrefix = getRegistryPathPrefix(validatedPath);
-                    if (isRegistryExist(validatedPath)) {
-                        jsonBody = Utils.createJsonError("Registry already exists. Can not POST an existing registry",
-                                axis2MessageContext, BAD_REQUEST);
-                    } else if (Objects.nonNull(pathWithPrefix)) {
-                        jsonBody = postRegistryArtifact(messageContext, axis2MessageContext, pathWithPrefix);
-                    } else {
-                        jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
-                                BAD_REQUEST);
-                    }
-                    Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            validatedPath = validatePath(registryPath, axis2MessageContext);
+            if (Objects.nonNull(validatedPath)) {
+                String pathWithPrefix = getRegistryPathPrefix(validatedPath);
+                if (isRegistryExist(validatedPath)) {
+                    jsonBody = Utils.createJsonError("Registry already exists. Can not POST an existing registry",
+                            axis2MessageContext, BAD_REQUEST);
+                } else if (Objects.nonNull(pathWithPrefix)) {
+                    jsonBody = postRegistryArtifact(messageContext, axis2MessageContext, pathWithPrefix);
+                } else {
+                    jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
+                            BAD_REQUEST);
                 }
-            } else {
-                jsonBody = Utils.createJsonError("File type of the registry is not supported", axis2MessageContext,
-                        BAD_REQUEST);
                 Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
             }
         } else {
@@ -284,21 +280,39 @@ public class RegistryContentResource implements MiApiResource {
     private JSONObject postRegistryArtifact(MessageContext messageContext,
             org.apache.axis2.context.MessageContext axis2MessageContext, String registryPath) {
 
-        String fileContent = getPayloadAsString(axis2MessageContext);
+        String contentType = axis2MessageContext.getProperty(CONTENT_TYPE).toString();
         String mediaType = Utils.getQueryParameter(messageContext, MEDIA_TYPE_KEY);
         JSONObject jsonBody = new JSONObject();
-        String contentType = DEFAULT_MEDIA_TYPE;
-        if (Objects.nonNull(mediaType)) {
-            contentType = mediaType;
+        if (Objects.isNull(mediaType)) {
+            mediaType = DEFAULT_MEDIA_TYPE;
         }
-        if (Objects.nonNull(fileContent)) {
-            MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
-            microIntegratorRegistry.newNonEmptyResource(registryPath, false, contentType, fileContent, "");
-            jsonBody.put("message", "Successfully added the registry resource");
+
+        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        if (Objects.nonNull(contentType) && contentType.contains(CONTENT_TYPE_MULTIPART_FORM_DATA)) {
+            byte[] fileContent = getPayloadFromMultipart(messageContext);
+            if (Objects.nonNull(fileContent)) {
+                microIntegratorRegistry.addMultipartResource(registryPath, mediaType, fileContent);
+                jsonBody.put("message", "Successfully added the registry resource");
+            } else {
+                jsonBody = Utils.createJsonError("Error while fetching file content from payload", axis2MessageContext,
+                        BAD_REQUEST);
+            }
+        } else if (Objects.nonNull(contentType)) {
+            String fileContent = getPayload(axis2MessageContext);
+            if (Objects.nonNull(fileContent)) {
+                microIntegratorRegistry.newNonEmptyResource(registryPath, false, mediaType, fileContent, "");
+                jsonBody.put("message", "Successfully added the registry resource");
+            } else {
+                jsonBody = Utils.createJsonError("Error while fetching file content from payload", axis2MessageContext,
+                        BAD_REQUEST);
+            }
         } else {
-            jsonBody = Utils.createJsonError("Error while fetching file content from payload", axis2MessageContext,
+            jsonBody = Utils.createJsonError("Error while fetching Content-Type from request", axis2MessageContext,
                     BAD_REQUEST);
         }
+
+
+
         return jsonBody;
     }
 
@@ -322,7 +336,7 @@ public class RegistryContentResource implements MiApiResource {
                     jsonBody = Utils.createJsonError("Registry does not exists in the path: " + registryPath,
                             axis2MessageContext, BAD_REQUEST);
                 } else if (Objects.nonNull(pathWithPrefix)) {
-                    jsonBody = putRegistryArtifact(axis2MessageContext, pathWithPrefix);
+                    jsonBody = putRegistryArtifact(axis2MessageContext, messageContext, pathWithPrefix);
                 } else {
                     jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
                             BAD_REQUEST);
@@ -345,16 +359,31 @@ public class RegistryContentResource implements MiApiResource {
      * @return                      A JSON object with the final status
      */
     private JSONObject putRegistryArtifact(org.apache.axis2.context.MessageContext axis2MessageContext,
-            String registryPath) {
+            MessageContext messageContext, String registryPath) {
 
-        String fileContent = getPayloadAsString(axis2MessageContext);
+        String contentType = axis2MessageContext.getProperty(CONTENT_TYPE).toString();
         JSONObject jsonBody = new JSONObject();
-        if (Objects.nonNull(fileContent)) {
-            MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
-            microIntegratorRegistry.updateResource(registryPath, fileContent);
-            jsonBody.put("message", "Successfully modified the registry resource");
+        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        if (Objects.nonNull(contentType) && contentType.contains(CONTENT_TYPE_MULTIPART_FORM_DATA)) {
+            byte[] fileContent = getPayloadFromMultipart(messageContext);
+            if (Objects.nonNull(fileContent)) {
+                microIntegratorRegistry.addMultipartResource(registryPath, null, fileContent);
+                jsonBody.put("message", "Successfully modified the registry resource");
+            } else {
+                jsonBody = Utils.createJsonError("Error while fetching file content from payload", axis2MessageContext,
+                        BAD_REQUEST);
+            }
+        } else if (Objects.nonNull(contentType)) {
+            String fileContent = getPayload(axis2MessageContext);
+            if (Objects.nonNull(fileContent)) {
+                microIntegratorRegistry.updateResource(registryPath, fileContent);
+                jsonBody.put("message", "Successfully modified the registry resource");
+            } else {
+                jsonBody = Utils.createJsonError("Error while fetching file content from payload", axis2MessageContext,
+                        BAD_REQUEST);
+            }
         } else {
-            jsonBody = Utils.createJsonError("Error while fetching file content from payload", axis2MessageContext,
+            jsonBody = Utils.createJsonError("Error while fetching Content-Type from request", axis2MessageContext,
                     BAD_REQUEST);
         }
         return jsonBody;
