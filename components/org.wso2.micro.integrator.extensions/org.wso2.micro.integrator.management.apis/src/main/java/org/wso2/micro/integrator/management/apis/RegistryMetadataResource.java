@@ -19,7 +19,7 @@ package org.wso2.micro.integrator.management.apis;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 
@@ -29,20 +29,21 @@ import java.util.Objects;
 import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
-import static org.wso2.micro.integrator.management.apis.Constants.EXPAND_PARAM;
+import static org.wso2.micro.integrator.management.apis.Constants.ERROR_KEY;
+import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_PATH;
-import static org.wso2.micro.integrator.management.apis.Constants.VALUE_TRUE;
 import static org.wso2.micro.integrator.management.apis.Utils.formatPath;
+import static org.wso2.micro.integrator.management.apis.Utils.isRegistryExist;
 import static org.wso2.micro.integrator.management.apis.Utils.validatePath;
 
 /**
- * This class provides mechanisms to monitor registry directory.
+ * This class provides mechanisms to monitor registry metadata.
  */
-public class RegistryResource implements MiApiResource {
+public class RegistryMetadataResource implements MiApiResource {
 
     Set<String> methods;
 
-    public RegistryResource() {
+    public RegistryMetadataResource() {
 
         methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
@@ -70,19 +71,21 @@ public class RegistryResource implements MiApiResource {
     private void handleGet(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext) {
 
         String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
-        String expandedEnabled = Utils.getQueryParameter(messageContext, EXPAND_PARAM);
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
         String validatedPath;
         if (Objects.nonNull(registryPath)) {
             validatedPath = validatePath(registryPath, axis2MessageContext);
-            if (Objects.nonNull(validatedPath) && Objects.nonNull(expandedEnabled) && expandedEnabled.equals(
-                    VALUE_TRUE)) {
-                populateRegistryResourceJSON(axis2MessageContext, microIntegratorRegistry, validatedPath);
-            } else if (Objects.nonNull(validatedPath)) {
-                populateImmediateChildren(axis2MessageContext, microIntegratorRegistry, validatedPath);
+            if (Objects.nonNull(validatedPath)) {
+                if (!isRegistryExist(validatedPath)) {
+                    JSONObject jsonBody = Utils.createJsonError("Can not find the registry: " + registryPath,
+                            axis2MessageContext, BAD_REQUEST);
+                    Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+                } else {
+                    populateRegistryMetadata(axis2MessageContext, microIntegratorRegistry, validatedPath);
+                }
             }
         } else {
-            JSONObject jsonBody = Utils.createJsonError("Registry path not found in the request", axis2MessageContext,
+            JSONObject jsonBody = Utils.createJsonError("Registry path not found in the request" , axis2MessageContext,
                     BAD_REQUEST);
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         }
@@ -90,47 +93,24 @@ public class RegistryResource implements MiApiResource {
     }
 
     /**
-     * This method is used to get the <MI-HOME>/registry directory and its content as a JSON.
-     *
-     * @param axis2MessageContext     AXIS2 message context
-     * @param microIntegratorRegistry Micro integrator registry
-     */
-    private void populateRegistryResourceJSON(org.apache.axis2.context.MessageContext axis2MessageContext,
-            MicroIntegratorRegistry microIntegratorRegistry, String path) {
-
-        String carbonHomePath = Utils.getCarbonHome();
-        String folderPath = formatPath(carbonHomePath + File.separator + path + File.separator);
-        File node = new File(folderPath);
-        JSONObject jsonBody;
-        if (node.exists() && node.isDirectory()) {
-            jsonBody = microIntegratorRegistry.getRegistryResourceJSON(folderPath);
-        } else {
-            jsonBody = Utils.createJsonError("Invalid registry path", axis2MessageContext, BAD_REQUEST);
-        }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
-    }
-
-    /**
-     * This method is to get the immediate child files, folders of a given directory with their metadata and properties.
+     * This method is used to fetch the metadata(media type) of a specified registry file.
      *
      * @param axis2MessageContext     AXIS2 message context
      * @param microIntegratorRegistry Micro integrator registry
      * @param path                    Registry path
      */
-    private void populateImmediateChildren(org.apache.axis2.context.MessageContext axis2MessageContext,
+    private void populateRegistryMetadata(org.apache.axis2.context.MessageContext axis2MessageContext,
             MicroIntegratorRegistry microIntegratorRegistry, String path) {
 
-        String carbonHomePath = formatPath(Utils.getCarbonHome());
+        String carbonHomePath = Utils.getCarbonHome();
         String registryPath = formatPath(carbonHomePath + File.separator + path);
-        File node = new File(registryPath);
-        JSONObject jsonBody;
-        if (node.exists() && node.isDirectory()) {
-            JSONArray childrenList = microIntegratorRegistry.getChildrenList(registryPath, carbonHomePath);
-            jsonBody = Utils.createJSONList(childrenList.length());
-            jsonBody.put(Constants.LIST, childrenList);
-        } else {
-            jsonBody = Utils.createJsonError("Invalid registry path", axis2MessageContext, BAD_REQUEST);
-        }
+        JSONObject jsonBody = microIntegratorRegistry.getRegistryMediaType(registryPath);
+        try {
+            String error = jsonBody.getString(ERROR_KEY);
+            if (Objects.nonNull(error)) {
+                jsonBody = Utils.createJsonError(error, axis2MessageContext, INTERNAL_SERVER_ERROR);
+            }
+        } catch (JSONException ignored) { }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 }

@@ -75,6 +75,8 @@ import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstant
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.GOVERNANCE_REGISTRY_PATH;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.GOVERNANCE_REGISTRY_PREFIX;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.HIDDEN_FILE_PREFIX;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LOCAL_REGISTRY_PATH;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LOCAL_REGISTRY_PREFIX;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.NAME_KEY;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTIES_KEY;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTY_EXTENTION;
@@ -1364,7 +1366,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     }
 
     /**
-     * Returns the converted file path with "conf:" and "gov:"
+     * Returns the converted file path with "conf:" and "gov:".
      *
      * @param registryPath   file path to be converted
      * @param carbonHomePath <MI-HOME> path
@@ -1377,6 +1379,8 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             resolvedRegKeyPath = resolvedRegKeyPath.replace(CONFIGURATION_REGISTRY_PATH, CONFIG_REGISTRY_PREFIX);
         } else if (resolvedRegKeyPath.startsWith(GOVERNANCE_REGISTRY_PATH)) {
             resolvedRegKeyPath = resolvedRegKeyPath.replace(GOVERNANCE_REGISTRY_PATH, GOVERNANCE_REGISTRY_PREFIX);
+        } else if (resolvedRegKeyPath.startsWith(LOCAL_REGISTRY_PATH)) {
+            resolvedRegKeyPath = resolvedRegKeyPath.replace(LOCAL_REGISTRY_PATH, LOCAL_REGISTRY_PREFIX);
         }
         return formatPath(resolvedRegKeyPath);
     }
@@ -1389,14 +1393,14 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
      */
     public static String formatPath(String path) {
         // removing white spaces
-        String pathformatted = path.replaceAll("\\b\\s+\\b", "%20");
+        String pathFormatted = path.replaceAll("\\b\\s+\\b", "%20");
         try {
-            pathformatted = java.net.URLDecoder.decode(pathformatted, "UTF-8");
+            pathFormatted = java.net.URLDecoder.decode(pathFormatted, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            log.error("Unsupported Encoding in the path :" + pathformatted);
+            log.error("Unsupported Encoding in the path :" + pathFormatted);
         }
         // replacing all "\" with "/"
-        return pathformatted.replace('\\', '/');
+        return pathFormatted.replace('\\', '/');
     }
 
     /**
@@ -1485,6 +1489,24 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Updates existing property files.
+     * @param path          Path of the registry resource
+     * @param properties    New properties
+     */
+    public void updateProperties(String path, Properties properties) throws URISyntaxException {
+        if (registryType == MicroIntegratorRegistryConstants.LOCAL_HOST_REGISTRY) {
+            String targetPath = resolveRegistryURI(path);
+
+            String parent = getParentPath(targetPath,  false);
+            File parentFile = new File(new URI(parent));
+            String fileName = getResourceName(targetPath);
+            writeProperties(parentFile, fileName, properties);
+        } else {
+            log.warn("Updating remote registry is NOT SUPPORTED. Unable to update: " + path);
         }
     }
 }

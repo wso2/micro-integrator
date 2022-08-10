@@ -71,4 +71,5 @@ public class MicroIntegratorRegistryConstants {
     public static final String PROPERTY_FILE_VALUE = "property file";
     public static final String CONFIGURATION_REGISTRY_PATH = "registry/config";
     public static final String GOVERNANCE_REGISTRY_PATH = "registry/governance";
+    public static final String LOCAL_REGISTRY_PATH = "registry/local";
 }

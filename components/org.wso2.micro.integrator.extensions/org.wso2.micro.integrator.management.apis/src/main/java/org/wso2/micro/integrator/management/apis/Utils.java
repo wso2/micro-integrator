@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -57,8 +58,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
+import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
+import static org.wso2.micro.integrator.management.apis.Constants.CONFIGURATION_REGISTRY_PATH;
+import static org.wso2.micro.integrator.management.apis.Constants.CONFIGURATION_REGISTRY_PREFIX;
 import static org.wso2.micro.integrator.management.apis.Constants.FORBIDDEN;
+import static org.wso2.micro.integrator.management.apis.Constants.GOVERNANCE_REGISTRY_PATH;
+import static org.wso2.micro.integrator.management.apis.Constants.GOVERNANCE_REGISTRY_PREFIX;
+import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
+import static org.wso2.micro.integrator.management.apis.Constants.LOCAL_REGISTRY_PATH;
+import static org.wso2.micro.integrator.management.apis.Constants.LOCAL_REGISTRY_PREFIX;
+import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_ROOT_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
+import static org.wso2.micro.integrator.management.apis.Constants.fileTypes;
 
 public class Utils {
 
@@ -448,5 +459,160 @@ public class Utils {
             }
         }
         return name;
+    }
+
+    /**
+     * This method is used to check the validity of the input path.
+     *
+     * @param registryPath        File path
+     * @param axis2MessageContext AXIS2 message context
+     * @return Validated path
+     */
+    public static String validatePath(String registryPath,
+            org.apache.axis2.context.MessageContext axis2MessageContext) {
+
+        String carbonHomePath = formatPath(Utils.getCarbonHome());
+        String registryRoot = formatPath(carbonHomePath + File.separator + REGISTRY_ROOT_PATH);
+        String validatedPath;
+
+        try {
+            File validatedPathFile = new File(formatPath(carbonHomePath + File.separator + registryPath));
+            File registryRootFile = new File(registryRoot);
+            if (!validatedPathFile.getCanonicalPath().startsWith(registryRootFile.getCanonicalPath())) {
+                JSONObject jsonBody = Utils.createJsonError("The registry path  '" + registryPath
+                                + "' is illegal which points to a location outside the registry", axis2MessageContext,
+                        BAD_REQUEST);
+                Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+                return null;
+            } else {
+                String validatedCanonicalPath = formatPath(validatedPathFile.getCanonicalPath());
+                String rootCanonicalPath = formatPath(registryRootFile.getCanonicalPath());
+                validatedPath = formatPath(validatedCanonicalPath.replace(rootCanonicalPath, REGISTRY_ROOT_PATH));
+            }
+        } catch (IOException | IllegalArgumentException e) {
+            JSONObject jsonBody = Utils.createJsonError(
+                    "Error while resolving the canonical path of the registry path : " + registryPath,
+                    axis2MessageContext, INTERNAL_SERVER_ERROR);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            return null;
+        }
+        return validatedPath;
+    }
+
+    /**
+     * Format the string paths to match any platform.. windows, linux etc..
+     *
+     * @param path  Input file path
+     * @return      Formatted file path
+     */
+    public static String formatPath(String path) {
+        // removing white spaces
+        String pathFormatted = path.replaceAll("\\b\\s+\\b", "%20");
+        try {
+            pathFormatted = java.net.URLDecoder.decode(pathFormatted, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Unsupported Encoding in the path :" + pathFormatted);
+        }
+        // replacing all "\" with "/"
+        return pathFormatted.replace('\\', '/');
+    }
+
+    /**
+     * This method checks whether a registry file exists or not.
+     *
+     * @param registryPath  Registry path
+     * @return              Boolean output indicating the existence of the registry
+     */
+    public static boolean isRegistryExist(String registryPath) {
+
+        String carbonHomePath = Utils.getCarbonHome();
+        String resolvedPath = formatPath(carbonHomePath + File.separator + registryPath + File.separator);
+        try {
+            File file = new File(resolvedPath);
+            return file.exists();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Format the path by adding the relevant registry type prefix.
+     * @param path  Registry path
+     * @return      Formatted path with the prefix
+     */
+    public static String getRegistryPathPrefix(String path) {
+
+        String pathWithPrefix;
+        if (path.startsWith(CONFIGURATION_REGISTRY_PATH)) {
+            pathWithPrefix = path.replace(CONFIGURATION_REGISTRY_PATH, CONFIGURATION_REGISTRY_PREFIX);
+        } else if (path.startsWith(GOVERNANCE_REGISTRY_PATH)) {
+            pathWithPrefix = path.replace(GOVERNANCE_REGISTRY_PATH, GOVERNANCE_REGISTRY_PREFIX);
+        } else if (path.startsWith(LOCAL_REGISTRY_PATH)) {
+            pathWithPrefix = path.replace(LOCAL_REGISTRY_PATH, LOCAL_REGISTRY_PREFIX);
+        } else {
+            return null;
+        }
+        return pathWithPrefix;
+    }
+
+    /**
+     * This method returns a string containing file content.
+     *
+     * @param axis2MessageContext Axis2 message context
+     * @return A string containing file content
+     */
+    public static String getPayloadAsString(org.apache.axis2.context.MessageContext axis2MessageContext) {
+
+        try {
+            InputStream inputStream = getInputStream(axis2MessageContext, true);
+            return IOUtils.toString(inputStream);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    private static InputStream getInputStream(org.apache.axis2.context.MessageContext messageContext, boolean reset) {
+        if (messageContext == null) {
+            return null;
+        } else {
+            Object o = messageContext.getProperty("bufferedInputStream");
+            if (o instanceof InputStream) {
+                InputStream is = (InputStream) o;
+                if (reset && is.markSupported()) {
+                    try {
+                        is.reset();
+                    } catch (IOException var5) {
+                        return null;
+                    }
+                }
+                return is;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Sends unauthorized fault response.
+     * @param axis2MessageContext   AXIS2 message context
+     */
+    public static void sendForbiddenFaultResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {
+        axis2MessageContext.setProperty(Constants.NO_ENTITY_BODY, true);
+        axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, 403);
+    }
+
+    /**
+     * This method validates the file type of the registry.
+     * @param registryPath  Registry path
+     * @return              Boolean output to indicate the validation of the file type
+     */
+    public static boolean isValidFileType(String registryPath) {
+        boolean valid = false;
+        for (String fileType : fileTypes) {
+            if (registryPath.endsWith(fileType)) {
+                valid = true;
+                break;
+            }
+        }
+        return valid;
     }
 }

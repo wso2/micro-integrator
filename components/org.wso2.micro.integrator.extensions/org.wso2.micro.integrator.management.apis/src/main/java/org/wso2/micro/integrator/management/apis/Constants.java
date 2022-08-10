@@ -21,6 +21,8 @@ package org.wso2.micro.integrator.management.apis;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 import javax.xml.namespace.QName;
+import java.util.Arrays;
+import java.util.List;
 
 public class Constants {
     //Constants for the API resource prefixes
@@ -32,6 +34,9 @@ public class Constants {
     public static final String PREFIX_INBOUND_ENDPOINTS = "/inbound-endpoints";
     public static final String PREFIX_PROXY_SERVICES = "/proxy-services";
     public static final String PREFIX_REGISTRY_RESOURCES = "/registry-resources";
+    public static final String PREFIX_REGISTRY_CONTENT = "/registry-resources/content";
+    public static final String PREFIX_REGISTRY_METADATA = "/registry-resources/metadata";
+    public static final String PREFIX_REGISTRY_PROPERTIES = "/registry-resources/properties";
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
     public static final String PREFIX_LOGGING = "/logging";
@@ -192,7 +197,7 @@ public class Constants {
     static final String SERVICE_PID = "service.pid";
 
     //Constants for RegistryResource
-    public static final String REGISTRY_PATH = "registryPath";
+    public static final String REGISTRY_PATH = "path";
     public static final String META_DATA = "metadata";
     public static final String FETCH_TYPE = "type";
     public static final String EXPAND_PARAM = "expand";
@@ -208,5 +213,11 @@ public class Constants {
     public static final String CONFIGURATION_REGISTRY_PREFIX = "conf:";
     public static final String GOVERNANCE_REGISTRY_PATH = "registry/governance";
     public static final String GOVERNANCE_REGISTRY_PREFIX = "gov:";
-    public static final String URL_SEPARATOR = "/";
+    public static final String LOCAL_REGISTRY_PATH = "registry/local";
+    public static final String LOCAL_REGISTRY_PREFIX = "local:";
+    public static final String DEFAULT_MEDIA_TYPE = "text/plain";
+    public static final String MEDIA_TYPE_KEY = "mediaType";
+    public static final String PROPERTY_EXTENSION = ".properties";
+    public static final String VALUE_KEY = "value";
+    public static final List<String> fileTypes = Arrays.asList(".txt", ".xml", ".json", ".dmc", ".xslt");
 }
