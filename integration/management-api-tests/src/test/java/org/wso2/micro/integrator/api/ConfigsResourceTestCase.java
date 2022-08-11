@@ -72,7 +72,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
     public void testRetrieveCorrelationConfigs() throws IOException, AutomationFrameworkException {
 
         startNewServer(false);
-        sendGetRequest(offset, false);
+        getCorrelationLogStateAndAssert(offset, false);
         String apiLogFilePath = carbonHome + File.separator + "repository"
                 + File.separator + "logs" + File.separator + "correlation.log";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(apiLogFilePath));
@@ -92,8 +92,8 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
             description = "Test get configs resource for correlation")
     public void testUpdateCorrelationConfigsEnable() throws IOException {
 
-        sendPutRequest(offset, true);
-        sendGetRequest(offset, true);
+        updateCorrelationLogState(offset, true);
+        getCorrelationLogStateAndAssert(offset, true);
 
         String apiLogFilePath = carbonHome + File.separator + "repository"
                 + File.separator + "logs" + File.separator + "correlation.log";
@@ -117,7 +117,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
             description = "Test get configs resource for correlation")
     public void testUpdateCorrelationConfigsDisable() throws IOException {
 
-        sendPutRequest(offset, false);
+        updateCorrelationLogState(offset, false);
 
         String apiLogFilePath = carbonHome + File.separator + "repository"
                 + File.separator + "logs" + File.separator + "correlation.log";
@@ -129,7 +129,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
                     logLine.contains("ROUND-TRIP LATENCY") || logLine.contains("Thread switch latency"));
         }
 
-        sendGetRequest(offset, false);
+        getCorrelationLogStateAndAssert(offset, false);
         logLine = bufferedReader.readLine();
         Assert.assertNull(logLine);
     }
@@ -150,8 +150,8 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
 
         stopServer();
         startNewServer(true);
-        sendGetRequest(offset, true);
-        sendPutRequest(offset, false);
+        getCorrelationLogStateAndAssert(offset, true);
+        updateCorrelationLogState(offset, false);
 
         String apiLogFilePath = carbonHome + File.separator + "repository"
                 + File.separator + "logs" + File.separator + "correlation.log";
@@ -163,7 +163,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
                     logLine.contains("ROUND-TRIP LATENCY") || logLine.contains("Thread switch latency"));
         }
 
-        sendGetRequest(offset, true);
+        getCorrelationLogStateAndAssert(offset, true);
 
         while ((logLine = bufferedReader.readLine()) != null) {
             Assert.assertTrue(logLine.contains("HTTP State Transition") ||
@@ -197,7 +197,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
         server.stopServer();
     }
 
-    private void sendGetRequest(int offset, boolean correlationConfigStatus) throws IOException {
+    private void getCorrelationLogStateAndAssert(int offset, boolean correlationConfigStatus) throws IOException {
 
         String accessToken = TokenUtil.getAccessToken(hostName, offset);
         Assert.assertNotNull(accessToken);
@@ -223,7 +223,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
         Assert.assertEquals(responseConfigs.get("enabled"), correlationConfigStatus);
     }
 
-    private void sendPutRequest(int offset, boolean correlationConfigEnabled) throws IOException {
+    private void updateCorrelationLogState(int offset, boolean correlationConfigEnabled) throws IOException {
 
         String accessToken = TokenUtil.getAccessToken(hostName, offset);
         Assert.assertNotNull(accessToken);
@@ -284,7 +284,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
 
         stopServer();
         System.setProperty("port.offset", String.valueOf(portOffset));
-        System.setProperty("enableCorrelationLogs", String.valueOf(false));
+        System.setProperty("enableCorrelationLogs", "false");
         super.cleanup();
     }
 }
