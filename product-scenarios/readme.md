@@ -5,7 +5,7 @@
 5. [Route messages between systems](5-Route-messages-between-systems)
 6. [Service orchestration](6-service-orchestration)
 7. [Connecting with Packaged applications](7-connecting-with-packaged-applications)
-8. [Connect devices to the enterprise](8-Connect-devices-to-enterprise)
+8. [Connect devices to the enterprise](8-connect-devices-to-enterprise)
 9. [Data integration](9-data-integration)
 10. [File processing](10-file-processing)
 11. [Asynchronous message processing](11-Asynchronous-message-processing)
