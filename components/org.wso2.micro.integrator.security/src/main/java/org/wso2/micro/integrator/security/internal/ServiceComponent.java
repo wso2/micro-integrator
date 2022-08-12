@@ -43,7 +43,7 @@ import org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreMa
 import java.util.Hashtable;
 
 @Component (
-        name = "org.wso2.micro.integrator.security.internal.ServiceComponent",
+        name = "org.wso2.micro.integrator.security",
         immediate = true
 )
 public class ServiceComponent {

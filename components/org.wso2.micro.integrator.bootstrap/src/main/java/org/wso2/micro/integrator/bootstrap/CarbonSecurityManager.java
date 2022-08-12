@@ -18,8 +18,6 @@
 
 package org.wso2.micro.integrator.bootstrap;
 
-import sun.security.util.SecurityConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +28,7 @@ import java.util.List;
 public class CarbonSecurityManager extends SecurityManager {
 
     private List<String> deniedProperties = new ArrayList<String>();
+    private static final RuntimePermission MODIFY_THREADGROUP_PERMISSION = new RuntimePermission("modifyThreadGroup");
 
     public CarbonSecurityManager() {
         super();
@@ -82,7 +81,7 @@ public class CarbonSecurityManager extends SecurityManager {
             throw new NullPointerException("thread group can't be null");
         }
 
-        checkPermission(SecurityConstants.MODIFY_THREADGROUP_PERMISSION);
+        checkPermission(MODIFY_THREADGROUP_PERMISSION);
     }
 
     /**
@@ -97,7 +96,7 @@ public class CarbonSecurityManager extends SecurityManager {
             throw new NullPointerException("thread can't be null");
         }
 
-        checkPermission(SecurityConstants.MODIFY_THREADGROUP_PERMISSION);
+        checkPermission(MODIFY_THREADGROUP_PERMISSION);
     }
 
 }
