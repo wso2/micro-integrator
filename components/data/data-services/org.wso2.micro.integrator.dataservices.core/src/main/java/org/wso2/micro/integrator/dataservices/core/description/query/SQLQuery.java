@@ -19,6 +19,7 @@ package org.wso2.micro.integrator.dataservices.core.description.query;
 
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
@@ -1894,8 +1895,11 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
     private void setDateValue(int queryType, String paramName, String value, String paramType,
             PreparedStatement sqlQuery, int i) throws SQLException, DataServiceFault {
         Date val = null;
-        if (value != null) {
+        if (!StringUtils.isEmpty(value)) {
             val = DBUtils.getDate(value);
+        } else {
+            // handle empty input to date column
+            value = null;
         }
         try {
             if (QueryTypes.IN.equals(paramType)) {

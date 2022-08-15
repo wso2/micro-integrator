@@ -24,6 +24,7 @@ import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.util.ReferenceCountUtil;
 import org.apache.axiom.om.OMOutputFormat;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.transport.MessageFormatter;
@@ -232,16 +233,20 @@ public class InboundWebsocketResponseSender implements InboundResponseSender {
 
     protected void handleSendBack(WebSocketFrame frame, InboundWebsocketChannelContext ctx, int clientBroadcastLevel,
                                   String subscriberPath, WebsocketSubscriberPathManager pathManager) {
-        if (clientBroadcastLevel == 0) {
-            ctx.writeToChannel(frame);
-        } else if (clientBroadcastLevel == 1) {
-            String endpointName = WebsocketEndpointManager.getInstance()
-                    .getEndpointName(sourceHandler.getPort(), sourceHandler.getTenantDomain());
-            pathManager.broadcastOnSubscriberPath(frame, endpointName, subscriberPath);
-        } else if (clientBroadcastLevel == 2) {
-            String endpointName = WebsocketEndpointManager.getInstance()
-                    .getEndpointName(sourceHandler.getPort(), sourceHandler.getTenantDomain());
-            pathManager.exclusiveBroadcastOnSubscriberPath(frame, endpointName, subscriberPath, ctx);
+        try {
+            if (clientBroadcastLevel == 0) {
+                ctx.writeToChannel(frame.retain());
+            } else if (clientBroadcastLevel == 1) {
+                String endpointName = WebsocketEndpointManager.getInstance().getEndpointName(sourceHandler.getPort(),
+                                                                                             sourceHandler.getTenantDomain());
+                pathManager.broadcastOnSubscriberPath(frame, endpointName, subscriberPath);
+            } else if (clientBroadcastLevel == 2) {
+                String endpointName = WebsocketEndpointManager.getInstance().getEndpointName(sourceHandler.getPort(),
+                                                                                             sourceHandler.getTenantDomain());
+                pathManager.exclusiveBroadcastOnSubscriberPath(frame, endpointName, subscriberPath, ctx);
+            }
+        } finally {
+            ReferenceCountUtil.release(frame);
         }
     }
 

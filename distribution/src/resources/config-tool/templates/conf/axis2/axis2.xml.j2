@@ -107,6 +107,8 @@
     <!-- ================================================= -->
     <!--                  Listeners                        -->
     <!-- ================================================= -->
+    
+    <listener class="org.apache.synapse.deployers.interceptor.DeploymentInterceptor"/>
 
     {% if server.enable_security_deployment_interceptor == true %}
     <!-- To handle WS policies -->

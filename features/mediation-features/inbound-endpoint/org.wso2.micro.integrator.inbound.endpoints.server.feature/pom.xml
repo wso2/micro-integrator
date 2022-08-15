@@ -60,6 +60,10 @@
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
+            <artifactId>netty-transport-native-unix-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
             <artifactId>netty-handler</artifactId>
         </dependency>
         <dependency>
@@ -142,6 +146,7 @@
                                 <bundleDef>ca.uhn.hapi.wso2:hapi</bundleDef>
                                 <bundleDef>io.netty:netty-common:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-transport:compatible:${netty.version}</bundleDef>
+                                <bundleDef>io.netty:netty-transport-native-unix-common:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-codec-http:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-codec:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-buffer:compatible:${netty.version}</bundleDef>
