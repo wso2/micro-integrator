@@ -505,7 +505,7 @@
             <dependency>
                 <groupId>org.wso2.orbit.org.quartz-scheduler</groupId>
                 <artifactId>quartz</artifactId>
-                <version>2.3.2.wso2v1</version>
+                <version>${quartz.orbit.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
@@ -1771,6 +1771,7 @@
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <version.disruptor>3.4.2</version.disruptor>
         <version.geronimo.jta.spec>1.1</version.geronimo.jta.spec>
+        <quartz.orbit.version>2.3.2.wso2v1</quartz.orbit.version>
     </properties>
 
     <repositories>
