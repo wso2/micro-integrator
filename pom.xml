@@ -503,9 +503,9 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.quartz-scheduler.wso2</groupId>
+                <groupId>org.wso2.orbit.org.quartz-scheduler</groupId>
                 <artifactId>quartz</artifactId>
-                <version>2.1.1.wso2v1</version>
+                <version>${quartz.orbit.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
@@ -724,8 +724,8 @@
                 <version>${org.apache.bsf.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>rhino.wso2</groupId>
-                <artifactId>js</artifactId>
+                <groupId>org.wso2.orbit.org.mozilla</groupId>
+                <artifactId>rhino</artifactId>
                 <version>${rhino.wso2.js.version}</version>
             </dependency>
             <dependency>
@@ -751,6 +751,10 @@
                     <exclusion>
                         <groupId>org.ops4j.pax.logging</groupId>
                         <artifactId>pax-logging-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -1484,7 +1488,7 @@
 
         <carbon.analytics.common.version>5.2.41</carbon.analytics.common.version>
         <carbon.analytics.common.imp.pkg.version>[5.2.0, 6.0.0)</carbon.analytics.common.imp.pkg.version>
-        <fasterxml.jackson.version>2.13.1</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.13.3</fasterxml.jackson.version>
         <carbon.commons.version>4.7.49</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
@@ -1540,7 +1544,7 @@
         <version.jaxb>2.2.5.wso2v1</version.jaxb>
         <javasysmon.version>0.3.3.wso2v1</javasysmon.version>
         <version.eclipse.ecj>4.4.2</version.eclipse.ecj>
-        <version.com.google.code.gson>2.8.5</version.com.google.code.gson>
+        <version.com.google.code.gson>2.9.0</version.com.google.code.gson>
         <docker.maven.plugin.version>1.0.0</docker.maven.plugin.version>
         <maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
         <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
@@ -1552,7 +1556,7 @@
         <commons-text.orbit.version>1.6.wso2v1</commons-text.orbit.version>
         <commons-lang3.orbit.version>3.4.0.wso2v1</commons-lang3.orbit.version>
         <joda-time.version>2.9.4.wso2v1</joda-time.version>
-        <libthrift.version>0.8.0.wso2v1</libthrift.version>
+        <libthrift.version>0.16.0.wso2v1</libthrift.version>
         <axis2.mar.maven.plugin>1.5.2</axis2.mar.maven.plugin>
 
         <!--PAX Logging related dependency versions-->
@@ -1593,7 +1597,7 @@
         <imp.package.version.osgi.services>[1.2.0,2.0.0)</imp.package.version.osgi.services>
 
         <org.apache.bsf.wso2.version>3.0.0.wso2v5</org.apache.bsf.wso2.version>
-        <rhino.wso2.js.version>1.7.0.R4.wso2v1</rhino.wso2.js.version>
+        <rhino.wso2.js.version>1.7.14.wso2v1</rhino.wso2.js.version>
         <org.apache.velocity.version>2.3</org.apache.velocity.version>
 
         <javax.servlet.version>3.0.0.v201112011016</javax.servlet.version>
@@ -1678,19 +1682,17 @@
 
         <olingo.orbit.imp.pkg.version>[4.4,5)</olingo.orbit.imp.pkg.version>
 
-        <google-http-client.orbit.version>1.20.0.wso2v2</google-http-client.orbit.version>
-        <google-http-client.orbit.imp.pkg.version>[1.20,2.0)</google-http-client.orbit.imp.pkg.version>
+        <google-http-client.orbit.version>1.41.2.wso2v1</google-http-client.orbit.version>
+        <google-http-client.orbit.imp.pkg.version>[1.41.2,2.0)</google-http-client.orbit.imp.pkg.version>
 
-        <google-api-client.orbit.imp.pkg.version>[1.20,2.0)</google-api-client.orbit.imp.pkg.version>
-
-        <google-oauth-client.orbit.version>1.20.0.wso2v1</google-oauth-client.orbit.version>
-        <google-oauth-client.orbit.imp.pkg.version>[1.20,2.0)</google-oauth-client.orbit.imp.pkg.version>
+        <google-oauth-client.orbit.version>1.33.1.wso2v1</google-oauth-client.orbit.version>
+        <google-oauth-client.orbit.imp.pkg.version>[1.33.1,2.0)</google-oauth-client.orbit.imp.pkg.version>
 
         <poi.orbit.version>3.17.0.wso2v1</poi.orbit.version>
         <poi.orbit.imp.pkg.version>0.0.0</poi.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0,4.0.0)) after osgi bundle is corrected - rajith-->
 
-        <google-api-client.orbit.version>1.20.0.wso2v1</google-api-client.orbit.version>
-        <google-api-client.orbit.imp.pkg.version>[1.20,2.0)</google-api-client.orbit.imp.pkg.version>
+        <google-api-client.orbit.version>1.33.1.wso2v1</google-api-client.orbit.version>
+        <google-api-client.orbit.imp.pkg.version>[1.33.1,2.0)</google-api-client.orbit.imp.pkg.version>
 
         <olingo.orbit.version>4.4.0.wso2v3</olingo.orbit.version>
 
@@ -1760,7 +1762,8 @@
         <commons-logging.version>1.2</commons-logging.version>
         <mockito.version>2.23.4</mockito.version>
         <wrapper.version>3.2.3</wrapper.version>
-        <nimbus-jose.orbit.version>5.8.0.wso2v1</nimbus-jose.orbit.version>
+        <nimbus-jose.orbit.version>9.22.0.wso2v1</nimbus-jose.orbit.version>
+        <nimbus-jose.orbit.imp.pkg.version>[9.22,10.0)</nimbus-jose.orbit.imp.pkg.version>
         <grpc.version>1.21.0</grpc.version>
         <axis2-java2wsdl.version>1.6.2</axis2-java2wsdl.version>
         <!-- Prometheus Library versions-->
@@ -1773,6 +1776,7 @@
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <version.disruptor>3.4.2</version.disruptor>
         <version.geronimo.jta.spec>1.1</version.geronimo.jta.spec>
+        <quartz.orbit.version>2.3.2.wso2v1</quartz.orbit.version>
     </properties>
 
     <repositories>
