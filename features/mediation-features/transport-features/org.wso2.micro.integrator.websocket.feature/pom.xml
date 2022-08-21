@@ -90,6 +90,7 @@
                                 <bundleDef>org.wso2.ei:org.wso2.micro.integrator.websocket.transport</bundleDef>
                                 <bundleDef>io.netty:netty-common:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-transport:compatible:${netty.version}</bundleDef>
+                                <bundleDef>io.netty:netty-transport-native-unix-common:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-codec-http:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-codec:compatible:${netty.version}</bundleDef>
                                 <bundleDef>io.netty:netty-buffer:compatible:${netty.version}</bundleDef>

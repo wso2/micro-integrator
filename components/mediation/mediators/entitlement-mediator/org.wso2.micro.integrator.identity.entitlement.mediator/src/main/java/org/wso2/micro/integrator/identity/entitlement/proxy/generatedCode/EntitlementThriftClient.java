@@ -191,11 +191,16 @@ public class EntitlementThriftClient {
                 super("getDecision");
             }
 
-            protected getDecision_args getEmptyArgsInstance() {
+            public getDecision_args getEmptyArgsInstance() {
                 return new getDecision_args();
             }
 
-            protected getDecision_result getResult(I iface, getDecision_args args) throws org.apache.thrift.TException {
+            @Override
+            protected boolean isOneway() {
+                return false;
+            }
+
+            public getDecision_result getResult(I iface, getDecision_args args) throws org.apache.thrift.TException {
                 getDecision_result result = new getDecision_result();
                 try {
                     result.success = iface.getDecision(args.request, args.sessionId);

@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.analytics.messageflow.data.publisher.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.aspects.flow.statistics.collectors.RuntimeStatisticCollector;
+import org.apache.synapse.config.SynapsePropertiesLoader;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -35,6 +36,7 @@ import org.wso2.micro.integrator.analytics.messageflow.data.publisher.observer.A
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.observer.MessageFlowObserver;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.observer.TenantInformation;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.observer.jmx.JMXMediationFlowObserver;
+import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.elasticsearch.ElasticConstants;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.services.MediationConfigReporterThread;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.services.MessageFlowReporterThread;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
@@ -180,6 +182,16 @@ public class MediationStatisticsComponent {
             log.debug("Registering  Observer for tenant: " + tenantId);
         }
         stores.put(tenantId, observerStore);
+
+        boolean elkAnalyticsEnabled = SynapsePropertiesLoader.getBooleanProperty(
+                ElasticConstants.SynapseConfigKeys.ELASTICSEARCH_ENABLED, false);
+        if (elkAnalyticsEnabled) {
+            /* If Elasticsearch Analytics are enabled EI Analytics should not function.
+              This is because the Micro-Integrator should be publishing analytics only to a single analytics service.
+              */
+            return;
+        }
+
         // Adding configuration reporting thread
         MediationConfigReporterThread configReporterThread = new MediationConfigReporterThread(synEnvService);
         configReporterThread.setName("mediation-config-reporter-" + tenantId);

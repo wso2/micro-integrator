@@ -193,11 +193,16 @@ public class AuthenticatorService {
                 super("authenticate");
             }
 
-            protected authenticate_args getEmptyArgsInstance() {
+            public authenticate_args getEmptyArgsInstance() {
                 return new authenticate_args();
             }
 
-            protected authenticate_result getResult(I iface, authenticate_args args)
+            @Override
+            protected boolean isOneway() {
+                return false;
+            }
+
+            public authenticate_result getResult(I iface, authenticate_args args)
                     throws org.apache.thrift.TException {
                 authenticate_result result = new authenticate_result();
                 try {
