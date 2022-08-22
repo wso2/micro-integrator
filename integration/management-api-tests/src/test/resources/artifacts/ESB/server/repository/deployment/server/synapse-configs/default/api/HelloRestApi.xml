@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/hellorest" name="HelloRestApi" xmlns="http://ws.apache.org/ns/synapse">
+    <resource inSequence="seq7" methods="GET" outSequence="seq8" url-mapping="/list">
+        <faultSequence/>
+    </resource>
+    <resource methods="POST PUT" outSequence="seq9" uri-template="/edit/{userId}">
+        <inSequence>
+            <log/>
+            <send>
+                <endpoint key="BackendService"/>
+            </send>
+        </inSequence>
+        <faultSequence/>
+    </resource>
+    <resource inSequence="seq10" methods="GET" outSequence="seq11">
+        <faultSequence/>
+    </resource>
+</api>

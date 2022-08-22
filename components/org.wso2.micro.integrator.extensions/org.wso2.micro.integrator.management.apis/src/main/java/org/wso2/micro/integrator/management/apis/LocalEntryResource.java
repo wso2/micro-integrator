@@ -19,21 +19,28 @@
 package org.wso2.micro.integrator.management.apis;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.config.Entry;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Set;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
+
+import static org.wso2.micro.integrator.management.apis.Constants.*;
 
 /**
  * This class provides mechanisms to monitor local entries deployed.
@@ -67,14 +74,52 @@ public class LocalEntryResource implements MiApiResource {
                           SynapseConfiguration synapseConfiguration) {
 
         String entryKey = Utils.getQueryParameter(messageContext, Constants.NAME);
-        if (Objects.nonNull(entryKey)) {
-            populateLocalEntryData(axis2MessageContext, synapseConfiguration, entryKey);
-        } else {
-            populateLocalEntries(axis2MessageContext, synapseConfiguration);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
+        try {
+            if (Objects.nonNull(entryKey)) {
+                populateLocalEntryData(axis2MessageContext, synapseConfiguration, entryKey);
+            } else if (Objects.nonNull(searchKey)) {
+                populateSearchResults(messageContext, searchKey.toLowerCase());
+            } else {
+                populateLocalEntries(axis2MessageContext, synapseConfiguration);
+            }
+        } catch (AxisFault e) {
+            LOG.error("Error while populating service: ", e);
+            messageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
         }
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
+
+    private static List<Entry> getSearchResults(MessageContext messageContext, String searchKey) throws AxisFault {
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<Entry> searchResultList = configuration.getDefinedEntries().values().stream()
+                .filter(entry -> entry.getKey().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+        return searchResultList;
+    }
+
+    private void populateSearchResults(MessageContext messageContext, String searchKey) throws AxisFault {
+        List<Entry> searchResultList = getSearchResults(messageContext, searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
+
+    private void setResponseBody(Collection<Entry> entriesCollection, MessageContext messageContext){
+
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+
+        JSONObject jsonBody = Utils.createJSONList(entriesCollection.size() - 2);
+
+        for (Entry entry : entriesCollection) {
+            JSONObject entryObject =  getLocalEntryAsJson(entry);
+            jsonBody.getJSONArray(LIST).put(entryObject);
+            //addLocalEntryToJsonList(entry, jsonBody.getJSONArray(Constants.LIST));
+        }
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+    }
+
 
     /**
      * Sets the list of all available local entries to the response as json.

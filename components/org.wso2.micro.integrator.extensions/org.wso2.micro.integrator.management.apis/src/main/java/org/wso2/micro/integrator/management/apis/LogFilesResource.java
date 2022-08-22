@@ -43,14 +43,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 
 import static org.apache.synapse.SynapseConstants.HTTP_SC;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
+import static org.wso2.micro.integrator.management.apis.Constants.COUNT;
 import static org.wso2.micro.integrator.management.apis.Constants.NO_ENTITY_BODY;
 
 /**
@@ -74,20 +80,43 @@ public class LogFilesResource extends APIResource {
     }
 
     @Override
-    public boolean invoke(MessageContext synCtx) {
+    public boolean invoke(MessageContext messageContext) {
 
-        String pathParameter = Utils.getQueryParameter(synCtx, "file");
+        String pathParameter = Utils.getQueryParameter(messageContext, "file");
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
         if (StringUtils.isNotEmpty(pathParameter)) {
-            populateFileContent(synCtx, pathParameter);
+            populateFileContent(messageContext, pathParameter);
+        } else if (Objects.nonNull(searchKey)){
+            populateSearchResults(messageContext, searchKey.toLowerCase());
         } else {
-            populateLogFileInfo(synCtx);
+            populateLogFileInfo(messageContext);
         }
         return true;
     }
 
-    private void populateLogFileInfo(MessageContext synCtx) {
-
+    private void populateLogFileInfo(MessageContext messageContext) {
         List<LogFileInfo> logFileInfoList = Utils.getLogFileInfoList();
+        setResponseBody(logFileInfoList, messageContext);
+    }
+    private static List<LogFileInfo> getSearchResults(String searchKey) {
+
+        List <LogFileInfo>searchResultList = Utils.getLogFileInfoList().stream()
+                .filter(resource -> resource.getLogName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+
+        return searchResultList;
+    }
+
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+
+        List <LogFileInfo>searchResultList = getSearchResults(searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
+    private void setResponseBody(Collection<LogFileInfo> logFileInfoList, MessageContext messageContext){
+
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
         JSONObject jsonBody = Utils.createJSONList(logFileInfoList.size());
 
         for (LogFileInfo logFileInfo : logFileInfoList) {
@@ -96,8 +125,7 @@ public class LogFilesResource extends APIResource {
             logfileObject.put("Size", logFileInfo.getFileSize());
             jsonBody.getJSONArray(Constants.LIST).put(logfileObject);
         }
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) synCtx).getAxis2MessageContext();
+
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         axis2MessageContext.removeProperty(NO_ENTITY_BODY);
     }

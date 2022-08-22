@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolConfiguration;
 import org.json.JSONArray;
@@ -33,10 +34,15 @@ import org.wso2.micro.integrator.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceRepository;
 import org.wso2.micro.integrator.ndatasource.core.utils.DataSourceUtils;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
+
 import java.util.Set;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.wso2.micro.integrator.management.apis.Constants.*;
 
 public class DataSourceResource implements MiApiResource {
 
@@ -81,6 +87,8 @@ public class DataSourceResource implements MiApiResource {
                 ? axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString() : "method undefined";
 
         String datasourceName = Utils.getQueryParameter(messageContext, Constants.NAME);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
         JSONObject response;
         try {
             DataSourceManager dsManager = DataSourceManager.getInstance();
@@ -90,6 +98,8 @@ public class DataSourceResource implements MiApiResource {
                     LOG.debug("Handling " + httpMethod + " request for " + datasourceName);
                 }
                 response = getDatasourceInformation(axis2MessageContext, dataSourceRepository, datasourceName);
+            } else if (Objects.nonNull(searchKey)){
+                response = populateSearchResults(dataSourceRepository, searchKey.toLowerCase());
             } else {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Handling " + httpMethod + " request to fetch data source list");
@@ -101,6 +111,33 @@ public class DataSourceResource implements MiApiResource {
         }
         Utils.setJsonPayLoad(axis2MessageContext, response);
         return true;
+    }
+
+    private static List<CarbonDataSource> getSearchResults(DataSourceRepository dataSourceRepository, String searchKey) {
+        Collection<CarbonDataSource> datasources = dataSourceRepository.getAllDataSources();
+
+        List<CarbonDataSource> searchResultList = datasources.stream()
+                .filter(artifact -> artifact.getDSMInfo().getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+
+        return searchResultList;
+    }
+
+    /**
+     * Reurns the JSON Object containing all available data-sources according to search and pagination parameters.
+     *
+     * @param dataSourceRepository DataSourceRepository
+     * @param searchKey String
+     * @return JSONObject response
+     */
+    private JSONObject populateSearchResults(DataSourceRepository dataSourceRepository, String searchKey) {
+
+        List<CarbonDataSource> resultsList = getSearchResults(dataSourceRepository, searchKey);
+        JSONObject datasourceList = Utils.createJSONList(resultsList.size());
+
+        resultsList.forEach((dataSource) -> addToJsonList(dataSource, datasourceList.getJSONArray(Constants.LIST)));
+
+        return datasourceList;
     }
 
     /**

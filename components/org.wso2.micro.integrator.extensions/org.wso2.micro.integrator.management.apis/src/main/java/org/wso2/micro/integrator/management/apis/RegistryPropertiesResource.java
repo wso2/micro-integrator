@@ -188,8 +188,8 @@ public class RegistryPropertiesResource implements MiApiResource {
                     jsonBody.getJSONArray(Constants.LIST).put(propertyObject);
                 }
             } else {
-                jsonBody = Utils.createJsonError("Error while fetching properties", axis2MessageContext,
-                        INTERNAL_SERVER_ERROR);
+                jsonBody = new JSONObject();
+                jsonBody.put(LIST,"Error while fetching properties");
             }
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);

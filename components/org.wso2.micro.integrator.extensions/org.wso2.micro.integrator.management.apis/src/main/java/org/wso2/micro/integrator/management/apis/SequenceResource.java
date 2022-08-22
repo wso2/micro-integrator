@@ -32,11 +32,16 @@ import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+
 import java.util.Set;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.wso2.micro.integrator.management.apis.Constants.*;
 
 public class SequenceResource extends APIResource {
 
@@ -64,9 +69,13 @@ public class SequenceResource extends APIResource {
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
         String seqName = Utils.getQueryParameter(messageContext, SEQUENCE_NAME);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(seqName)) {
                 populateSequenceData(messageContext, seqName);
+            } else if (Objects.nonNull(searchKey)){
+                populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateSequenceList(messageContext);
             }
@@ -74,6 +83,44 @@ public class SequenceResource extends APIResource {
             handlePost(messageContext, axisMsgCtx);
         }
         return true;
+    }
+
+    private static List<SequenceMediator> getSearchResults(MessageContext messageContext, String searchKey){
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<SequenceMediator> searchResultList = configuration.getDefinedSequences().values().stream()
+                .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+        return searchResultList;
+    }
+    
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+        List<SequenceMediator> searchResultList = getSearchResults(messageContext, searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
+
+    private void setResponseBody(Collection<SequenceMediator> sequenceMediatorCollection, MessageContext messageContext){
+
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+
+        JSONObject jsonBody = Utils.createJSONList(sequenceMediatorCollection.size());
+
+        for (SequenceMediator sequence: sequenceMediatorCollection) {
+
+            JSONObject sequenceObject = new JSONObject();
+
+            sequenceObject.put(Constants.NAME, sequence.getName());
+            sequenceObject.put(Constants.CONTAINER, sequence.getArtifactContainerName());
+
+            String statisticState = sequence.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;
+            sequenceObject.put(Constants.STATS, statisticState);
+
+            String tracingState = sequence.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
+            sequenceObject.put(Constants.TRACING, tracingState);
+
+            jsonBody.getJSONArray(Constants.LIST).put(sequenceObject);
+        }
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void handlePost(MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
@@ -111,31 +158,11 @@ public class SequenceResource extends APIResource {
 
     private void populateSequenceList(MessageContext messageContext) {
 
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
         SynapseConfiguration configuration = messageContext.getConfiguration();
 
         Map<String, SequenceMediator> sequenceMediatorMap = configuration.getDefinedSequences();
-
-        JSONObject jsonBody = Utils.createJSONList(sequenceMediatorMap.size());
-
-        for (SequenceMediator sequence: sequenceMediatorMap.values()) {
-
-            JSONObject sequenceObject = new JSONObject();
-
-            sequenceObject.put(Constants.NAME, sequence.getName());
-            sequenceObject.put(Constants.CONTAINER, sequence.getArtifactContainerName());
-
-            String statisticState = sequence.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;
-            sequenceObject.put(Constants.STATS, statisticState);
-
-            String tracingState = sequence.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
-            sequenceObject.put(Constants.TRACING, tracingState);
-
-            jsonBody.getJSONArray(Constants.LIST).put(sequenceObject);
-        }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Collection<SequenceMediator> sequenceCollection = sequenceMediatorMap.values();
+        setResponseBody(sequenceCollection, messageContext);
     }
 
     private void populateSequenceData(MessageContext messageContext, String sequenceName) {

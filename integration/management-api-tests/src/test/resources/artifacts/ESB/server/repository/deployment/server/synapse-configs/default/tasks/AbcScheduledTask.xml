@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<task class="org.apache.synapse.startup.tasks.MessageInjector" group="synapse.simple.quartz" name="AbcScheduledTask" xmlns="http://ws.apache.org/ns/synapse">
+    <trigger once="true"/>
+</task>

@@ -25,26 +25,22 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
-import org.json.JSONArray;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONObject;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
+import scala.actors.threadpool.Arrays;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
-import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
-import static org.wso2.micro.integrator.management.apis.Constants.DOMAIN;
-import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
-import static org.wso2.micro.integrator.management.apis.Constants.LIST;
-import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
-import static org.wso2.micro.integrator.management.apis.Constants.ROLE;
-import static org.wso2.micro.integrator.management.apis.Constants.ROLES;
-import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
-import static org.wso2.micro.integrator.management.apis.Constants.USER_ID;
+import java.util.Set;
+import java.util.List;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Objects;
+
+import static org.wso2.micro.integrator.management.apis.Constants.*;
 
 /**
  * This resource will handle requests coming to roles/.
@@ -88,7 +84,12 @@ public class RolesResource implements MiApiResource {
         try {
             switch (httpMethod) {
                 case Constants.HTTP_GET: {
-                    response = handleGet(messageContext);
+                    String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+                    if (Objects.nonNull(searchKey)){
+                        response = populateSearchResults(messageContext, searchKey.toLowerCase());
+                    } else {
+                        response = handleGet(messageContext);
+                    }
                     break;
                 }
                 case Constants.HTTP_POST: {
@@ -125,13 +126,40 @@ public class RolesResource implements MiApiResource {
                     + "authentication and authorization handlers is recommended.");
         }
         String[] roles = Utils.getUserStore(null).getRoleNames();
-        JSONObject jsonBody = Utils.createJSONList(roles.length);
+        return setResponseBody(Arrays.asList(roles));
+    }
+
+    private JSONObject setResponseBody(List<String> roles){
+
+        JSONObject jsonBody = Utils.createJSONList(roles.size());
         for (String role : roles) {
             JSONObject userObject = new JSONObject();
             userObject.put(ROLE, role);
             jsonBody.getJSONArray(LIST).put(userObject);
         }
         return jsonBody;
+    }
+
+    private static List<String> getSearchResults(MessageContext messageContext, String searchKey) throws UserStoreException {
+        if (!Utils.isUserAuthenticated(messageContext)) {
+            LOG.warn("Listing user roles without authenticating/authorizing the request sender. Adding "
+                    + "authentication and authorization handlers is recommended.");
+        }
+        String[] roles = Utils.getUserStore(null).getRoleNames();
+        List<String> searchResults = new ArrayList<>();
+
+        for (String role : roles) {
+            if (role.toLowerCase().contains(searchKey)) {
+                searchResults.add(role);
+            }
+        }
+        return searchResults;
+    }
+
+    protected JSONObject populateSearchResults(MessageContext messageContext, String searchKey) throws UserStoreException {
+
+        List<String> roles = getSearchResults(messageContext, searchKey);
+        return setResponseBody(roles);
     }
 
     protected JSONObject handlePost(MessageContext messageContext,

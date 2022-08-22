@@ -17,6 +17,7 @@
 package org.wso2.micro.integrator.management.apis;
 
 import com.google.gson.Gson;
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
@@ -44,11 +45,17 @@ import org.wso2.micro.integrator.management.apis.models.dataServices.ResourceInf
 import org.wso2.micro.service.mgt.ServiceAdmin;
 import org.wso2.micro.service.mgt.ServiceMetaData;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Objects;
+
+import java.util.stream.Collectors;
+
+import static org.wso2.micro.integrator.management.apis.Constants.*;
 
 public class DataServiceResource extends APIResource {
 
@@ -68,43 +75,58 @@ public class DataServiceResource extends APIResource {
     }
 
     @Override
-    public boolean invoke(MessageContext msgCtx) {
-        buildMessage(msgCtx);
+    public boolean invoke(MessageContext messageContext) {
+        buildMessage(messageContext);
         if (serviceAdmin == null) {
-            serviceAdmin = Utils.getServiceAdmin(msgCtx);
+            serviceAdmin = Utils.getServiceAdmin(messageContext);
         }
-        String param = Utils.getQueryParameter(msgCtx, "dataServiceName");
+        String param = Utils.getQueryParameter(messageContext, "dataServiceName");
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
 
         try {
             if (param != null) {
                 // data-service specified by name
-                populateDataServiceByName(msgCtx, param);
+                populateDataServiceByName(messageContext, param);
+            } else if (Objects.nonNull(searchKey)){
+                populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 // list of all data-services
-                populateDataServiceList(msgCtx);
+                populateDataServiceList(messageContext);
             }
         } catch (Exception exception) {
             log.error("Error while populating service: ", exception);
-            msgCtx.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
+            messageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
         }
 
-        org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) msgCtx)
+        org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) messageContext)
                 .getAxis2MessageContext();
 
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
-    private void populateDataServiceList(MessageContext msgCtx) throws Exception {
-        SynapseConfiguration configuration = msgCtx.getConfiguration();
+    private static List<String> getSearchResults(MessageContext messageContext, String searchKey) throws AxisFault {
+        SynapseConfiguration configuration = messageContext.getConfiguration();
         AxisConfiguration axisConfiguration = configuration.getAxisConfiguration();
-        String[] dataServicesNames = DBUtils.getAvailableDS(axisConfiguration);
+        List<String> dataServicesNames = Arrays.stream(DBUtils.getAvailableDS(axisConfiguration))
+                .filter(serviceName -> serviceName.toLowerCase().contains(searchKey)).collect(Collectors.toList());
+        return dataServicesNames;
+    }
 
-        // initiate list model
-        DataServicesList dataServicesList = new DataServicesList(dataServicesNames.length);
+    private void populateSearchResults(MessageContext messageContext, String searchKey) throws Exception {
+        List<String> resultsList = getSearchResults(messageContext, searchKey);
+        setResponseBody(resultsList, messageContext);
+    }
+
+    private void setResponseBody(List<String> dataServicesNames, MessageContext messageContext) throws Exception {
+
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+
+        DataServicesList dataServicesList = new DataServicesList(dataServicesNames.size());
 
         for (String dataServiceName : dataServicesNames) {
-            DataService dataService = getDataServiceByName(msgCtx, dataServiceName);
+            DataService dataService = getDataServiceByName(messageContext, dataServiceName);
             ServiceMetaData serviceMetaData = getServiceMetaData(dataService);
             // initiate summary model
             DataServiceSummary summary = null;
@@ -113,12 +135,15 @@ public class DataServiceResource extends APIResource {
             }
             dataServicesList.addServiceSummary(summary);
         }
-
-        org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) msgCtx)
-                .getAxis2MessageContext();
-
         String stringPayload = new Gson().toJson(dataServicesList);
         Utils.setJsonPayLoad(axis2MessageContext, new JSONObject(stringPayload));
+    }
+    private void populateDataServiceList(MessageContext msgCtx) throws Exception {
+        SynapseConfiguration configuration = msgCtx.getConfiguration();
+        AxisConfiguration axisConfiguration = configuration.getAxisConfiguration();
+        List<String> dataServicesNames = Arrays.stream(DBUtils.getAvailableDS(axisConfiguration)).collect(Collectors.toList());
+
+        setResponseBody(dataServicesNames, msgCtx);
     }
 
     private void populateDataServiceByName(MessageContext msgCtx, String serviceName) throws Exception {

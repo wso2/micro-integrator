@@ -64,6 +64,34 @@ public class DataSourceResourceTestCase extends ESBIntegrationTest {
         Assert.assertEquals(datasourceType, "RDBMS");
     }
 
+    @Test(groups = { "wso2.esb" }, description = "Test get data-source resource for search key")
+    public void retrieveSearchedDataSources() throws IOException {
+
+        if (!isManagementApiAvailable) {
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+                    until(isManagementApiAvailable());
+        }
+
+        String accessToken = TokenUtil.getAccessToken(hostName, portOffset);
+        Assert.assertNotNull(accessToken);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        headers.put("Authorization", "Bearer " + accessToken);
+
+        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
+                + "data-sources?searchKey=MYSQL";
+
+        SimpleHttpClient client = new SimpleHttpClient();
+
+        HttpResponse response = client.doGet(endpoint, headers);
+        String responsePayload = client.getResponsePayload(response);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        JSONObject jsonResponse = new JSONObject(responsePayload);
+        Assert.assertEquals(jsonResponse.get("count"), 1);
+        Assert.assertTrue(jsonResponse.get("list").toString().contains("MySQLConnection"));
+    }
+
     @AfterClass(alwaysRun = true)
     public void cleanState() throws Exception {
         super.cleanup();

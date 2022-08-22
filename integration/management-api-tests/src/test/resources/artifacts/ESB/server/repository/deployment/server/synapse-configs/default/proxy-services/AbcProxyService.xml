@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="AbcProxyService" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <property expression="//request/location/city" name="uri.var.city" scope="default" type="STRING"/>
+            <property expression="//request/location/country" name="uri.var.cc" scope="default" type="STRING"/>
+            <log>
+                <property expression="get-property('uri.var.city')" name="Which city?"/>
+                <property expression="get-property('uri.var.cc')" name="Which country?"/>
+            </log>
+            <send>
+                <endpoint name="EP">
+                    <http method="get" uri-template="http://api.openweathermap.org/data/2.5/weather?q={uri.var.city},{uri.var.cc}&amp;APPID=ae2a70399cf2c35940a6538f38fee3d3">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>1</progressionFactor>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </http>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <log level="full"/>
+        </outSequence>
+        <faultSequence/>
+    </target>
+</proxy>

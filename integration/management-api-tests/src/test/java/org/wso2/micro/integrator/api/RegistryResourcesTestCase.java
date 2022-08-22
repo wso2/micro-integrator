@@ -224,7 +224,30 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
                 response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
+        JSONAssert.assertEquals(expected, jsonResponse.get("list").toString(), false);
+    }
+
+    @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry directory with expanding for searchKey")
+    public void testRegistryGetNestedFileSearch() throws IOException {
+
+        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
+                + "registry-resources";
+        String registryPath = "registry";
+        String queryParameters = "?path=" + registryPath + "&searchKey=test-text";
+        String expected = "{\"name\":\"testFolder\",\n"
+                + "\"files\":[\n"
+                + "    {\"name\":\"test-text-delete.txt\",\"files\":[],\"type\":\"testMediaType\"},\n"
+                + "    {\"name\":\"test-text.txt\",\"files\":[],\"type\":\"testMediaType\"},\n"
+                + "    \"type\":\"directory\"}],\n"
+                + "\"type\":\"directory\"}";
+
+        SimpleHttpClient client = new SimpleHttpClient();
+        HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
+        String responsePayload = client.getResponsePayload(response);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
+        JSONObject jsonResponse = new JSONObject(responsePayload);
+        Assert.assertTrue(jsonResponse.get("list").toString().contains(expected));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry metadata")

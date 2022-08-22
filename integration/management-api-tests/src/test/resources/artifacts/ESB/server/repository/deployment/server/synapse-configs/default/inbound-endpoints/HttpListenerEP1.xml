@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inboundEndpoint name="HttpListenerEP1" onError="fault" protocol="http" sequence="TestIn" suspend="false" xmlns="http://ws.apache.org/ns/synapse">
+    <parameters>
+        <parameter name="inbound.http.port">8085</parameter>
+        <parameter name="inbound.worker.pool.size.core">400</parameter>
+        <parameter name="inbound.worker.pool.size.max">500</parameter>
+        <parameter name="inbound.worker.thread.keep.alive.sec">60</parameter>
+        <parameter name="inbound.worker.pool.queue.length">-1</parameter>
+        <parameter name="inbound.thread.id">PassThroughInboundWorkerPool</parameter>
+    </parameters>
+</inboundEndpoint>

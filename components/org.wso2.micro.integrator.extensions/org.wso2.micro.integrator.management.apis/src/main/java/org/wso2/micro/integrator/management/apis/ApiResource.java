@@ -44,9 +44,13 @@ import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.Objects;
+
+import static org.wso2.micro.integrator.management.apis.Constants.*;
 
 public class ApiResource extends APIResource {
 
@@ -75,9 +79,13 @@ public class ApiResource extends APIResource {
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
         String apiName = Utils.getQueryParameter(messageContext, API_NAME);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(apiName)) {
                 populateApiData(messageContext, apiName);
+            } else if (Objects.nonNull(searchKey)){
+                populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateApiList(messageContext);
             }
@@ -87,6 +95,37 @@ public class ApiResource extends APIResource {
         return true;
     }
 
+    private static List<API> getSearchResults(MessageContext messageContext, String searchKey){
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List <API>searchResultList = configuration.getAPIs().stream()
+                .filter(artifact -> artifact.getAPIName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+        return searchResultList;
+    }
+
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+        List<API> searchResultList = getSearchResults(messageContext, searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
+
+    private void setResponseBody(Collection<API> resultList, MessageContext messageContext){
+
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+
+        JSONObject jsonBody = Utils.createJSONList(resultList.size());
+
+        for (API api: resultList) {
+            JSONObject apiObject = new JSONObject();
+            String apiUrl = getApiUrl(api, messageContext);
+            apiObject.put(Constants.NAME, api.getName());
+            apiObject.put(Constants.URL, apiUrl);
+            apiObject.put(Constants.TRACING,
+                    api.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED);
+            jsonBody.getJSONArray(Constants.LIST).put(apiObject);
+        }
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+    }
     private void handlePost(MessageContext msgCtx, org.apache.axis2.context.MessageContext axisMsgCtx) {
 
         JSONObject response;
@@ -121,25 +160,12 @@ public class ApiResource extends APIResource {
 
     private void populateApiList(MessageContext messageContext) {
 
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
         SynapseConfiguration configuration = messageContext.getConfiguration();
 
         Collection<API> apis = configuration.getAPIs();
 
-        JSONObject jsonBody = Utils.createJSONList(apis.size());
-        for (API api: apis) {
-            JSONObject apiObject = new JSONObject();
-            String apiUrl = getApiUrl(api, messageContext);
-            apiObject.put(Constants.NAME, api.getName());
-            apiObject.put(Constants.URL, apiUrl);
-            apiObject.put(Constants.TRACING,
-                          api.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED);
-            jsonBody.getJSONArray(Constants.LIST).put(apiObject);
+        setResponseBody(apis,messageContext);
 
-        }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateApiData(MessageContext messageContext, String apiName) {

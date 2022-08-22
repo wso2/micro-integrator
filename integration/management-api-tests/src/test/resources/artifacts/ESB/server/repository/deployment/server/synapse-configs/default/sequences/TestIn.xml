@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="TestIn" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <call>
+        <endpoint>
+            <address uri="http://localhost:9159/services/SimpleStockQuoteService">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>1</progressionFactor>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+        </endpoint>
+    </call>
+    <respond/>
+</sequence>

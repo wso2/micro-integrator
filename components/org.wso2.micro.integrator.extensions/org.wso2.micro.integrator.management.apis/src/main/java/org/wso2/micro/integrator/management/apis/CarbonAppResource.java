@@ -54,18 +54,20 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+
 import java.util.Set;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Base64;
+import java.util.Iterator;
+import java.util.stream.Collectors;
 import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 import javax.xml.namespace.QName;
 
-import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
-import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
+import static org.wso2.micro.integrator.management.apis.Constants.*;
 
 public class CarbonAppResource extends APIResource {
 
@@ -73,6 +75,7 @@ public class CarbonAppResource extends APIResource {
     private static final String MULTIPART_FORMDATA_DATA_TYPE = "multipart/form-data";
     private static final String CAPP_NAME = "name";
     private static final String CAPP_FILE_NAME = "cAppFileName";
+
     // HTTP method types supported by the resource
     private Set<String> methods;
 
@@ -109,6 +112,7 @@ public class CarbonAppResource extends APIResource {
         switch (httpMethod) {
             case Constants.HTTP_GET: {
                 String param = Utils.getQueryParameter(messageContext, "carbonAppName");
+                String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
 
                 if (Objects.nonNull(param)) {
                     String acceptHeader = (String) SecurityUtils.getHeaders(axis2MessageContext)
@@ -118,6 +122,8 @@ public class CarbonAppResource extends APIResource {
                     } else {
                         populateCarbonAppData(messageContext, param);
                     }
+                } else if (Objects.nonNull(searchKey)){
+                    populateSearchResults(messageContext, searchKey.toLowerCase());
                 } else {
                     populateCarbonAppList(messageContext);
                 }
@@ -143,6 +149,48 @@ public class CarbonAppResource extends APIResource {
         return true;
     }
 
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+
+        List<CarbonApplication> appList
+                = CappDeployer.getCarbonApps().stream().filter(capp -> capp.getAppName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+
+        List<CarbonApplication> faultyAppList = CappDeployer.getFaultyCAppObjects().stream().filter(capp -> capp.getAppName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+
+        setResponseBody(appList, faultyAppList, messageContext);
+    }
+
+    private void setResponseBody(Collection<CarbonApplication> appList, Collection<CarbonApplication> faultyAppList, MessageContext messageContext) {
+
+        JSONObject jsonBody;
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+
+        if(appList == null) {
+            jsonBody = new JSONObject();
+            jsonBody.put("error", "Error while getting the Carbon Application List");
+        } else if (faultyAppList == null) {
+            jsonBody = new JSONObject();
+            jsonBody.put("error", "Error while getting the Carbon Faulty Application List");
+        } else {
+            int listLength = appList.size() + faultyAppList.size();
+            jsonBody = Utils.createJSONList(listLength);
+
+            for (CarbonApplication app : appList) {
+
+                JSONObject appObject = convertCarbonAppToJsonObject(app);
+                jsonBody.getJSONArray(LIST).put(appObject);
+            }
+
+            for (CarbonApplication faultyApp : faultyAppList) {
+
+                JSONObject appObject = convertCarbonAppToJsonObject(faultyApp);
+                jsonBody.getJSONArray(LIST).put(appObject);
+            }
+        }
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+    }
     /**
      * Populate file content.
      * @param synCtx message context
@@ -320,35 +368,12 @@ public class CarbonAppResource extends APIResource {
 
     private void populateCarbonAppList(MessageContext messageContext) {
 
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
         List<CarbonApplication> appList
                 = CappDeployer.getCarbonApps();
 
         List<CarbonApplication> faultyAppList = CappDeployer.getFaultyCAppObjects();
 
-        JSONObject jsonBody = Utils.createCAppJSONList(appList.size(), faultyAppList.size());
-
-        for (CarbonApplication app: appList) {
-
-            JSONObject appObject = new JSONObject();
-            appObject.put(Constants.NAME, app.getAppName());
-            appObject.put(Constants.VERSION, app.getAppVersion());
-
-            jsonBody.getJSONArray(Constants.ACTIVE_LIST).put(appObject);
-        }
-
-        for (CarbonApplication faultyApp: faultyAppList) {
-
-            JSONObject appObject = new JSONObject();
-            appObject.put(Constants.NAME, faultyApp.getAppName());
-            appObject.put(Constants.VERSION, faultyApp.getAppVersion());
-
-            jsonBody.getJSONArray(Constants.FAULTY_LIST).put(appObject);
-        }
-
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        setResponseBody(appList, faultyAppList, messageContext);
     }
 
     private void populateCarbonAppData(MessageContext messageContext, String carbonAppName) {

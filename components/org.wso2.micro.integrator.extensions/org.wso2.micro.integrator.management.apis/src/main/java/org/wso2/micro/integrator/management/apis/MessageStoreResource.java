@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.MessageStoreSerializer;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.message.store.MessageStore;
 import org.apache.synapse.message.store.impl.jdbc.JDBCMessageStore;
 import org.apache.synapse.message.store.impl.jms.JmsStore;
@@ -32,14 +33,16 @@ import org.apache.synapse.message.store.impl.resequencer.ResequenceMessageStore;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.Set;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD;
-import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD_MASKED_VALUE;
+import static org.wso2.micro.integrator.management.apis.Constants.*;
 
 /**
  * Represents Message store resource defined in the synapse configuration.
@@ -59,8 +62,6 @@ public class MessageStoreResource implements MiApiResource {
     private static final String STORE_TYPE_PROPERTY = "type";
     private static final String CONTAINER_ATTRIBUTE = "container";
     private static final String FILE_NAME_ATTRIBUTE = "file";
-    private static final String CONSUMER_ATTRIBUTE = "consumer";
-    private static final String PRODUCER_ATTRIBUTE = "producer";
     private static final String PROPERTIES_ATTRIBUTE = "properties";
     private static final String STORE_SIZE_ATTRIBUTE = "size";
     //HTTP method types supported by the resource
@@ -82,28 +83,60 @@ public class MessageStoreResource implements MiApiResource {
                           SynapseConfiguration synapseConfiguration) {
 
         String messageStoreName = Utils.getQueryParameter(messageContext, Constants.NAME);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
         if (Objects.nonNull(messageStoreName)) {
             populateMessageStoreData(axis2MessageContext, synapseConfiguration, messageStoreName);
+        } else if (Objects.nonNull(searchKey)){
+            populateSearchResults(messageContext, searchKey.toLowerCase());
         } else {
-            populateMessageStoreList(axis2MessageContext, synapseConfiguration);
+            populateMessageStoreList(messageContext, synapseConfiguration);
         }
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
+    private static List<MessageStore> getSearchResults(MessageContext messageContext, String searchKey){
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<MessageStore> searchResultList = configuration.getMessageStores().values().stream()
+                .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+
+        return searchResultList;
+    }
+
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+
+        List<MessageStore> searchResultList = getSearchResults(messageContext, searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
+
+    private void setResponseBody(Collection<MessageStore> storeList, MessageContext messageContext){
+
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+
+        JSONObject jsonBody = Utils.createJSONList(storeList.size());
+
+        for (MessageStore store : storeList){
+            addToJsonList(jsonBody.getJSONArray(Constants.LIST), store);
+        }
+
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+    }
+
+
     /**
      * Sets the list of all available message stores to the response as json
      *
-     * @param axis2MessageContext AXIS2 message context
+     * @param messageContext  MessageContext
      * @param synapseConfiguration Synapse configuration object
      */
-    private void populateMessageStoreList(org.apache.axis2.context.MessageContext axis2MessageContext,
+    private void populateMessageStoreList(MessageContext messageContext,
                                           SynapseConfiguration synapseConfiguration) {
         Map<String, MessageStore> storeMap = synapseConfiguration.getMessageStores();
-        JSONObject jsonBody = Utils.createJSONList(storeMap.size());
-        storeMap.forEach((key, value) ->
-                addToJsonList(jsonBody.getJSONArray(Constants.LIST), value));
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Collection<MessageStore> storeList = storeMap.values();
+        setResponseBody(storeList, messageContext);
     }
 
     /**

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template name="AbcTemplate" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter defaultValue="" isMandatory="false" name="message"/>
+    <sequence>
+        <log level="custom">
+            <property expression="$func:message" name="GREETING_MESSAGE"/>
+        </log>
+    </sequence>
+</template>

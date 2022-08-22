@@ -187,6 +187,17 @@ public class SecondaryUserManagementTests extends ESBIntegrationTest {
         Assert.assertEquals(successResponse.getString("status"), "Added",
                 "Invalid response received " + successResponse);
     }
+    @Test(dependsOnMethods = "testAddRoleToSecondary")
+    public void testGetExistingRoles() throws Exception {
+        String roles = getSearchedRoles("wso2role");
+        JSONObject rolesJson = new JSONObject(roles);
+        String errorMessageOnAssertionFailure = "Received response" + roles;
+        //Assert role count
+        Assert.assertEquals(rolesJson.get("count"), 1, errorMessageOnAssertionFailure);
+        //Assert role details
+        Assert.assertEquals((rolesJson.getJSONArray("list")).length(), 1, errorMessageOnAssertionFailure);
+        Assert.assertTrue(roles.contains("{\"role\":\"wso2Role\"}"), "Could not find the wso2Role role");
+    }
 
     @Test(dependsOnMethods = "testAddRoleToSecondary")
     public void testAddUserToSecondary() throws Exception {
@@ -352,6 +363,19 @@ public class SecondaryUserManagementTests extends ESBIntegrationTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         String endpoint = roleResource;
+        HttpResponse response = client.doGet(endpoint, headers);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Unexpected status code");
+        String responseString = client.getResponsePayload(response);
+        log.info("Received payload: " + responseString);
+        return responseString;
+    }
+
+    private String getSearchedRoles(String searchKey) throws IOException {
+
+        SimpleHttpClient client = new SimpleHttpClient();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        String endpoint = roleResource.concat("?searchKey=").concat(searchKey);
         HttpResponse response = client.doGet(endpoint, headers);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Unexpected status code");
         String responseString = client.getResponsePayload(response);

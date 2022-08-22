@@ -42,18 +42,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
-import static org.wso2.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
-import static org.wso2.micro.integrator.management.apis.Constants.NAME;
-import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
-import static org.wso2.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
+import static org.wso2.micro.integrator.management.apis.Constants.*;
 
 public class ProxyServiceResource extends APIResource {
 
     private static Log LOG = LogFactory.getLog(ProxyServiceResource.class);
 
     private static final String PROXY_NAME = "proxyName";
+    private static final String PROXY_SERVICE_NAME = "proxyServiceName";
 
     private static ServiceAdmin serviceAdmin = null;
 
@@ -82,10 +80,14 @@ public class ProxyServiceResource extends APIResource {
             serviceAdmin = Utils.getServiceAdmin(messageContext);
         }
 
-        String proxyServiceName = Utils.getQueryParameter(messageContext, "proxyServiceName");
+        String proxyServiceName = Utils.getQueryParameter(messageContext, PROXY_SERVICE_NAME);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(proxyServiceName)) {
                 populateProxyServiceData(messageContext, proxyServiceName);
+            } else if (Objects.nonNull(searchKey)){
+                populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateProxyServiceList(messageContext);
             }
@@ -117,36 +119,25 @@ public class ProxyServiceResource extends APIResource {
         return true;
     }
 
-    private void handleTracing(String performedBy, JSONObject info, JsonObject payload, MessageContext msgCtx,
-                               org.apache.axis2.context.MessageContext axisMsgCtx) {
+    private static List<ProxyService> getSearchResults(MessageContext messageContext, String searchKey){
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<ProxyService> searchResultList = configuration.getProxyServices().stream()
+                .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
 
-        JSONObject response;
-        if (payload.has(NAME)) {
-            String proxyName = payload.get(NAME).getAsString();
-            SynapseConfiguration configuration = msgCtx.getConfiguration();
-            ProxyService proxyService = configuration.getProxyService(proxyName);
-            if (proxyService != null) {
-                response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_PROXY_SERVICE_TRACE,
-                                               Constants.PROXY_SERVICES, info, proxyService.getAspectConfiguration(),
-                                               proxyName, axisMsgCtx);
-            } else {
-                response = Utils.createJsonError("Specified proxy ('" + proxyName + "') not found", axisMsgCtx,
-                                                 Constants.BAD_REQUEST);
-            }
-        } else {
-            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
-        }
-        Utils.setJsonPayLoad(axisMsgCtx, response);
+        return searchResultList;
     }
 
-    private void populateProxyServiceList(MessageContext messageContext) {
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+
+        List<ProxyService> searchResultList = getSearchResults(messageContext, searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
+
+    private void setResponseBody(Collection<ProxyService> proxyServices, MessageContext messageContext){
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
-        SynapseConfiguration configuration = messageContext.getConfiguration();
-
-        Collection<ProxyService> proxyServices = configuration.getProxyServices();
 
         JSONObject jsonBody = Utils.createJSONList(proxyServices.size());
 
@@ -171,6 +162,37 @@ public class ProxyServiceResource extends APIResource {
             jsonBody.getJSONArray(Constants.LIST).put(proxyObject);
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+    }
+
+    private void handleTracing(String performedBy, JSONObject info, JsonObject payload, MessageContext msgCtx,
+                               org.apache.axis2.context.MessageContext axisMsgCtx) {
+
+        JSONObject response;
+        if (payload.has(NAME)) {
+            String proxyName = payload.get(NAME).getAsString();
+            SynapseConfiguration configuration = msgCtx.getConfiguration();
+            ProxyService proxyService = configuration.getProxyService(proxyName);
+            if (proxyService != null) {
+                response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_PROXY_SERVICE_TRACE,
+                                               Constants.PROXY_SERVICES, info, proxyService.getAspectConfiguration(),
+                                               proxyName, axisMsgCtx);
+            } else {
+                response = Utils.createJsonError("Specified proxy ('" + proxyName + "') not found", axisMsgCtx,
+                                                 Constants.BAD_REQUEST);
+            }
+        } else {
+            response = Utils.createJsonError("Unsupported operation", axisMsgCtx, Constants.BAD_REQUEST);
+        }
+        Utils.setJsonPayLoad(axisMsgCtx, response);
+    }
+
+    private void populateProxyServiceList(MessageContext messageContext) {
+
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+
+        Collection<ProxyService> proxyServices = configuration.getProxyServices();
+
+        setResponseBody(proxyServices, messageContext);
     }
 
     private void populateProxyServiceData(MessageContext messageContext, String proxyServiceName) {

@@ -63,10 +63,37 @@ public class CarbonAppResourceTestCase extends ESBIntegrationTest {
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("faultyCount"), 1);
-        Assert.assertEquals(jsonResponse.get("totalCount"), 2);
-        Assert.assertTrue(jsonResponse.get("faultyList").toString().contains("FaultyCAppCompositeExporter"));
-        Assert.assertTrue(jsonResponse.get("activeList").toString().contains("hello-worldCompositeExporter"));
+        Assert.assertEquals(jsonResponse.get("count"), 3);
+        Assert.assertTrue(jsonResponse.get("list").toString().contains("FaultyCAppCompositeExporter"));
+        Assert.assertTrue(jsonResponse.get("list").toString().contains("hello-worldCompositeExporter"));
+    }
+
+    @Test(groups = { "wso2.esb" }, description = "Test get carbon applications resource for search key")
+    public void retrieveSearchedCApps() throws IOException {
+
+        if (!isManagementApiAvailable) {
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+                    until(isManagementApiAvailable());
+        }
+
+        String accessToken = TokenUtil.getAccessToken(hostName, portOffset);
+        Assert.assertNotNull(accessToken);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        headers.put("Authorization", "Bearer " + accessToken);
+
+        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
+                + "applications?searchKey=FaultyCApp";
+
+        SimpleHttpClient client = new SimpleHttpClient();
+
+        HttpResponse response = client.doGet(endpoint, headers);
+        String responsePayload = client.getResponsePayload(response);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        JSONObject jsonResponse = new JSONObject(responsePayload);
+        Assert.assertEquals(jsonResponse.get("count"), 1);
+        Assert.assertTrue(jsonResponse.get("list").toString().contains("FaultyCAppCompositeExporter"));
     }
 
     @AfterClass(alwaysRun = true)

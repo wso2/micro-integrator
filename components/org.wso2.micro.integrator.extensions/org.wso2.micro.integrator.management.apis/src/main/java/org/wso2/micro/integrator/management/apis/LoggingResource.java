@@ -27,8 +27,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
-import org.json.JSONArray;
+
 import org.json.JSONObject;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.micro.core.util.AuditLogger;
 
@@ -38,12 +39,17 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+
+import java.util.Set;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.ArrayList;
 
-public class LoggingResource extends ApiResource {
+import static org.wso2.micro.integrator.management.apis.Constants.*;
+
+public class LoggingResource extends APIResource {
 
     private static final Log log = LogFactory.getLog(LoggingResource.class);
 
@@ -51,9 +57,9 @@ public class LoggingResource extends ApiResource {
             new Level[] { Level.OFF, Level.TRACE, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL };
 
     private JSONObject jsonBody;
-    private String filePath = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH) + File.separator
+    private static String filePath = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH) + File.separator
             + "log4j2.properties";
-    private File logPropFile = new File(filePath);
+    private static File logPropFile = new File(filePath);
 
     private PropertiesConfiguration config;
     private PropertiesConfigurationLayout layout;
@@ -93,6 +99,8 @@ public class LoggingResource extends ApiResource {
 
         if (httpMethod.equals(Constants.HTTP_GET)) {
             String param = Utils.getQueryParameter(messageContext, Constants.LOGGER_NAME);
+            String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
             if (Objects.nonNull(param)) {
                 try {
                     if (isLoggerExist(param)) {
@@ -104,13 +112,16 @@ public class LoggingResource extends ApiResource {
                     jsonBody = createJsonError(EXCEPTION_MSG, exception, axis2MessageContext);
                 }
             } else {
-                Object payload;
                 try {
-                    payload = getAllLoggerDetails(axis2MessageContext);
+                    if (Objects.nonNull(searchKey)){
+                        getAllLoggerDetails(messageContext, searchKey.toLowerCase());
+                    } else {
+                        getAllLoggerDetails(messageContext);
+                    }
                 } catch (IOException e) {
-                    payload = createJsonError(EXCEPTION_MSG, e, axis2MessageContext);
+                    jsonBody = createJsonError(EXCEPTION_MSG, e, axis2MessageContext);
+                    Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
                 }
-                Utils.setJsonPayLoad(axis2MessageContext, payload);
                 return true;
             }
         } else {
@@ -237,7 +248,7 @@ public class LoggingResource extends ApiResource {
         return Arrays.stream(loggers).anyMatch(loggerValue -> loggerValue.trim().equals(loggerName));
     }
 
-    private String getLoggers() throws IOException {
+    private static String getLoggers() throws IOException {
         return Utils.getProperty(logPropFile, LOGGERS_PROPERTY);
     }
 
@@ -263,19 +274,57 @@ public class LoggingResource extends ApiResource {
         return jsonBody;
     }
 
-    private JSONArray getAllLoggerDetails(org.apache.axis2.context.MessageContext axisMsgCtx) throws IOException {
-
-        JSONArray payload = new JSONArray();
-        // add root logger
-        JSONObject data = getLoggerData(axisMsgCtx, Constants.ROOT_LOGGER);
-        payload.put(data);
-
+    private static String[] getAllLoggers() throws IOException {
+        //along with root logger
         String[] loggers = getLoggers().split(",");
-        for (String logger : loggers) {
-            data = getLoggerData(axisMsgCtx, logger.trim());
-            payload.put(data);
+
+        // add root logger
+        int fullLength = loggers.length + 1;
+        String[] allLoggers = new String[fullLength];
+
+        allLoggers[0] = ROOT_LOGGER;
+
+        for(int i = 1; i<fullLength; i++){
+            allLoggers[i] = loggers[i-1];
         }
-        return payload;
+        return allLoggers;
+    }
+    private void getAllLoggerDetails(MessageContext messageContext) throws IOException {
+        String[] loggers = getAllLoggers();
+        setResponseBody(Arrays.asList(loggers), messageContext);
+    }
+
+    private static List<String> getSearchResults(String searchKey) throws IOException {
+        String[] allLoggers = getAllLoggers();
+        List<String> filteredLoggers = new ArrayList<>();
+
+        for (String logger : allLoggers) {
+            if (logger.toLowerCase().contains(searchKey)) {
+                filteredLoggers.add(logger);
+            }
+        }
+        return filteredLoggers;
+    }
+
+    private void getAllLoggerDetails(MessageContext messageContext, String searchKey) throws IOException {
+        List<String> resultsList = getSearchResults(searchKey);
+        setResponseBody(resultsList, messageContext);
+    }
+
+
+    private void setResponseBody(List<String> logConfigsList, MessageContext messageContext){
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+
+        JSONObject jsonBody = Utils.createJSONList(logConfigsList.size());
+
+        JSONObject data;
+        for (String logger : logConfigsList) {
+            data = getLoggerData(axis2MessageContext, logger.trim());
+            jsonBody.getJSONArray(Constants.LIST).put(data);
+        }
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        axis2MessageContext.removeProperty(NO_ENTITY_BODY);
     }
 
     private boolean isValidLogLevel(String logLevelToTest) {

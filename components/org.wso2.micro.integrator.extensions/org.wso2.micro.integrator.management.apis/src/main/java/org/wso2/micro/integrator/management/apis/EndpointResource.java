@@ -36,17 +36,17 @@ import org.wso2.micro.core.util.AuditLogger;
 
 import javax.xml.namespace.QName;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
+
+import java.util.Set;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
-import static org.wso2.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
-import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
-import static org.wso2.micro.integrator.management.apis.Constants.TRACING;
+import static org.wso2.micro.integrator.management.apis.Constants.*;
+
 
 public class EndpointResource implements MiApiResource {
 
@@ -74,6 +74,8 @@ public class EndpointResource implements MiApiResource {
                           SynapseConfiguration synapseConfiguration) {
 
         String endpointName = Utils.getQueryParameter(messageContext, ENDPOINT_NAME);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+        
         String performedBy = Constants.ANONYMOUS_USER;
         if (messageContext.getProperty(Constants.USERNAME_PROPERTY) !=  null) {
             performedBy = messageContext.getProperty(Constants.USERNAME_PROPERTY).toString();
@@ -81,6 +83,8 @@ public class EndpointResource implements MiApiResource {
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(endpointName)) {
                 populateEndpointData(messageContext, endpointName);
+            } else if (Objects.nonNull(searchKey)){
+                populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateEndpointList(messageContext, synapseConfiguration);
             }
@@ -105,6 +109,19 @@ public class EndpointResource implements MiApiResource {
         return true;
     }
 
+    private static List<Endpoint> getSearchResults(MessageContext messageContext, String searchKey) {
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<Endpoint> searchResultList = configuration.getDefinedEndpoints().values().stream()
+                .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+
+        return searchResultList;
+    }
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+
+        List<Endpoint> searchResultList = getSearchResults(messageContext, searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
     private void handleTracing(String performedBy, JsonObject payload, MessageContext msgCtx,
                                org.apache.axis2.context.MessageContext axisMsgCtx) {
 
@@ -132,11 +149,15 @@ public class EndpointResource implements MiApiResource {
 
     private void populateEndpointList(MessageContext messageContext, SynapseConfiguration configuration) {
 
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
         Map<String, Endpoint> namedEndpointMap = configuration.getDefinedEndpoints();
         Collection<Endpoint> namedEndpointCollection = namedEndpointMap.values();
+        setResponseBody(namedEndpointCollection, messageContext);
+    }
+
+    private void setResponseBody(Collection<Endpoint> namedEndpointCollection, MessageContext messageContext){
+
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
         JSONObject jsonBody = Utils.createJSONList(namedEndpointCollection.size());
 
@@ -163,7 +184,6 @@ public class EndpointResource implements MiApiResource {
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
-
     private void populateEndpointData(MessageContext messageContext, String endpointName) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
