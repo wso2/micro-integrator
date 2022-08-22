@@ -51,6 +51,7 @@ public class AuthorizationHandler extends AuthorizationHandlerAdapter {
         defaultResources = new ArrayList<>(1);
         defaultResources.add(Constants.PREFIX_USERS);
         defaultResources.add(Constants.PREFIX_ROLES);
+        defaultResources.add(Constants.PREFIX_CONFIGS);
     }
 
     @Override

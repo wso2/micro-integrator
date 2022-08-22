@@ -28,6 +28,7 @@
 
     <test name="Management-API-Tests" verbose="2" parallel="false">
         <classes>
+            <class name="org.wso2.micro.integrator.api.ConfigsResourceTestCase"/>
             <class name="org.wso2.micro.integrator.api.AuditLogTestCase"/>
             <class name="org.wso2.micro.integrator.api.CarbonAppResourceTestCase"/>
             <class name="org.wso2.micro.integrator.api.MetaDataResourceTestCase"/>
