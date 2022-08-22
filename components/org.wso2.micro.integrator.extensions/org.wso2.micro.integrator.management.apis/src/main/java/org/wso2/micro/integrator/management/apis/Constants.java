@@ -166,6 +166,8 @@ public class Constants {
     public static final String AUDIT_LOG_TYPE_SEQUENCE_TEMPLATE_TRACE = "sequence_template_trace";
     public static final String AUDIT_LOG_TYPE_SEQUENCE_TRACE = "sequence_trace";
     public static final String AUDIT_LOG_TYPE_ENDPOINT_TRACE = "endpoint_trace";
+    public static final String AUDIT_LOG_TYPE_REGISTRY_RESOURCE = "registry_resource";
+    public static final String AUDIT_LOG_TYPE_REGISTRY_RESOURCE_PROPERTIES = "registry_resource_properties";
 
     public static final String PROXY_SERVICES = "proxy-services";
     public static final String APIS = "apis";
@@ -209,5 +211,8 @@ public class Constants {
     public static final String MEDIA_TYPE_KEY = "mediaType";
     public static final String PROPERTY_EXTENSION = ".properties";
     public static final String VALUE_KEY = "value";
+    public static final String REGISTRY_RESOURCE_NAME = "registryResourceName";
+    public static final String REGISTRY_PROPERTY_NAME = "propertyName";
+    public static final String FILE = "file";
 
 }

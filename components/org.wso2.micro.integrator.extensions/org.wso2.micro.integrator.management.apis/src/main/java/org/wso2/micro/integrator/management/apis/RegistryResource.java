@@ -17,6 +17,7 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONArray;
@@ -57,7 +58,15 @@ public class RegistryResource implements MiApiResource {
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
             SynapseConfiguration synapseConfiguration) {
 
-        handleGet(messageContext, axis2MessageContext);
+        String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
+        String validatedPath = validatePath(registryPath, axis2MessageContext);
+
+        if (StringUtils.isEmpty(validatedPath)) {
+            axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+            return true;
+        }
+        handleGet(messageContext, axis2MessageContext, validatedPath);
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -67,26 +76,16 @@ public class RegistryResource implements MiApiResource {
      * @param messageContext      Synapse message context
      * @param axis2MessageContext AXIS2 message context
      */
-    private void handleGet(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext) {
+    private void handleGet(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
+            String validatedPath) {
 
-        String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
         String expandedEnabled = Utils.getQueryParameter(messageContext, EXPAND_PARAM);
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
-        String validatedPath;
-        if (Objects.nonNull(registryPath)) {
-            validatedPath = validatePath(registryPath, axis2MessageContext);
-            if (Objects.nonNull(validatedPath) && Objects.nonNull(expandedEnabled) && expandedEnabled.equals(
-                    VALUE_TRUE)) {
-                populateRegistryResourceJSON(axis2MessageContext, microIntegratorRegistry, validatedPath);
-            } else if (Objects.nonNull(validatedPath)) {
-                populateImmediateChildren(axis2MessageContext, microIntegratorRegistry, validatedPath);
-            }
+        if (Objects.nonNull(expandedEnabled) && expandedEnabled.equals(VALUE_TRUE)) {
+            populateRegistryResourceJSON(axis2MessageContext, microIntegratorRegistry, validatedPath);
         } else {
-            JSONObject jsonBody = Utils.createJsonError("Registry path not found in the request", axis2MessageContext,
-                    BAD_REQUEST);
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            populateImmediateChildren(axis2MessageContext, microIntegratorRegistry, validatedPath);
         }
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
     }
 
     /**

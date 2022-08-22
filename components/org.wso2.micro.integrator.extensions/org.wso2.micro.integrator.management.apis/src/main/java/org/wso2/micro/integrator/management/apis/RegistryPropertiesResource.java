@@ -18,12 +18,16 @@
 package org.wso2.micro.integrator.management.apis;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
@@ -35,18 +39,27 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
+import static org.wso2.micro.integrator.management.apis.Constants.ANONYMOUS_USER;
+import static org.wso2.micro.integrator.management.apis.Constants.AUDIT_LOG_ACTION_CREATED;
+import static org.wso2.micro.integrator.management.apis.Constants.AUDIT_LOG_ACTION_DELETED;
+import static org.wso2.micro.integrator.management.apis.Constants.AUDIT_LOG_ACTION_UPDATED;
+import static org.wso2.micro.integrator.management.apis.Constants.AUDIT_LOG_TYPE_REGISTRY_RESOURCE_PROPERTIES;
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
 import static org.wso2.micro.integrator.management.apis.Constants.DEFAULT_MEDIA_TYPE;
 import static org.wso2.micro.integrator.management.apis.Constants.HTTP_DELETE;
 import static org.wso2.micro.integrator.management.apis.Constants.HTTP_GET;
 import static org.wso2.micro.integrator.management.apis.Constants.HTTP_POST;
 import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
+import static org.wso2.micro.integrator.management.apis.Constants.LIST;
 import static org.wso2.micro.integrator.management.apis.Constants.NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.PROPERTY_EXTENSION;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_PATH;
+import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_PROPERTY_NAME;
+import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_RESOURCE_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 import static org.wso2.micro.integrator.management.apis.Constants.VALUE_KEY;
 import static org.wso2.micro.integrator.management.apis.Utils.getRegistryPathPrefix;
+import static org.wso2.micro.integrator.management.apis.Utils.getResourceName;
 import static org.wso2.micro.integrator.management.apis.Utils.isRegistryExist;
 import static org.wso2.micro.integrator.management.apis.Utils.validatePath;
 
@@ -55,6 +68,7 @@ import static org.wso2.micro.integrator.management.apis.Utils.validatePath;
  */
 public class RegistryPropertiesResource implements MiApiResource {
 
+    private static final Log LOG = LogFactory.getLog(Utils.class);
     Set<String> methods;
 
     public RegistryPropertiesResource() {
@@ -75,14 +89,23 @@ public class RegistryPropertiesResource implements MiApiResource {
             SynapseConfiguration synapseConfiguration) {
 
         String httpMethod = axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString();
+        String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
+        String validatedPath = validatePath(registryPath, axis2MessageContext);
+
+        if (StringUtils.isEmpty(validatedPath)) {
+            axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+            return true;
+        }
+
         switch (httpMethod) {
         case HTTP_GET:
-            handleGet(messageContext, axis2MessageContext);
+            handleGet(messageContext, axis2MessageContext, registryPath, validatedPath);
             break;
         case HTTP_POST:
             try {
+                axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
                 if (SecurityUtils.isAdmin(messageContext.getProperty(USERNAME_PROPERTY).toString())) {
-                    handlePost(messageContext, axis2MessageContext);
+                    handlePost(messageContext, axis2MessageContext, registryPath, validatedPath);
                 } else {
                     Utils.sendForbiddenFaultResponse(axis2MessageContext);
                 }
@@ -90,13 +113,13 @@ public class RegistryPropertiesResource implements MiApiResource {
                 JSONObject jsonBody = Utils.createJsonError("Error occurs while retrieving the user data",
                         axis2MessageContext, INTERNAL_SERVER_ERROR);
                 Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
-                axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
             }
             break;
         case HTTP_DELETE:
             try {
+                axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
                 if (SecurityUtils.isAdmin(messageContext.getProperty(USERNAME_PROPERTY).toString())) {
-                    handleDelete(messageContext, axis2MessageContext);
+                    handleDelete(messageContext, axis2MessageContext, registryPath, validatedPath);
                 } else {
                     Utils.sendForbiddenFaultResponse(axis2MessageContext);
                 }
@@ -104,7 +127,6 @@ public class RegistryPropertiesResource implements MiApiResource {
                 JSONObject jsonBody = Utils.createJsonError("Error occurs while retrieving the user data",
                         axis2MessageContext, INTERNAL_SERVER_ERROR);
                 Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
-                axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
             }
             break;
         default:
@@ -112,9 +134,9 @@ public class RegistryPropertiesResource implements MiApiResource {
                     "Unsupported HTTP method, " + httpMethod + ". Only GET, POST and DELETE methods are supported",
                     axis2MessageContext, BAD_REQUEST);
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
-            axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
             break;
         }
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -124,30 +146,20 @@ public class RegistryPropertiesResource implements MiApiResource {
      * @param messageContext      Synapse message context
      * @param axis2MessageContext AXIS2 message context
      */
-    private void handleGet(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext) {
+    private void handleGet(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
+            String registryPath, String validatedPath) {
 
-        String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
         String propertyName = Utils.getQueryParameter(messageContext, NAME);
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
-        String validatedPath;
-        if (Objects.nonNull(registryPath)) {
-            validatedPath = validatePath(registryPath, axis2MessageContext);
-            if (Objects.nonNull(validatedPath)) {
-                if (!isRegistryExist(validatedPath)) {
-                    JSONObject jsonBody = Utils.createJsonError("Can not find the registry: " + registryPath,
-                            axis2MessageContext, BAD_REQUEST);
-                    Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
-                } else if (Objects.nonNull(propertyName)) {
-                    populateRegistryProperty(axis2MessageContext, microIntegratorRegistry, validatedPath, propertyName);
-                } else {
-                    populateRegistryProperties(axis2MessageContext, microIntegratorRegistry, validatedPath);
-                }
-            }
-        } else {
-            JSONObject jsonBody = Utils.createJsonError("Registry path not found", axis2MessageContext, BAD_REQUEST);
+        if (!isRegistryExist(validatedPath)) {
+            JSONObject jsonBody = Utils.createJsonError("Can not find the registry: " + registryPath,
+                    axis2MessageContext, BAD_REQUEST);
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        } else if (Objects.nonNull(propertyName)) {
+            populateRegistryProperty(axis2MessageContext, microIntegratorRegistry, validatedPath, propertyName);
+        } else {
+            populateRegistryProperties(axis2MessageContext, microIntegratorRegistry, validatedPath);
         }
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
     }
 
     /**
@@ -222,36 +234,23 @@ public class RegistryPropertiesResource implements MiApiResource {
      * @param axis2MessageContext AXIS2 message context
      */
     private void handlePost(MessageContext messageContext,
-            org.apache.axis2.context.MessageContext axis2MessageContext) {
+            org.apache.axis2.context.MessageContext axis2MessageContext, String registryPath, String validatedPath) {
 
-        String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
-        String validatedPath;
         JSONObject jsonBody;
-        if (Objects.nonNull(registryPath)) {
-            validatedPath = validatePath(registryPath, axis2MessageContext);
-            if (Objects.nonNull(validatedPath)) {
-                String pathWithPrefix = getRegistryPathPrefix(validatedPath);
-                if (Objects.nonNull(pathWithPrefix)) {
-                    if (isRegistryExist(validatedPath) && isRegistryExist(validatedPath + PROPERTY_EXTENSION)) {
-                        jsonBody = postRegistryProperties(axis2MessageContext, pathWithPrefix);
-                    } else if (isRegistryExist(validatedPath)) {
-                        jsonBody = postNewRegistryProperties(axis2MessageContext, pathWithPrefix);
-                    } else {
-                        jsonBody = postEmptyRegistryProperties(axis2MessageContext, pathWithPrefix);
-                    }
-                } else {
-                    jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
-                            BAD_REQUEST);
-                }
-                axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
-                Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        String pathWithPrefix = getRegistryPathPrefix(validatedPath);
+        if (Objects.nonNull(pathWithPrefix)) {
+            if (isRegistryExist(validatedPath) && isRegistryExist(validatedPath + PROPERTY_EXTENSION)) {
+                jsonBody = postRegistryProperties(messageContext, axis2MessageContext, pathWithPrefix);
+            } else if (isRegistryExist(validatedPath)) {
+                jsonBody = postNewRegistryProperties(messageContext, axis2MessageContext, pathWithPrefix);
+            } else {
+                jsonBody = postEmptyRegistryProperties(messageContext, axis2MessageContext, pathWithPrefix);
             }
         } else {
-            axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
-            jsonBody = Utils.createJsonError("Registry path is missing", axis2MessageContext, BAD_REQUEST);
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
+                    BAD_REQUEST);
         }
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     /**
@@ -261,13 +260,21 @@ public class RegistryPropertiesResource implements MiApiResource {
      * @param registryPath          Registry path
      * @return                      A JSON object with the final status
      */
-    private JSONObject postRegistryProperties(org.apache.axis2.context.MessageContext axis2MessageContext,
-            String registryPath) {
+    private JSONObject postRegistryProperties(MessageContext messageContext,
+            org.apache.axis2.context.MessageContext axis2MessageContext, String registryPath) {
 
         String propertiesPayload = getPayload(axis2MessageContext);
         JSONObject jsonBody = new JSONObject();
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
         Properties oldProperties = microIntegratorRegistry.getResourceProperties(registryPath);
+        String performedBy = ANONYMOUS_USER;
+        JSONObject info = new JSONObject();
+
+        if (messageContext.getProperty(USERNAME_PROPERTY) !=  null) {
+            performedBy = messageContext.getProperty(USERNAME_PROPERTY).toString();
+        }
+        String name = getResourceName(registryPath);
+        info.put(REGISTRY_RESOURCE_NAME, name);
 
         if (Objects.nonNull(propertiesPayload)) {
             Properties properties = getProperties(propertiesPayload);
@@ -277,6 +284,9 @@ public class RegistryPropertiesResource implements MiApiResource {
                     try {
                         microIntegratorRegistry.updateProperties(registryPath, newProperties);
                         jsonBody.put("message", "Successfully added the registry property");
+                        info.put(LIST, newProperties);
+                        AuditLogger.logAuditMessage(performedBy, AUDIT_LOG_TYPE_REGISTRY_RESOURCE_PROPERTIES,
+                                AUDIT_LOG_ACTION_UPDATED, info);
                     } catch (URISyntaxException e) {
                         jsonBody = Utils.createJsonError("Error while writing properties", axis2MessageContext,
                                 INTERNAL_SERVER_ERROR);
@@ -302,12 +312,20 @@ public class RegistryPropertiesResource implements MiApiResource {
      * @param registryPath          Registry path
      * @return                      A JSON object with the final status
      */
-    private JSONObject postNewRegistryProperties(org.apache.axis2.context.MessageContext axis2MessageContext,
-            String registryPath) {
+    private JSONObject postNewRegistryProperties(MessageContext messageContext,
+            org.apache.axis2.context.MessageContext axis2MessageContext, String registryPath) {
 
         String propertiesPayload = getPayload(axis2MessageContext);
         JSONObject jsonBody = new JSONObject();
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        String performedBy = ANONYMOUS_USER;
+        JSONObject info = new JSONObject();
+
+        if (messageContext.getProperty(USERNAME_PROPERTY) !=  null) {
+            performedBy = messageContext.getProperty(USERNAME_PROPERTY).toString();
+        }
+        String name = getResourceName(registryPath);
+        info.put(REGISTRY_RESOURCE_NAME, name);
 
         if (Objects.nonNull(propertiesPayload)) {
             Properties properties = getProperties(propertiesPayload);
@@ -315,6 +333,9 @@ public class RegistryPropertiesResource implements MiApiResource {
                 try {
                     microIntegratorRegistry.updateProperties(registryPath, properties);
                     jsonBody.put("message", "Successfully added the registry property");
+                    info.put(LIST, properties);
+                    AuditLogger.logAuditMessage(performedBy, AUDIT_LOG_TYPE_REGISTRY_RESOURCE_PROPERTIES,
+                            AUDIT_LOG_ACTION_UPDATED, info);
                 } catch (URISyntaxException e) {
                     jsonBody = Utils.createJsonError("Error while writing properties", axis2MessageContext,
                             INTERNAL_SERVER_ERROR);
@@ -336,18 +357,29 @@ public class RegistryPropertiesResource implements MiApiResource {
      * @param registryPath          Registry path
      * @return                      A JSON object with the final status
      */
-    private JSONObject postEmptyRegistryProperties(org.apache.axis2.context.MessageContext axis2MessageContext,
-            String registryPath) {
+    private JSONObject postEmptyRegistryProperties(MessageContext messageContext,
+            org.apache.axis2.context.MessageContext axis2MessageContext, String registryPath) {
 
         String propertiesPayload = getPayload(axis2MessageContext);
         JSONObject jsonBody = new JSONObject();
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        String performedBy = ANONYMOUS_USER;
+        JSONObject info = new JSONObject();
+
+        if (messageContext.getProperty(USERNAME_PROPERTY) !=  null) {
+            performedBy = messageContext.getProperty(USERNAME_PROPERTY).toString();
+        }
+        String name = getResourceName(registryPath);
+        info.put(REGISTRY_RESOURCE_NAME, name);
 
         if (Objects.nonNull(propertiesPayload)) {
             Properties properties = getProperties(propertiesPayload);
             if (properties != null) {
                 microIntegratorRegistry.addNewNonEmptyResource(registryPath, false, DEFAULT_MEDIA_TYPE, "", properties);
                 jsonBody.put("message", "Successfully added the registry property");
+                info.put(LIST, properties);
+                AuditLogger.logAuditMessage(performedBy, AUDIT_LOG_TYPE_REGISTRY_RESOURCE_PROPERTIES,
+                        AUDIT_LOG_ACTION_CREATED, info);
             } else {
                 jsonBody = Utils.createJsonError("Invalid payload for properties", axis2MessageContext, BAD_REQUEST);
             }
@@ -370,6 +402,7 @@ public class RegistryPropertiesResource implements MiApiResource {
             InputStream jsonStream = JsonUtil.getJsonPayload(axis2MessageContext);
             return IOUtils.toString(jsonStream);
         } catch (Exception e) {
+            LOG.error("Error while fetching properties from payload", e);
             return null;
         }
     }
@@ -389,6 +422,7 @@ public class RegistryPropertiesResource implements MiApiResource {
                 properties.put(jsonObject.get(NAME), jsonObject.get(VALUE_KEY));
             }
         } catch (JSONException e) {
+            LOG.error("Error while fetching properties", e);
             return null;
         }
         return properties;
@@ -417,42 +451,29 @@ public class RegistryPropertiesResource implements MiApiResource {
      * @param axis2MessageContext AXIS2 message context
      */
     private void handleDelete(MessageContext messageContext,
-            org.apache.axis2.context.MessageContext axis2MessageContext) {
+            org.apache.axis2.context.MessageContext axis2MessageContext, String registryPath, String validatedPath) {
 
-        String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
         String propertyName = Utils.getQueryParameter(messageContext, NAME);
-        String validatedPath;
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         JSONObject jsonBody;
         if (Objects.nonNull(propertyName)) {
-            if (Objects.nonNull(registryPath)) {
-                validatedPath = validatePath(registryPath, axis2MessageContext);
-                if (Objects.nonNull(validatedPath)) {
-                    String pathWithPrefix = getRegistryPathPrefix(validatedPath);
-                    if (Objects.nonNull(pathWithPrefix)) {
-                        if (isRegistryExist(validatedPath + PROPERTY_EXTENSION)) {
-                            jsonBody = deleteRegistryProperty(axis2MessageContext, pathWithPrefix, propertyName);
-                        } else {
-                            jsonBody = Utils.createJsonError("Cannot find a property file in the path: " + registryPath,
-                                    axis2MessageContext, BAD_REQUEST);
-                        }
-                    } else {
-                        jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
-                                BAD_REQUEST);
-                    }
-                    Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            String pathWithPrefix = getRegistryPathPrefix(validatedPath);
+            if (Objects.nonNull(pathWithPrefix)) {
+                if (isRegistryExist(validatedPath + PROPERTY_EXTENSION)) {
+                    jsonBody = deleteRegistryProperty(messageContext, axis2MessageContext, pathWithPrefix,
+                            propertyName);
+                } else {
+                    jsonBody = Utils.createJsonError("Cannot find a property file in the path: " + registryPath,
+                            axis2MessageContext, BAD_REQUEST);
                 }
             } else {
-                jsonBody = Utils.createJsonError("Registry path not found in the request", axis2MessageContext,
+                jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
                         BAD_REQUEST);
-                Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
             }
         } else {
             jsonBody = Utils.createJsonError("Property name not found in the request", axis2MessageContext,
                     BAD_REQUEST);
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         }
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     /**
@@ -461,17 +482,29 @@ public class RegistryPropertiesResource implements MiApiResource {
      * @param registryPath  Registry path
      * @return              JSON object indicating the final status
      */
-    private JSONObject deleteRegistryProperty(org.apache.axis2.context.MessageContext axis2MessageContext,
-            String registryPath, String propertyName) {
+    private JSONObject deleteRegistryProperty(MessageContext messageContext,
+            org.apache.axis2.context.MessageContext axis2MessageContext, String registryPath, String propertyName) {
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
         Properties properties = microIntegratorRegistry.getResourceProperties(registryPath);
         JSONObject jsonBody = new JSONObject();
+        String performedBy = ANONYMOUS_USER;
+        JSONObject info = new JSONObject();
+
+        if (messageContext.getProperty(USERNAME_PROPERTY) !=  null) {
+            performedBy = messageContext.getProperty(USERNAME_PROPERTY).toString();
+        }
+        String name = getResourceName(registryPath);
+        info.put(REGISTRY_RESOURCE_NAME, name);
+
         if (properties != null) {
             if (properties.containsKey(propertyName)) {
                 properties.remove(propertyName);
                 try {
                     microIntegratorRegistry.updateProperties(registryPath, properties);
                     jsonBody.put("message", "Successfully deleted the registry property");
+                    info.put(REGISTRY_PROPERTY_NAME, propertyName);
+                    AuditLogger.logAuditMessage(performedBy, AUDIT_LOG_TYPE_REGISTRY_RESOURCE_PROPERTIES,
+                            AUDIT_LOG_ACTION_DELETED, info);
                 } catch (URISyntaxException e) {
                     jsonBody = Utils.createJsonError("Error while writing updated properties", axis2MessageContext,
                             INTERNAL_SERVER_ERROR);

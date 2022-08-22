@@ -65,6 +65,7 @@ import java.util.Properties;
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
 import static org.wso2.micro.integrator.management.apis.Constants.CONFIGURATION_REGISTRY_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.CONFIGURATION_REGISTRY_PREFIX;
+import static org.wso2.micro.integrator.management.apis.Constants.FILE;
 import static org.wso2.micro.integrator.management.apis.Constants.FORBIDDEN;
 import static org.wso2.micro.integrator.management.apis.Constants.GOVERNANCE_REGISTRY_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.GOVERNANCE_REGISTRY_PREFIX;
@@ -73,6 +74,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.LOCAL_REGISTRY
 import static org.wso2.micro.integrator.management.apis.Constants.LOCAL_REGISTRY_PREFIX;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_ROOT_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.URL_SEPARATOR;
 
 public class Utils {
 
@@ -474,6 +476,13 @@ public class Utils {
     public static String validatePath(String registryPath,
             org.apache.axis2.context.MessageContext axis2MessageContext) {
 
+        if (StringUtils.isEmpty(registryPath)) {
+            JSONObject jsonBody = Utils.createJsonError("Registry path not found in the request", axis2MessageContext,
+                    BAD_REQUEST);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            return null;
+        }
+
         String carbonHomePath = formatPath(Utils.getCarbonHome());
         String registryRoot = formatPath(carbonHomePath + File.separator + REGISTRY_ROOT_PATH);
         String validatedPath;
@@ -534,6 +543,7 @@ public class Utils {
             File file = new File(resolvedPath);
             return file.exists();
         } catch (Exception e) {
+            LOG.error("Error occurred while checking the existence of the registry", e);
             return false;
         }
     }
@@ -567,24 +577,31 @@ public class Utils {
     public static String getPayload(org.apache.axis2.context.MessageContext axis2MessageContext) {
 
         try {
-            InputStream inputStream = getInputStream(axis2MessageContext, true);
+            InputStream inputStream = getInputStream(axis2MessageContext);
             return IOUtils.toString(inputStream);
         } catch (Exception e) {
+            LOG.error("Error occurred while fetching the payload", e);
             return null;
         }
     }
 
-    private static InputStream getInputStream(org.apache.axis2.context.MessageContext messageContext, boolean reset) {
+    /**
+     * Returns input stream from the payload.
+     * @param messageContext    Axis2 message context
+     * @return                  InputStream of payload
+     */
+    private static InputStream getInputStream(org.apache.axis2.context.MessageContext messageContext) {
         if (messageContext == null) {
             return null;
         } else {
             Object o = messageContext.getProperty("bufferedInputStream");
             if (o instanceof InputStream) {
                 InputStream is = (InputStream) o;
-                if (reset && is.markSupported()) {
+                if (is.markSupported()) {
                     try {
                         is.reset();
-                    } catch (IOException var5) {
+                    } catch (IOException e) {
+                        LOG.error("Error occurred while fetching the payload", e);
                         return null;
                     }
                 }
@@ -605,9 +622,10 @@ public class Utils {
 
         try {
             OMNode fileOmNode = messageContext.getEnvelope().getBody().getFirstElement()
-                    .getFirstChildWithName(new QName("file")).getFirstOMChild();
+                    .getFirstChildWithName(new QName(FILE)).getFirstOMChild();
             return Base64.getDecoder().decode(((OMTextImpl) fileOmNode).getText());
         } catch (Exception e) {
+            LOG.error("Error occurred while fetching the payload", e);
             return null;
         }
     }
@@ -619,5 +637,21 @@ public class Utils {
     public static void sendForbiddenFaultResponse(org.apache.axis2.context.MessageContext axis2MessageContext) {
         axis2MessageContext.setProperty(Constants.NO_ENTITY_BODY, true);
         axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, 403);
+    }
+
+    /**
+     * Fetches the registry name from the registy path.
+     * @param path  Registry path
+     * @return      Registry name
+     */
+    public static String getResourceName(String path) {
+        if (path != null) {
+            String correctedPath = path;
+            if (path.endsWith(URL_SEPARATOR)) {
+                correctedPath = path.substring(0, path.lastIndexOf(URL_SEPARATOR));
+            }
+            return correctedPath.substring(correctedPath.lastIndexOf(URL_SEPARATOR) + 1, correctedPath.length());
+        }
+        return "";
     }
 }

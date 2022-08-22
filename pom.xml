@@ -1361,6 +1361,11 @@
                 <artifactId>jsr105</artifactId>
                 <version>1.0.1.wso2v1</version>
             </dependency>
+            <dependency>
+                <groupId>org.skyscreamer</groupId>
+                <artifactId>jsonassert</artifactId>
+                <version>${jsonassert.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1495,6 +1500,7 @@
         <saml.common.util.version>1.0.10</saml.common.util.version>
         <imp.pkg.version.xmlsec>[1.4.2, 2.3.0)</imp.pkg.version.xmlsec>
         <xmlsec.version>1.5.2</xmlsec.version>
+        <jsonassert.version>1.5.1</jsonassert.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
         <bouncycastle.orbit.version>1.70.0.wso2v1</bouncycastle.orbit.version>
         <orbit.version.poi.ooxml>3.17.0.wso2v1</orbit.version.poi.ooxml>

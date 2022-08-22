@@ -50,11 +50,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding registry content (text)")
     public void testRegistryPostText() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/config/testFolder/test-text.txt";
@@ -73,11 +68,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding registry content (text) for test delete")
     public void testRegistryPostTextExtraTextFile() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -98,11 +88,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding registry content (json)")
     public void testRegistryPostJson() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/config/testFolder/test-json.json";
@@ -120,11 +105,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding registry content (xml)")
     public void testRegistryPostXml() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -154,11 +134,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding new properties with empty content file")
     public void testRegistryPostNewProperties() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -191,11 +166,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry directory without expanding")
     public void testRegistryGetDirectory() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources";
         String registryPath = "registry/config/testFolder";
@@ -221,11 +191,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry directory with expanding")
     public void testRegistryGetDirectoryExpand() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources";
@@ -253,11 +218,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry metadata")
     public void testRegistryGetMetadata() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/metadata";
         String registryPath = "registry/config/testFolder/testSubFolder/test-xml.xml";
@@ -275,11 +235,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry content")
     public void testRegistryGetContent() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/config/testFolder/test-text.txt";
@@ -288,18 +243,13 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
+        String responsePayload = client.getResponsePayload(response).replaceAll("\r\n", "\n");
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
         Assert.assertEquals(responsePayload, expected);
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry content from a .json file")
     public void testRegistryGetContentJson() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -318,18 +268,13 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
+        String responsePayload = client.getResponsePayload(response).replaceAll("\r\n", "\n");
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
         Assert.assertEquals(responsePayload, expected);
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry content from a .xml file")
     public void testRegistryGetContentXml() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -350,18 +295,13 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
+        String responsePayload = client.getResponsePayload(response).replaceAll("\r\n", "\n");
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
         Assert.assertEquals(responsePayload, expected);
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry properties as a list")
     public void testRegistryGetPropertiesList() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -384,11 +324,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry property with a given name")
     public void testRegistryGetProperty() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
         String registryPath = "registry/config/testFolder/test-empty.txt";
@@ -406,11 +341,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test error - fetching non existing registry property")
     public void testRegistryGetPropertyError() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
         String registryPath = "registry/config/testFolder/test-empty.txt";
@@ -427,11 +357,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test error - adding existing registry content")
     public void testRegistryPostContentErrorExistingRegistry() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -452,11 +377,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test error - deleting non existing registry property")
     public void testRegistryDeletePropertyErrorNonExistingProperty() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
         String registryPath = "registry/config/testFolder/test-empty.txt";
@@ -474,11 +394,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test error - property name missing in the request")
     public void testRegistryDeletePropertyErrorPropertyNameMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
         String registryPath = "registry/config/testFolder/test-empty.txt";
@@ -495,11 +410,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 4, description = "Test adding new properties to existing content file")
     public void testRegistryPostNewPropertiesToExistingContent() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -533,11 +443,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 4, description = "Test modifying registry content")
     public void testRegistryPutText() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/config/testFolder/test-text.txt";
@@ -556,11 +461,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 4, description = "Test deleting registry content")
     public void testRegistryDelete() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/config/testFolder/test-text-delete.txt";
@@ -576,11 +476,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 4, description = "Test adding new and existing properties")
     public void testRegistryPostExistingProperties() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -613,11 +508,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 4, description = "Test deleting registry property")
     public void testRegistryDeleteProperty() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
         String registryPath = "registry/config/testFolder/test-empty.txt";
@@ -634,11 +524,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 5, description = "Test fetching properties list to verify the changes")
     public void testRegistryGetPropertiesListVerifyEditedProperties() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -662,11 +547,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 5, description = "Test fetching properties list to verify new properties")
     public void testRegistryGetPropertiesListVerifyNewProperties() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
         String registryPath = "registry/config/testFolder/test-text.txt";
@@ -688,11 +568,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 5, description = "Test fetching registry content to verify changes")
     public void testRegistryGetContentToVerifyChanges() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/config/testFolder/test-text.txt";
@@ -701,7 +576,7 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
+        String responsePayload = client.getResponsePayload(response).replaceAll("\r\n", "\n");
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
         Assert.assertEquals(responsePayload, expected);
     }
@@ -709,11 +584,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = {
             "wso2.esb" }, priority = 5, description = "Test fetching registry directory with expanding to verify")
     public void testRegistryGetDirectoryExpandToVerifyChanges() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources";
@@ -764,11 +634,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching directory from non existing path")
     public void testRegistryGetDirectoryErrorNonExistingPath() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources";
         String registryPath = "registry/config/testFolder";
@@ -786,11 +651,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
             description = "Test error - fetching expanded directory from non existing path")
     public void testRegistryGetDirectoryExpandErrorNonExistingPath() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources";
         String registryPath = "registry/config/testFolder";
@@ -806,11 +666,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
     public void testRegistryGetDirectoryErrorIllegalPath() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources";
@@ -829,11 +684,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
     public void testRegistryGetDirectoryErrorPathMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources";
 
@@ -847,11 +697,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from non existing registry")
     public void testRegistryGetMetadataErrorNonExistingRegistry() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/metadata";
@@ -869,11 +714,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
     public void testRegistryGetMetadataErrorPathMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/metadata";
 
@@ -887,11 +727,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from a illegal path")
     public void testRegistryGetMetadataErrorIllegalPath() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/metadata";
@@ -910,11 +745,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from non existing registry")
     public void testRegistryGetContentErrorNonExistingRegistry() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/config/testFolder/test-text.txt";
@@ -931,11 +761,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
     public void testRegistryGetContentErrorPathMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
 
@@ -949,11 +774,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from a illegal path")
     public void testRegistryGetContentErrorIllegalPath() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -972,11 +792,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
     public void testRegistryPostContentErrorPathMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         File file = new File(TestConfigurationProvider.getResourceLocation(ESBTestConstant.ESB_PRODUCT_GROUP)
@@ -992,11 +807,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
     public void testRegistryPostContentErrorIllegalPath() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -1016,11 +826,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - modifying non existing registry")
     public void testRegistryPutContentErrorNonExistingRegistry() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -1042,11 +847,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
             description = "Test error - modifying registry artifacts outside default registry directories")
     public void testRegistryPutContentErrorOutsideRecommendedPath() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/testFolder/test-text.txt";
@@ -1065,11 +865,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
     public void testRegistryPutContentErrorIllegalPath() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -1090,11 +885,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
     public void testRegistryPutContentErrorPathMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String contentType = "text/plain";
@@ -1111,11 +901,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1,
             description = "Test error - deleting registry artifacts outside default registry directories")
     public void testRegistryDeleteContentErrorOutsideRecommendedPath() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
@@ -1134,11 +919,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
     public void testRegistryDeleteContentErrorIllegalPath() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/../test-text.txt";
@@ -1156,11 +936,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
     public void testRegistryDeleteContentErrorPathMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
 
@@ -1174,11 +949,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from non existing registry")
     public void testRegistryGetPropertiesErrorNonExistingRegistry() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -1196,11 +966,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
     public void testRegistryGetPropertiesErrorPathMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
 
@@ -1214,11 +979,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from a illegal path")
     public void testRegistryGetPropertiesErrorIllegalPath() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -1237,11 +997,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter missing")
     public void testRegistryPostPropertiesErrorPathMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
         String contentType = "application/json";
@@ -1257,16 +1012,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Registry path is missing");
+        Assert.assertEquals(jsonResponse.get("Error"), "Registry path not found in the request");
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
     public void testRegistryPostPropertiesErrorIllegalPath() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -1293,11 +1043,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
             description = "Test error - deleting properties from non existing registry")
     public void testRegistryDeletePropertiesErrorNonExistingRegistry() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
         String registryPath = "registry/config/testFolder/test-empty.txt";
@@ -1315,11 +1060,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter missing")
     public void testRegistryDeletePropertiesPathMissing() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
         String queryParameters = "?" + "name=prop-1";
@@ -1334,11 +1074,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
     public void testRegistryDeleteIllegalPath() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -1359,11 +1094,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
             description = "Test error - adding registry artifacts outside default registry directories")
     public void testRegistryPostContentErrorOutsideRecommendedDirectory() throws IOException {
 
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
-
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/content";
         String registryPath = "registry/testFolder/test-text.txt";
@@ -1382,11 +1112,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, priority = 1,
             description = "Test error - adding registry artifacts outside config, governance, local registry directories")
     public void testRegistryPostPropertiesErrorOutsideRecommendedDirectory() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
@@ -1410,11 +1135,6 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - Invalid payload for properties")
     public void testRegistryPostPropertiesErrorInvalidPayload() throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .until(isManagementApiAvailable());
-        }
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
                 + "registry-resources/properties";
