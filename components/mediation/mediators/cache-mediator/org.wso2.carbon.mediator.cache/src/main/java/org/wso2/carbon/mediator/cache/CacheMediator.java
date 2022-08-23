@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -373,11 +374,12 @@ public class CacheMediator extends AbstractMediator implements ManagedLifecycle,
             msgCtx.removeProperty(Constants.Configuration.CONTENT_TYPE);
         }
         if ((headerProperties = cachedResponse.getHeaderProperties()) != null) {
-
+            Map clonedMap = new HashMap();
+            clonedMap.putAll(headerProperties);
             msgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS,
-                    headerProperties);
+                    clonedMap);
             msgCtx.setProperty(Constants.Configuration.MESSAGE_TYPE,
-                    headerProperties.get(Constants.Configuration.MESSAGE_TYPE));
+                    clonedMap.get(Constants.Configuration.MESSAGE_TYPE));
             msgCtx.setProperty(Constants.Configuration.CONTENT_TYPE,
                     headerProperties.get(CONTENT_TYPE));
         }
