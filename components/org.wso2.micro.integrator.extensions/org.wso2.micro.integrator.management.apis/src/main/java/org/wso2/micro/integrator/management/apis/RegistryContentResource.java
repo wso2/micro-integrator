@@ -63,6 +63,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.HTTP_GET;
 import static org.wso2.micro.integrator.management.apis.Constants.HTTP_POST;
 import static org.wso2.micro.integrator.management.apis.Constants.HTTP_PUT;
 import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
+import static org.wso2.micro.integrator.management.apis.Constants.MAXIMUM_RETRY_COUNT;
 import static org.wso2.micro.integrator.management.apis.Constants.MEDIA_TYPE_KEY;
 import static org.wso2.micro.integrator.management.apis.Constants.NO_ENTITY_BODY;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_PATH;
@@ -407,7 +408,7 @@ public class RegistryContentResource implements MiApiResource {
             jsonBody = Utils.createJsonError("Registry does not exists in the path: " + registryPath,
                     axis2MessageContext, BAD_REQUEST);
         } else if (Objects.nonNull(pathWithPrefix)) {
-            jsonBody = deleteRegistryArtifact(messageContext, pathWithPrefix);
+            jsonBody = deleteRegistryArtifact(messageContext, axis2MessageContext, pathWithPrefix, validatedPath);
         } else {
             jsonBody = Utils.createJsonError("Invalid registry path: " + registryPath, axis2MessageContext,
                     BAD_REQUEST);
@@ -421,7 +422,8 @@ public class RegistryContentResource implements MiApiResource {
      * @param registryPath  Registry path
      * @return              JSON object indicating the final status
      */
-    private JSONObject deleteRegistryArtifact(MessageContext messageContext, String registryPath) {
+    private JSONObject deleteRegistryArtifact(MessageContext messageContext,
+            org.apache.axis2.context.MessageContext axis2MessageContext, String registryPath, String validatedPath) {
 
         String performedBy = ANONYMOUS_USER;
         JSONObject info = new JSONObject();
@@ -431,13 +433,19 @@ public class RegistryContentResource implements MiApiResource {
         }
         String name = getResourceName(registryPath);
         info.put(REGISTRY_RESOURCE_NAME, name);
-
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
-        microIntegratorRegistry.delete(registryPath);
-        JSONObject jsonBody = new JSONObject();
-        jsonBody.put("message", "Successfully deleted the registry resource");
-        AuditLogger.logAuditMessage(performedBy, AUDIT_LOG_TYPE_REGISTRY_RESOURCE,
-                AUDIT_LOG_ACTION_DELETED, info);
-        return jsonBody;
+
+        for (int i = 0; i < MAXIMUM_RETRY_COUNT; i++) {
+            microIntegratorRegistry.delete(registryPath);
+            if (!isRegistryExist(validatedPath)) {
+                JSONObject jsonBody = new JSONObject();
+                jsonBody.put("message", "Successfully deleted the registry resource");
+                AuditLogger.logAuditMessage(performedBy, AUDIT_LOG_TYPE_REGISTRY_RESOURCE,
+                        AUDIT_LOG_ACTION_DELETED, info);
+                return jsonBody;
+            }
+        }
+        return Utils.createJsonError("Seems that the file still exists but unable to delete the resource",
+                axis2MessageContext, INTERNAL_SERVER_ERROR);
     }
 }

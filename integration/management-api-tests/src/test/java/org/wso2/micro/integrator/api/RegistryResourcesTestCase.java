@@ -61,9 +61,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPostWithMultipart(endpoint + queryParameters, file, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry resource");
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry resource",
+                "Invalid response received " + jsonResponse.get("message"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding registry content (text) for test delete")
@@ -80,9 +82,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPostWithMultipart(endpoint + queryParameters, file, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry resource");
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry resource",
+                "Invalid response received " + jsonResponse.get("message"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding registry content (json)")
@@ -98,9 +102,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPostWithMultipart(endpoint + queryParameters, file, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry resource");
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry resource",
+                "Invalid response received " + jsonResponse.get("message"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding registry content (xml)")
@@ -127,9 +133,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPost(endpoint + queryParameters, getHeaderMap(), payload, contentType);
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry resource");
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry resource",
+                "Invalid response received " + jsonResponse.get("message"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding new properties with empty content file")
@@ -158,9 +166,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPost(endpoint + queryParameters, getHeaderMap(), payload, contentType);
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry property");
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry property",
+                "Invalid response received " + jsonResponse.get("message"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry directory without expanding")
@@ -184,7 +194,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -210,7 +221,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -227,7 +239,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -244,8 +257,9 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response).replaceAll("\r\n", "\n");
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-        Assert.assertEquals(responsePayload, expected);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
+        Assert.assertEquals(responsePayload, expected, "Invalid registry content received " + responsePayload);
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry content from a .json file")
@@ -269,8 +283,9 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response).replaceAll("\r\n", "\n");
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-        Assert.assertEquals(responsePayload, expected);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
+        Assert.assertEquals(responsePayload, expected, "Invalid registry content received " + responsePayload);
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry content from a .xml file")
@@ -296,8 +311,9 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response).replaceAll("\r\n", "\n");
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-        Assert.assertEquals(responsePayload, expected);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
+        Assert.assertEquals(responsePayload, expected, "Invalid registry content received " + responsePayload);
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry properties as a list")
@@ -316,7 +332,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -333,7 +350,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -350,7 +368,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(jsonResponse.toString(), expected, false);
     }
@@ -369,7 +388,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPostWithMultipart(endpoint + queryParameters, file, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -386,7 +406,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -403,7 +424,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -435,9 +457,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPost(endpoint + queryParameters, getHeaderMap(), payload, contentType);
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry property");
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry property",
+                "Invalid response received " + jsonResponse.get("message"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 4, description = "Test modifying registry content")
@@ -453,9 +477,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPutWithMultipart(endpoint + queryParameters, file, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("message"), "Successfully modified the registry resource");
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully modified the registry resource",
+                "Invalid response received " + jsonResponse.get("message"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 4, description = "Test deleting registry content")
@@ -469,9 +495,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("message"), "Successfully deleted the registry resource");
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully deleted the registry resource",
+                "Invalid response received " + jsonResponse.get("message"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 4, description = "Test adding new and existing properties")
@@ -500,9 +528,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPost(endpoint + queryParameters, getHeaderMap(), payload, contentType);
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry property");
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully added the registry property",
+                "Invalid response received " + jsonResponse.get("message"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 4, description = "Test deleting registry property")
@@ -517,7 +547,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -539,7 +570,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -560,7 +592,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -577,8 +610,9 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response).replaceAll("\r\n", "\n");
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-        Assert.assertEquals(responsePayload, expected);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
+        Assert.assertEquals(responsePayload, expected, "Invalid registry content received " + responsePayload);
     }
 
     @Test(groups = {
@@ -603,7 +637,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
     }
@@ -626,9 +661,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Registry does not exists in the path:"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Registry does not exists in the path:"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching directory from non existing path")
@@ -642,9 +679,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Invalid registry path"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Invalid registry path"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1,
@@ -659,9 +698,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Invalid registry path"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Invalid registry path"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
@@ -675,10 +716,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
         Assert.assertEquals(jsonResponse.get("Error").toString(), "The registry path  'registry/../repository' "
-                + "is illegal");
+                + "is illegal", "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
@@ -690,9 +732,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint , getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error").toString(), "Registry path not found in the request");
+        Assert.assertEquals(jsonResponse.get("Error").toString(), "Registry path not found in the request",
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from non existing registry")
@@ -706,9 +750,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Can not find the registry:"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Can not find the registry:"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
@@ -720,9 +766,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Registry path not found in the request"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Registry path not found in the request"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from a illegal path")
@@ -736,10 +784,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("The registry path  "
-                + "'registry/../repository/test-text.txt' is illegal"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("The registry path  'registry/../repository/test-text.txt' is illegal"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from non existing registry")
@@ -753,9 +802,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Can not find the registry:"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Can not find the registry:"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
@@ -767,9 +818,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Registry path not found in the request"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Registry path not found in the request"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from a illegal path")
@@ -783,45 +836,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("The registry path  "
-                + "'registry/../repository/test-text.txt' is illegal"));
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
-    public void testRegistryPostContentErrorPathMissing() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/content";
-        File file = new File(TestConfigurationProvider.getResourceLocation(ESBTestConstant.ESB_PRODUCT_GROUP)
-                + "/registry-resources/test-initial.txt");
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doPostWithMultipart(endpoint, file, getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Registry path not found in the request");
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
-    public void testRegistryPostContentErrorIllegalPath() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/content";
-        String registryPath = "registry/../testFolder/test-text.txt";
-        String queryParameters = "?path=" + registryPath;
-        File file = new File(TestConfigurationProvider.getResourceLocation(ESBTestConstant.ESB_PRODUCT_GROUP)
-                + "/registry-resources/test-initial.txt");
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doPostWithMultipart(endpoint + queryParameters, file, getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "The registry path  'registry/../testFolder/test-text.txt' "
-                + "is illegal");
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("The registry path  'registry/../repository/test-text.txt' is illegal"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - modifying non existing registry")
@@ -837,10 +856,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPut(endpoint + queryParameters, getHeaderMap(), payload, contentType);
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Registry does not exists in the path: "
-                + "registry/config/testFolder/test-text.txt");
+        Assert.assertEquals(jsonResponse.get("Error"), "Registry does not exists in the path: registry/config/testFolder/test-text.txt",
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1,
@@ -857,45 +877,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPut(endpoint + queryParameters, getHeaderMap(), payload, contentType);
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Registry does not exists in the path: "
-                + "registry/testFolder/test-text.txt");
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
-    public void testRegistryPutContentErrorIllegalPath() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/content";
-        String registryPath = "registry/../test-text.txt";
-        String queryParameters = "?path=" + registryPath;
-        String contentType = "text/plain";
-        String payload = "Updated\n" + "content\n" + "of the\n" + "\n" + "test file\n" + "../12356";
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doPut(endpoint + queryParameters, getHeaderMap(), payload, contentType);
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "The registry path  'registry/../test-text.txt' "
-                + "is illegal");
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
-    public void testRegistryPutContentErrorPathMissing() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/content";
-        String contentType = "text/plain";
-        String payload = "Updated\n" + "content\n" + "of the\n" + "\n" + "test file\n" + "../12356";
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doPut(endpoint , getHeaderMap(), payload, contentType);
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Registry path not found in the request");
+        Assert.assertEquals(jsonResponse.get("Error"), "Registry does not exists in the path: registry/testFolder/test-text.txt",
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1,
@@ -910,41 +896,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Registry does not exists in the path: "
-                + "registry/testFolder/test-text.txt");
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
-    public void testRegistryDeleteContentErrorIllegalPath() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/content";
-        String registryPath = "registry/../test-text.txt";
-        String queryParameters = "?path=" + registryPath;
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "The registry path  'registry/../test-text.txt' "
-                + "is illegal");
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
-    public void testRegistryDeleteContentErrorPathMissing() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/content";
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doDelete(endpoint , getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Registry path not found in the request");
+        Assert.assertEquals(jsonResponse.get("Error"), "Registry does not exists in the path: registry/testFolder/test-text.txt",
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from non existing registry")
@@ -958,9 +914,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Can not find the registry:"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Can not find the registry:"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter not found")
@@ -972,9 +930,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Registry path not found"));
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("Registry path not found"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - fetching from a illegal path")
@@ -988,55 +948,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("Error").toString().contains("The registry path  "
-                + "'registry/../repository/test-text.txt' is illegal"));
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter missing")
-    public void testRegistryPostPropertiesErrorPathMissing() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/properties";
-        String contentType = "application/json";
-        String payload = "[\n"
-                + "    {\n"
-                + "        \"name\":\"prop-1\",\n"
-                + "        \"value\":\"val-1\"\n"
-                + "    }\n"
-                + "]\n";
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doPost(endpoint , getHeaderMap(), payload, contentType);
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Registry path not found in the request");
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
-    public void testRegistryPostPropertiesErrorIllegalPath() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/properties";
-        String registryPath = "registry/../testFolder/test-empty.txt";
-        String queryParameters = "?path=" + registryPath;
-        String contentType = "application/json";
-        String payload = "[\n"
-                + "    {\n"
-                + "        \"name\":\"prop-1\",\n"
-                + "        \"value\":\"val-1\"\n"
-                + "    }\n"
-                + "]\n";
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doPost(endpoint + queryParameters, getHeaderMap(), payload, contentType);
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "The registry path  'registry/../testFolder/test-empty.txt' "
-                + "is illegal");
+        Assert.assertTrue(jsonResponse.get("Error").toString().contains("The registry path  'registry/../repository/test-text.txt' is illegal"),
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1,
@@ -1051,42 +967,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Cannot find a property file in the path: "
-                + "registry/config/testFolder/test-empty.txt");
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - query parameter missing")
-    public void testRegistryDeletePropertiesPathMissing() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/properties";
-        String queryParameters = "?" + "name=prop-1";
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Registry path not found in the request");
-    }
-
-    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - illegal path")
-    public void testRegistryDeleteIllegalPath() throws IOException {
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "registry-resources/properties";
-        String registryPath = "registry/../repository/test-file.txt";
-        String queryParameters = "?path=" + registryPath + "&name=prop-1";
-
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doDelete(endpoint + queryParameters, getHeaderMap());
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "The registry path  'registry/../repository/test-file.txt' "
-                + "is illegal");
+        Assert.assertEquals(jsonResponse.get("Error"), "Cannot find a property file in the path: registry/config/testFolder/test-empty.txt",
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = {
@@ -1104,9 +989,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPostWithMultipart(endpoint + queryParameters, file, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Invalid registry path: registry/testFolder/test-text.txt");
+        Assert.assertEquals(jsonResponse.get("Error"), "Invalid registry path: registry/testFolder/test-text.txt",
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1,
@@ -1128,9 +1015,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPost(endpoint + queryParameters, getHeaderMap(), payload, contentType);
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Invalid registry path: registry/testFolder/test-text.txt");
+        Assert.assertEquals(jsonResponse.get("Error"), "Invalid registry path: registry/testFolder/test-text.txt",
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @Test(groups = { "wso2.esb" }, priority = 1, description = "Test error - Invalid payload for properties")
@@ -1151,9 +1040,11 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doPost(endpoint + queryParameters, getHeaderMap(), payload, contentType);
         String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400, "Invalid response status " +
+                response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("Error"), "Invalid payload for properties");
+        Assert.assertEquals(jsonResponse.get("Error"), "Invalid payload for properties",
+                "Invalid error message received " + jsonResponse.get("Error").toString());
     }
 
     @AfterClass(alwaysRun = true)

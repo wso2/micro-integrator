@@ -214,5 +214,6 @@ public class Constants {
     public static final String REGISTRY_RESOURCE_NAME = "registryResourceName";
     public static final String REGISTRY_PROPERTY_NAME = "propertyName";
     public static final String FILE = "file";
+    public static final int MAXIMUM_RETRY_COUNT = 5;
 
 }
