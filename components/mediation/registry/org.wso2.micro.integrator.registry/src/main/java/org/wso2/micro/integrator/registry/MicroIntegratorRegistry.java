@@ -1304,8 +1304,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             String[] childNodes = node.list();
             if (childNodes != null) {
                 for (String childNode : childNodes) {
-                    if (!childNode.startsWith(HIDDEN_FILE_PREFIX) && !childNode.endsWith(METADATA_FILE_SUFFIX)
-                            && !childNode.endsWith(METADATA_DIR_NAME) && !childNode.endsWith(PROPERTY_EXTENTION)) {
+                    if (isNodeNotRequiredToBeFetched(childNode)) {
                         JSONObject nodeJSONObject = new JSONObject();
                         File childFile = new File(node, childNode);
                         addNodesToJSON(childFile, nodeJSONObject);
@@ -1430,8 +1429,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             String[] childNodes = node.list();
             if (childNodes != null) {
                 for (String childNode : childNodes) {
-                    if (!childNode.startsWith(HIDDEN_FILE_PREFIX) && !childNode.endsWith(METADATA_FILE_SUFFIX)
-                            && !childNode.endsWith(METADATA_DIR_NAME) && !childNode.endsWith(PROPERTY_EXTENTION)) {
+                    if (isNodeNotRequiredToBeFetched(childNode)) {
                         JSONObject childJSONObject = new JSONObject();
                         File childFile = new File(node, childNode);
                         childJSONObject.put(NAME_KEY, childFile.getName());
@@ -1491,6 +1489,18 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                 }
             }
         }
+    }
+
+    /**
+     * Checks the node name not to start with "." , node not to be a metadata file or metadata folder and
+     * node not to be a property file.
+     *
+     * @param nodeName  Node name
+     * @return          Boolean output of the checks
+     */
+    private boolean isNodeNotRequiredToBeFetched(String nodeName) {
+        return !nodeName.startsWith(HIDDEN_FILE_PREFIX) && !nodeName.endsWith(METADATA_FILE_SUFFIX)
+                && !nodeName.endsWith(METADATA_DIR_NAME) && !nodeName.endsWith(PROPERTY_EXTENTION);
     }
 
     /**
