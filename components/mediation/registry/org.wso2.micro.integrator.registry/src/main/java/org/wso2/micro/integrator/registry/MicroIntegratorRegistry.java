@@ -30,17 +30,21 @@ import org.apache.synapse.SynapseException;
 import org.apache.synapse.registry.AbstractRegistry;
 import org.apache.synapse.registry.RegistryEntry;
 import org.apache.synapse.util.SynapseBinaryDataSource;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -48,6 +52,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,11 +65,26 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.DEFAULT_MEDIA_TYPE;
-import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTY_EXTENTION;
-import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.URL_SEPARATOR;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.CHILD_FILES_LIST_KEY;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.CONFIGURATION_REGISTRY_PATH;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.CONFIG_DIRECTORY_NAME;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.CONFIG_REGISTRY_PREFIX;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.DEFAULT_MEDIA_TYPE;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.ERROR_KEY;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.FILE_TYPE_DIRECTORY;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.GOVERNANCE_DIRECTORY_NAME;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.GOVERNANCE_REGISTRY_PATH;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.GOVERNANCE_REGISTRY_PREFIX;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.HIDDEN_FILE_PREFIX;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LOCAL_REGISTRY_PATH;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LOCAL_REGISTRY_PREFIX;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.NAME_KEY;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTIES_KEY;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTY_EXTENTION;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTY_FILE_VALUE;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.TYPE_KEY;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.URL_SEPARATOR;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.VALUE_KEY;
 
 public class MicroIntegratorRegistry extends AbstractRegistry {
 
@@ -103,7 +124,6 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     private int registryProtocol = FILE;
 
     private static Map<String, Long> resourceLastModifiedMap = new HashMap<String, Long>();
-
 
     public MicroIntegratorRegistry() {
         //default registry is file system based resided in carbon home
@@ -992,13 +1012,13 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         if (key != null || !key.isEmpty()) {
             String registryRoot = "";
             String resourcePath = "";
-            if (key.startsWith(MicroIntegratorRegistryConstants.CONFIG_REGISTRY_PREFIX)) {
+            if (key.startsWith(CONFIG_REGISTRY_PREFIX)) {
                 registryRoot = configRegistry;
-                resourcePath = key.substring(MicroIntegratorRegistryConstants.CONFIG_REGISTRY_PREFIX.length());
+                resourcePath = key.substring(CONFIG_REGISTRY_PREFIX.length());
 
-            } else if (key.startsWith(MicroIntegratorRegistryConstants.GOVERNANCE_REGISTRY_PREFIX)) {
+            } else if (key.startsWith(GOVERNANCE_REGISTRY_PREFIX)) {
                 registryRoot = govRegistry;
-                resourcePath = key.substring(MicroIntegratorRegistryConstants.GOVERNANCE_REGISTRY_PREFIX.length());
+                resourcePath = key.substring(GOVERNANCE_REGISTRY_PREFIX.length());
 
             } else if (key.startsWith(MicroIntegratorRegistryConstants.LOCAL_REGISTRY_PREFIX)) {
                 registryRoot = localRegistry;
@@ -1251,4 +1271,309 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         }
     }
 
+    /**
+     * Returns a JSON object with the folder structure of the <MI-HOME>/registry directory.
+     *
+     * @param folderPath Path of the registry
+     * @return JSON object containing the folder structure
+     */
+    public JSONObject getRegistryResourceJSON(String folderPath) {
+
+        File node = new File(folderPath);
+        JSONObject jsonObject = new JSONObject();
+        addNodesToJSON(node, jsonObject);
+        return jsonObject;
+    }
+
+    /**
+     * Updates the JSON object with existing files and folder in the <MI-HOME>/registry directory.
+     * Updates a MAP with the metadata of each registry.
+     * Updates a MAP with the properties of each registry.
+     *
+     * @param node       File
+     * @param jsonObject JSON object with results
+     */
+    private void addNodesToJSON(File node, JSONObject jsonObject) {
+
+        String nodeName = node.getName();
+        jsonObject.put(NAME_KEY, nodeName);
+
+        if (node.isDirectory()) {
+            jsonObject.put(TYPE_KEY, FILE_TYPE_DIRECTORY);
+            JSONArray childArray = new JSONArray();
+            String[] childNodes = node.list();
+            if (childNodes != null) {
+                for (String childNode : childNodes) {
+                    if (isNodeNotRequiredToBeFetched(childNode)) {
+                        JSONObject nodeJSONObject = new JSONObject();
+                        File childFile = new File(node, childNode);
+                        addNodesToJSON(childFile, nodeJSONObject);
+                        childArray.put(nodeJSONObject);
+                    } else if (childNode.endsWith(PROPERTY_EXTENTION)) {
+                        String propertyOwner = childNode.replace(PROPERTY_EXTENTION, "");
+                        if (!Arrays.asList(childNodes).contains(propertyOwner)) {
+                            JSONObject nodeJSONObject = new JSONObject();
+                            nodeJSONObject.put(NAME_KEY, propertyOwner);
+                            nodeJSONObject.put(TYPE_KEY, PROPERTY_FILE_VALUE);
+                            nodeJSONObject.put(CHILD_FILES_LIST_KEY, Collections.<String>emptyList());
+                            childArray.put(nodeJSONObject);
+                        }
+                    }
+                }
+            }
+            jsonObject.put(CHILD_FILES_LIST_KEY, childArray);
+        } else {
+            String mediaType = DEFAULT_MEDIA_TYPE;
+            Properties metadata = getMetadata(formatPath(node.getPath()));
+            if (metadata != null) {
+                String mediaTypeValue = metadata.getProperty(METADATA_KEY_MEDIA_TYPE);
+                if (StringUtils.isNotEmpty(mediaTypeValue)) {
+                    mediaType = mediaTypeValue;
+                }
+            }
+            jsonObject.put(TYPE_KEY, mediaType);
+            jsonObject.put(CHILD_FILES_LIST_KEY, Collections.<String>emptyList());
+        }
+    }
+
+    /**
+     * Returns metadata (media type) of a specified registry.
+     *
+     * @param path Registry path
+     * @return Result json object
+     */
+    public JSONObject getRegistryMediaType(String path) {
+
+        File file = new File(path);
+        String mediaType;
+        JSONObject jsonBody = new JSONObject();
+        if (file.isDirectory()) {
+            jsonBody.put(ERROR_KEY, "Can not fetch metadata for a directory.");
+        } else {
+            Properties metadata = getMetadata(formatPath(file.getPath()));
+            if (metadata != null) {
+                String mediaTypeValue = metadata.getProperty(METADATA_KEY_MEDIA_TYPE);
+                if (StringUtils.isNotEmpty(mediaTypeValue)) {
+                    mediaType = mediaTypeValue;
+                    jsonBody.put(NAME_KEY, file.getName());
+                    jsonBody.put(METADATA_KEY_MEDIA_TYPE, mediaType);
+                }
+            } else {
+                jsonBody.put(ERROR_KEY, "Error while fetching metadata");
+            }
+        }
+        return jsonBody;
+    }
+
+    /**
+     * Returns the converted file path with "conf:" and "gov:".
+     *
+     * @param registryPath   file path to be converted
+     * @param carbonHomePath <MI-HOME> path
+     * @return converted file path
+     */
+    private String getChildPath(String registryPath, String carbonHomePath) {
+
+        String resolvedRegKeyPath = registryPath.replace(carbonHomePath + URL_SEPARATOR, "");
+        if (resolvedRegKeyPath.startsWith(CONFIGURATION_REGISTRY_PATH)) {
+            resolvedRegKeyPath = resolvedRegKeyPath.replace(CONFIGURATION_REGISTRY_PATH, CONFIG_REGISTRY_PREFIX);
+        } else if (resolvedRegKeyPath.startsWith(GOVERNANCE_REGISTRY_PATH)) {
+            resolvedRegKeyPath = resolvedRegKeyPath.replace(GOVERNANCE_REGISTRY_PATH, GOVERNANCE_REGISTRY_PREFIX);
+        } else if (resolvedRegKeyPath.startsWith(LOCAL_REGISTRY_PATH)) {
+            resolvedRegKeyPath = resolvedRegKeyPath.replace(LOCAL_REGISTRY_PATH, LOCAL_REGISTRY_PREFIX);
+        }
+        return formatPath(resolvedRegKeyPath);
+    }
+
+    /**
+     * Format the string paths to match any platform.. windows, linux etc..
+     *
+     * @param path input file path
+     * @return formatted file path
+     */
+    public static String formatPath(String path) {
+        // removing white spaces
+        String pathFormatted = path.replaceAll("\\b\\s+\\b", "%20");
+        try {
+            pathFormatted = java.net.URLDecoder.decode(pathFormatted, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error("Unsupported Encoding in the path :" + pathFormatted);
+        }
+        // replacing all "\" with "/"
+        return pathFormatted.replace('\\', '/');
+    }
+
+    /**
+     * Returns JSON array with immediate children, metadata and properties of a given parent directory.
+     *
+     * @param folderPath Registry path
+     * @return Resulting JSON array
+     */
+    public JSONArray getChildrenList(String folderPath, String carbonHomePath) {
+
+        File node = new File(folderPath);
+        JSONArray jsonArray = new JSONArray();
+        addImmediateChildren(node, jsonArray, carbonHomePath);
+        return jsonArray;
+    }
+
+    /**
+     * Updates the JSON array with JSON objects for each child file/folder.
+     *
+     * @param node       Parent file
+     * @param childArray JSON array to store child files
+     */
+    private void addImmediateChildren(File node, JSONArray childArray, String carbonHomePath) {
+
+        if (node.isDirectory()) {
+            String[] childNodes = node.list();
+            if (childNodes != null) {
+                for (String childNode : childNodes) {
+                    if (isNodeNotRequiredToBeFetched(childNode)) {
+                        JSONObject childJSONObject = new JSONObject();
+                        File childFile = new File(node, childNode);
+                        childJSONObject.put(NAME_KEY, childFile.getName());
+
+                        String childPath = getChildPath(formatPath(childFile.getPath()), carbonHomePath);
+                        Properties properties = getResourceProperties((childPath));
+                        JSONArray propertiesJSONArray = new JSONArray();
+                        if (properties != null) {
+                            for (Object property : properties.keySet()) {
+                                Object value = properties.get(property);
+                                JSONObject propertyObject = new JSONObject();
+                                propertyObject.put(NAME_KEY, property);
+                                propertyObject.put(VALUE_KEY, value);
+                                propertiesJSONArray.put(propertyObject);
+                            }
+                        }
+                        childJSONObject.put(PROPERTIES_KEY, propertiesJSONArray);
+
+                        String mediaType = DEFAULT_MEDIA_TYPE;
+                        if (childFile.isDirectory()) {
+                            mediaType = FILE_TYPE_DIRECTORY;
+                        } else {
+                            Properties metadata = getMetadata(formatPath(childFile.getPath()));
+                            if (metadata != null) {
+                                String mediaTypeValue = metadata.getProperty(METADATA_KEY_MEDIA_TYPE);
+                                if (StringUtils.isNotEmpty(mediaTypeValue)) {
+                                    mediaType = mediaTypeValue;
+                                }
+                            }
+                        }
+                        childJSONObject.put(METADATA_KEY_MEDIA_TYPE, mediaType);
+                        childArray.put(childJSONObject);
+                    } else if (childNode.endsWith(PROPERTY_EXTENTION)) {
+                        String propertyOwner = childNode.replace(PROPERTY_EXTENTION, "");
+                        if (!Arrays.asList(childNodes).contains(propertyOwner)) {
+                            JSONObject childJSONObject = new JSONObject();
+                            File childFile = new File(node, propertyOwner);
+                            childJSONObject.put(NAME_KEY, childNode);
+
+                            String childPath = getChildPath(formatPath(childFile.getPath()), carbonHomePath);
+                            Properties properties = getResourceProperties(childPath);
+                            JSONArray propertiesJSONArray = new JSONArray();
+                            if (properties != null) {
+                                for (Object property : properties.keySet()) {
+                                    Object value = properties.get(property);
+                                    JSONObject propertyObject = new JSONObject();
+                                    propertyObject.put(NAME_KEY, property);
+                                    propertyObject.put(VALUE_KEY, value);
+                                    propertiesJSONArray.put(propertyObject);
+                                }
+                            }
+                            childJSONObject.put(PROPERTIES_KEY, propertiesJSONArray);
+                            childJSONObject.put(METADATA_KEY_MEDIA_TYPE, PROPERTY_FILE_VALUE);
+                            childArray.put(childJSONObject);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks the node name not to start with "." , node not to be a metadata file or metadata folder and
+     * node not to be a property file.
+     *
+     * @param nodeName  Node name
+     * @return          Boolean output of the checks
+     */
+    private boolean isNodeNotRequiredToBeFetched(String nodeName) {
+        return !nodeName.startsWith(HIDDEN_FILE_PREFIX) && !nodeName.endsWith(METADATA_FILE_SUFFIX)
+                && !nodeName.endsWith(METADATA_DIR_NAME) && !nodeName.endsWith(PROPERTY_EXTENTION);
+    }
+
+    /**
+     * Updates existing property files.
+     * @param path          Path of the registry resource
+     * @param properties    New properties
+     */
+    public void updateProperties(String path, Properties properties) throws URISyntaxException {
+        if (registryType == MicroIntegratorRegistryConstants.LOCAL_HOST_REGISTRY) {
+            String targetPath = resolveRegistryURI(path);
+
+            String parent = getParentPath(targetPath,  false);
+            File parentFile = new File(new URI(parent));
+            String fileName = getResourceName(targetPath);
+            writeProperties(parentFile, fileName, properties);
+        } else {
+            log.warn("Updating remote registry is NOT SUPPORTED. Unable to update: " + path);
+        }
+    }
+
+    /**
+     * Add content to a registry resource.
+     *
+     * @param path             registry resource path
+     * @param mediaType        media type of the registry resource
+     * @param content          content of the registry resource
+     */
+    public void addMultipartResource(String path, String mediaType, byte[] content) {
+        if (registryType == MicroIntegratorRegistryConstants.LOCAL_HOST_REGISTRY) {
+            String targetPath = resolveRegistryURI(path);
+
+            String parent = getParentPath(targetPath, false);
+            try {
+                File parentFile = new File(new URI(parent));
+                String fileName = getResourceName(targetPath);
+                Properties metadata = null;
+                if (mediaType != null) {
+                    metadata = new Properties();
+                    metadata.setProperty(METADATA_KEY_MEDIA_TYPE, mediaType);
+                }
+                writeToBinaryFile(parentFile, fileName, content, metadata);
+            } catch (Exception e) {
+                handleException("Error when adding a new resource", e);
+            }
+        } else {
+            log.warn("Creating new resource in remote registry is NOT SUPPORTED. Unable to create: " + path);
+        }
+    }
+
+    /**
+     * Function to write to file, create if not exists including directory structure.
+     *
+     * @param parent             parent file
+     * @param newFileName        new file name to be created
+     * @param content            content to be included in the new file
+     * @param metadata           metadata of the new file
+     */
+    private void writeToBinaryFile(File parent, String newFileName, byte[] content, Properties metadata) {
+        if (!parent.exists() && !parent.mkdirs()) {
+            handleException("Unable to create parent directory: " + parent.getPath());
+        }
+        File newFile = new File(parent, newFileName);
+        try (FileOutputStream fos = new FileOutputStream(newFile)) {
+            fos.write(content);
+            if (metadata != null) {
+                writeMetadata(parent, newFileName, metadata);
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("Successfully content written to file : " + parent.getPath() + URL_SEPARATOR + newFileName);
+            }
+        } catch (IOException e) {
+            handleException("Couldn't write to registry resource: "
+                    + parent.getPath() + URL_SEPARATOR + newFileName, e);
+        }
+    }
 }

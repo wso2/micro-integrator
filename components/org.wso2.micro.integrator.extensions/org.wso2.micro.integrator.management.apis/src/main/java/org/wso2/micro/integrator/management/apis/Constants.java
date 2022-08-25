@@ -31,6 +31,10 @@ public class Constants {
     public static final String PREFIX_ENDPOINTS = "/endpoints";
     public static final String PREFIX_INBOUND_ENDPOINTS = "/inbound-endpoints";
     public static final String PREFIX_PROXY_SERVICES = "/proxy-services";
+    public static final String PREFIX_REGISTRY_RESOURCES = "/registry-resources";
+    public static final String PREFIX_REGISTRY_CONTENT = "/registry-resources/content";
+    public static final String PREFIX_REGISTRY_METADATA = "/registry-resources/metadata";
+    public static final String PREFIX_REGISTRY_PROPERTIES = "/registry-resources/properties";
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
     public static final String PREFIX_LOGGING = "/logging";
@@ -163,6 +167,8 @@ public class Constants {
     public static final String AUDIT_LOG_TYPE_SEQUENCE_TEMPLATE_TRACE = "sequence_template_trace";
     public static final String AUDIT_LOG_TYPE_SEQUENCE_TRACE = "sequence_trace";
     public static final String AUDIT_LOG_TYPE_ENDPOINT_TRACE = "endpoint_trace";
+    public static final String AUDIT_LOG_TYPE_REGISTRY_RESOURCE = "registry_resource";
+    public static final String AUDIT_LOG_TYPE_REGISTRY_RESOURCE_PROPERTIES = "registry_resource_properties";
 
     public static final String PROXY_SERVICES = "proxy-services";
     public static final String APIS = "apis";
@@ -180,7 +186,8 @@ public class Constants {
     public static final String DOMAIN_SEPARATOR;
 
     static {
-        String userDomainSeparator = CarbonServerConfigurationService.getInstance().getFirstProperty("UserDomainSeparator");
+        String userDomainSeparator = CarbonServerConfigurationService.getInstance()
+                .getFirstProperty("UserDomainSeparator");
         if (userDomainSeparator != null && !userDomainSeparator.trim().isEmpty()) {
             DOMAIN_SEPARATOR = userDomainSeparator.trim();
         } else {
@@ -188,6 +195,26 @@ public class Constants {
         }
     }
 
-
     static final String SERVICE_PID = "service.pid";
+    public static final String REGISTRY_PATH = "path";
+    public static final String EXPAND_PARAM = "expand";
+    public static final String VALUE_TRUE = "true";
+    public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "multipart/form-data";
+    public static final String REGISTRY_ROOT_PATH = "registry";
+    public static final String ERROR_KEY = "error";
+    public static final String CONFIGURATION_REGISTRY_PATH = "registry/config";
+    public static final String CONFIGURATION_REGISTRY_PREFIX = "conf:";
+    public static final String GOVERNANCE_REGISTRY_PATH = "registry/governance";
+    public static final String GOVERNANCE_REGISTRY_PREFIX = "gov:";
+    public static final String LOCAL_REGISTRY_PATH = "registry/local";
+    public static final String LOCAL_REGISTRY_PREFIX = "local:";
+    public static final String DEFAULT_MEDIA_TYPE = "text/plain";
+    public static final String MEDIA_TYPE_KEY = "mediaType";
+    public static final String PROPERTY_EXTENSION = ".properties";
+    public static final String VALUE_KEY = "value";
+    public static final String REGISTRY_RESOURCE_NAME = "registryResourceName";
+    public static final String REGISTRY_PROPERTY_NAME = "propertyName";
+    public static final String FILE = "file";
+    public static final int MAXIMUM_RETRY_COUNT = 5;
+
 }
