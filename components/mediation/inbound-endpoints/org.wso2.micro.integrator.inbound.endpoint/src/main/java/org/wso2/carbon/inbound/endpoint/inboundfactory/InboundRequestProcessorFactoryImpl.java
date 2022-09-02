@@ -94,6 +94,9 @@ public class InboundRequestProcessorFactoryImpl implements InboundRequestProcess
                 case httpswss:
                     inboundRequestProcessor = new InboundHttpsSecureWebsocketListener(params);
                     break;
+                case grpc:
+                    inboundRequestProcessor = new InboundGRPCListener(params);
+                    break;
             }
         } else if (params.getClassImpl() != null) {
             if (GenericInboundListener.isListeningInboundEndpoint(params)) {
