@@ -87,6 +87,7 @@
             <class name="org.wso2.carbon.esb.jms.transport.test.JMSClientAndRestServiceTestCase"/>
             <class name="org.wso2.carbon.esb.jms.transport.test.JMSEndpointSuspensionTestCase"/>
             <class name="org.wso2.carbon.esb.jms.transport.test.JMSEndpointTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSBlockingCallWithToHeaderTestCase"/>
             <class name="org.wso2.carbon.esb.jms.transport.test.JMSMapMessageTestCase"/>
             <class name="org.wso2.carbon.esb.jms.transport.test.JMSMessageProcessorTestCase"/>
             <class name="org.wso2.carbon.esb.jms.transport.test.JMSMessageStoreProcRESTTestCase"/>
