@@ -113,7 +113,7 @@ public class LoggingResource extends APIResource {
                 }
             } else {
                 try {
-                    if (Objects.nonNull(searchKey)){
+                    if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                         getAllLoggerDetails(messageContext, searchKey.toLowerCase());
                     } else {
                         getAllLoggerDetails(messageContext);

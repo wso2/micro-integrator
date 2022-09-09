@@ -97,7 +97,7 @@ public class MessageProcessorResource extends APIResource {
 
             if (Objects.nonNull(nameParameter)) {
                 populateMessageProcessorData(messageContext, nameParameter);
-            } else if (Objects.nonNull(searchKey)){
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateMessageProcessorList(messageContext);

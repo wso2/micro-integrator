@@ -90,7 +90,7 @@ public class TemplateResource extends APIResource {
                 } else {
                     populateTemplateListByType(messageContext, templateTypeParam);
                 }
-            } else if (Objects.nonNull(searchKey)) {
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateFullTemplateList(messageContext);

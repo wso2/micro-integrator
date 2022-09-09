@@ -74,7 +74,7 @@ public class SequenceResource extends APIResource {
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(seqName)) {
                 populateSequenceData(messageContext, seqName);
-            } else if (Objects.nonNull(searchKey)){
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateSequenceList(messageContext);

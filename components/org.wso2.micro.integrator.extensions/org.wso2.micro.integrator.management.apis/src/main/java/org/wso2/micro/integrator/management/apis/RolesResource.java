@@ -25,20 +25,19 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
-import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONObject;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
-import scala.actors.threadpool.Arrays;
 
 import java.io.IOException;
 
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.*;
 
@@ -85,7 +84,7 @@ public class RolesResource implements MiApiResource {
             switch (httpMethod) {
                 case Constants.HTTP_GET: {
                     String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
-                    if (Objects.nonNull(searchKey)){
+                    if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                         response = populateSearchResults(messageContext, searchKey.toLowerCase());
                     } else {
                         response = handleGet(messageContext);

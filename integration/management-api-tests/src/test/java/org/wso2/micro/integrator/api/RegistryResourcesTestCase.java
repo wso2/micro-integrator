@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.api;
 
 import org.apache.http.HttpResponse;
 import org.awaitility.Awaitility;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -234,20 +235,18 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
                 + "registry-resources";
         String registryPath = "registry";
         String queryParameters = "?path=" + registryPath + "&searchKey=test-text";
-        String expected = "{\"name\":\"testFolder\",\n"
-                + "\"files\":[\n"
-                + "    {\"name\":\"test-text-delete.txt\",\"files\":[],\"type\":\"testMediaType\"},\n"
-                + "    {\"name\":\"test-text.txt\",\"files\":[],\"type\":\"testMediaType\"},\n"
-                + "    \"type\":\"directory\"}],\n"
-                + "\"type\":\"directory\"}";
 
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
                 response.getStatusLine().getStatusCode() + " returned.");
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertTrue(jsonResponse.get("list").toString().contains(expected));
+        JSONObject jsonResponse = new JSONObject(responsePayload).getJSONObject("list");
+        Assert.assertTrue(jsonResponse.get("name").toString().contains("registry"));
+        JSONArray filesArray = jsonResponse.getJSONArray("files");
+        Assert.assertTrue(filesArray.getJSONObject(0).get("name").toString().contains("config"));
+        Assert.assertTrue(filesArray.getJSONObject(0).getJSONArray("files").getJSONObject(0)
+                .get("name").toString().contains("testFolder"));
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry metadata")
@@ -646,24 +645,18 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
                 + "registry-resources";
         String registryPath = "registry/config/testFolder";
         String queryParameters = "?path=" + registryPath + "&expand=true";
-        String expected = "{\"name\":\"testFolder\",\n"
-                + "\"files\":[\n"
-                + "    {\"name\":\"test-json.json\",\"files\":[],\"type\":\"text/plain\"},\n"
-                + "    {\"name\":\"test-text.txt\",\"files\":[],\"type\":\"testMediaType\"},\n"
-                + "    {\"name\":\"test-empty.txt\",\"files\":[],\"type\":\"text/plain\"},\n"
-                + "    {\"name\":\"testSubFolder\",\n"
-                + "    \"files\":[\n"
-                + "        {\"name\":\"test-xml.xml\",\"files\":[],\"type\":\"application/xml\"}],\n"
-                + "    \"type\":\"directory\"}],\n"
-                + "\"type\":\"directory\"}";
 
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint + queryParameters, getHeaderMap());
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
                 response.getStatusLine().getStatusCode() + " returned.");
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        JSONAssert.assertEquals(expected, jsonResponse.toString(), false);
+        JSONObject jsonResponse = new JSONObject(responsePayload).getJSONObject("list");
+        Assert.assertTrue(jsonResponse.get("name").toString().contains("testFolder"));
+        JSONArray filesArray = jsonResponse.getJSONArray("files");
+        Assert.assertEquals(filesArray.length(), 4);
+        Assert.assertTrue(filesArray.getJSONObject(0).get("name").toString().contains("test-json.json"));
+        Assert.assertTrue(filesArray.getJSONObject(1).get("name").toString().contains("test-text.txt"));
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test error - deleting non existing registry")

@@ -1304,21 +1304,19 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             String[] childNodes = node.list();
             if (childNodes != null) {
                 for (String childNode : childNodes) {
-                    System.out.println("child node : " + childNode);
                     if (isNodeNotRequiredToBeFetched(childNode)) {
                         JSONObject nodeJSONObject = new JSONObject();
                         File childFile = new File(node, childNode);
                         addNodesToJSON(searchKey, childFile, nodeJSONObject);
-                        if(nodeJSONObject.has(NAME_KEY)) {
+                        if (nodeJSONObject.has(NAME_KEY)) {
                             childArray.put(nodeJSONObject);
                         }
-
                     } else if (childNode.endsWith(PROPERTY_EXTENTION)) {
                         String propertyOwner = childNode.replace(PROPERTY_EXTENTION, "");
                         if (propertyOwner.toLowerCase().contains(searchKey)) {
                             if (!Arrays.asList(childNodes).contains(propertyOwner)) {
                                 JSONObject nodeJSONObject = new JSONObject();
-                                nodeJSONObject.put(NAME_KEY, propertyOwner);
+                                nodeJSONObject.put(NAME_KEY, childNode);
                                 nodeJSONObject.put(TYPE_KEY, PROPERTY_FILE_VALUE);
                                 nodeJSONObject.put(CHILD_FILES_LIST_KEY, Collections.<String>emptyList());
                                 childArray.put(nodeJSONObject);
@@ -1333,7 +1331,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                 jsonObject.put(CHILD_FILES_LIST_KEY, childArray);
             }
 
-        } else if(nodeName.toLowerCase().contains(searchKey)) {
+        } else if (nodeName.toLowerCase().contains(searchKey)) {
             String mediaType = DEFAULT_MEDIA_TYPE;
             Properties metadata = getMetadata(formatPath(node.getPath()));
             if (metadata != null) {
@@ -1447,7 +1445,6 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                         childJSONObject.put(NAME_KEY, childFile.getName());
 
                         String childPath = getChildPath(formatPath(childFile.getPath()), carbonHomePath);
-                        System.out.println("child path in imediatechild : " + childPath);
                         Properties properties = getResourceProperties((childPath));
                         JSONArray propertiesJSONArray = new JSONArray();
                         if (properties != null) {

@@ -122,7 +122,7 @@ public class CarbonAppResource extends APIResource {
                     } else {
                         populateCarbonAppData(messageContext, param);
                     }
-                } else if (Objects.nonNull(searchKey)){
+                } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                     populateSearchResults(messageContext, searchKey.toLowerCase());
                 } else {
                     populateCarbonAppList(messageContext);

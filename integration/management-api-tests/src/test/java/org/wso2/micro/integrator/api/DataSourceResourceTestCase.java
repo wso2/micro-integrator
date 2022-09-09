@@ -50,11 +50,15 @@ public class DataSourceResourceTestCase extends ESBIntegrationTest {
             Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
                     until(isManagementApiAvailable());
         }
+        String accessToken = TokenUtil.getAccessToken(hostName, portOffset);
+        Assert.assertNotNull(accessToken);
+
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
+        headers.put("Authorization", "Bearer " + accessToken);
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "data-sources?name=MySQLConnection1";
+                + "data-sources?name=MySQLConnection2";
         SimpleHttpClient client = new SimpleHttpClient();
         HttpResponse response = client.doGet(endpoint, headers);
         String responsePayload = client.getResponsePayload(response);
@@ -89,7 +93,7 @@ public class DataSourceResourceTestCase extends ESBIntegrationTest {
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
         JSONObject jsonResponse = new JSONObject(responsePayload);
         Assert.assertEquals(jsonResponse.get("count"), 1);
-        Assert.assertTrue(jsonResponse.get("list").toString().contains("MySQLConnection"));
+        Assert.assertTrue(jsonResponse.get("list").toString().contains("MySQLConnection2"));
     }
 
     @AfterClass(alwaysRun = true)

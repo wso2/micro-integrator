@@ -63,7 +63,7 @@ public class CarbonAppResourceTestCase extends ESBIntegrationTest {
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("count"), 3);
+        Assert.assertEquals(jsonResponse.get("count"), 4);
         Assert.assertTrue(jsonResponse.get("list").toString().contains("FaultyCAppCompositeExporter"));
         Assert.assertTrue(jsonResponse.get("list").toString().contains("hello-worldCompositeExporter"));
     }

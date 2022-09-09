@@ -87,7 +87,7 @@ public class LogFilesResource extends APIResource {
 
         if (StringUtils.isNotEmpty(pathParameter)) {
             populateFileContent(messageContext, pathParameter);
-        } else if (Objects.nonNull(searchKey)){
+        } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
             populateSearchResults(messageContext, searchKey.toLowerCase());
         } else {
             populateLogFileInfo(messageContext);

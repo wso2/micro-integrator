@@ -90,7 +90,7 @@ public class ConnectorResource implements MiApiResource {
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(connectorName)) {
                 populateConnectorData(axis2MessageContext, synapseConfiguration, connectorName);
-            } else if (Objects.nonNull(searchKey)){
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateConnectorList(messageContext, synapseConfiguration);

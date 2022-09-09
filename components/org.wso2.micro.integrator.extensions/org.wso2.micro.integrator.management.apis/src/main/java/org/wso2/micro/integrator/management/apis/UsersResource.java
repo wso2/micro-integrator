@@ -78,7 +78,7 @@ public class UsersResource extends UserResource {
             switch (httpMethod) {
                 case Constants.HTTP_GET: {
                     String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
-                    if (Objects.nonNull(searchKey)){
+                    if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                         response = populateSearchResults(messageContext, searchKey.toLowerCase());
                     } else {
                         response = handleGet(messageContext);

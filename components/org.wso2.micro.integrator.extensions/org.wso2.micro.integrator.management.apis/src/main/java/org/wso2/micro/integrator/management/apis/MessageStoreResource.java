@@ -87,7 +87,7 @@ public class MessageStoreResource implements MiApiResource {
 
         if (Objects.nonNull(messageStoreName)) {
             populateMessageStoreData(axis2MessageContext, synapseConfiguration, messageStoreName);
-        } else if (Objects.nonNull(searchKey)){
+        } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
             populateSearchResults(messageContext, searchKey.toLowerCase());
         } else {
             populateMessageStoreList(messageContext, synapseConfiguration);

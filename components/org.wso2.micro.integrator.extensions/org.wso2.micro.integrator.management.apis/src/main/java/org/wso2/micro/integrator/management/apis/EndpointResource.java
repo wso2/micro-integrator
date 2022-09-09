@@ -83,7 +83,7 @@ public class EndpointResource implements MiApiResource {
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(endpointName)) {
                 populateEndpointData(messageContext, endpointName);
-            } else if (Objects.nonNull(searchKey)){
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateEndpointList(messageContext, synapseConfiguration);

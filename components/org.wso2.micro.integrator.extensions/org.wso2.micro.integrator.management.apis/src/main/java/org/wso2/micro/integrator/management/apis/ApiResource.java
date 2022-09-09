@@ -84,7 +84,7 @@ public class ApiResource extends APIResource {
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(apiName)) {
                 populateApiData(messageContext, apiName);
-            } else if (Objects.nonNull(searchKey)){
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateApiList(messageContext);

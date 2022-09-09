@@ -98,7 +98,7 @@ public class DataSourceResource implements MiApiResource {
                     LOG.debug("Handling " + httpMethod + " request for " + datasourceName);
                 }
                 response = getDatasourceInformation(axis2MessageContext, dataSourceRepository, datasourceName);
-            } else if (Objects.nonNull(searchKey)){
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 response = populateSearchResults(dataSourceRepository, searchKey.toLowerCase());
             } else {
                 if (LOG.isDebugEnabled()) {

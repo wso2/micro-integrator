@@ -75,7 +75,7 @@ public class TaskResource extends APIResource {
 
         if (Objects.nonNull(param)) {
             populateTaskData(messageContext, param);
-        } else if (Objects.nonNull(searchKey)){
+        } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
             populateSearchResults(messageContext, searchKey.toLowerCase());
         } else {
             populateTasksList(messageContext);

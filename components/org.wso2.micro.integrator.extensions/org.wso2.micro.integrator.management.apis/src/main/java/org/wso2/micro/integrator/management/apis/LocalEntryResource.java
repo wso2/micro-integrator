@@ -79,7 +79,7 @@ public class LocalEntryResource implements MiApiResource {
         try {
             if (Objects.nonNull(entryKey)) {
                 populateLocalEntryData(axis2MessageContext, synapseConfiguration, entryKey);
-            } else if (Objects.nonNull(searchKey)) {
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateLocalEntries(axis2MessageContext, synapseConfiguration);

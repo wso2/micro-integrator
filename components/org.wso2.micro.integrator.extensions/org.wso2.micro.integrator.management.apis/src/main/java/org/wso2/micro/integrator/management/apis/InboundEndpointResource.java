@@ -73,7 +73,7 @@ public class InboundEndpointResource extends APIResource {
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(inboundName)) {
                 populateInboundEndpointData(messageContext, inboundName);
-            } else if (Objects.nonNull(searchKey)){
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateInboundEndpointList(messageContext);

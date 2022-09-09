@@ -87,7 +87,7 @@ public class DataServiceResource extends APIResource {
             if (param != null) {
                 // data-service specified by name
                 populateDataServiceByName(messageContext, param);
-            } else if (Objects.nonNull(searchKey)){
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
                 populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 // list of all data-services

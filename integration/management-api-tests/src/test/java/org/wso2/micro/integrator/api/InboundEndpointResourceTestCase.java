@@ -46,8 +46,8 @@ public class InboundEndpointResourceTestCase extends ESBIntegrationTest {
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("count"), 2);
-        Assert.assertTrue(jsonResponse.get("list").toString().contains("HttpListenerEP1"));
+        Assert.assertEquals(jsonResponse.get("count"), 1);
+        Assert.assertTrue(jsonResponse.get("list").toString().contains("HL7_Inbound"));
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test get Inbound Endpoints resource for search key")
@@ -66,7 +66,7 @@ public class InboundEndpointResourceTestCase extends ESBIntegrationTest {
         headers.put("Authorization", "Bearer " + accessToken);
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "inbound-endpoints?searchKey=test";
+                + "inbound-endpoints?searchKey=HL7_";
 
         SimpleHttpClient client = new SimpleHttpClient();
 
