@@ -50,7 +50,7 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.Objects;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 public class ApiResource extends APIResource {
 
@@ -95,7 +95,7 @@ public class ApiResource extends APIResource {
         return true;
     }
 
-    private static List<API> getSearchResults(MessageContext messageContext, String searchKey){
+    private static List<API> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
         List <API>searchResultList = configuration.getAPIs().stream()
                 .filter(artifact -> artifact.getAPIName().toLowerCase().contains(searchKey))
@@ -108,13 +108,11 @@ public class ApiResource extends APIResource {
         setResponseBody(searchResultList, messageContext);
     }
 
-    private void setResponseBody(Collection<API> resultList, MessageContext messageContext){
+    private void setResponseBody(Collection<API> resultList, MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
         JSONObject jsonBody = Utils.createJSONList(resultList.size());
-
         for (API api: resultList) {
             JSONObject apiObject = new JSONObject();
             String apiUrl = getApiUrl(api, messageContext);
@@ -164,7 +162,7 @@ public class ApiResource extends APIResource {
 
         Collection<API> apis = configuration.getAPIs();
 
-        setResponseBody(apis,messageContext);
+        setResponseBody(apis, messageContext);
 
     }
 

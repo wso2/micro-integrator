@@ -654,7 +654,8 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         JSONObject jsonResponse = new JSONObject(responsePayload).getJSONObject("list");
         Assert.assertTrue(jsonResponse.get("name").toString().contains("testFolder"));
         JSONArray filesArray = jsonResponse.getJSONArray("files");
-        Assert.assertEquals(filesArray.length(), 4);
+        Assert.assertEquals(filesArray.length(), 4, "Assert Failed due to the mismatch of " +
+                "actual vs expected resource count");
         Assert.assertTrue(filesArray.getJSONObject(0).get("name").toString().contains("test-json.json"));
         Assert.assertTrue(filesArray.getJSONObject(1).get("name").toString().contains("test-text.txt"));
     }

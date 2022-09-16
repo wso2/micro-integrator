@@ -45,7 +45,11 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
+import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.TRACING;
 
 
 public class EndpointResource implements MiApiResource {
@@ -110,18 +114,16 @@ public class EndpointResource implements MiApiResource {
     }
 
     private static List<Endpoint> getSearchResults(MessageContext messageContext, String searchKey) {
-        SynapseConfiguration configuration = messageContext.getConfiguration();
-        List<Endpoint> searchResultList = configuration.getDefinedEndpoints().values().stream()
+        return messageContext.getConfiguration().getDefinedEndpoints().values().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-
-        return searchResultList;
     }
-    private void populateSearchResults(MessageContext messageContext, String searchKey) {
 
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
         List<Endpoint> searchResultList = getSearchResults(messageContext, searchKey);
         setResponseBody(searchResultList, messageContext);
     }
+
     private void handleTracing(String performedBy, JsonObject payload, MessageContext msgCtx,
                                org.apache.axis2.context.MessageContext axisMsgCtx) {
 
@@ -154,7 +156,7 @@ public class EndpointResource implements MiApiResource {
         setResponseBody(namedEndpointCollection, messageContext);
     }
 
-    private void setResponseBody(Collection<Endpoint> namedEndpointCollection, MessageContext messageContext){
+    private void setResponseBody(Collection<Endpoint> namedEndpointCollection, MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();

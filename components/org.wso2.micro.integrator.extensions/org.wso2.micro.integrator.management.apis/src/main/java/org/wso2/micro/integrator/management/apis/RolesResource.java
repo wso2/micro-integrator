@@ -39,7 +39,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
+import static org.wso2.micro.integrator.management.apis.Constants.DOMAIN;
+import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
+import static org.wso2.micro.integrator.management.apis.Constants.LIST;
+import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
+import static org.wso2.micro.integrator.management.apis.Constants.ROLE;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
+import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.USER_ID;
 
 /**
  * This resource will handle requests coming to roles/.
@@ -85,9 +93,9 @@ public class RolesResource implements MiApiResource {
                 case Constants.HTTP_GET: {
                     String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
                     if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
-                        response = populateSearchResults(messageContext, searchKey.toLowerCase());
+                        response = populateSearchResults(searchKey.toLowerCase());
                     } else {
-                        response = handleGet(messageContext);
+                        response = handleGet();
                     }
                     break;
                 }
@@ -119,16 +127,12 @@ public class RolesResource implements MiApiResource {
         return true;
     }
 
-    protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException {
-        if (!Utils.isUserAuthenticated(messageContext)) {
-            LOG.warn("Listing user roles without authenticating/authorizing the request sender. Adding "
-                    + "authentication and authorization handlers is recommended.");
-        }
+    protected JSONObject handleGet() throws UserStoreException {
         String[] roles = Utils.getUserStore(null).getRoleNames();
         return setResponseBody(Arrays.asList(roles));
     }
 
-    private JSONObject setResponseBody(List<String> roles){
+    private JSONObject setResponseBody(List<String> roles) {
 
         JSONObject jsonBody = Utils.createJSONList(roles.size());
         for (String role : roles) {
@@ -139,11 +143,7 @@ public class RolesResource implements MiApiResource {
         return jsonBody;
     }
 
-    private static List<String> getSearchResults(MessageContext messageContext, String searchKey) throws UserStoreException {
-        if (!Utils.isUserAuthenticated(messageContext)) {
-            LOG.warn("Listing user roles without authenticating/authorizing the request sender. Adding "
-                    + "authentication and authorization handlers is recommended.");
-        }
+    private static List<String> getSearchResults(String searchKey) throws UserStoreException {
         String[] roles = Utils.getUserStore(null).getRoleNames();
         List<String> searchResults = new ArrayList<>();
 
@@ -155,9 +155,9 @@ public class RolesResource implements MiApiResource {
         return searchResults;
     }
 
-    protected JSONObject populateSearchResults(MessageContext messageContext, String searchKey) throws UserStoreException {
+    protected JSONObject populateSearchResults(String searchKey) throws UserStoreException {
 
-        List<String> roles = getSearchResults(messageContext, searchKey);
+        List<String> roles = getSearchResults(searchKey);
         return setResponseBody(roles);
     }
 

@@ -46,23 +46,8 @@ public class DataSourceResourceTestCase extends ESBIntegrationTest {
      */
     @Test(groups = {"wso2.esb"}, description = "Test get data source info")
     public void retrieveDataSourceInfo() throws IOException {
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
-                    until(isManagementApiAvailable());
-        }
-        String accessToken = TokenUtil.getAccessToken(hostName, portOffset);
-        Assert.assertNotNull(accessToken);
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Accept", "application/json");
-        headers.put("Authorization", "Bearer " + accessToken);
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "data-sources?name=MySQLConnection2";
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doGet(endpoint, headers);
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        String responsePayload = sendHttpRequestAndGetPayload("MySQLConnection2", null);
         JSONObject jsonResponse = new JSONObject(responsePayload);
         String datasourceType = jsonResponse.get("type").toString();
         Assert.assertEquals(datasourceType, "RDBMS");
@@ -71,29 +56,37 @@ public class DataSourceResourceTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Test get data-source resource for search key")
     public void retrieveSearchedDataSources() throws IOException {
 
+        String responsePayload = sendHttpRequestAndGetPayload(null, "MYSQL");
+        JSONObject jsonResponse = new JSONObject(responsePayload);
+        Assert.assertEquals(jsonResponse.get("count"), 1, "Assert Failed due to the mismatch of " +
+                "actual vs expected resource count");
+        Assert.assertTrue(jsonResponse.get("list").toString().contains("MySQLConnection2"), "Assert failed " +
+                "since expected resource name not found in the list");
+    }
+
+    private String sendHttpRequestAndGetPayload(String name, String searchKey) throws IOException {
+
         if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+            Awaitility.await().pollInterval(100, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
                     until(isManagementApiAvailable());
         }
-
         String accessToken = TokenUtil.getAccessToken(hostName, portOffset);
         Assert.assertNotNull(accessToken);
-
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         headers.put("Authorization", "Bearer " + accessToken);
-
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
-                + "data-sources?searchKey=MYSQL";
-
+        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/data-sources";
+        if (name != null) {
+            endpoint = endpoint.concat("?name=").concat(name);
+        }
+        if (searchKey != null) {
+            endpoint = endpoint.concat("?searchKey=").concat(searchKey);
+        }
         SimpleHttpClient client = new SimpleHttpClient();
-
         HttpResponse response = client.doGet(endpoint, headers);
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("count"), 1);
-        Assert.assertTrue(jsonResponse.get("list").toString().contains("MySQLConnection2"));
+        return responsePayload;
     }
 
     @AfterClass(alwaysRun = true)

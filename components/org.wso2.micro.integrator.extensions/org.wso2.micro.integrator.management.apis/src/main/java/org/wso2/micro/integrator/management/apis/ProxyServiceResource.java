@@ -44,7 +44,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.NAME;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
+import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 public class ProxyServiceResource extends APIResource {
 
@@ -119,7 +124,7 @@ public class ProxyServiceResource extends APIResource {
         return true;
     }
 
-    private static List<ProxyService> getSearchResults(MessageContext messageContext, String searchKey){
+    private static List<ProxyService> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
         List<ProxyService> searchResultList = configuration.getProxyServices().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
@@ -129,36 +134,25 @@ public class ProxyServiceResource extends APIResource {
     }
 
     private void populateSearchResults(MessageContext messageContext, String searchKey) {
-
         List<ProxyService> searchResultList = getSearchResults(messageContext, searchKey);
         setResponseBody(searchResultList, messageContext);
     }
 
-    private void setResponseBody(Collection<ProxyService> proxyServices, MessageContext messageContext){
-
+    private void setResponseBody(Collection<ProxyService> proxyServices, MessageContext messageContext) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
         JSONObject jsonBody = Utils.createJSONList(proxyServices.size());
-
         for (ProxyService proxyService : proxyServices) {
-
             JSONObject proxyObject = new JSONObject();
-
             try {
-
                 ServiceMetaData data = serviceAdmin.getServiceData(proxyService.getName());
-
                 proxyObject.put(Constants.NAME, proxyService.getName());
-
                 String[] wsdlUrls = data.getWsdlURLs();
                 proxyObject.put("wsdl1_1", wsdlUrls[0]);
                 proxyObject.put("wsdl2_0", wsdlUrls[1]);
-
             } catch (Exception e) {
                 LOG.error("Error occurred while processing service data", e);
             }
-
             jsonBody.getJSONArray(Constants.LIST).put(proxyObject);
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
@@ -166,7 +160,6 @@ public class ProxyServiceResource extends APIResource {
 
     private void handleTracing(String performedBy, JSONObject info, JsonObject payload, MessageContext msgCtx,
                                org.apache.axis2.context.MessageContext axisMsgCtx) {
-
         JSONObject response;
         if (payload.has(NAME)) {
             String proxyName = payload.get(NAME).getAsString();
@@ -189,9 +182,7 @@ public class ProxyServiceResource extends APIResource {
     private void populateProxyServiceList(MessageContext messageContext) {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
-
         Collection<ProxyService> proxyServices = configuration.getProxyServices();
-
         setResponseBody(proxyServices, messageContext);
     }
 

@@ -47,7 +47,9 @@ import java.util.Objects;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.NO_ENTITY_BODY;
+import static org.wso2.micro.integrator.management.apis.Constants.ROOT_LOGGER;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 public class LoggingResource extends APIResource {
 
@@ -277,15 +279,12 @@ public class LoggingResource extends APIResource {
     private static String[] getAllLoggers() throws IOException {
         //along with root logger
         String[] loggers = getLoggers().split(",");
-
         // add root logger
         int fullLength = loggers.length + 1;
         String[] allLoggers = new String[fullLength];
-
         allLoggers[0] = ROOT_LOGGER;
-
-        for(int i = 1; i<fullLength; i++){
-            allLoggers[i] = loggers[i-1];
+        for (int i = 1; i < fullLength; i++) {
+            allLoggers[i] = loggers[i - 1];
         }
         return allLoggers;
     }
@@ -312,7 +311,7 @@ public class LoggingResource extends APIResource {
     }
 
 
-    private void setResponseBody(List<String> logConfigsList, MessageContext messageContext){
+    private void setResponseBody(List<String> logConfigsList, MessageContext messageContext) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 

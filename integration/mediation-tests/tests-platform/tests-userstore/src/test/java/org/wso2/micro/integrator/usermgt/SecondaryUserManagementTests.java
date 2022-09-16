@@ -187,19 +187,20 @@ public class SecondaryUserManagementTests extends ESBIntegrationTest {
         Assert.assertEquals(successResponse.getString("status"), "Added",
                 "Invalid response received " + successResponse);
     }
-    @Test(dependsOnMethods = "testAddRoleToSecondary")
-    public void testGetExistingRoles() throws Exception {
-        String roles = getSearchedRoles("wso2role");
+    @Test (dependsOnMethods = "testVerifyDeletedRole")
+    public void testGetSearchedRoles() throws Exception {
+        String roles = getSearchedRoles("admin");
         JSONObject rolesJson = new JSONObject(roles);
         String errorMessageOnAssertionFailure = "Received response" + roles;
         //Assert role count
         Assert.assertEquals(rolesJson.get("count"), 1, errorMessageOnAssertionFailure);
         //Assert role details
         Assert.assertEquals((rolesJson.getJSONArray("list")).length(), 1, errorMessageOnAssertionFailure);
-        Assert.assertTrue(roles.contains("{\"role\":\"wso2Role\"}"), "Could not find the wso2Role role");
+        Assert.assertEquals((rolesJson.getJSONArray("list")).getJSONObject(0).get(ROLE), "admin",
+                errorMessageOnAssertionFailure);
     }
 
-    @Test(dependsOnMethods = "testAddRoleToSecondary")
+    @Test(dependsOnMethods = "testGetSearchedRoles")
     public void testAddUserToSecondary() throws Exception {
         String response = addValidUser(SECONDARY_USER_ID, "adminpwd", false, SECONDARY_DOMAIN);
         JSONObject successResponse = new JSONObject(response);

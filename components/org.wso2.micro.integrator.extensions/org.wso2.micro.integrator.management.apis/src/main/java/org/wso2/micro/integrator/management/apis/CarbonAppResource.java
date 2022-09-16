@@ -67,7 +67,10 @@ import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 import javax.xml.namespace.QName;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
+import static org.wso2.micro.integrator.management.apis.Constants.LIST;
+import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 public class CarbonAppResource extends APIResource {
 
@@ -75,7 +78,6 @@ public class CarbonAppResource extends APIResource {
     private static final String MULTIPART_FORMDATA_DATA_TYPE = "multipart/form-data";
     private static final String CAPP_NAME = "name";
     private static final String CAPP_FILE_NAME = "cAppFileName";
-
     // HTTP method types supported by the resource
     private Set<String> methods;
 
@@ -113,7 +115,6 @@ public class CarbonAppResource extends APIResource {
             case Constants.HTTP_GET: {
                 String param = Utils.getQueryParameter(messageContext, "carbonAppName");
                 String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
-
                 if (Objects.nonNull(param)) {
                     String acceptHeader = (String) SecurityUtils.getHeaders(axis2MessageContext)
                                                                 .get(HTTPConstants.HEADER_ACCEPT);
@@ -154,20 +155,17 @@ public class CarbonAppResource extends APIResource {
         List<CarbonApplication> appList
                 = CappDeployer.getCarbonApps().stream().filter(capp -> capp.getAppName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-
-        List<CarbonApplication> faultyAppList = CappDeployer.getFaultyCAppObjects().stream().filter(capp -> capp.getAppName().toLowerCase().contains(searchKey))
-                .collect(Collectors.toList());
-
+        List<CarbonApplication> faultyAppList = CappDeployer.getFaultyCAppObjects().stream()
+                .filter(capp -> capp.getAppName().toLowerCase().contains(searchKey)).collect(Collectors.toList());
         setResponseBody(appList, faultyAppList, messageContext);
     }
 
-    private void setResponseBody(Collection<CarbonApplication> appList, Collection<CarbonApplication> faultyAppList, MessageContext messageContext) {
-
+    private void setResponseBody(Collection<CarbonApplication> appList, Collection<CarbonApplication> faultyAppList,
+                                 MessageContext messageContext) {
         JSONObject jsonBody;
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
-        if(appList == null) {
+        if (appList == null) {
             jsonBody = new JSONObject();
             jsonBody.put("error", "Error while getting the Carbon Application List");
         } else if (faultyAppList == null) {
@@ -176,13 +174,10 @@ public class CarbonAppResource extends APIResource {
         } else {
             int listLength = appList.size() + faultyAppList.size();
             jsonBody = Utils.createJSONList(listLength);
-
             for (CarbonApplication app : appList) {
-
                 JSONObject appObject = convertCarbonAppToJsonObject(app);
                 jsonBody.getJSONArray(LIST).put(appObject);
             }
-
             for (CarbonApplication faultyApp : faultyAppList) {
 
                 JSONObject appObject = convertCarbonAppToJsonObject(faultyApp);

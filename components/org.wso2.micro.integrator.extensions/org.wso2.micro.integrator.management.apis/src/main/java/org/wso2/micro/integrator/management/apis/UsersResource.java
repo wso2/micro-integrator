@@ -39,8 +39,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.Arrays;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
-
+import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
+import static org.wso2.micro.integrator.management.apis.Constants.DOMAIN;
+import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
+import static org.wso2.micro.integrator.management.apis.Constants.LIST;
+import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
+import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD;
+import static org.wso2.micro.integrator.management.apis.Constants.PATTERN;
+import static org.wso2.micro.integrator.management.apis.Constants.ROLE;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
+import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
 /**
  * Resource for a retrieving and adding users.
  * <p>
@@ -155,11 +163,10 @@ public class UsersResource extends UserResource {
         List<String> users = getUserResults(messageContext).stream()
                 .filter(name -> name.toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-
         return setResponseBody(users);
     }
 
-    private JSONObject setResponseBody(List<String> users){
+    private JSONObject setResponseBody(List<String> users) {
         JSONObject jsonBody = Utils.createJSONList(users.size());
         for (String user : users) {
             JSONObject userObject = new JSONObject();

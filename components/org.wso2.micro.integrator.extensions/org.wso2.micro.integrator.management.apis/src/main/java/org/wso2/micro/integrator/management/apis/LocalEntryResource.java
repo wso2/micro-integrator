@@ -40,7 +40,8 @@ import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.LIST;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 /**
  * This class provides mechanisms to monitor local entries deployed.
@@ -84,12 +85,13 @@ public class LocalEntryResource implements MiApiResource {
             } else {
                 populateLocalEntries(axis2MessageContext, synapseConfiguration);
             }
+            axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+            return true;
         } catch (AxisFault e) {
             LOG.error("Error while populating service: ", e);
             messageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
         }
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
-        return true;
+        return false;
     }
 
     private static List<Entry> getSearchResults(MessageContext messageContext, String searchKey) throws AxisFault {
@@ -105,17 +107,14 @@ public class LocalEntryResource implements MiApiResource {
         setResponseBody(searchResultList, messageContext);
     }
 
-    private void setResponseBody(Collection<Entry> entriesCollection, MessageContext messageContext){
+    private void setResponseBody(Collection<Entry> entriesCollection, MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
         JSONObject jsonBody = Utils.createJSONList(entriesCollection.size() - 2);
-
         for (Entry entry : entriesCollection) {
             JSONObject entryObject =  getLocalEntryAsJson(entry);
             jsonBody.getJSONArray(LIST).put(entryObject);
-            //addLocalEntryToJsonList(entry, jsonBody.getJSONArray(Constants.LIST));
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }

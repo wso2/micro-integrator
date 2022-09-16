@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 import java.util.Iterator;
 import javax.xml.namespace.QName;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 public class TaskResource extends APIResource {
 
@@ -84,7 +84,7 @@ public class TaskResource extends APIResource {
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
-    private static List<Startup> getSearchResults(MessageContext messageContext, String searchKey){
+    private static List<Startup> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
         List<Startup> searchResultList = configuration.getStartups().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
@@ -97,7 +97,7 @@ public class TaskResource extends APIResource {
         setResponseBody(searchResultList, messageContext);
     }
 
-    private void setResponseBody(Collection<Startup> tasks, MessageContext messageContext){
+    private void setResponseBody(Collection<Startup> tasks, MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -114,7 +114,6 @@ public class TaskResource extends APIResource {
     private void populateTasksList(MessageContext messageContext) {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
-
         Collection<Startup> tasks = configuration.getStartups();
         setResponseBody(tasks, messageContext);
     }

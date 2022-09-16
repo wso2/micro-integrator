@@ -55,7 +55,7 @@ import java.util.Objects;
 
 import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 public class DataServiceResource extends APIResource {
 
@@ -75,30 +75,30 @@ public class DataServiceResource extends APIResource {
     }
 
     @Override
-    public boolean invoke(MessageContext messageContext) {
-        buildMessage(messageContext);
+    public boolean invoke(MessageContext msgCtx) {
+        buildMessage(msgCtx);
         if (serviceAdmin == null) {
-            serviceAdmin = Utils.getServiceAdmin(messageContext);
+            serviceAdmin = Utils.getServiceAdmin(msgCtx);
         }
-        String param = Utils.getQueryParameter(messageContext, "dataServiceName");
-        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+        String param = Utils.getQueryParameter(msgCtx, "dataServiceName");
+        String searchKey = Utils.getQueryParameter(msgCtx, SEARCH_KEY);
 
         try {
             if (param != null) {
                 // data-service specified by name
-                populateDataServiceByName(messageContext, param);
+                populateDataServiceByName(msgCtx, param);
             } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
-                populateSearchResults(messageContext, searchKey.toLowerCase());
+                populateSearchResults(msgCtx, searchKey.toLowerCase());
             } else {
                 // list of all data-services
-                populateDataServiceList(messageContext);
+                populateDataServiceList(msgCtx);
             }
         } catch (Exception exception) {
             log.error("Error while populating service: ", exception);
-            messageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
+            msgCtx.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
         }
 
-        org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) messageContext)
+        org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) msgCtx)
                 .getAxis2MessageContext();
 
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
@@ -142,7 +142,6 @@ public class DataServiceResource extends APIResource {
         SynapseConfiguration configuration = msgCtx.getConfiguration();
         AxisConfiguration axisConfiguration = configuration.getAxisConfiguration();
         List<String> dataServicesNames = Arrays.stream(DBUtils.getAvailableDS(axisConfiguration)).collect(Collectors.toList());
-
         setResponseBody(dataServicesNames, msgCtx);
     }
 

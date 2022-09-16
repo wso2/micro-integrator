@@ -42,7 +42,9 @@ import java.util.Objects;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD;
+import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD_MASKED_VALUE;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 /**
  * Represents Message store resource defined in the synapse configuration.
@@ -96,7 +98,7 @@ public class MessageStoreResource implements MiApiResource {
         return true;
     }
 
-    private static List<MessageStore> getSearchResults(MessageContext messageContext, String searchKey){
+    private static List<MessageStore> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
         List<MessageStore> searchResultList = configuration.getMessageStores().values().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
@@ -111,17 +113,14 @@ public class MessageStoreResource implements MiApiResource {
         setResponseBody(searchResultList, messageContext);
     }
 
-    private void setResponseBody(Collection<MessageStore> storeList, MessageContext messageContext){
+    private void setResponseBody(Collection<MessageStore> storeList, MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
         JSONObject jsonBody = Utils.createJSONList(storeList.size());
-
-        for (MessageStore store : storeList){
+        for (MessageStore store : storeList) {
             addToJsonList(jsonBody.getJSONArray(Constants.LIST), store);
         }
-
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 

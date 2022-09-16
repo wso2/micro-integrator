@@ -29,7 +29,11 @@ import java.util.Set;
 import java.util.Objects;
 import java.util.HashSet;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
+import static org.wso2.micro.integrator.management.apis.Constants.EXPAND_PARAM;
+import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_PATH;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
+import static org.wso2.micro.integrator.management.apis.Constants.VALUE_TRUE;
 import static org.wso2.micro.integrator.management.apis.Utils.formatPath;
 import static org.wso2.micro.integrator.management.apis.Utils.validatePath;
 
@@ -62,8 +66,8 @@ public class RegistryResource implements MiApiResource {
             axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
             return true;
         }
-        if(Objects.nonNull(searchKey)) {
-            if(searchKey.trim().isEmpty()) {
+        if (Objects.nonNull(searchKey)) {
+            if (searchKey.trim().isEmpty()) {
                 validatedPath = validatePath(registryPath, axis2MessageContext);
                 handleGet(messageContext, axis2MessageContext, validatedPath);
             } else {
@@ -95,8 +99,10 @@ public class RegistryResource implements MiApiResource {
     }
 
     /**
-     * This method is used to get the <MI-HOME>/registry directory and its content as a JSON.
+     * This method is used to get the <MI-HOME>/registry directory and its content which match with the search key,
+     * as a JSON.
      *
+     * @param searchKey String
      * @param axis2MessageContext     AXIS2 message context
      * @param microIntegratorRegistry Micro integrator registry
      */

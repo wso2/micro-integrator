@@ -48,7 +48,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.ITEM_TYPE_IMPORT;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 /**
  * API Resource to manage connectors deployed
@@ -136,18 +137,14 @@ public class ConnectorResource implements MiApiResource {
         setResponseBody(searchResultList, messageContext);
     }
 
-    private void setResponseBody(Collection<Library> libraryList, MessageContext messageContext){
-
+    private void setResponseBody(Collection<Library> libraryList, MessageContext messageContext) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
         JSONObject jsonBody = Utils.createJSONList(libraryList.size());
-
-        for(Library library : libraryList){
+        for (Library library : libraryList) {
             addToJsonList(jsonBody.getJSONArray(Constants.LIST), (SynapseLibrary) library);
         }
-
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
-
     }
     private void populateConnectorData(org.apache.axis2.context.MessageContext axis2MessageContext,
                                        SynapseConfiguration synapseConfiguration, String connectorName) {
@@ -155,7 +152,7 @@ public class ConnectorResource implements MiApiResource {
         Map<String, Library> libraries = synapseConfiguration.getSynapseLibraries();
 
         for (Map.Entry<String, Library> entry : libraries.entrySet()) {
-            if(((SynapseLibrary)entry.getValue()).getName().equals(connectorName)) {
+            if (((SynapseLibrary)entry.getValue()).getName().equals(connectorName)) {
                 SynapseLibrary connector = (SynapseLibrary)entry.getValue();
                 if (Objects.nonNull(connector)) {
                     Utils.setJsonPayLoad(axis2MessageContext, getConnectorAsJson(connector));
@@ -181,7 +178,6 @@ public class ConnectorResource implements MiApiResource {
      */
     private void populateConnectorList(MessageContext messageContext,
                                        SynapseConfiguration synapseConfiguration) {
-
         Map<String, Library> libraryMap = synapseConfiguration.getSynapseLibraries();
         Collection<Library> libraryList = libraryMap.values();
         setResponseBody(libraryList, messageContext);

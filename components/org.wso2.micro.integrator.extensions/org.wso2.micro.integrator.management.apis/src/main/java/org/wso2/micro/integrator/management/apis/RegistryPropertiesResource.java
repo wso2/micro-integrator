@@ -189,7 +189,7 @@ public class RegistryPropertiesResource implements MiApiResource {
                 }
             } else {
                 jsonBody = new JSONObject();
-                jsonBody.put(LIST,"Error while fetching properties");
+                jsonBody.put(LIST, "Error while fetching properties");
             }
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);

@@ -42,7 +42,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 public class DataSourceResource implements MiApiResource {
 
@@ -115,11 +115,9 @@ public class DataSourceResource implements MiApiResource {
 
     private static List<CarbonDataSource> getSearchResults(DataSourceRepository dataSourceRepository, String searchKey) {
         Collection<CarbonDataSource> datasources = dataSourceRepository.getAllDataSources();
-
         List<CarbonDataSource> searchResultList = datasources.stream()
                 .filter(artifact -> artifact.getDSMInfo().getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-
         return searchResultList;
     }
 
@@ -131,12 +129,9 @@ public class DataSourceResource implements MiApiResource {
      * @return JSONObject response
      */
     private JSONObject populateSearchResults(DataSourceRepository dataSourceRepository, String searchKey) {
-
         List<CarbonDataSource> resultsList = getSearchResults(dataSourceRepository, searchKey);
         JSONObject datasourceList = Utils.createJSONList(resultsList.size());
-
         resultsList.forEach((dataSource) -> addToJsonList(dataSource, datasourceList.getJSONArray(Constants.LIST)));
-
         return datasourceList;
     }
 

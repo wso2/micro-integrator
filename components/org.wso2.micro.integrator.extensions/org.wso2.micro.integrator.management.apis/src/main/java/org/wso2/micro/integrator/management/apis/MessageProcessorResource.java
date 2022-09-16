@@ -48,7 +48,11 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.NAME;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
+import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
 
 /**
  * Represents message processor resources defined in the synapse configuration.
@@ -122,7 +126,7 @@ public class MessageProcessorResource extends APIResource {
         return true;
     }
 
-    private static List<MessageProcessor> getSearchResults(MessageContext messageContext, String searchKey){
+    private static List<MessageProcessor> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
         List<MessageProcessor> searchResultList = configuration.getMessageProcessors().values().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
@@ -138,13 +142,13 @@ public class MessageProcessorResource extends APIResource {
         setResponseBody(searchResultList, messageContext);
     }
 
-    private void setResponseBody(Collection<MessageProcessor> processorList, MessageContext messageContext){
+    private void setResponseBody(Collection<MessageProcessor> processorList, MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
         JSONObject jsonBody = Utils.createJSONList(processorList.size());
 
-        for (MessageProcessor processor : processorList){
+        for (MessageProcessor processor : processorList) {
             addToJSONList(processor, jsonBody.getJSONArray(Constants.LIST));
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);

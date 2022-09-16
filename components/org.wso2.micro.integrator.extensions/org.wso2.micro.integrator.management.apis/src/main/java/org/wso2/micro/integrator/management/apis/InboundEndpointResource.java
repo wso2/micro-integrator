@@ -41,7 +41,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
+import static org.wso2.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 public class InboundEndpointResource extends APIResource {
 
@@ -139,7 +140,7 @@ public class InboundEndpointResource extends APIResource {
         Collection<InboundEndpoint> inboundEndpoints = configuration.getInboundEndpoints();
         setResponseBody(inboundEndpoints, messageContext);
     }
-    private void setResponseBody(Collection<InboundEndpoint> inboundEndpointCollection, MessageContext messageContext){
+    private void setResponseBody(Collection<InboundEndpoint> inboundEndpointCollection, MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();

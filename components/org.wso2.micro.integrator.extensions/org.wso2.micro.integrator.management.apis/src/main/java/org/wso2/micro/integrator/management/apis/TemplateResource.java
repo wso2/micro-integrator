@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.wso2.micro.integrator.management.apis.Constants.*;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 /**
  * Represents template resources defined in the synapse configuration.
@@ -75,25 +75,25 @@ public class TemplateResource extends APIResource {
     }
 
     @Override
-    public boolean invoke(MessageContext messageContext) {
+    public boolean invoke(MessageContext msgCtx) {
 
-        buildMessage(messageContext);
-        org.apache.axis2.context.MessageContext axis2MsgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        String templateTypeParam = Utils.getQueryParameter(messageContext, TEMPLATE_TYPE_PARAM);
-        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+        buildMessage(msgCtx);
+        org.apache.axis2.context.MessageContext axis2MsgCtx = ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
+        String templateTypeParam = Utils.getQueryParameter(msgCtx, TEMPLATE_TYPE_PARAM);
+        String searchKey = Utils.getQueryParameter(msgCtx, SEARCH_KEY);
         
-        if (messageContext.isDoingGET()) {
+        if (msgCtx.isDoingGET()) {
             if (Objects.nonNull(templateTypeParam)) {
-                String templateNameParam = Utils.getQueryParameter(messageContext, TEMPLATE_NAME_PARAM);
+                String templateNameParam = Utils.getQueryParameter(msgCtx, TEMPLATE_NAME_PARAM);
                 if (Objects.nonNull(templateNameParam)) {
-                    populateTemplateData(messageContext, templateNameParam, templateTypeParam);
+                    populateTemplateData(msgCtx, templateNameParam, templateTypeParam);
                 } else {
-                    populateTemplateListByType(messageContext, templateTypeParam);
+                    populateTemplateListByType(msgCtx, templateTypeParam);
                 }
             } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
-                populateSearchResults(messageContext, searchKey.toLowerCase());
+                populateSearchResults(msgCtx, searchKey.toLowerCase());
             } else {
-                populateFullTemplateList(messageContext);
+                populateFullTemplateList(msgCtx);
             }
         } else {
             JSONObject response;
@@ -104,7 +104,7 @@ public class TemplateResource extends APIResource {
                 }
                 if (payload.has(Constants.NAME) && SEQUENCE_TEMPLATE_TYPE.equals(templateTypeParam)) {
                     String seqTempName = payload.get(Constants.NAME).getAsString();
-                    response = handleTracing(seqTempName, messageContext, axis2MsgCtx);
+                    response = handleTracing(seqTempName, msgCtx, axis2MsgCtx);
                 } else {
                     response = Utils.createJsonError("Unsupported operation", axis2MsgCtx, Constants.BAD_REQUEST);
                 }
@@ -147,29 +147,24 @@ public class TemplateResource extends APIResource {
         List<Template> epSearchResultList = configuration.getEndpointTemplates().values().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-
         List<TemplateMediator> seqSearchResultList = configuration.getSequenceTemplates().values().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-
         setResponseBody(epSearchResultList, seqSearchResultList, messageContext);
     }
 
-    private void setResponseBody(List<Template> epList, List<TemplateMediator> seqList, MessageContext messageContext){
+    private void setResponseBody(List<Template> epList, List<TemplateMediator> seqList, MessageContext messageContext) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-
         int listLength = epList.size() + seqList.size();
         JSONObject jsonBody = Utils.createJSONList(listLength);
 
         for (Template epTemplate: epList) {
-
             JSONObject templateObject = getEndpointTemplateAsJson(epTemplate);
             jsonBody.getJSONArray(Constants.LIST).put(templateObject);
         }
 
         for (TemplateMediator seqTemplate: seqList) {
-
             JSONObject templateObject = getSequenceTemplateAsJson(seqTemplate);
             jsonBody.getJSONArray(Constants.LIST).put(templateObject);
         }

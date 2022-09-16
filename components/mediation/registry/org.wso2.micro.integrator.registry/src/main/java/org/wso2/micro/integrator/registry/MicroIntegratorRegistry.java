@@ -1271,10 +1271,12 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     }
 
     /**
-     * Returns a JSON object with the folder structure of the <MI-HOME>/registry directory.
+     * Returns a JSON object with the folder structure of the <MI-HOME>/registry directory,
+     * which contains the files/ leaf level directories matching with the given search key.
      *
+     * @param searchKey String
      * @param folderPath Path of the registry
-     * @return JSON object containing the folder structure and search results count
+     * @return JSON object containing the folder structure
      */
     public JSONObject getRegistryResourceJSON(String searchKey, String folderPath) {
 
@@ -1288,10 +1290,10 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     }
 
     /**
-     * Updates the JSON object with existing files and folder in the <MI-HOME>/registry directory.
-     * Updates a MAP with the metadata of each registry.
-     * Updates a MAP with the properties of each registry.
+     * Updates the JSON object with existing files and folder which
+     * match with the searchKey, in the given registry directory.
      *
+     * @param searchKey String
      * @param node       File
      * @param jsonObject JSON object with results
      */
@@ -1508,7 +1510,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
      * @param nodeName  Node name
      * @return          Boolean output of the checks
      */
-    public boolean isNodeNotRequiredToBeFetched(String nodeName) {
+    private boolean isNodeNotRequiredToBeFetched(String nodeName) {
         return !nodeName.startsWith(HIDDEN_FILE_PREFIX) && !nodeName.endsWith(METADATA_FILE_SUFFIX)
                 && !nodeName.endsWith(METADATA_DIR_NAME) && !nodeName.endsWith(PROPERTY_EXTENTION);
     }

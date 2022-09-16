@@ -74,7 +74,7 @@ public class DataSourceServiceComponent {
         String carbonDataSourceRepositoryClassName =
 		        MicroIntegratorBaseUtils.getServerConfiguration().getFirstProperty(
                         DATA_SOURCE_REPO_CLASS_TAG);
-        if(carbonDataSourceRepositoryClassName!=null){
+        if (carbonDataSourceRepositoryClassName!=null) {
             try {
                 carbonDataSourceRepositoryClass=(Class<DataSourceRepository>) this.getClass()
                         .getClassLoader().loadClass

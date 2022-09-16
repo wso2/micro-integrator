@@ -141,14 +141,11 @@ public class UserManagementTests extends ESBIntegrationTest {
 
     @Test(dependsOnMethods = "testAddNonAdminUser3")
     public void testGetAllCurrentUsers() throws Exception {
-
         String users = getUsers();
         JSONObject usersJson = new JSONObject(users);
-
         String errorMessageOnAssertionFailure = "Received response" + users;
         //Assert user count
         Assert.assertEquals(usersJson.get("count"), 3, errorMessageOnAssertionFailure);
-
         //Assert user details
         Assert.assertEquals((usersJson.getJSONArray("list")).length(), 3, errorMessageOnAssertionFailure);
         Assert.assertEquals((usersJson.getJSONArray("list")).getJSONObject(0).get(USER_ID_PARAM), "admin",
@@ -161,14 +158,11 @@ public class UserManagementTests extends ESBIntegrationTest {
 
     @Test(dependsOnMethods = "testGetAllCurrentUsers")
     public void testSearchCurrentUsers() throws Exception {
-
         String users = getSearchedUsers("developer");
         JSONObject usersJson = new JSONObject(users);
-
         String errorMessageOnAssertionFailure = "Received response" + users;
         //Assert user count
         Assert.assertEquals(usersJson.get("count"), 1, errorMessageOnAssertionFailure);
-
         //Assert user details
         Assert.assertEquals((usersJson.getJSONArray("list")).length(), 1, errorMessageOnAssertionFailure);
         Assert.assertEquals((usersJson.getJSONArray("list")).getJSONObject(0).get(USER_ID_PARAM), "developerUser",
@@ -215,13 +209,10 @@ public class UserManagementTests extends ESBIntegrationTest {
     }
 
     private String getSearchedUsers(String searchKey) throws IOException {
-
         SimpleHttpClient client = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
-
         String endpoint = userResource.concat("?searchKey=").concat(searchKey);
-
         HttpResponse response = client.doGet(endpoint, headers);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Unexpected status code");
         String responseString = client.getResponsePayload(response);
