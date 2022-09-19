@@ -89,7 +89,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
      * @throws IOException the io exception
      */
     @Test(groups = {"wso2.esb"}, dependsOnMethods = {"testRetrieveCorrelationConfigs"},
-            description = "Test get configs resource for correlation")
+            description = "Test put configs resource for correlation")
     public void testUpdateCorrelationConfigsEnable() throws IOException {
 
         updateCorrelationLogState(offset, true);
@@ -114,7 +114,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
      * @throws IOException the io exception
      */
     @Test(groups = {"wso2.esb"}, dependsOnMethods = {"testUpdateCorrelationConfigsEnable"},
-            description = "Test get configs resource for correlation")
+            description = "Test put configs resource for correlation")
     public void testUpdateCorrelationConfigsDisable() throws IOException {
 
         updateCorrelationLogState(offset, false);
@@ -134,6 +134,42 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
         Assert.assertNull(logLine);
     }
 
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = {"testUpdateCorrelationConfigsDisable"},
+            description = "Test put configs resource for correlation")
+    public void testUpdateCorrelationConfigsRandom() throws IOException {
+        // Update the correlation state to true and then send a random string as enabled field
+        updateCorrelationLogState(offset, true);
+        getCorrelationLogStateAndAssert(offset, true);
+
+        String accessToken = TokenUtil.getAccessToken(hostName, offset);
+        Assert.assertNotNull(accessToken);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        headers.put("Authorization", "Bearer " + accessToken);
+
+        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + offset) + "/management/"
+                + "configs";
+
+        JSONObject payloadConfigs = new JSONObject();
+        payloadConfigs.put("enabled", "abcd");  //Random string as the enabled field
+        JSONObject payload = new JSONObject();
+        payload.put("configName", "correlation");
+        payload.put("configs", payloadConfigs);
+
+        SimpleHttpClient client = new SimpleHttpClient();
+        HttpResponse response = client.doPut(endpoint, headers, payload.toString(), "application/json");
+        String responsePayload = client.getResponsePayload(response);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        JSONObject jsonResponse = new JSONObject(responsePayload);
+        Assert.assertTrue(jsonResponse.has("message"));
+        Assert.assertEquals(jsonResponse.get("message"), "Successfully Updated Correlation Logs Status");
+
+        // Should be false because a random string has been sent
+        getCorrelationLogStateAndAssert(offset, false);
+    }
+
+
     /**
      * Test retrieve correlation configs with system parameter. This will start up the server
      * with the enableCorrelationLogs flag. It will check whether the GET request of correlation
@@ -144,7 +180,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
      * @throws IOException                  the io exception
      * @throws AutomationFrameworkException the automation framework exception
      */
-    @Test(groups = {"wso2.esb"}, dependsOnMethods = {"testUpdateCorrelationConfigsDisable"},
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = {"testUpdateCorrelationConfigsRandom"},
             description = "Test get configs resource for correlation with system parameter")
     public void testRetrieveCorrelationConfigsWithSystemParameter() throws IOException, AutomationFrameworkException {
 
@@ -170,6 +206,7 @@ public class ConfigsResourceTestCase extends ESBIntegrationTest {
                     logLine.contains("ROUND-TRIP LATENCY") || logLine.contains("Thread switch latency"));
         }
     }
+
 
     /**
      * Start a new server.
