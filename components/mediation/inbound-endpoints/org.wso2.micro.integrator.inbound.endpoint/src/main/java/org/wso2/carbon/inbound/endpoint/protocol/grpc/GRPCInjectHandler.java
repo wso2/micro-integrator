@@ -40,6 +40,7 @@ import org.wso2.carbon.inbound.endpoint.protocol.grpc.util.Event;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 /**
  * Inject gRPC message into the sequence.
@@ -143,7 +144,7 @@ public class GRPCInjectHandler {
         MessageContext axis2MsgCtx =
                 ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx).getAxis2MessageContext();
         //setting transport headers
-        axis2MsgCtx.setProperty(MessageContext.TRANSPORT_HEADERS, receivedEvent.getHeadersMap());
+        axis2MsgCtx.setProperty(MessageContext.TRANSPORT_HEADERS, new HashMap<>(receivedEvent.getHeadersMap()));
         String contentType = receivedEvent.getHeadersMap().
                 get(InboundGRPCConstants.HEADER_MAP_CONTENT_TYPE_PARAMETER_NAME);
         if (log.isDebugEnabled()) {
