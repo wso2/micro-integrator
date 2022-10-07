@@ -18,6 +18,8 @@
 
 package org.wso2.micro.integrator.dataservices.core.odata;
 
+import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
@@ -28,6 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.olingo.server.api.uri.queryoption.OrderByItem;
+import org.apache.olingo.server.api.uri.queryoption.OrderByOption;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.jongo.Jongo;
@@ -65,12 +69,23 @@ public class MongoDataHandler implements ODataDataHandler {
     private static final String ETAG = "ETag";
     private static final String DOCUMENT_ID = "_id";
 
+    /**
+     * Preferred chunk size.
+     */
+    private final int chunkSize;
+
+    /**
+     * Number of entities to be skipped during the current read iteration.
+     */
+    private int skipEntityCount;
+
     public MongoDataHandler(String configId, Jongo jongo) {
         this.configId = configId;
         this.jongo = jongo;
         this.tableList = generateTableList();
         this.tableMetaData = generateTableMetaData();
         this.primaryKeys = generatePrimaryKeys();
+        this.chunkSize = ODataAdapter.getChunkSize();
     }
 
     /**
@@ -174,6 +189,97 @@ public class MongoDataHandler implements ODataDataHandler {
             entryList.add(dataEntry);
         }
         return entryList;
+    }
+
+    public List<ODataEntry> streamTable(String tableName) {
+        DBCollection readResult = jongo.getDatabase().getCollection(tableName);
+        Iterator<DBObject> iterator = readResult.find().skip(this.skipEntityCount).limit(this.chunkSize);
+        return readStreamResultSet(tableName, iterator);
+    }
+
+    public List<ODataEntry> streamTableWithKeys(String tableName, ODataEntry keys) throws ODataServiceFault {
+        throw new ODataServiceFault("MongoDB datasources doesn't support navigation.");
+    }
+
+    public void initStreaming() {
+        this.skipEntityCount = 0;
+    }
+
+    public List<ODataEntry> streamTableWithOrder(String tableName, OrderByOption orderByOption) {
+        DBCollection readResult = jongo.getDatabase().getCollection(tableName);
+        List<BasicDBObject> stages = getSortStage(orderByOption);
+
+        BasicDBObject skip = new BasicDBObject();
+        skip.put("$skip", this.skipEntityCount);
+        stages.add(skip);
+        BasicDBObject limit = new BasicDBObject();
+        limit.put("$limit", this.chunkSize);
+        stages.add(limit);
+
+        AggregationOptions options = AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.INLINE)
+                .build();
+        Iterator<DBObject> iterator = readResult.aggregate(stages, options);
+        return readStreamResultSet(tableName, iterator);
+    }
+
+    /**
+     * This method reads the stream result set to generate a list of OData entries.
+     *
+     * @param tableName Name of the table
+     * @param iterator  Iterator of the results set
+     * @return
+     */
+    private List<ODataEntry> readStreamResultSet(String tableName, Iterator<DBObject> iterator) {
+        DBObject documentData;
+        String tempValue;
+        List<ODataEntry> entryList = new ArrayList<>();
+        while (iterator.hasNext()) {
+            ODataEntry dataEntry;
+            documentData = iterator.next();
+            tempValue = documentData.toString();
+            Iterator<?> keys = new JSONObject(tempValue).keys();
+            dataEntry = createDataEntryFromResult(tempValue, keys);
+            //Set Etag to the entity
+            dataEntry.addValue(ETAG, ODataUtils.generateETag(this.configId, tableName, dataEntry));
+            entryList.add(dataEntry);
+        }
+        this.skipEntityCount += this.chunkSize;
+        return entryList;
+    }
+
+    /**
+     * This method arranges the sort stage of the aggregator.
+     *
+     * @param orderByOption List of keys to consider when sorting
+     * @return List of DBObjects
+     * @see BasicDBObject
+     */
+    private List<BasicDBObject> getSortStage(OrderByOption orderByOption) {
+        List<BasicDBObject> stages = new ArrayList<>();
+        BasicDBObject sortList = new BasicDBObject();
+        BasicDBObject fieldList = new BasicDBObject();
+
+        for (int i = 0; i < orderByOption.getOrders().size(); i++) {
+            final OrderByItem item = orderByOption.getOrders().get(i);
+            String expr = item.getExpression().toString().replaceAll("[\\[\\]]", "").replaceAll("[\\{\\}]", "");
+            String[] exprArr = expr.split(" ");
+            int order = item.isDescending() ? -1 : 1;
+            if (exprArr.length == 1) {
+                sortList.put(exprArr[0], order);
+            } else if (exprArr.length == 2) {
+                BasicDBObject length = new BasicDBObject();
+                length.put("$strLenCP", "$" + exprArr[1]);
+                fieldList.put(exprArr[1] + "Len", length);
+                sortList.put(exprArr[1] + "Len", order);
+            }
+        }
+        BasicDBObject addFields = new BasicDBObject();
+        addFields.put("$addFields", fieldList);
+        BasicDBObject sort = new BasicDBObject();
+        sort.put("$sort", sortList);
+        stages.add(addFields);
+        stages.add(sort);
+        return stages;
     }
 
     /**
@@ -419,5 +525,17 @@ public class MongoDataHandler implements ODataDataHandler {
     public void deleteReference(String rootTableName, ODataEntry rootTableKeys, String navigationTable,
                                 ODataEntry navigationTableKeys) throws ODataServiceFault {
         throw new ODataServiceFault("MongoDB datasources do not support references.");
+    }
+
+    @Override
+    public int getEntityCount(String tableName) {
+        DBCollection readResult = jongo.getDatabase().getCollection(tableName);
+        int rowCount = (int) readResult.getCount();
+        return rowCount;
+    }
+
+    @Override
+    public int getEntityCountWithKeys(String tableName, ODataEntry keys) throws ODataServiceFault {
+        throw new ODataServiceFault("MongoDB datasources doesn't support navigation.");
     }
 }   
