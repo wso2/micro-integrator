@@ -154,7 +154,6 @@ public class ODataAdapter implements ServiceHandler {
      */
     private static final String ACCEPT_HEADER = "Accept";
 
-
     /**
      * Service metadata of the odata service.
      */
