@@ -188,10 +188,10 @@ public class EDMProvider extends CsdlAbstractEdmProvider {
             //if oneToManyRelationList is null, Obviously manyToOneRelationList should be NULL.
             if (oneToManyRelationList != null) {
                 //Set Navigational Bindings to oneToMany
-                CsdlNavigationPropertyBinding navPropBinding = new CsdlNavigationPropertyBinding();
                 List<CsdlNavigationPropertyBinding> navPropBindingList = new ArrayList<>();
                 if (oneToManyRelationList.get(entitySetName) != null) {
                     for (String navigation : oneToManyRelationList.get(entitySetName)) {
+                        CsdlNavigationPropertyBinding navPropBinding = new CsdlNavigationPropertyBinding();
                         // the target entity set, where the navigation property points to
                         navPropBinding.setTarget(navigation);
                         // the path from entity type to navigation property
@@ -201,6 +201,7 @@ public class EDMProvider extends CsdlAbstractEdmProvider {
                 }
                 if (manyToOneRelationList.get(entitySetName) != null) {
                     for (String navigation : manyToOneRelationList.get(entitySetName)) {
+                        CsdlNavigationPropertyBinding navPropBinding = new CsdlNavigationPropertyBinding();
                         // the target entity set, where the navigation property points to
                         navPropBinding.setTarget(navigation);
                         // the path from entity type to navigation property
