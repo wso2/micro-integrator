@@ -18,6 +18,7 @@
 
 package org.wso2.micro.integrator.dataservices.core.odata;
 
+import org.apache.olingo.server.api.uri.queryoption.OrderByOption;
 import org.wso2.micro.integrator.dataservices.core.engine.DataEntry;
 
 import java.util.List;
@@ -165,4 +166,60 @@ public interface ODataDataHandler {
      */
     void deleteReference(String rootTableName, ODataEntry rootTableKeys, String navigationTable,
                          ODataEntry navigationTableKeys) throws ODataServiceFault;
+
+    /**
+     * This method reads a table to the stream buffer.
+     * Returns a list of ODataEntry objects.
+     *
+     * @param tableName Name of the table
+     * @return List of OData entries
+     * @throws ODataServiceFault
+     */
+    List<ODataEntry> streamTable(String tableName) throws ODataServiceFault;
+
+    /**
+     * This method reads a table with keys to the stream buffer.
+     * Returns a list of ODataEntry objects.
+     *
+     * @param tableName Name of the table
+     * @param keys      Keys to check
+     * @return List of OData entries
+     * @throws ODataServiceFault
+     */
+    List<ODataEntry> streamTableWithKeys(String tableName, ODataEntry keys) throws ODataServiceFault;
+
+    /**
+     * This method reads a sorted table to the stream buffer.
+     * Returns a list of ODataEntry objects.
+     *
+     * @param tableName     Name of the table
+     * @param orderByOption Order by options
+     * @return List of OData entries
+     * @throws ODataServiceFault
+     */
+    List<ODataEntry> streamTableWithOrder(String tableName, OrderByOption orderByOption) throws ODataServiceFault;
+
+    /**
+     * This method returns the number of entities in a table.
+     *
+     * @param tableName Name of the table
+     * @return Entity count
+     * @throws ODataServiceFault
+     */
+    int getEntityCount(String tableName) throws ODataServiceFault;
+
+    /**
+     * This method returns the number of entities in a table after applying an OData query.
+     *
+     * @param tableName Name of the table
+     * @param keys      Keys to check
+     * @return Entity count
+     * @throws ODataServiceFault
+     */
+    int getEntityCountWithKeys(String tableName, ODataEntry keys) throws ODataServiceFault;
+
+    /**
+     * This method initializes the ODataHandlers for streaming.
+     */
+    void initStreaming();
 }
