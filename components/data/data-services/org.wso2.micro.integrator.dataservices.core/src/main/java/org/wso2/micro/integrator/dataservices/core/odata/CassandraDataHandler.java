@@ -28,7 +28,6 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.SimpleStatement;
 import com.datastax.driver.core.Statement;
 import com.datastax.driver.core.TableMetadata;
-import java.util.Comparator;
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
@@ -38,7 +37,10 @@ import org.apache.olingo.server.api.uri.queryoption.OrderByOption;
 import org.apache.olingo.server.api.uri.queryoption.expression.ExpressionVisitException;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.core.odata.DataColumn.ODataDataType;
-import org.wso2.micro.integrator.dataservices.core.DBUtils;import org.wso2.micro.integrator.dataservices.core.DataServiceFault;
+import org.wso2.micro.integrator.dataservices.core.DBUtils;
+import org.wso2.micro.integrator.dataservices.core.DataServiceFault;
+import org.wso2.micro.integrator.dataservices.core.odata.expression.ExpressionVisitorODataEntryImpl;
+import org.wso2.micro.integrator.dataservices.core.odata.expression.operand.TypedOperand;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -46,14 +48,13 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.wso2.micro.integrator.dataservices.core.odata.expression.ExpressionVisitorODataEntryImpl;
-import org.wso2.micro.integrator.dataservices.core.odata.expression.operand.TypedOperand;
 
 /**
  * This class implements cassandra datasource related operations for ODataDataHandler.
@@ -96,10 +97,12 @@ public class CassandraDataHandler implements ODataDataHandler {
      * SQL alias to get row count.
      */
     private static final String SQL_COUNT_ALIAS = "rowcount";
+
     /**
      * Preferred chunk size.
      */
     private final int chunkSize;
+
     /**
      * To indicate initialization phase of streaming.
      */
@@ -161,7 +164,7 @@ public class CassandraDataHandler implements ODataDataHandler {
     public List<ODataEntry> streamTable(String tableName) throws ODataServiceFault {
         if (this.initializeStream) {
             this.initializeStream = false;
-            Statement statement = new SimpleStatement("Select * from " + this.keyspace + "." + tableName);
+            Statement statement = new SimpleStatement("SELECT * FROM " + this.keyspace + "." + tableName);
             statement.setFetchSize(this.chunkSize);
             this.streamResultSet = session.execute(statement);
             this.streamResultSet.fetchMoreResults();
@@ -194,7 +197,7 @@ public class CassandraDataHandler implements ODataDataHandler {
         if (this.initializeStream) {
             this.initializeStream = false;
             this.entryList = new ArrayList<>();
-            Statement statement = new SimpleStatement("Select * from " + this.keyspace + "." + tableName);
+            Statement statement = new SimpleStatement("SELECT * FROM " + this.keyspace + "." + tableName);
             ResultSet resultSet = session.execute(statement);
             ColumnDefinitions columnDefinitions = resultSet.getColumnDefinitions();
             Iterator<Row> iterator = resultSet.iterator();
@@ -490,7 +493,7 @@ public class CassandraDataHandler implements ODataDataHandler {
     @Override
     public int getEntityCount(String tableName) throws ODataServiceFault {
         Statement statement = new SimpleStatement(
-                "Select count(*) as " + SQL_COUNT_ALIAS + " from " + this.keyspace + "." + tableName);
+                "SELECT COUNT(*) AS " + SQL_COUNT_ALIAS + " FROM " + this.keyspace + "." + tableName);
         ResultSet resultSet = this.session.execute(statement);
         return (int) resultSet.one().getLong(SQL_COUNT_ALIAS);
     }
