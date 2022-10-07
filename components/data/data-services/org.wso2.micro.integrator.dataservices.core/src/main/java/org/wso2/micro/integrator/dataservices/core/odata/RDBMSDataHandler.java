@@ -459,7 +459,7 @@ public class RDBMSDataHandler implements ODataDataHandler {
         try {
             connection = initializeConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT count(*) FROM ").append(tableName);
+            sql.append("SELECT COUNT(*) FROM ").append(tableName);
             statement = connection.prepareStatement(sql.toString());
             resultSet = statement.executeQuery();
             resultSet.next();
@@ -1581,7 +1581,7 @@ public class RDBMSDataHandler implements ODataDataHandler {
      */
     private String createCountSqlWithKeys(String tableName, ODataEntry keys) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT count(*) FROM ").append(tableName).append(" WHERE ");
+        sql.append("SELECT COUNT(*) FROM ").append(tableName).append(" WHERE ");
         boolean propertyMatch = false;
         for (String column : this.rdbmsDataTypes.get(tableName).keySet()) {
             if (keys.getNames().contains(column)) {
