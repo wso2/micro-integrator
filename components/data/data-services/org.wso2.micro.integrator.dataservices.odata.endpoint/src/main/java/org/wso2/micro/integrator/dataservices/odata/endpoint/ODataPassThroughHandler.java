@@ -46,10 +46,10 @@ public class ODataPassThroughHandler extends AbstractSynapseHandler {
             Object isODataService = axis2MessageContext.getProperty(IS_ODATA_SERVICE);
             // In this if block we are skipping proxy services, inbound related message contexts & api.
             if (axis2MessageContext.getProperty(TRANSPORT_IN_URL) != null && isODataService != null) {
+                RelayUtils.buildMessage(axis2MessageContext);
+                ODataServletRequest request = new ODataServletRequest(axis2MessageContext);
+                ODataServletResponse response = new ODataServletResponse(axis2MessageContext);
                 synchronized (this) {
-                    RelayUtils.buildMessage(axis2MessageContext);
-                    ODataServletRequest request = new ODataServletRequest(axis2MessageContext);
-                    ODataServletResponse response = new ODataServletResponse(axis2MessageContext);
                     ODataEndpoint.process(request, response);
                     streamResponseBack(response, messageContext, axis2MessageContext);
                 }
