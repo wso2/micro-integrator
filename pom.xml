@@ -83,6 +83,11 @@
                 <version>${axis2.wso2.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2-client</artifactId>
+                <version>${axis2.wso2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.axis2</groupId>
                 <artifactId>axis2-transport-base</artifactId>
                 <version>${axis2.wso2.version}</version>
@@ -1802,6 +1807,9 @@
         <quartz.orbit.version>2.3.2.wso2v1</quartz.orbit.version>
         <!-- Maven bundle plugin -->
         <maven.bundle.plugin.version>3.3.0</maven.bundle.plugin.version>
+        <apache.http.nio.version>4.4.15.wso2v1</apache.http.nio.version>
+        <wso2.caching.version>4.0.3</wso2.caching.version>
+        <apache.http.protocol.version>4.4.14.wso2v1</apache.http.protocol.version>
     </properties>
 
     <repositories>

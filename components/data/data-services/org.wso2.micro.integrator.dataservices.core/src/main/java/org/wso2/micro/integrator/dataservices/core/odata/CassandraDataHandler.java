@@ -30,9 +30,17 @@ import com.datastax.driver.core.Statement;
 import com.datastax.driver.core.TableMetadata;
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.olingo.commons.api.ex.ODataRuntimeException;
+import org.apache.olingo.server.api.ODataApplicationException;
+import org.apache.olingo.server.api.uri.queryoption.OrderByItem;
+import org.apache.olingo.server.api.uri.queryoption.OrderByOption;
+import org.apache.olingo.server.api.uri.queryoption.expression.ExpressionVisitException;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.core.odata.DataColumn.ODataDataType;
-import org.wso2.micro.integrator.dataservices.core.DBUtils;import org.wso2.micro.integrator.dataservices.core.DataServiceFault;
+import org.wso2.micro.integrator.dataservices.core.DBUtils;
+import org.wso2.micro.integrator.dataservices.core.DataServiceFault;
+import org.wso2.micro.integrator.dataservices.core.odata.expression.ExpressionVisitorODataEntryImpl;
+import org.wso2.micro.integrator.dataservices.core.odata.expression.operand.TypedOperand;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -40,6 +48,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -84,6 +93,31 @@ public class CassandraDataHandler implements ODataDataHandler {
      */
     private final String keyspace;
 
+    /**
+     * SQL alias to get row count.
+     */
+    private static final String SQL_COUNT_ALIAS = "rowcount";
+
+    /**
+     * Preferred chunk size.
+     */
+    private final int chunkSize;
+
+    /**
+     * To indicate initialization phase of streaming.
+     */
+    private boolean initializeStream;
+
+    /**
+     * Result Set for streaming.
+     */
+    private ResultSet streamResultSet;
+
+    /**
+     * List of sorted OData entries.
+     */
+    private ArrayList<ODataEntry> entryList;
+
     private ThreadLocal<Boolean> transactionAvailable = new ThreadLocal<Boolean>() {
         protected synchronized Boolean initialValue() {
             return false;
@@ -109,6 +143,8 @@ public class CassandraDataHandler implements ODataDataHandler {
         this.tableList = generateTableList();
         this.primaryKeys = generatePrimaryKeyList();
         this.tableMetaData = generateMetaData();
+        this.initializeStream = false;
+        this.chunkSize = ODataAdapter.getChunkSize();
     }
 
     @Override
@@ -123,6 +159,117 @@ public class CassandraDataHandler implements ODataDataHandler {
             entryList.add(dataEntry);
         }
         return entryList;
+    }
+
+    public List<ODataEntry> streamTable(String tableName) throws ODataServiceFault {
+        if (this.initializeStream) {
+            this.initializeStream = false;
+            Statement statement = new SimpleStatement("SELECT * FROM " + this.keyspace + "." + tableName);
+            statement.setFetchSize(this.chunkSize);
+            this.streamResultSet = session.execute(statement);
+            this.streamResultSet.fetchMoreResults();
+        }
+        List<ODataEntry> entryList = new ArrayList<>();
+        ColumnDefinitions columnDefinitions = this.streamResultSet.getColumnDefinitions();
+        Iterator<Row> iterator = this.streamResultSet.iterator();
+        int processedEntryCount = 0;
+        while (iterator.hasNext()) {
+            ODataEntry dataEntry = createDataEntryFromRow(tableName, iterator.next(), columnDefinitions);
+            entryList.add(dataEntry);
+            processedEntryCount++;
+            if (processedEntryCount >= this.chunkSize) {
+                break;
+            }
+        }
+        return entryList;
+    }
+
+    public List<ODataEntry> streamTableWithKeys(String tableName, ODataEntry keys) throws ODataServiceFault {
+        throw new ODataServiceFault("Cassandra datasources doesn't support navigation.");
+    }
+
+    public void initStreaming() {
+        this.initializeStream = true;
+    }
+
+    public List<ODataEntry> streamTableWithOrder(String tableName, OrderByOption orderByOption)
+            throws ODataServiceFault {
+        if (this.initializeStream) {
+            this.initializeStream = false;
+            this.entryList = new ArrayList<>();
+            Statement statement = new SimpleStatement("SELECT * FROM " + this.keyspace + "." + tableName);
+            ResultSet resultSet = session.execute(statement);
+            ColumnDefinitions columnDefinitions = resultSet.getColumnDefinitions();
+            Iterator<Row> iterator = resultSet.iterator();
+            while (iterator.hasNext()) {
+                ODataEntry dataEntry = createDataEntryFromRow(tableName, iterator.next(), columnDefinitions);
+                this.entryList.add(dataEntry);
+            }
+            sortEntryList(orderByOption, tableName);
+        }
+        List<ODataEntry> resultSet = new ArrayList<>();
+        Iterator<ODataEntry> iterator = this.entryList.iterator();
+        int processedEntryCount = 0;
+        while (iterator.hasNext()) {
+            resultSet.add(iterator.next());
+            iterator.remove();
+            processedEntryCount++;
+            if (processedEntryCount >= this.chunkSize) {
+                break;
+            }
+        }
+        return resultSet;
+    }
+
+    /**
+     * This method sort the list of OData entries.
+     * To support OData orderby query option.
+     *
+     * @param orderByOption keys to consider when sorting
+     * @param tableName     Name of the table
+     */
+    private void sortEntryList(final OrderByOption orderByOption, String tableName) {
+        ExpressionVisitorODataEntryImpl.setTableMetaData(this.getTableMetadata().get(tableName).values());
+        Collections.sort(this.entryList, new Comparator<ODataEntry>() {
+            @Override
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            public int compare(final ODataEntry e1, final ODataEntry e2) {
+                // Evaluate the first order option for both entity
+                // If and only if the result of the previous order option is equals to 0
+                // evaluate the next order option until all options are evaluated or they are not equals
+                int result = 0;
+                for (int i = 0; i < orderByOption.getOrders().size() && result == 0; i++) {
+                    try {
+                        final OrderByItem item = orderByOption.getOrders().get(i);
+                        final TypedOperand op1 = item.getExpression().accept(new ExpressionVisitorODataEntryImpl(e1))
+                                .asTypedOperand();
+                        final TypedOperand op2 = item.getExpression().accept(new ExpressionVisitorODataEntryImpl(e2))
+                                .asTypedOperand();
+                        if (op1.isNull() || op2.isNull()) {
+                            if (op1.isNull() && op2.isNull()) {
+                                result = 0; // null is equals to null
+                            } else {
+                                result = op1.isNull() ? -1 : 1;
+                            }
+                        } else {
+                            Object o1 = op1.getValue();
+                            Object o2 = op2.getValue();
+
+                            if (o1.getClass() == o2.getClass() && o1 instanceof Comparable) {
+                                result = ((Comparable) o1).compareTo(o2);
+                            } else {
+                                result = 0;
+                            }
+                        }
+                        result = item.isDescending() ? result * -1 : result;
+                    } catch (ExpressionVisitException | ODataApplicationException e) {
+                        throw new ODataRuntimeException(
+                                "Error occurred while sorting the entry list. :" + e.getMessage(), e);
+                    }
+                }
+                return result;
+            }
+        });
     }
 
     @Override
@@ -343,6 +490,19 @@ public class CassandraDataHandler implements ODataDataHandler {
         throw new ODataServiceFault("Cassandra datasources doesn't support references.");
     }
 
+    @Override
+    public int getEntityCount(String tableName) throws ODataServiceFault {
+        Statement statement = new SimpleStatement(
+                "SELECT COUNT(*) AS " + SQL_COUNT_ALIAS + " FROM " + this.keyspace + "." + tableName);
+        ResultSet resultSet = this.session.execute(statement);
+        return (int) resultSet.one().getLong(SQL_COUNT_ALIAS);
+    }
+
+    @Override
+    public int getEntityCountWithKeys(String tableName, ODataEntry keys) throws ODataServiceFault {
+        throw new ODataServiceFault("Cassandra datasources doesn't support navigation.");
+    }
+
     /**
      * This method wraps result set data in to DataEntry and creates a list of DataEntry.
      *
@@ -425,6 +585,9 @@ public class CassandraDataHandler implements ODataDataHandler {
                         break;
                     case TUPLE:
                         paramValue = row.isNull(i) ? null : row.getTupleValue(i).toString();
+                        break;
+                    case DATE:
+                        paramValue = row.isNull(i) ? null : row.getDate(i).toString();
                         break;
                     case CUSTOM:
                         paramValue = row.isNull(i) ? null : this.base64EncodeByteBuffer(row.getBytes(i));

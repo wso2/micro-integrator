@@ -18,58 +18,41 @@
 
 package org.wso2.micro.integrator.dataservices.odata.endpoint;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMText;
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.axiom.soap.SOAPBody;
-import org.apache.axiom.soap.SOAPEnvelope;
-import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axis2.AxisFault;
+import java.io.IOException;
+import javax.ws.rs.core.MediaType;
 import org.apache.axis2.Constants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.protocol.HTTP;
 import org.apache.synapse.AbstractSynapseHandler;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
-import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
-import org.apache.synapse.core.axis2.Axis2Sender;
 import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.transport.passthru.util.RelayUtils;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
 
 public class ODataPassThroughHandler extends AbstractSynapseHandler {
-    private static final Log log = LogFactory.getLog(ODataPassThroughHandler.class);
-    public final static String JSON_CONTENT_TYPE = "application/json";
-    public final static String XML_CONTENT_TYPE = "application/xml";
-    public final static String TEXT_CONTENT_TYPE = "text/plain";
-    private final static QName TEXT_ELEMENT = new QName("http://ws.apache.org/commons/ns/payload", "text");
+    private static final Log LOG = LogFactory.getLog(ODataPassThroughHandler.class);
 
+    private static final String IS_ODATA_SERVICE = "IsODataService";
+    private static final String TRANSPORT_IN_URL = "TransportInURL";
 
     @Override
     public boolean handleRequestInFlow(MessageContext messageContext) {
         try {
             org.apache.axis2.context.MessageContext axis2MessageContext =
                     ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-            Object isODataService = axis2MessageContext.getProperty("IsODataService");
+            Object isODataService = axis2MessageContext.getProperty(IS_ODATA_SERVICE);
             // In this if block we are skipping proxy services, inbound related message contexts & api.
-            if (axis2MessageContext.getProperty("TransportInURL") != null && isODataService != null) {
+            if (axis2MessageContext.getProperty(TRANSPORT_IN_URL) != null && isODataService != null) {
                 RelayUtils.buildMessage(axis2MessageContext);
                 ODataServletRequest request = new ODataServletRequest(axis2MessageContext);
                 ODataServletResponse response = new ODataServletResponse(axis2MessageContext);
-                ODataEndpoint.process(request, response);
-                setContent(axis2MessageContext, response);
-                setHeaders(axis2MessageContext, response);
-                messageContext.setTo(null);
-                messageContext.setResponse(true);
-                Axis2Sender.sendBack(messageContext);
+                synchronized (this) {
+                    ODataEndpoint.process(request, response);
+                    streamResponseBack(response, messageContext, axis2MessageContext);
+                }
             }
             return true;
         } catch (Exception e) {
@@ -78,54 +61,26 @@ public class ODataPassThroughHandler extends AbstractSynapseHandler {
         }
     }
 
-    private void setHeaders(org.apache.axis2.context.MessageContext axis2MessageContext,
-                            ODataServletResponse response) throws UnsupportedEncodingException {
-        axis2MessageContext.setProperty(Constants.Configuration.CONTENT_TYPE, response.getContentType());
-        Object o = axis2MessageContext.getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
-        Map headers = (Map) o;
-        if (headers != null) {
-            headers.remove(HTTP.CONTENT_TYPE);
-            headers.put(HTTP.CONTENT_TYPE, response.getContentType());
-        }
-        if (response.getContentAsString() != null && response.getContentAsString().length() != 0) {
-            axis2MessageContext.removeProperty(PassThroughConstants.NO_ENTITY_BODY);
-        }
-    }
-
-    private void setContent(org.apache.axis2.context.MessageContext axis2MessageContext, ODataServletResponse response)
-            throws UnsupportedEncodingException, AxisFault, XMLStreamException {
-        String content = response.getContentAsString();
-        if (response.getContentType() != null && response.getContentType().contains(JSON_CONTENT_TYPE)) {
-            axis2MessageContext.setProperty(Constants.Configuration.MESSAGE_TYPE, JSON_CONTENT_TYPE);
-            JsonUtil.getNewJsonPayload(axis2MessageContext, content, true, true);
-        } else if (response.getContentType() != null && response.getContentType().contains(XML_CONTENT_TYPE)) {
-            axis2MessageContext.setProperty(Constants.Configuration.MESSAGE_TYPE, response.getContentType());
-            OMElement omXML = AXIOMUtil.stringToOM(content);
-            SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
-            SOAPEnvelope envelope = fac.getDefaultEnvelope();
-            envelope.getBody().addChild(omXML);
-            axis2MessageContext.setEnvelope(envelope);
-        } else if (response.getContentType() != null && response.getContentType().contains(TEXT_CONTENT_TYPE)) {
-            axis2MessageContext.setProperty(Constants.Configuration.MESSAGE_TYPE, response.getContentType());
-            SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
-            SOAPEnvelope envelope = fac.getDefaultEnvelope();
-            envelope.getBody().addChild(getTextElement(content));
-            axis2MessageContext.setEnvelope(envelope);
-        }
-    }
-
-    private OMElement getTextElement(String content) {
-        OMFactory factory = OMAbstractFactory.getOMFactory();
-        OMElement textElement = factory.createOMElement(TEXT_ELEMENT);
-        if (content == null) {
-            content = "";
-        }
-        textElement.setText(content);
-        return textElement;
+    /**
+     * This method starts streaming the response from the server to the client.
+     *
+     * @param response       OData Servlet response.
+     * @param messageContext Message context.
+     * @throws XMLStreamException if unexpected processing errors occurred while building the message.
+     * @throws IOException        if any interrupted I/O operations occurred while building the message.
+     */
+    private void streamResponseBack(ODataServletResponse response, MessageContext messageContext,
+                                    org.apache.axis2.context.MessageContext axis2MessageContext) throws IOException {
+        axis2MessageContext.setProperty(Constants.Configuration.MESSAGE_TYPE, MediaType.TEXT_PLAIN);
+        axis2MessageContext.removeProperty(PassThroughConstants.NO_ENTITY_BODY);
+        messageContext.setTo(null);
+        messageContext.setResponse(true);
+        ODataAxisEngine oDataAxisEngine = new ODataAxisEngine();
+        oDataAxisEngine.stream(axis2MessageContext, response);
     }
 
     private void handleException(String msg, Exception e, MessageContext msgContext) {
-        log.error(msg, e);
+        LOG.error(msg, e);
         if (msgContext.getServiceLog() != null) {
             msgContext.getServiceLog().error(msg, e);
         }

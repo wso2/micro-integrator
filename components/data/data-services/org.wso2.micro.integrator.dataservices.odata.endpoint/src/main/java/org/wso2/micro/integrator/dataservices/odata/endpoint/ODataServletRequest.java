@@ -18,18 +18,19 @@
 
 package org.wso2.micro.integrator.dataservices.odata.endpoint;
 
+import javax.ws.rs.core.MediaType;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.collections4.iterators.IteratorEnumeration;
+import org.apache.commons.lang.StringUtils;
 import org.apache.synapse.commons.json.JsonUtil;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -43,7 +44,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,6 +55,7 @@ import java.util.Map;
 public class ODataServletRequest implements HttpServletRequest {
 
     private MessageContext axis2MessageContext;
+    private static final String DEFAULT_CONTEXT_PATH = "/odata";
 
     ODataServletRequest(MessageContext messageContext) {
         this.axis2MessageContext = messageContext;
@@ -117,7 +118,7 @@ public class ODataServletRequest implements HttpServletRequest {
 
     @Override
     public String getContextPath() {
-        return "/odata";
+        return DEFAULT_CONTEXT_PATH;
     }
 
     @Override
@@ -172,7 +173,7 @@ public class ODataServletRequest implements HttpServletRequest {
 
     @Override
     public String getServletPath() {
-        return "";
+        return StringUtils.EMPTY;
     }
 
     @Override
@@ -265,11 +266,11 @@ public class ODataServletRequest implements HttpServletRequest {
         OMElement content = axis2MessageContext.getEnvelope().getBody().getFirstElement();
         if (content != null) {
             String contentType = (String) axis2MessageContext.getProperty(Constants.Configuration.CONTENT_TYPE);
-            if (contentType.contains(ODataPassThroughHandler.JSON_CONTENT_TYPE)) {
+            if (contentType.contains(MediaType.APPLICATION_JSON)) {
                 ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
                 JsonUtil.writeAsJson(axis2MessageContext, byteOutputStream);
                 return new RequestServletInputStream(new ByteArrayInputStream(byteOutputStream.toByteArray()));
-            } else if (contentType.contains(ODataPassThroughHandler.XML_CONTENT_TYPE)) {
+            } else if (contentType.contains(MediaType.APPLICATION_XML)) {
                 return new RequestServletInputStream(new ByteArrayInputStream(content.toString().getBytes()));
             }
         }
