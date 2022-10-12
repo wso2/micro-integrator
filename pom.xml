@@ -1390,6 +1390,31 @@
                 <artifactId>activation</artifactId>
                 <version>${version.org.wso2.orbit.javax.activation}</version>
             </dependency>
+            <dependency>
+                <groupId>org.openjdk.nashorn</groupId>
+                <artifactId>nashorn-core</artifactId>
+                <version>${openjdk.nashorn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-util</artifactId>
+                <version>${ow2.asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+                <version>${ow2.asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${ow2.asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.messaging.saaj</groupId>
+                <artifactId>saaj-impl</artifactId>
+                <version>${messaging.saaj.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1577,7 +1602,7 @@
         <maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
         <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
-        <jacoco.maven.plugin.version>0.8.2</jacoco.maven.plugin.version>
+        <jacoco.maven.plugin.version>0.8.8</jacoco.maven.plugin.version>
         <testng.version>6.11</testng.version>
         <javax.jms-api.version>2.0.1</javax.jms-api.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
@@ -1606,7 +1631,7 @@
         <junit.version>4.8.2</junit.version>
         <netty.version>4.1.79.Final</netty.version>
         <netty.tcnative.version>2.0.53.Final</netty.tcnative.version>
-        <jacoco.agent.version>0.8.2</jacoco.agent.version>
+        <jacoco.agent.version>0.8.8</jacoco.agent.version>
         <activemq.version>5.2.0</activemq.version>
         <activemq.broker.version>5.15.2</activemq.broker.version>
         <aries.version>1.1.0</aries.version>
@@ -1810,6 +1835,9 @@
         <apache.http.nio.version>4.4.15.wso2v1</apache.http.nio.version>
         <wso2.caching.version>4.0.3</wso2.caching.version>
         <apache.http.protocol.version>4.4.14.wso2v1</apache.http.protocol.version>
+        <messaging.saaj.version>1.5.1</messaging.saaj.version>
+        <openjdk.nashorn.version>15.3</openjdk.nashorn.version>
+        <ow2.asm.version>9.2</ow2.asm.version>
     </properties>
 
     <repositories>
