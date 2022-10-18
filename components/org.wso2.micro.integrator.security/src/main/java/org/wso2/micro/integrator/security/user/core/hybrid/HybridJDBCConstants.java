@@ -24,6 +24,8 @@ public class HybridJDBCConstants {
 
     public static final String GET_ROLE_LIST_OF_USERS = "GetRoleListOfInternalUsersSQL";
 
+    public static final String NON_USER_CORE_MODE = "NonUserCoreMode";
+
     public static final String ADD_ROLE_SQL = "INSERT INTO UM_HYBRID_ROLE (UM_ROLE_NAME, UM_TENANT_ID) VALUES (?, ?)";
     public static final String DELETE_ROLE_SQL = "DELETE FROM UM_HYBRID_ROLE WHERE UM_ROLE_NAME = ? AND UM_TENANT_ID=?";
     public static final String ON_DELETE_ROLE_REMOVE_USER_ROLE_SQL = "DELETE FROM UM_HYBRID_USER_ROLE WHERE " +

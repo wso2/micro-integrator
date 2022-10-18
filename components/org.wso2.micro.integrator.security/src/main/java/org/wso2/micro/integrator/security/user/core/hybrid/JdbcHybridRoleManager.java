@@ -291,7 +291,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
     public String[] getUserListOfHybridRole(String roleName) throws UserStoreException {
 
         if (UserCoreUtil.isEveryoneRole(roleName, realmConfig)) {
-            if (Boolean.parseBoolean(System.getProperty("NonUserCoreMode"))) {
+            if (Boolean.parseBoolean(System.getProperty(HybridJDBCConstants.NON_USER_CORE_MODE))) {
                 // Primary User Store
                 return getPrimaryRoles();
             }
