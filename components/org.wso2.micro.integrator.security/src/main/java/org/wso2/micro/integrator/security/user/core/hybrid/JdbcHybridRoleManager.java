@@ -32,13 +32,11 @@ import org.wso2.micro.integrator.security.user.core.jdbc.JDBCUserStoreManager;
 import org.wso2.micro.integrator.security.user.core.jdbc.caseinsensitive.JDBCCaseInsensitiveConstants;
 import org.wso2.micro.integrator.security.user.core.util.DatabaseUtil;
 import org.wso2.micro.integrator.security.user.core.util.UserCoreUtil;
-import org.wso2.micro.integrator.security.internal.DataHolder;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
-import org.wso2.micro.integrator.security.user.core.util.DatabaseUtil;
 import static org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants.ErrorMessages.ERROR_CODE_DUPLICATE_WHILE_ADDING_A_HYBRID_ROLE;
 import static org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants.ErrorMessages.ERROR_CODE_DUPLICATE_WHILE_WRITING_TO_DATABASE;
 
