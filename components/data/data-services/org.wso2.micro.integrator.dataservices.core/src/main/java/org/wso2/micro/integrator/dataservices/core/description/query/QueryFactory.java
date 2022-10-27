@@ -811,6 +811,8 @@ public class QueryFactory {
 
         private String requiredRoles;
 
+        private String isOptional;
+
         public ResultEntryColumnInfo(String value) throws DataServiceFault {
             // {"name":"$jack(type:integer;requiredRoles:admin,role1)"
             value = value.trim();
@@ -848,6 +850,8 @@ public class QueryFactory {
                 this.requiredRoles = value;
             } else if (DBSFields.TYPE.equals(name)) {
                 this.dataType = value;
+            } else if (DBSFields.OPTIONAL.equals(name)) {
+                this.isOptional = value;
             } else {
                 throw new DataServiceFault("Unrecognized option type '" + name + "', "
                         + "found: " + name);
@@ -866,6 +870,9 @@ public class QueryFactory {
             return dataType;
         }
 
+        public String getIsOptional() {
+            return isOptional;
+        }
     }
 
     private static ResultEntryColumnInfo extractJSONResultColumnInfo(
@@ -927,6 +934,9 @@ public class QueryFactory {
             }
             if (info.getRequiredRoles() != null) {
                 childEl.addAttribute(DBSFields.REQUIRED_ROLES, info.getRequiredRoles(), null);
+            }
+            if (info.getIsOptional() != null) {
+                childEl.addAttribute(DBSFields.OPTIONAL, info.getIsOptional(), null);
             }
         }
     }
