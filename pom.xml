@@ -1356,7 +1356,7 @@
                 <version>${saml.common.util.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.santuario</groupId>
+                <groupId>org.wso2.santuario.orbit</groupId>
                 <artifactId>xmlsec</artifactId>
                 <version>${xmlsec.version}</version>
             </dependency>
@@ -1550,7 +1550,7 @@
         <opensaml.orbit.version>3.3.1.wso2v7</opensaml.orbit.version>
         <saml.common.util.version>1.0.10</saml.common.util.version>
         <imp.pkg.version.xmlsec>[1.4.2, 2.3.0)</imp.pkg.version.xmlsec>
-        <xmlsec.version>1.5.2</xmlsec.version>
+        <xmlsec.version>1.5.6-wso2v1</xmlsec.version>
         <jsonassert.version>1.5.1</jsonassert.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
         <bouncycastle.orbit.version>1.70.0.wso2v1</bouncycastle.orbit.version>
