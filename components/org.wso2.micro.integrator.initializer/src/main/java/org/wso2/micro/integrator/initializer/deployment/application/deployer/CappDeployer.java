@@ -217,6 +217,8 @@ public class CappDeployer extends AbstractDeployer {
             log.error("Error occurred while deploying the Carbon application: " + cAppName
                       + ". Reverting successfully deployed artifacts in the CApp.", e);
             undeployCarbonApp(currentApp, axisConfig);
+            // Validate synapse config to remove half added swagger definitions in the case of a faulty CAPP.
+            SynapseConfigUtils.getSynapseConfiguration(SUPER_TENANT_DOMAIN_NAME).validateSwaggerTable();
             faultyCAppObjects.add(currentApp);
             faultyCapps.add(cAppName);
         }

@@ -65,6 +65,7 @@
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataStringFunctionsTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataSuperTenantUserTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataViewTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.odata.ODataEntityStreamingTestCase"/>
         </classes>
     </test>
 

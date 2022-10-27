@@ -55,7 +55,7 @@
             <artifactId>org.wso2.carbon.identity.saml.common.util</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.santuario</groupId>
+            <groupId>org.wso2.santuario.orbit</groupId>
             <artifactId>xmlsec</artifactId>
         </dependency>
         <dependency>
@@ -98,7 +98,7 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.authenticator.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon.commons:org.wso2.carbon.identity.entitlement.stub</bundleDef>
                                 <bundleDef>org.wso2.orbit.xalan:xalan</bundleDef>
-                                <bundleDef>org.apache.santuario:xmlsec</bundleDef>
+                                <bundleDef>org.wso2.santuario.orbit:xmlsec</bundleDef>
                                 <bundleDef>org.wso2.carbon.identity.saml.common:org.wso2.carbon.identity.saml.common.util</bundleDef>
                                 <bundleDef>org.wso2.orbit.jsr105:jsr105</bundleDef>
                             </bundles>

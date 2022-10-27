@@ -18,20 +18,20 @@
 
 package org.wso2.micro.integrator.dataservices.odata.endpoint;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.SynapseException;
+import org.wso2.micro.integrator.core.Constants;
 import org.wso2.micro.integrator.dataservices.core.odata.ODataServiceFault;
 import org.wso2.micro.integrator.dataservices.core.odata.ODataServiceHandler;
 import org.wso2.micro.integrator.dataservices.core.odata.ODataServiceRegistry;
 
 public class ODataEndpoint {
     private static final Log log = LogFactory.getLog(ODataEndpoint.class);
-    private static final int NOT_IMPLEMENTED = 501;
-    private static final int BAD_REQUEST = 400;
     private static final String SUPER_TENANT_DOMAIN_NAME = "carbon.super";
+    private static final String ODATA_SERVICE = "odata/";
+    private static final String URL_SEPARATOR = "/";
+    private static final Character URL_SEPARATOR_CHAR = '/';
 
     /**
      * This method will find the particular OdataHandler from the ODataServiceRegistry and process the request.
@@ -40,14 +40,14 @@ public class ODataEndpoint {
      * @param response HTTPServlet Response
      * @see ODataServiceRegistry
      */
-    public static void process(HttpServletRequest request, HttpServletResponse response) {
+    public static void process(ODataServletRequest request, ODataServletResponse response) {
         String tenantDomain = SUPER_TENANT_DOMAIN_NAME;
         if (log.isDebugEnabled()) {
             log.debug("OData Request received to DSS: Request body - " + request.toString() + ", ThreadID - " +
                       Thread.currentThread().getId());
         }
         try {
-            String[] serviceParams = getServiceDetails(request.getRequestURI(), tenantDomain);
+            String[] serviceParams = getServiceDetails(request.getRequestURI());
             /*
                 Security Comment :
                 Here we get the serviceRootPath from the request uri, and then we check whether there is a particular service handler for the service request.
@@ -55,7 +55,7 @@ public class ODataEndpoint {
                 These two parameters (Service Name, Config ID) are coming from the requests, therefore we call getServiceDetails to retrieve these information from the request.
                 and then we check whether there is a handler for this requests, if there is a handler we process the request. otherwise we don't process the request.
              */
-            String serviceRootPath = "/" + serviceParams[0] + "/" + serviceParams[1];
+            String serviceRootPath = URL_SEPARATOR + serviceParams[0] + URL_SEPARATOR + serviceParams[1];
             String serviceKey = serviceParams[0] + serviceParams[1];
             ODataServiceRegistry registry = ODataServiceRegistry.getInstance();
             ODataServiceHandler handler = registry.getServiceHandler(serviceKey, tenantDomain);
@@ -63,15 +63,15 @@ public class ODataEndpoint {
                 if (log.isDebugEnabled()) {
                     log.debug(serviceRootPath + " Service invoked.");
                 }
-                handler.process(request, response, serviceRootPath);
+                process(request, response, serviceRootPath, handler);
             } else {
                 if (log.isDebugEnabled()) {
                     log.debug("Couldn't find the ODataService Handler for " + serviceRootPath + " Service.");
                 }
-                response.setStatus(NOT_IMPLEMENTED);
+                response.setStatus(Constants.NOT_IMPLEMENTED);
             }
         } catch (ODataServiceFault e) {
-            response.setStatus(BAD_REQUEST);
+            response.setStatus(Constants.BAD_REQUEST);
             if (log.isDebugEnabled()) {
                 log.debug("Bad Request invoked. :" + e.getMessage());
             }
@@ -84,25 +84,54 @@ public class ODataEndpoint {
     }
 
     /**
+     * This method will process the servlet request and builds the response.
+     *
+     * @param request             OData Servlet request.
+     * @param response            OData Servlet response.
+     * @param serviceRootPath     Path of the request URL.
+     * @param oDataServiceHandler Service handler to process the Servlet request and the response.
+     */
+    private static void process(ODataServletRequest request, ODataServletResponse response, String serviceRootPath,
+                                ODataServiceHandler oDataServiceHandler) {
+        if (oDataServiceHandler == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Couldn't find the ODataService Handler for " + serviceRootPath + " Service.");
+            }
+            response.setStatus(Constants.NOT_IMPLEMENTED);
+        } else {
+            Thread streamThread = new Thread(() -> {
+                try {
+                    oDataServiceHandler.process(request, response, serviceRootPath);
+                } catch (Exception e) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Failed to process the servlet request. " + e);
+                    }
+                    throw new SynapseException("Error occurred while processing the request " + request + ".", e);
+                } finally {
+                    response.flushOutputStream();
+                }
+            });
+            streamThread.start();
+        }
+    }
+
+    /**
      * This method retrieve the service name and config id from the request uri.
      *
      * @param uri          Request uri
-     * @param tenantDomain Tenant domain
      * @return String Array String[0] ServiceName, String[1] ConfigID
      */
-    private static String[] getServiceDetails(String uri, String tenantDomain) throws ODataServiceFault {
-        String odataServices;
+    private static String[] getServiceDetails(String uri) throws ODataServiceFault {
         String odataServiceName;
         String odataServiceUri;
         String configID;
-        odataServices = "odata/";
-        int index = uri.indexOf(odataServices);
+        int index = uri.indexOf(ODATA_SERVICE);
         if (-1 != index) {
-            int serviceStart = index + odataServices.length();
+            int serviceStart = index + ODATA_SERVICE.length();
             if (uri.length() > serviceStart + 1) {
                 odataServiceUri = uri.substring(serviceStart);
-                if (-1 != odataServiceUri.indexOf('/')) {
-                    String[] params = odataServiceUri.split("/");
+                if (-1 != odataServiceUri.indexOf(URL_SEPARATOR_CHAR)) {
+                    String[] params = odataServiceUri.split(URL_SEPARATOR);
                     odataServiceName = params[0];
                     configID = params[1];
                     return new String[] { odataServiceName, configID };

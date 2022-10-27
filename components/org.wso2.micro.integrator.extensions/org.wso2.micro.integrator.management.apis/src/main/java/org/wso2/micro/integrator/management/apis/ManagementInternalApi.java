@@ -50,6 +50,10 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOG_FIL
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_PROCESSORS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_CONTENT;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_METADATA;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_PROPERTIES;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_RESOURCES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_ROLES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SEQUENCES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SERVER_DATA;
@@ -87,6 +91,10 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ApiResourceAdapter(PREFIX_MESSAGE_STORE, new MessageStoreResource()));
         resourcesList.add(new MessageProcessorResource(PREFIX_MESSAGE_PROCESSORS));
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOCAL_ENTRIES, new LocalEntryResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_REGISTRY_RESOURCES , new RegistryResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_REGISTRY_CONTENT , new RegistryContentResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_REGISTRY_PROPERTIES , new RegistryPropertiesResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_REGISTRY_METADATA , new RegistryMetadataResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_CONNECTORS, new ConnectorResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGIN, new LoginResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_USERS + PATH_PARAM_USER, new UserResource()));

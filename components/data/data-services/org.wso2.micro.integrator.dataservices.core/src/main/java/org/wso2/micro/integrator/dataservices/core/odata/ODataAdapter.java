@@ -18,14 +18,18 @@
 
 package org.wso2.micro.integrator.dataservices.core.odata;
 
-import org.apache.axis2.databinding.utils.ConverterUtil;
+import java.nio.ByteBuffer;
+import java.nio.channels.WritableByteChannel;
+import java.util.Iterator;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.Constants;
+import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
+import org.apache.olingo.commons.api.data.EntityIterator;
 import org.apache.olingo.commons.api.data.Link;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
@@ -46,18 +50,23 @@ import org.apache.olingo.commons.api.edm.constants.EdmTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlEdmProvider;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
+import org.apache.olingo.commons.api.edmx.EdmxReference;
+import org.apache.olingo.commons.api.ex.ODataRuntimeException;
 import org.apache.olingo.commons.api.format.ContentType;
 import org.apache.olingo.commons.api.http.HttpHeader;
 import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
-import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataApplicationException;
+import org.apache.olingo.server.api.ODataContentWriteErrorCallback;
+import org.apache.olingo.server.api.ODataContentWriteErrorContext;
 import org.apache.olingo.server.api.ODataLibraryException;
 import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
 import org.apache.olingo.server.api.ODataServerError;
 import org.apache.olingo.server.api.ServiceMetadata;
+import org.apache.olingo.server.api.serializer.EntityCollectionSerializerOptions;
 import org.apache.olingo.server.api.serializer.SerializerException;
+import org.apache.olingo.server.api.serializer.SerializerStreamResult;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriInfoResource;
 import org.apache.olingo.server.api.uri.UriParameter;
@@ -71,9 +80,11 @@ import org.apache.olingo.server.api.uri.queryoption.ExpandItem;
 import org.apache.olingo.server.api.uri.queryoption.ExpandOption;
 import org.apache.olingo.server.api.uri.queryoption.FilterOption;
 import org.apache.olingo.server.api.uri.queryoption.OrderByOption;
+import org.apache.olingo.server.api.uri.queryoption.SelectOption;
 import org.apache.olingo.server.api.uri.queryoption.SkipOption;
 import org.apache.olingo.server.api.uri.queryoption.SkipTokenOption;
 import org.apache.olingo.server.api.uri.queryoption.TopOption;
+import org.apache.olingo.server.api.uri.queryoption.expression.ExpressionVisitException;
 import org.apache.olingo.server.core.ContentNegotiatorException;
 import org.apache.olingo.server.core.ServiceHandler;
 import org.apache.olingo.server.core.requests.ActionRequest;
@@ -105,15 +116,17 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Types;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
+import org.wso2.micro.integrator.dataservices.core.odata.expression.ExpressionVisitorImpl;
+import org.wso2.micro.integrator.dataservices.core.odata.expression.operand.TypedOperand;
+import org.wso2.micro.integrator.dataservices.core.odata.expression.operand.VisitorOperand;
+import org.wso2.micro.integrator.dataservices.core.odata.serializer.OData;
+import org.wso2.micro.integrator.dataservices.core.odata.serializer.ODataSerializer;
 
 /**
  * This class implements the olingo serviceHandler to process requests and response.
@@ -126,7 +139,20 @@ public class ODataAdapter implements ServiceHandler {
 
     private static final String EMPTY_E_TAG = "*";
 
+    /**
+     * Default max page size.
+     */
+    private static final int DEFAULT_MAX_PAGE_SIZE = 10;
+
+    /**
+     * HTTP Header for the prefered page size.
+     */
     private static final String ODATA_MAX_PAGE_SIZE = "odata.maxpagesize";
+
+    /**
+     * HTTP header for the acceptable content type.
+     */
+    private static final String ACCEPT_HEADER = "Accept";
 
     /**
      * Service metadata of the odata service.
@@ -148,6 +174,36 @@ public class ODataAdapter implements ServiceHandler {
      */
     private String namespace;
 
+    /**
+     * Preferred chunk size.
+     */
+    private static final int chunkSize;
+
+    /**
+     * Default chunk size.
+     */
+    private static final int DEFAULT_CHUNK_SIZE = 1000;
+
+    /**
+     * System property to get chunk size.
+     */
+    private static final String CHUNK_SIZE = "odataChunkSize";
+
+    /**
+     * Initializing the chunk size for entity streaming.
+     */
+    static {
+        try {
+            chunkSize = Integer.parseInt(System.getProperty(CHUNK_SIZE, String.valueOf(DEFAULT_CHUNK_SIZE)));
+        } catch (NumberFormatException e) {
+            throw new ODataRuntimeException("Error occurred while initializing the chunk size. :" + e.getMessage(), e);
+        }
+    }
+
+    public static int getChunkSize() {
+        return chunkSize;
+    }
+
     private ThreadLocal<Boolean> batchRequest = new ThreadLocal<Boolean>() {
         protected synchronized Boolean initialValue() {
             return false;
@@ -161,7 +217,7 @@ public class ODataAdapter implements ServiceHandler {
     }
 
     @Override
-    public void init(OData odata, ServiceMetadata serviceMetadata) {
+    public void init(org.apache.olingo.server.api.OData odata, ServiceMetadata serviceMetadata) {
         this.serviceMetadata = serviceMetadata;
     }
 
@@ -171,17 +227,34 @@ public class ODataAdapter implements ServiceHandler {
         response.writeMetadata();
     }
 
+    /**
+     * This method returns the page size.
+     * If page size is not defined a default page size is allocated.
+     *
+     * @param request
+     */
+    private int getPageSize(final DataRequest request) {
+        Integer preferredSize = request.getOdata().createPreferences(
+                request.getODataRequest().getHeaders(HttpHeader.PREFER)).getMaxPageSize();
+        return preferredSize == null ? DEFAULT_MAX_PAGE_SIZE : preferredSize;
+    }
+
     @Override
     public void readServiceDocument(ServiceDocumentRequest request, ServiceDocumentResponse response)
-            throws ODataApplicationException, ODataLibraryException {
+            throws ODataLibraryException {
         response.writeServiceDocument(request.getODataRequest().getRawBaseUri());
     }
 
     private static class EntityDetails {
-        EntityCollection entitySet = null;
         Entity entity = null;
         EdmEntityType entityType;
+        EdmEntitySet edmEntitySet;
+        EntityIterator iterator = null;
         boolean eTagMatched = false;
+        ExpandOption expandOption;
+        CountOption countOption;
+        SelectOption selectOption;
+        boolean writeOnlyReference;
     }
 
     /**
@@ -192,7 +265,7 @@ public class ODataAdapter implements ServiceHandler {
      * @throws ODataApplicationException
      */
     private EntityDetails process(final DataRequest request) throws ODataApplicationException {
-        EntityCollection entitySet = null;
+        EntityIterator iterator = null;
         Entity entity = null;
         EdmEntityType entityType;
         Entity parentEntity;
@@ -200,6 +273,18 @@ public class ODataAdapter implements ServiceHandler {
         EntityDetails details = new EntityDetails();
         String baseURL = request.getODataRequest().getRawBaseUri();
         UriInfo uriInfo = request.getUriInfo();
+
+        ExpandOption expandOption = uriInfo.getExpandOption();
+        FilterOption filterOption = uriInfo.getFilterOption();
+        CountOption countOption = uriInfo.getCountOption();
+        OrderByOption orderByOption = uriInfo.getOrderByOption();
+        SkipOption skipOption = uriInfo.getSkipOption();
+        TopOption topOption = uriInfo.getTopOption();
+        SkipTokenOption skipTokenOption = uriInfo.getSkipTokenOption();
+        SelectOption selectOption = uriInfo.getSelectOption();
+
+        QueryOptions queryOptions = new QueryOptions(expandOption, filterOption, countOption, skipOption, topOption,
+                                                     orderByOption, skipTokenOption);
         try {
             if (request.isSingleton()) {
                 log.error(new ODataServiceFault("Singletons are not supported."));
@@ -207,6 +292,10 @@ public class ODataAdapter implements ServiceHandler {
                                                     HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ENGLISH);
             } else {
                 edmEntitySet = request.getEntitySet();
+                if (skipTokenOption != null) {
+                    int pageSize = this.getPageSize(request);
+                    queryOptions.initPagination(pageSize, baseURL, edmEntitySet.getName());
+                }
                 entityType = edmEntitySet.getEntityType();
                 List<UriParameter> keys = request.getKeyPredicates();
                 if (keys != null && !keys.isEmpty()) {
@@ -215,73 +304,19 @@ public class ODataAdapter implements ServiceHandler {
                         details.eTagMatched = true;
                     }
                 } else {
-                    entitySet = getEntityCollection(edmEntitySet.getName(), baseURL);
+                    iterator = getEntityIterator(edmEntitySet, baseURL, queryOptions);
                 }
             }
-            ExpandOption expandOption = uriInfo.getExpandOption();
-            if (expandOption != null) {
-                // retrieve the EdmNavigationProperty from the expand expression.
-                EdmNavigationProperty edmNavigationProperty = null;
-                List<ExpandItem> expandItems = expandOption.getExpandItems();
-                for (ExpandItem expandItem : expandItems) {
-                    if (expandItem.isStar()) {
-                        List<EdmNavigationPropertyBinding> bindings = edmEntitySet.getNavigationPropertyBindings();
-                        // check if navigation bindings exist.
-                        if (!bindings.isEmpty()) {
-                            EdmNavigationPropertyBinding binding = bindings.get(0);
-                            EdmElement property = edmEntitySet.getEntityType().getProperty(binding.getPath());
-                            if (property instanceof EdmNavigationProperty) {
-                                edmNavigationProperty = (EdmNavigationProperty) property;
-                            }
-                        }
-                    } else {
-                        UriResource uriResource = expandItem.getResourcePath().getUriResourceParts().get(0);
-                        if (uriResource instanceof UriResourceNavigation) {
-                            edmNavigationProperty = ((UriResourceNavigation) uriResource).getProperty();
-                        }
-                    }
-                    // handle $expand.
-                    if (edmNavigationProperty != null) {
-                        String navPropName = edmNavigationProperty.getName();
-                        List<Entity> entityList;
-                        if (entitySet != null) {
-                            entityList = entitySet.getEntities();
-                        } else {
-                            entityList = Collections.singletonList(entity);
-                        }
-                        for (Entity entityObject : entityList) {
-                            Link link = new Link();
-                            link.setTitle(navPropName);
-                            link.setType(Constants.ENTITY_NAVIGATION_LINK_TYPE);
-                            link.setRel(Constants.NS_ASSOCIATION_LINK_REL + navPropName);
-                            if (edmNavigationProperty.isCollection()) {
-                                EntityCollection expandEntityCollection = getNavigableEntitySet(this.serviceMetadata,
-                                                                                                entityObject,
-                                                                                                edmNavigationProperty,
-                                                                                                baseURL);
-                                link.setInlineEntitySet(expandEntityCollection);
-                                if (expandEntityCollection != null) {
-                                    link.setHref(expandEntityCollection.getId().toASCIIString());
-                                }
-                            } else {
-                                Entity expandEntity = getNavigableEntity(serviceMetadata, entityObject,
-                                                                         edmNavigationProperty, baseURL);
-                                link.setInlineEntity(expandEntity);
-                                if (expandEntity != null) {
-                                    link.setHref(expandEntity.getId().toASCIIString());
-                                }
-                            }
-                            // set the link containing the expanded data to the current entity.
-                            entityObject.getNavigationLinks().add(link);
-                        }
-                    }
-                }
-            }
-            // handle navigation.
             if (!request.getNavigations().isEmpty() && entity != null) {
                 for (UriResourceNavigation nav : request.getNavigations()) {
                     if (nav.isCollection()) {
-                        entitySet = getNavigableEntitySet(this.serviceMetadata, entity, nav.getProperty(), baseURL);
+                        edmEntitySet = getNavigationTargetEntitySet(edmEntitySet, nav.getProperty());
+                        if (skipTokenOption != null) {
+                            int pageSize = this.getPageSize(request);
+                            queryOptions.initPagination(pageSize, baseURL, edmEntitySet.getName());
+                        }
+                        iterator = getNavigableEntityIterator(edmEntitySet, this.serviceMetadata, entity,
+                                                              nav.getProperty(), baseURL, queryOptions);
                     } else {
                         parentEntity = entity;
                         entity = getNavigableEntity(serviceMetadata, parentEntity, nav.getProperty(), baseURL);
@@ -289,44 +324,46 @@ public class ODataAdapter implements ServiceHandler {
                     entityType = nav.getProperty().getType();
                 }
             }
-
+            if (expandOption != null && iterator == null) {
+                entity = expandEntityForStreaming(this, entity, baseURL, edmEntitySet, expandOption);
+            }
+            details.edmEntitySet = edmEntitySet;
+            details.expandOption = expandOption;
+            details.countOption = countOption;
+            details.selectOption = selectOption;
             details.entity = entity;
-            details.entitySet = entitySet;
             details.entityType = entityType;
-            // According to the odatav4 spec we have to perform these queries according to the following order
-            FilterOption filterOption = uriInfo.getFilterOption();
-            CountOption countOption = uriInfo.getCountOption();
-            OrderByOption orderByOption = uriInfo.getOrderByOption();
-            SkipOption skipOption = uriInfo.getSkipOption();
-            TopOption topOption = uriInfo.getTopOption();
-            SkipTokenOption skipTokenOption = uriInfo.getSkipTokenOption();
-            if (filterOption != null) {
-                QueryHandler.applyFilterSystemQuery(filterOption, details.entitySet, edmEntitySet);
-            }
-            if (countOption != null) {
-                QueryHandler.applyCountSystemQueryOption(countOption, details.entitySet);
-            }
-            if (orderByOption != null) {
-                QueryHandler.applyOrderByOption(orderByOption, details.entitySet, edmEntitySet);
-            }
-            if (skipOption != null) {
-                QueryHandler.applySkipSystemQueryHandler(skipOption, details.entitySet);
-            }
-            if (topOption != null) {
-                QueryHandler.applyTopSystemQueryOption(topOption, details.entitySet);
-            }
-            if (skipTokenOption != null) {
-                int pageSize = request.getOdata().createPreferences(request.getODataRequest()
-                                                                           .getHeaders(HttpHeader.PREFER))
-                                      .getMaxPageSize();
-                QueryHandler.applyServerSidePaging(skipTokenOption, details.entitySet, edmEntitySet, baseURL, pageSize);
-            }
+            details.iterator = iterator;
+            details.writeOnlyReference = request.isReferenceRequest();
             return details;
         } catch (ODataServiceFault dataServiceFault) {
             log.error("Error in processing the read request. : " + dataServiceFault.getMessage(), dataServiceFault);
             throw new ODataApplicationException(dataServiceFault.getMessage(),
                                                 HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), Locale.ENGLISH);
         }
+    }
+
+    /**
+     * This method returns the EDM entity set of the navigation target.
+     *
+     * @param startEdmEntitySet
+     * @param edmNavigationProperty
+     * @throws ODataApplicationException
+     */
+    private EdmEntitySet getNavigationTargetEntitySet(EdmEntitySet startEdmEntitySet,
+                                                      EdmNavigationProperty edmNavigationProperty)
+            throws ODataApplicationException {
+
+        EdmEntitySet navigationTargetEntitySet = null;
+        String navPropName = edmNavigationProperty.getName();
+        EdmBindingTarget edmBindingTarget = startEdmEntitySet.getRelatedBindingTarget(navPropName);
+        if (edmBindingTarget != null && edmBindingTarget instanceof EdmEntitySet) {
+            navigationTargetEntitySet = (EdmEntitySet) edmBindingTarget;
+        } else {
+            throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(),
+                                                Locale.ROOT);
+        }
+        return navigationTargetEntitySet;
     }
 
     private EdmEntitySet getEdmEntitySet(final UriInfoResource uriInfo) throws ODataApplicationException {
@@ -399,26 +436,29 @@ public class ODataAdapter implements ServiceHandler {
 
         response.accepts(new ServiceResponseVisior() {
             @Override
-            public void visit(CountResponse response) throws ODataApplicationException, SerializerException {
-                response.writeCount(details.entitySet.getCount());
+            public void visit(CountResponse response) throws SerializerException {
+                while (details.iterator.hasNext()) {
+                    details.iterator.next();
+                }
+                response.writeCount(details.iterator.getCount());
             }
 
             @Override
-            public void visit(PrimitiveValueResponse response) throws ODataApplicationException, SerializerException {
+            public void visit(PrimitiveValueResponse response) throws SerializerException {
                 EdmProperty edmProperty = request.getUriResourceProperty().getProperty();
                 Property property = details.entity.getProperty(edmProperty.getName());
                 response.write(property.getValue());
             }
 
             @Override
-            public void visit(PropertyResponse response) throws ODataApplicationException, SerializerException {
+            public void visit(PropertyResponse response) throws SerializerException {
                 EdmProperty edmProperty = request.getUriResourceProperty().getProperty();
                 Property property = details.entity.getProperty(edmProperty.getName());
                 response.writeProperty(edmProperty.getType(), property);
             }
 
             @Override
-            public void visit(StreamResponse response) throws ODataApplicationException {
+            public void visit(StreamResponse response) {
                 EdmProperty edmProperty = request.getUriResourceProperty().getProperty();
                 Property property = details.entity.getProperty(edmProperty.getName());
                 response.writeStreamResponse(new ByteArrayInputStream((byte[]) (property.getValue())),
@@ -427,7 +467,7 @@ public class ODataAdapter implements ServiceHandler {
             }
 
             @Override
-            public void visit(EntitySetResponse response) throws ODataApplicationException, SerializerException {
+            public void visit(EntitySetResponse response) throws SerializerException {
                 if (request.getPreference(ODATA_MAX_PAGE_SIZE) != null) {
                     response.writeHeader("Preference-Applied", ODATA_MAX_PAGE_SIZE + "=" +
                                                                request.getPreference(ODATA_MAX_PAGE_SIZE));
@@ -435,12 +475,37 @@ public class ODataAdapter implements ServiceHandler {
                 if (details.entity == null && !request.getNavigations().isEmpty()) {
                     response.writeReadEntitySet(details.entityType, new EntityCollection());
                 } else {
-                    response.writeReadEntitySet(details.entityType, details.entitySet);
+                    OData odata = OData.newInstance();
+                    ODataSerializer serializer = getSerializer(request, odata);
+                    ServiceMetadata edm = odata.createServiceMetadata(getEdmProvider(), new ArrayList<EdmxReference>());
+                    final String id = request.getODataRequest().getRawBaseUri() + "/" + details.edmEntitySet.getName();
+                    ContextURL contextUrl = null;
+                    if (details.selectOption != null) {
+                        String selectList = odata.createUriHelper().buildContextURLSelectList(details.entityType, null,
+                                                                                              details.selectOption);
+                        contextUrl = ContextURL.with().entitySet(details.edmEntitySet).selectList(selectList).build();
+                    } else {
+                        contextUrl = ContextURL.with().entitySet(details.edmEntitySet).build();
+                    }
+                    EntityCollectionSerializerOptions opts = buildSerializerOptions(details, contextUrl, id);
+                    SerializerStreamResult serializerResult = serializer.entityCollectionStreamed(edm,
+                                                                                                  details.edmEntitySet.getEntityType(),
+                                                                                                  details.iterator,
+                                                                                                  opts);
+                    if (ContentType.parse(request.getHeader(ACCEPT_HEADER)) != null) {
+                        response.getODataResponse().setHeader(HttpHeader.CONTENT_TYPE,
+                                                              request.getHeader(ACCEPT_HEADER));
+                    } else {
+                        response.getODataResponse().setHeader(HttpHeader.CONTENT_TYPE,
+                                                              ContentType.APPLICATION_XML.toString());
+                    }
+                    response.getODataResponse().setODataContent(serializerResult.getODataContent());
+                    response.getODataResponse().setStatusCode(HttpStatusCode.OK.getStatusCode());
                 }
             }
 
             @Override
-            public void visit(EntityResponse response) throws ODataApplicationException, SerializerException {
+            public void visit(EntityResponse response) throws SerializerException {
                 if (details.entity == null) {
                     /*Sometimes there can be navigation entity might be null,
 					therefore according to the ODATA spec we should send NoContent Header
@@ -459,6 +524,64 @@ public class ODataAdapter implements ServiceHandler {
                 }
             }
         });
+    }
+
+    /**
+     * This method builds the entity serializer options.
+     *
+     * @param details
+     * @param contextUrl Context URL
+     * @param id         OData request ID
+     * @return
+     */
+    private EntityCollectionSerializerOptions buildSerializerOptions(EntityDetails details, ContextURL contextUrl,
+                                                                     String id) {
+        ODataContentWriteErrorCallback errorCallback = new ODataContentWriteErrorCallback() {
+            public void handleError(ODataContentWriteErrorContext context, WritableByteChannel channel) {
+                String message = "An error occurred with message: ";
+                if (context.getException() != null) {
+                    message += context.getException().getMessage();
+                }
+                try {
+                    channel.write(ByteBuffer.wrap(message.getBytes()));
+                } catch (IOException e) {
+                    throw new ODataRuntimeException(
+                            "Error occurred while writing the error message to the output buffer. :" + e.getMessage(),
+                            e);
+                }
+            }
+        };
+        EntityCollectionSerializerOptions options = EntityCollectionSerializerOptions.with().id(id)
+                .writeContentErrorCallback(errorCallback).contextURL(contextUrl).expand(details.expandOption).count(
+                        details.countOption).select(details.selectOption).writeOnlyReferences(
+                        details.writeOnlyReference).build();
+        return options;
+    }
+
+    /**
+     * This method creates a serializer based on the given content type.
+     * Content type can be JSON or XML.
+     *
+     * @param request OData request
+     * @param odata
+     * @return
+     * @throws SerializerException
+     */
+    private ODataSerializer getSerializer(DataRequest request, OData odata) throws SerializerException {
+        ODataSerializer serializer = null;
+        if (ContentType.parse(request.getHeader(ACCEPT_HEADER)) != null) {
+            if (ContentType.parse(request.getHeader(ACCEPT_HEADER)).equals(ContentType.APPLICATION_JSON)) {
+                serializer = odata.createSerializer(ContentType.APPLICATION_JSON);
+            } else if (ContentType.parse(request.getHeader(ACCEPT_HEADER)).equals(ContentType.APPLICATION_XML)) {
+                serializer = odata.createSerializer(ContentType.APPLICATION_XML);
+            } else {
+                throw new IllegalArgumentException(
+                        "Does not support " + request.getHeader(ACCEPT_HEADER) + " content type");
+            }
+        } else {
+            serializer = odata.createSerializer(ContentType.APPLICATION_XML);
+        }
+        return serializer;
     }
 
     @Override
@@ -1101,7 +1224,7 @@ public class ODataAdapter implements ServiceHandler {
     }
 
     /**
-     * Returns entity collection from the data entry list to use in olingo.  .
+     * Returns entity collection from the data entry list to use in olingo.
      *
      * @param tableName Name of the table
      * @param entries   List of Data Entry
@@ -1118,7 +1241,8 @@ public class ODataAdapter implements ServiceHandler {
                 Entity entity = new Entity();
                 for (DataColumn column : this.dataHandler.getTableMetadata().get(tableName).values()) {
                     String columnName = column.getColumnName();
-                    entity.addProperty(createPrimitive(column.getColumnType(), columnName, entry.getValue(columnName)));
+                    entity.addProperty(
+                            ODataUtils.createPrimitive(column.getColumnType(), columnName, entry.getValue(columnName)));
                 }
                 //Set ETag to the entity
                 EdmEntityType entityType = this.serviceMetadata.getEdm()
@@ -1144,6 +1268,250 @@ public class ODataAdapter implements ServiceHandler {
     }
 
     /**
+     * Returns an entity iterator of the result entity list.
+     * To be used in the Odata serializer to stream the entities.
+     *
+     * @param edmEntitySet Container of the Entity Type
+     * @param baseURL      Base URL of the request
+     * @param queryOptions Odata query options
+     * @param properties   Navigation properties
+     * @param tableName    Name of the table
+     * @return Entity Iterator
+     * @see EntityIterator
+     */
+    public EntityIterator createEntityIterator(EdmEntitySet edmEntitySet, String baseURL, QueryOptions queryOptions,
+                                               ODataEntry properties, String tableName) throws ODataServiceFault {
+        this.dataHandler.initStreaming();
+        List<Entity> entityList = new ArrayList<Entity>();
+        Iterator<Entity> it = entityList.iterator();
+        int rowsCount = -1;
+        try {
+            if (properties != null) {
+                rowsCount = this.dataHandler.getEntityCountWithKeys(tableName, properties);
+            } else {
+                rowsCount = this.dataHandler.getEntityCount(tableName);
+            }
+        } catch (ODataServiceFault e) {
+            throw new ODataServiceFault(e, "Connection Error occurred. :" + e.getMessage());
+        }
+
+        return new StreamingEntityIterator(this, edmEntitySet, baseURL, it, entityList, queryOptions, rowsCount,
+                                           properties, tableName) {
+            @Override
+            public boolean hasNext() {
+                if (!this.iterator.hasNext()) {
+                    try {
+                        if (this.entityCount >= this.rowsCount) {
+                            return false;
+                        }
+                        QueryOptions queryOptions = this.getQueryOptions();
+                        if (queryOptions.getTopOption() != null
+                                && queryOptions.getTopCount() > queryOptions.getTopOption().getValue()) {
+                            return false;
+                        }
+                        if (queryOptions.getSkipTokenOption() != null && queryOptions.getSkipTokenCount() > (
+                                queryOptions.getItemsToSkip() + queryOptions.getPageSize())) {
+                            return false;
+                        }
+                        EdmEntitySet edmEntitySet = this.getEdmEntitySet();
+                        ODataAdapter oDataAdapter = this.getAdapter();
+                        String tableName = this.getTableName();
+                        List<ODataEntry> entries = null;
+
+                        if (queryOptions.getOrderByOption() != null) {
+                            entries = oDataAdapter.dataHandler.streamTableWithOrder(tableName,
+                                                                                    queryOptions.getOrderByOption());
+                        } else if (this.getProperties() != null) {
+                            entries = oDataAdapter.dataHandler.streamTableWithKeys(tableName, this.getProperties());
+                        } else {
+                            entries = oDataAdapter.dataHandler.streamTable(tableName);
+                        }
+
+                        String baseURL = this.getBaseURL();
+                        for (int i = 0; i < entries.size(); i++) {
+                            Entity entity = createEntityForStreaming(oDataAdapter, tableName, entries.get(i), baseURL);
+                            this.entityCount++;
+                            if (queryOptions.getFilterOption() != null) {
+                                final VisitorOperand operand = queryOptions.getFilterOption().getExpression().accept(
+                                        new ExpressionVisitorImpl(entity, edmEntitySet));
+                                final TypedOperand typedOperand = operand.asTypedOperand();
+                                if (typedOperand.is(ODataConstants.primitiveBoolean)) {
+                                    if (Boolean.FALSE.equals(typedOperand.getTypedValue(Boolean.class))) {
+                                        continue;
+                                    }
+                                } else {
+                                    throw new ODataApplicationException(
+                                            "Invalid filter expression. Filter expressions must return a value of "
+                                                    + "type Edm.Boolean", HttpStatusCode.BAD_REQUEST.getStatusCode(),
+                                            Locale.ROOT);
+                                }
+                            }
+                            if (queryOptions.getSkipOption() != null) {
+                                queryOptions.stepSkipCount();
+                                if (queryOptions.getSkipCount() <= queryOptions.getSkipOption().getValue()) {
+                                    continue;
+                                }
+                            }
+                            if (queryOptions.getTopOption() != null) {
+                                queryOptions.stepTopCount();
+                                if (queryOptions.getTopCount() > queryOptions.getTopOption().getValue()) {
+                                    this.iterator = this.getEntityList().iterator();
+                                    return this.iterator.hasNext();
+                                }
+                            }
+                            if (queryOptions.getSkipTokenOption() != null) {
+                                queryOptions.stepSkipTokenCount();
+                                if (queryOptions.getSkipTokenCount() <= queryOptions.getItemsToSkip()) {
+                                    continue;
+                                } else if (queryOptions.getSkipTokenCount() > (queryOptions.getItemsToSkip()
+                                        + queryOptions.getPageSize())) {
+                                    this.iterator = this.getEntityList().iterator();
+                                    return this.iterator.hasNext();
+                                }
+                            }
+                            if (queryOptions.getExpandOption() != null) {
+                                entity = expandEntityForStreaming(oDataAdapter, entity, baseURL, edmEntitySet,
+                                                                  queryOptions.getExpandOption());
+                            }
+                            this.getEntityList().add(entity);
+                        }
+                        if (this.entityCount < this.rowsCount && this.getEntityList().isEmpty()) {
+                            if (queryOptions.getFilterOption() != null) {
+                                return hasNext();
+                            }
+                            if (queryOptions.getSkipOption() != null && (queryOptions.getSkipCount()
+                                    <= queryOptions.getSkipOption().getValue())) {
+                                return hasNext();
+                            }
+                            if (queryOptions.getSkipTokenOption() != null && (queryOptions.getSkipTokenCount()
+                                    <= queryOptions.getItemsToSkip())) {
+                                return hasNext();
+                            }
+                        }
+                        this.iterator = this.getEntityList().iterator();
+                        return this.iterator.hasNext();
+
+                    } catch (ODataServiceFault | ODataApplicationException | ExpressionVisitException e) {
+                        throw new ODataRuntimeException(
+                                "Error occurred while processing the entities. :" + e.getMessage(), e);
+                    }
+                }
+                return this.iterator.hasNext();
+            }
+
+            @Override
+            public Entity next() {
+                Entity entity = null;
+                entity = this.iterator.next();
+                this.setCount(this.getCount() + 1);
+                this.iterator.remove();
+                return entity;
+            }
+        };
+    }
+
+    /**
+     * This method handles OData expand option.
+     * Expand and attach referenced entities.
+     *
+     * @param oDataAdapter
+     * @param entity       Entity to be processed
+     * @param baseURL      Base URL of the request
+     * @param edmEntitySet Container of the Entity Type
+     * @param expandOption OData expand options
+     * @return Processed entity
+     */
+    private Entity expandEntityForStreaming(ODataAdapter oDataAdapter, Entity entity, String baseURL,
+                                            EdmEntitySet edmEntitySet, ExpandOption expandOption)
+            throws ODataServiceFault {
+        try {
+            EdmNavigationProperty edmNavigationProperty = null;
+            List<ExpandItem> expandItems = expandOption.getExpandItems();
+            for (ExpandItem expandItem : expandItems) {
+                if (expandItem.isStar()) {
+                    List<EdmNavigationPropertyBinding> bindings = edmEntitySet.getNavigationPropertyBindings();
+                    if (!bindings.isEmpty()) {
+                        EdmNavigationPropertyBinding binding = bindings.get(0);
+                        EdmElement property = edmEntitySet.getEntityType().getProperty(binding.getPath());
+                        if (property instanceof EdmNavigationProperty) {
+                            edmNavigationProperty = (EdmNavigationProperty) property;
+                        }
+                    }
+                } else {
+                    UriResource uriResource = expandItem.getResourcePath().getUriResourceParts().get(0);
+                    if (uriResource instanceof UriResourceNavigation) {
+                        edmNavigationProperty = ((UriResourceNavigation) uriResource).getProperty();
+                    }
+                }
+                if (edmNavigationProperty != null) {
+                    String navPropName = edmNavigationProperty.getName();
+                    Link link = new Link();
+                    link.setTitle(navPropName);
+                    link.setType(Constants.ENTITY_NAVIGATION_LINK_TYPE);
+                    link.setRel(Constants.NS_ASSOCIATION_LINK_REL + navPropName);
+                    if (edmNavigationProperty.isCollection()) {
+                        EntityCollection expandEntityCollection = getNavigableEntitySet(oDataAdapter.serviceMetadata,
+                                                                                        entity, edmNavigationProperty,
+                                                                                        baseURL);
+                        link.setInlineEntitySet(expandEntityCollection);
+                        if (expandEntityCollection != null) {
+                            link.setHref(expandEntityCollection.getId().toASCIIString());
+                        }
+                    } else {
+                        Entity expandEntity = getNavigableEntity(serviceMetadata, entity, edmNavigationProperty,
+                                                                 baseURL);
+                        link.setInlineEntity(expandEntity);
+                        if (expandEntity != null) {
+                            link.setHref(expandEntity.getId().toASCIIString());
+                        }
+                    }
+                    entity.getNavigationLinks().add(link);
+                }
+            }
+            return entity;
+        } catch (ODataServiceFault | ODataApplicationException e) {
+            throw new ODataServiceFault(e,
+                                        "Error occurred when expanding a property for the entity. :" + e.getMessage());
+        }
+    }
+
+    /**
+     * This method creates an entity using an OData entry and table metadata.
+     *
+     * @param oDataAdapter
+     * @param tableName    Name of the table (Entity Type)
+     * @param oDataEntry   A single row of data
+     * @param baseURL      Base URL of the request
+     * @return Created entity
+     */
+    private Entity createEntityForStreaming(ODataAdapter oDataAdapter, String tableName, ODataEntry oDataEntry,
+                                            String baseURL) throws ODataServiceFault {
+        Entity entity = null;
+        try {
+            entity = new Entity();
+            for (DataColumn column : oDataAdapter.dataHandler.getTableMetadata().get(tableName).values()) {
+                String columnName = column.getColumnName();
+                entity.addProperty(ODataUtils.createPrimitive(column.getColumnType(), columnName,
+                                                              oDataEntry.getValue(columnName)));
+            }
+            EdmEntityType entityType = oDataAdapter.serviceMetadata.getEdm().getEntityType(
+                    new FullQualifiedName(oDataAdapter.namespace, tableName));
+            entity.setId(new URI(ODataUtils.buildLocation(baseURL, entity, entityType.getName(), entityType)));
+            entity.setETag(oDataEntry.getValue("ETag"));
+            entity.setType(new FullQualifiedName(oDataAdapter.namespace, tableName).getFullQualifiedNameAsString());
+            return entity;
+        } catch (URISyntaxException e) {
+            throw new ODataServiceFault(e, "Error occurred when creating id for the entity. :" + e.getMessage());
+        } catch (ParseException e) {
+            throw new ODataServiceFault(e,
+                                        "Error occurred when creating a property for the entity. :" + e.getMessage());
+        } catch (EdmPrimitiveTypeException e) {
+            throw new ODataServiceFault(e,
+                                        "Error occurred when creating a property for the entity. :" + e.getMessage());
+        }
+    }
+
+    /**
      * This method creates the entity in table by calling the insertEntityToTable method in ODataDataHandler.
      * Entity object is wrapped to DataEntry before call the method.
      *
@@ -1165,7 +1533,7 @@ public class ODataAdapter implements ServiceHandler {
             for(String paramName : createdEntity.getNames()) {
                 if(!paramName.equals(ODataConstants.E_TAG)) {
                     DataColumn column = this.dataHandler.getTableMetadata().get(rootTable).get(paramName);
-                    entity.addProperty(createPrimitive(column.getColumnType(), paramName, createdEntity.getValue(paramName)));
+                    entity.addProperty(ODataUtils.createPrimitive(column.getColumnType(), paramName, createdEntity.getValue(paramName)));
                 }
             }
             if (!entity.getNavigationBindings().isEmpty()) {
@@ -1266,14 +1634,6 @@ public class ODataAdapter implements ServiceHandler {
         return this.edmProvider;
     }
 
-    private byte[] getBytesFromBase64String(String base64Str) throws ODataServiceFault {
-        try {
-            return Base64.decodeBase64(base64Str.getBytes(DBConstants.DEFAULT_CHAR_SET_TYPE));
-        } catch (Exception e) {
-            throw new ODataServiceFault(e.getMessage());
-        }
-    }
-
     private String getBase64StringFromBytes(byte[] data) throws ODataServiceFault {
         byte[] base64Data = Base64.encodeBase64(data);
         try {
@@ -1349,14 +1709,17 @@ public class ODataAdapter implements ServiceHandler {
     }
 
     /**
-     * This method returns the entity collection from the ODataDataHandler
+     * This method returns the entity iterator for the entities when navigation option is not defined.
      *
-     * @param tableName Name of the table
-     * @return EntityCollection
+     * @param edmEntitySet Container of the Entity Type
+     * @param baseUrl      Base URL of the request
+     * @param queryOptions OData Query options
+     * @return EntityIterator
      * @throws ODataServiceFault
      */
-    private EntityCollection getEntityCollection(String tableName, String baseUrl) throws ODataServiceFault {
-        return createEntityCollectionFromDataEntryList(tableName, this.dataHandler.readTable(tableName), baseUrl);
+    private EntityIterator getEntityIterator(EdmEntitySet edmEntitySet, String baseUrl, QueryOptions queryOptions)
+            throws ODataServiceFault {
+        return createEntityIterator(edmEntitySet, baseUrl, queryOptions, null, edmEntitySet.getName());
     }
 
     /**
@@ -1564,6 +1927,44 @@ public class ODataAdapter implements ServiceHandler {
         if(!properties.isEmpty()) {
             return createEntityCollectionFromDataEntryList(linkName, dataHandler
                     .readTableWithKeys(linkName, wrapPropertiesToDataEntry(type, properties, propertyMap)), url);
+        }
+        return null;
+    }
+
+    /**
+     * This method return the entity iterator for the entities which are able to navigate from the parent
+     * entity (source) using uri navigation properties.
+     *
+     * @param metadata     Service Metadata
+     * @param parentEntity parentEntity
+     * @param navigation   UriResourceNavigation
+     * @param url          base URL of the request
+     * @param edmEntitySet Container of the Entity Type
+     * @param queryOptions OData query options.
+     * @return EntityIterator
+     * @throws ODataServiceFault
+     * @throws ODataApplicationException
+     */
+    private EntityIterator getNavigableEntityIterator(EdmEntitySet edmEntitySet, ServiceMetadata metadata,
+                                                      Entity parentEntity, EdmNavigationProperty navigation, String url,
+                                                      QueryOptions queryOptions)
+            throws ODataApplicationException, ODataServiceFault {
+        EdmEntityType type = metadata.getEdm().getEntityType(new FullQualifiedName(parentEntity.getType()));
+        String linkName = navigation.getName();
+        List<Property> properties = new ArrayList<>();
+        Map<String, EdmProperty> propertyMap = new HashMap<>();
+        for (NavigationKeys keys : this.dataHandler.getNavigationProperties().get(type.getName()).getNavigationKeys(
+                linkName)) {
+            Property property = parentEntity.getProperty(keys.getPrimaryKey());
+            if (property != null && !property.isNull()) {
+                propertyMap.put(keys.getForeignKey(), (EdmProperty) type.getProperty(property.getName()));
+                property.setName(keys.getForeignKey());
+                properties.add(property);
+            }
+        }
+        if (!properties.isEmpty()) {
+            return createEntityIterator(edmEntitySet, url, queryOptions,
+                                        wrapPropertiesToDataEntry(type, properties, propertyMap), linkName);
         }
         return null;
     }
@@ -1821,176 +2222,6 @@ public class ODataAdapter implements ServiceHandler {
             propertiesMap.put(tableName, getProperties(tableName));
         }
         return propertiesMap;
-    }
-
-    /**
-     * This method creates primitive type property.
-     *
-     * @param columnType Data type of the column - java.sql.Types
-     * @param name       Name of the column
-     * @param paramValue String value
-     * @return Property
-     * @throws ODataServiceFault
-     * @see Types
-     * @see Property
-     */
-    private Property createPrimitive(final DataColumn.ODataDataType columnType, final String name,
-                                     final String paramValue) throws ODataServiceFault, ParseException {
-        String propertyType;
-        Object value;
-        switch (columnType) {
-            case INT32:
-                propertyType = EdmPrimitiveTypeKind.Int32.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : ConverterUtil.convertToInt(paramValue);
-                break;
-            case INT16:
-                propertyType = EdmPrimitiveTypeKind.Int16.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : ConverterUtil.convertToShort(paramValue);
-                break;
-            case DOUBLE:
-                propertyType = EdmPrimitiveTypeKind.Double.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : ConverterUtil.convertToDouble(paramValue);
-                break;
-            case STRING:
-                propertyType = EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case BOOLEAN:
-                propertyType = EdmPrimitiveTypeKind.Boolean.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : ConverterUtil.convertToBoolean(paramValue);
-                break;
-            case BINARY:
-                propertyType = EdmPrimitiveTypeKind.Binary.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : getBytesFromBase64String(paramValue);
-                break;
-            case BYTE:
-                propertyType = EdmPrimitiveTypeKind.Byte.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case SBYTE:
-                propertyType = EdmPrimitiveTypeKind.SByte.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case DATE:
-                propertyType = EdmPrimitiveTypeKind.Date.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = ConverterUtil.convertToDate(paramValue);
-                break;
-            case DURATION:
-                propertyType = EdmPrimitiveTypeKind.Duration.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case DECIMAL:
-                propertyType = EdmPrimitiveTypeKind.Decimal.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : ConverterUtil.convertToBigDecimal(paramValue);
-                break;
-            case SINGLE:
-                propertyType = EdmPrimitiveTypeKind.Single.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : ConverterUtil.convertToFloat(paramValue);
-                break;
-            case TIMEOFDAY:
-                propertyType = EdmPrimitiveTypeKind.TimeOfDay.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : ConverterUtil.convertToTime(paramValue).getAsCalendar();
-                break;
-            case INT64:
-                propertyType = EdmPrimitiveTypeKind.Int64.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue == null ? null : ConverterUtil.convertToLong(paramValue);
-                break;
-            case DATE_TIMEOFFSET:
-                propertyType = EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName()
-                                                                  .getFullQualifiedNameAsString();
-                value = ConverterUtil.convertToDateTime(paramValue);
-                break;
-            case GUID:
-                propertyType = EdmPrimitiveTypeKind.Guid.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = UUID.fromString(paramValue);
-                break;
-            case STREAM:
-                propertyType = EdmPrimitiveTypeKind.Stream.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOGRAPHY:
-                propertyType = EdmPrimitiveTypeKind.Geography.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOGRAPHY_POINT:
-                propertyType = EdmPrimitiveTypeKind.GeographyPoint.getFullQualifiedName()
-                                                                  .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOGRAPHY_LINE_STRING:
-                propertyType = EdmPrimitiveTypeKind.GeographyLineString.getFullQualifiedName()
-                                                                       .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOGRAPHY_POLYGON:
-                propertyType = EdmPrimitiveTypeKind.GeographyPolygon.getFullQualifiedName()
-                                                                    .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOGRAPHY_MULTIPOINT:
-                propertyType = EdmPrimitiveTypeKind.GeographyMultiPoint.getFullQualifiedName()
-                                                                       .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOGRAPHY_MULTILINE_STRING:
-                propertyType = EdmPrimitiveTypeKind.GeographyMultiLineString.getFullQualifiedName()
-                                                                            .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOGRAPHY_MULTIPOLYGON:
-                propertyType = EdmPrimitiveTypeKind.GeographyMultiPolygon.getFullQualifiedName()
-                                                                         .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOGRAPHY_COLLECTION:
-                propertyType = EdmPrimitiveTypeKind.GeographyCollection.getFullQualifiedName()
-                                                                       .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOMETRY:
-                propertyType = EdmPrimitiveTypeKind.Geometry.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOMETRY_POINT:
-                propertyType = EdmPrimitiveTypeKind.GeometryPoint.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOMETRY_LINE_STRING:
-                propertyType = EdmPrimitiveTypeKind.GeometryLineString.getFullQualifiedName()
-                                                                      .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOMETRY_POLYGON:
-                propertyType = EdmPrimitiveTypeKind.GeometryPolygon.getFullQualifiedName()
-                                                                   .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOMETRY_MULTIPOINT:
-                propertyType = EdmPrimitiveTypeKind.GeometryMultiPoint.getFullQualifiedName()
-                                                                      .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOMETRY_MULTILINE_STRING:
-                propertyType = EdmPrimitiveTypeKind.GeographyMultiLineString.getFullQualifiedName()
-                                                                            .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOMETRY_MULTIPOLYGON:
-                propertyType = EdmPrimitiveTypeKind.GeometryMultiPolygon.getFullQualifiedName()
-                                                                        .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            case GEOMETRY_COLLECTION:
-                propertyType = EdmPrimitiveTypeKind.GeometryCollection.getFullQualifiedName()
-                                                                      .getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-            default:
-                propertyType = EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString();
-                value = paramValue;
-                break;
-        }
-        return new Property(propertyType, name, ValueType.PRIMITIVE, value);
     }
 
     /**

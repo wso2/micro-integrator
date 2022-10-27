@@ -56,4 +56,19 @@ public class MicroIntegratorRegistryConstants {
     public static final String DEFAULT_MEDIA_TYPE = "text/plain";
 
     public static final String CONNECTOR_SECURE_VAULT_CONFIG_REPOSITORY = "conf:/repository/components/secure-vault";
+    public static final String TYPE_KEY = "type";
+    public static final String NAME_KEY = "name";
+    public static final String ERROR_KEY = "error";
+
+    public static final String FILE_TYPE_DIRECTORY = "directory";
+    public static final String HIDDEN_FILE_PREFIX = ".";
+    public static final String CHILD_FILES_LIST_KEY = "files";
+    public static final String PROPERTIES_KEY = "properties";
+    public static final String VALUE_KEY = "value";
+
+    //PROPERTY_FILE_VALUE is used to identify existing ".properties" files without the content file.
+    public static final String PROPERTY_FILE_VALUE = "property file";
+    public static final String CONFIGURATION_REGISTRY_PATH = "registry/config";
+    public static final String GOVERNANCE_REGISTRY_PATH = "registry/governance";
+    public static final String LOCAL_REGISTRY_PATH = "registry/local";
 }

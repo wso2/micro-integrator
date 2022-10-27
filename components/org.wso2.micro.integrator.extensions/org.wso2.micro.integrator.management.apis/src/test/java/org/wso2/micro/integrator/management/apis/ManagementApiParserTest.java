@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.ConfigurationLoader;
@@ -42,6 +43,8 @@ import static org.wso2.micro.integrator.management.apis.Constants.NAME_ATTR;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ConfigurationLoader.class)
+@PowerMockIgnore({"javax.xml.*", "org.xml.*", "javax.management.*", "javax.xml.parsers.*", "javax.naming.spi.*", "javax.naming.*", "javax" +
+        ".xml.stream.*",  "org.apache.xerces.jaxp.*", "com.sun.org.apache.xerces.internal.jaxp.*", "org.w3c.dom.*"})
 public class ManagementApiParserTest {
 
     private void initializeConfDirectory() {

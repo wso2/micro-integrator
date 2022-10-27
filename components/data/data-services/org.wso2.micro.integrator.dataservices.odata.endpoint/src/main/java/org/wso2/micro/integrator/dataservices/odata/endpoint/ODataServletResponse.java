@@ -18,9 +18,10 @@
 
 package org.wso2.micro.integrator.dataservices.odata.endpoint;
 
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.protocol.HTTP;
+import org.apache.synapse.SynapseException;
 import org.apache.synapse.transport.passthru.PassThroughConstants;
 
 import javax.servlet.ServletOutputStream;
@@ -30,7 +31,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Locale;
@@ -38,19 +38,38 @@ import java.util.Map;
 
 public class ODataServletResponse implements HttpServletResponse {
 
+    private final static int OUTPUT_STREAM_BUFFER_SIZE = 4096;
     private MessageContext axis2MessageContext;
     private final ByteArrayOutputStream content = new ByteArrayOutputStream(1024);
-    private final ServletOutputStream outputStream = new ResponseServletOutputStream(this.content);
+    private final ResponseServletOutputStream outputStream = new ResponseServletOutputStream(this.content);
     private long contentLength = 0;
     private String contentType;
     private String characterEncoding = StandardCharsets.UTF_8.name();
     private int bufferSize = 4096;
     private int statusCode;
-
     private boolean committed;
+    private boolean stopStream = false;
 
     ODataServletResponse(MessageContext messageContext) {
         this.axis2MessageContext =  messageContext;
+    }
+
+    /**
+     * This method will signal when to start streaming.
+     *
+     * @return true if the streaming has started. Otherwise, return false.
+     */
+    public boolean startStream() {
+        return this.outputStream.startStream;
+    }
+
+    /**
+     * This method will signal when to stop streaming.
+     *
+     * @return true if the streaming has stopped. Otherwise, return false.
+     */
+    public boolean isComplete() {
+        return this.stopStream;
     }
 
     @Override
@@ -195,24 +214,112 @@ public class ODataServletResponse implements HttpServletResponse {
         }
     }
 
+    /**
+     * This method flushes the remaining bytes to the output stream.
+     */
+    public void flushOutputStream() {
+        try {
+            this.outputStream.flushOutputByteArray();
+        } catch (IOException e) {
+            throw new SynapseException("Error occurred while trying to close the Servlet response.", e);
+        }
+    }
+
+    /**
+     * This method closes the response.
+     */
+    public void close() {
+        try {
+            this.content.close();
+            this.outputStream.close();
+        } catch (IOException e) {
+            throw new SynapseException("Error occurred while trying to close the Servlet response.", e);
+        }
+    }
+
     public void setCommitted(boolean committed) {
         this.committed = committed;
     }
 
     private class ResponseServletOutputStream extends ServletOutputStream {
 
-        private final OutputStream targetStream;
+        public boolean readWithoutLimit = false;
+        private OutputStream targetStream;
+        private boolean startStream = false;
+        private byte[] byteArr = new byte[OUTPUT_STREAM_BUFFER_SIZE];
+        private int byteCount = 0;
 
         ResponseServletOutputStream(OutputStream out) {
             targetStream = out;
         }
 
+        /**
+         * This method writes a byte to a byte array. Once the byte array is full the entire array is written to the
+         * output stream.
+         * This will reduce the latency of the response.
+         *
+         * @param b Byte value to be written.
+         * @throws IOException if any unexpected I/O error occurred while writing to the output stream.
+         */
         @Override
         public void write(int b) throws IOException {
-            targetStream.write(b);
+            byteArr[byteCount++] = (byte) b;
+            if (!startStream) {
+                startStream = true;
+            }
+            if (byteCount >= OUTPUT_STREAM_BUFFER_SIZE) {
+                writeOutputStream();
+                byteCount = 0;
+            }
+        }
+
+        /**
+         * This method writes a byte array to the output stream.
+         *
+         * @throws IOException if any unexpected I/O error occurred while writing to the output stream.
+         */
+        private synchronized void writeOutputStream() throws IOException {
+            targetStream.write(byteArr);
             super.flush();
             targetStream.flush();
             setCommittedIfBufferSizeExceeded();
+            byteCount = 0;
+        }
+
+        /**
+         * This method returns the content in the output stream in string format.
+         *
+         * @throws IOException if any unexpected I/O error occurred while reading the output stream.
+         */
+        private synchronized String readOutputStream(String characterEncoding) throws IOException {
+            String response = StringUtils.EMPTY;
+            if (this.readWithoutLimit
+                    || ((ByteArrayOutputStream) targetStream).size() > OUTPUT_STREAM_BUFFER_SIZE * 8) {
+                response = (characterEncoding != null ? ((ByteArrayOutputStream) targetStream).toString(
+                        characterEncoding) : ((ByteArrayOutputStream) targetStream).toString());
+                ((ByteArrayOutputStream) targetStream).reset();
+            }
+            if (this.readWithoutLimit) {
+                stopStream = true;
+            }
+            return response;
+        }
+
+        /**
+         * This method reads the remaining content in the output stream (content that has not yet read).
+         *
+         * @throws IOException if any unexpected I/O error occurred while writing to the output stream.
+         */
+        private synchronized void flushOutputByteArray() throws IOException {
+            if (byteCount < OUTPUT_STREAM_BUFFER_SIZE) {
+                targetStream.write(byteArr, 0, byteCount);
+                super.flush();
+                targetStream.flush();
+                setCommittedIfBufferSizeExceeded();
+                byteCount = 0;
+                byteArr = new byte[OUTPUT_STREAM_BUFFER_SIZE];
+            }
+            readWithoutLimit = true;
         }
 
         @Override
@@ -248,9 +355,17 @@ public class ODataServletResponse implements HttpServletResponse {
         return (int) this.contentLength;
     }
 
-    public String getContentAsString() throws UnsupportedEncodingException {
-        return (this.characterEncoding != null ?
-                this.content.toString(this.characterEncoding) : this.content.toString());
+    /**
+     * This method returns the content in the output stream in string format.
+     *
+     * @return content in the output stream in string format.
+     * @throws IOException if any unexpected I/O error occurred while reading the output stream.
+     */
+    public String getContentAsString() throws IOException {
+        if (this.content != null) {
+            return outputStream.readOutputStream(this.characterEncoding);
+        }
+        return StringUtils.EMPTY;
     }
 
     @Override
@@ -289,6 +404,13 @@ public class ODataServletResponse implements HttpServletResponse {
         this.characterEncoding = null;
         this.contentLength = 0;
         this.contentType = null;
+    }
+
+    /**
+     * This method will set stopStream to true. Forcing the response to be closed.
+     */
+    public void forceComplete() {
+        this.stopStream = true;
     }
 
     @Override

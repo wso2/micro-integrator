@@ -37,4 +37,9 @@ public class Constants {
     public static final String ENV_VAR_PLACEHOLDER_PREFIX = "$env{";
     public static final String DYNAMIC_PROPERTY_PLACEHOLDER_PREFIX = "${";
     public static final String PLACEHOLDER_SUFFIX = "}";
+
+    public static final int NO_CONTENT = 204;
+    public static final int BAD_REQUEST = 400;
+    public static final int NOT_IMPLEMENTED = 501;
+    public static final int BAD_GATEWAY = 502;
 }

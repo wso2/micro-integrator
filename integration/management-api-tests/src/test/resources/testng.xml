@@ -34,4 +34,9 @@
             <class name="org.wso2.micro.integrator.api.MetaDataResourceTestCase"/>
         </classes>
     </test>
+    <test name="Management-API-Tests-Registry-Resources" verbose="2" parallel="false">
+        <classes>
+            <class name="org.wso2.micro.integrator.api.RegistryResourcesTestCase"/>
+        </classes>
+    </test>
 </suite>
