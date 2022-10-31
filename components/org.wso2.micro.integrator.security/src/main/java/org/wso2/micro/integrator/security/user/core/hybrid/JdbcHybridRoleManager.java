@@ -295,7 +295,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
                 // Primary User Store
                 return getPrimaryRoles();
             }
-            else{
+            else {
                 return userRealm.getUserStoreManager().listUsers("*", -1);
             }
         }
@@ -321,7 +321,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
     }
 
     public String[] getPrimaryRoles() throws UserStoreException {
-        String filter = "%";
+        String filter = HybridJDBCConstants.ALL_FILTER;
         List<String> lst = new LinkedList<String>();
         String sqlStmt = HybridJDBCConstants.GET_PRIMARY_USER_ROLES;
         Connection dbConnection = null;
