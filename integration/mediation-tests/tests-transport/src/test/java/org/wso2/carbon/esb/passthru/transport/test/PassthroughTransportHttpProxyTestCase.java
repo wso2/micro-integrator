@@ -52,7 +52,13 @@ public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
         } catch (AxisFault expected) {
             //read timeout expected
         }
-        assertTrue(carbonLogReader.checkForLog("111.wso2.com:7777", DEFAULT_TIMEOUT),
+
+        // This test case is supposed to test the pass-through server by sending a request to a pass-through proxy.
+        // We need to improve this test to send a message to the pass-through server and validate the request. Since
+        // there is a difference in printing, IP address with host, and port  with JDK 17, the host and port resolution
+        // differs from the original we need to check both for building in JDK 11 and 17
+        assertTrue(carbonLogReader.checkForLog("111.wso2.com", DEFAULT_TIMEOUT) &&
+                        carbonLogReader.checkForLog("7777", DEFAULT_TIMEOUT),
                 "The log message with http proxy host was not found in passthroughTransportHttpProxy testcase.");
     }
 
