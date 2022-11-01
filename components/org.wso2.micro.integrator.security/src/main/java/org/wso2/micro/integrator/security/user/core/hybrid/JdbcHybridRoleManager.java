@@ -294,8 +294,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
             if (Boolean.parseBoolean(System.getProperty(HybridJDBCConstants.NON_USER_CORE_MODE))) {
                 // Primary User Store
                 return getPrimaryRoles();
-            }
-            else {
+            } else {
                 return userRealm.getUserStoreManager().listUsers("*", -1);
             }
         }
