@@ -34,10 +34,11 @@ import org.wso2.micro.integrator.security.user.core.util.DatabaseUtil;
 import org.wso2.micro.integrator.security.user.core.util.UserCoreUtil;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.SQLTimeoutException;
 import java.util.*;
 
 import static org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants.ErrorMessages.ERROR_CODE_DUPLICATE_WHILE_ADDING_A_HYBRID_ROLE;
@@ -290,7 +291,12 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
     public String[] getUserListOfHybridRole(String roleName) throws UserStoreException {
 
         if (UserCoreUtil.isEveryoneRole(roleName, realmConfig)) {
-            return userRealm.getUserStoreManager().listUsers("*", -1);
+            if (Boolean.parseBoolean(System.getProperty(HybridJDBCConstants.NON_USER_CORE_MODE))) {
+                // Primary User Store
+                return getPrimaryRoles();
+            } else {
+                return userRealm.getUserStoreManager().listUsers("*", -1);
+            }
         }
 
         // ########### Domain-less Roles and Domain-aware Users from here onwards #############
@@ -311,6 +317,81 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
         } finally {
             DatabaseUtil.closeAllConnections(dbConnection);
         }
+    }
+
+    public String[] getPrimaryRoles() throws UserStoreException {
+        String filter = HybridJDBCConstants.ALL_FILTER;
+        List<String> lst = new LinkedList<String>();
+        String sqlStmt = HybridJDBCConstants.GET_PRIMARY_USER_ROLES;
+        Connection dbConnection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        String[] users = new String[0];
+
+        try {
+            // get DB connection
+            dbConnection = DatabaseUtil.getDBConnection(dataSource);
+            dbConnection.setAutoCommit(false);
+            if (dbConnection.getTransactionIsolation() != Connection.TRANSACTION_READ_COMMITTED) {
+                dbConnection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            }
+
+            // prepare statement
+            prepStmt = dbConnection.prepareStatement(sqlStmt);
+            prepStmt.setString(1, filter);
+            if (sqlStmt.contains(UserCoreConstants.UM_TENANT_COLUMN)) {
+                prepStmt.setInt(2, tenantId);
+            }
+            prepStmt.setMaxRows(DEFAULT_MAX_ROLE_LIST_SIZE);
+            prepStmt.setQueryTimeout(DEFAULT_MAX_SEARCH_TIME);
+
+            try {
+                // execute query
+                rs = prepStmt.executeQuery();
+
+            } catch (SQLException e) {
+                if (e instanceof SQLTimeoutException) {
+                    log.error("The cause might be a time out. Hence ignored", e);
+                    return users;
+                }
+                String errorMessage =
+                        "Error while fetching users according to filter : * & max Item limit " +
+                                ": " + DEFAULT_MAX_ROLE_LIST_SIZE;
+                if (log.isDebugEnabled()) {
+                    log.debug(errorMessage, e);
+                }
+                throw new UserStoreException(errorMessage, e);
+            }
+
+            // get name list
+            while (rs.next()) {
+                String name = rs.getString(1);
+                if (UserCoreConstants.REGISTRY_ANONNYMOUS_USERNAME.equals(name)) {
+                    continue;
+                }
+                // append the "PRIMARY" domain
+                String domain = "PRIMARY";
+                name = UserCoreUtil.addDomainToName(name, domain);
+                lst.add(name);
+            }
+
+            rs.close();
+            if (lst.size() > 0) {
+                users = lst.toArray(new String[lst.size()]);
+            }
+            Arrays.sort(users);
+
+        } catch (SQLException e) {
+            String msg = "Error occurred while retrieving users for filter : * & max Item limit : " +
+                    DEFAULT_MAX_ROLE_LIST_SIZE;
+            if (log.isDebugEnabled()) {
+                log.debug(msg, e);
+            }
+            throw new UserStoreException(msg, e);
+        } finally {
+            DatabaseUtil.closeAllConnections(dbConnection, rs, prepStmt);
+        }
+        return users;
     }
 
     /**

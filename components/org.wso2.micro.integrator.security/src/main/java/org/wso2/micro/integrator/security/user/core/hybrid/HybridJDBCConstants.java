@@ -24,6 +24,8 @@ public class HybridJDBCConstants {
 
     public static final String GET_ROLE_LIST_OF_USERS = "GetRoleListOfInternalUsersSQL";
 
+    public static final String NON_USER_CORE_MODE = "NonUserCoreMode";
+
     public static final String ADD_ROLE_SQL = "INSERT INTO UM_HYBRID_ROLE (UM_ROLE_NAME, UM_TENANT_ID) VALUES (?, ?)";
     public static final String DELETE_ROLE_SQL = "DELETE FROM UM_HYBRID_ROLE WHERE UM_ROLE_NAME = ? AND UM_TENANT_ID=?";
     public static final String ON_DELETE_ROLE_REMOVE_USER_ROLE_SQL = "DELETE FROM UM_HYBRID_USER_ROLE WHERE " +
@@ -118,4 +120,8 @@ public class HybridJDBCConstants {
     public static final String UPDATE_REMEMBERME_VALUE_SQL = "UPDATE UM_HYBRID_REMEMBER_ME SET UM_COOKIE_VALUE=?, UM_CREATED_TIME=? WHERE UM_USER_NAME=? AND UM_TENANT_ID=?";
 
     public static final String GET_REMEMBERME_VALUE_SQL = "SELECT UM_COOKIE_VALUE, UM_CREATED_TIME FROM UM_HYBRID_REMEMBER_ME WHERE UM_USER_NAME=? AND UM_TENANT_ID=?";
+
+    public static final String GET_PRIMARY_USER_ROLES = "SELECT UM_USER_NAME FROM UM_USER WHERE LOWER(UM_USER_NAME) LIKE LOWER(?) AND UM_TENANT_ID=? ORDER BY UM_USER_NAME";
+
+    public static final String ALL_FILTER = "%";
 }
