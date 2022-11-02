@@ -22,6 +22,7 @@ import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
+import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.BoxcarringOps;
 import org.wso2.micro.integrator.dataservices.core.DBUtils;
@@ -45,8 +46,12 @@ import java.util.Map;
  * Represents a data services request.
  */
 public abstract class DataServiceRequest {
-	
-	/** 
+
+	/**
+	 * Used to hold the axis2 operation name of the current dataservice operation.
+	 */
+	public static final String AXIS_OPERATION_NAME = "axisOperationName";
+	/**
 	 * contains the username of the user who made the current message request 
 	 */
 	private String user;
@@ -89,8 +94,13 @@ public abstract class DataServiceRequest {
 		AxisService axisService = msgContext.getAxisService();
 		AxisOperation axisOp = msgContext.getAxisOperation();
 		OMElement inputMessage = msgContext.getEnvelope().getBody().getFirstElement();
+		// Fetching the operation name from the property
+		// since axisOp.getName() provide different results in a load test scenario.
+		String requestName = (String) msgContext.getProperty(AXIS_OPERATION_NAME);
 		/* get operation/request name */
-		String requestName = axisOp.getName().getLocalPart();
+		if (StringUtils.isEmpty(requestName)) {
+			requestName = axisOp.getName().getLocalPart();
+		}
 		if (Boolean.parseBoolean(System.getProperty("dss.force.xml.validation"))) {
 			if (inputMessage != null && !requestName.equals(inputMessage.getLocalName())) {
 				throw new DataServiceFault("Input Message and " + requestName + " Axis Operation didn't match.");
