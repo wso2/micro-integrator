@@ -58,6 +58,8 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import static org.wso2.micro.integrator.dataservices.core.dispatch.DataServiceRequest.AXIS_OPERATION_NAME;
+
 public class DataServiceCallMediator extends AbstractMediator {
 
     private String dsName;
@@ -203,6 +205,8 @@ public class DataServiceCallMediator extends AbstractMediator {
         }
         QName rootOpQName = new QName(rootOpName);
         axis2MessageContext.getAxisOperation().setName(rootOpQName);
+        // Setting axis2 operation name as a property since its getting changes before invocation under high load.
+        axis2MessageContext.setProperty(AXIS_OPERATION_NAME, rootOpQName.getLocalPart());
         OMElement payload = fac.createOMElement(rootOpName, omNamespace);
         addOperations(rootOperations, payload, messageContext, rootOperations.getType());
         return payload;
