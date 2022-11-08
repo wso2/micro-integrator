@@ -25,15 +25,18 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
@@ -42,7 +45,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVE
 import static org.wso2.micro.integrator.management.apis.Constants.LIST;
 import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
 import static org.wso2.micro.integrator.management.apis.Constants.ROLE;
-import static org.wso2.micro.integrator.management.apis.Constants.ROLES;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
 import static org.wso2.micro.integrator.management.apis.Constants.USER_ID;
 
@@ -88,7 +91,12 @@ public class RolesResource implements MiApiResource {
         try {
             switch (httpMethod) {
                 case Constants.HTTP_GET: {
-                    response = handleGet(messageContext);
+                    String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+                    if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
+                        response = populateSearchResults(searchKey.toLowerCase());
+                    } else {
+                        response = handleGet();
+                    }
                     break;
                 }
                 case Constants.HTTP_POST: {
@@ -119,19 +127,38 @@ public class RolesResource implements MiApiResource {
         return true;
     }
 
-    protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException {
-        if (!Utils.isUserAuthenticated(messageContext)) {
-            LOG.warn("Listing user roles without authenticating/authorizing the request sender. Adding "
-                    + "authentication and authorization handlers is recommended.");
-        }
+    protected JSONObject handleGet() throws UserStoreException {
         String[] roles = Utils.getUserStore(null).getRoleNames();
-        JSONObject jsonBody = Utils.createJSONList(roles.length);
+        return setResponseBody(Arrays.asList(roles));
+    }
+
+    private JSONObject setResponseBody(List<String> roles) {
+
+        JSONObject jsonBody = Utils.createJSONList(roles.size());
         for (String role : roles) {
             JSONObject userObject = new JSONObject();
             userObject.put(ROLE, role);
             jsonBody.getJSONArray(LIST).put(userObject);
         }
         return jsonBody;
+    }
+
+    private static List<String> getSearchResults(String searchKey) throws UserStoreException {
+        String[] roles = Utils.getUserStore(null).getRoleNames();
+        List<String> searchResults = new ArrayList<>();
+
+        for (String role : roles) {
+            if (role.toLowerCase().contains(searchKey)) {
+                searchResults.add(role);
+            }
+        }
+        return searchResults;
+    }
+
+    protected JSONObject populateSearchResults(String searchKey) throws UserStoreException {
+
+        List<String> roles = getSearchResults(searchKey);
+        return setResponseBody(roles);
     }
 
     protected JSONObject handlePost(MessageContext messageContext,

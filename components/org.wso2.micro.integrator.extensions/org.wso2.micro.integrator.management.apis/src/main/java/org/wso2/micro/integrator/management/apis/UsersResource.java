@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONObject;
 import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
@@ -31,11 +32,12 @@ import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 import org.wso2.micro.integrator.security.user.core.multiplecredentials.UserAlreadyExistsException;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
+
 import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.Arrays;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
 import static org.wso2.micro.integrator.management.apis.Constants.DOMAIN;
@@ -45,8 +47,8 @@ import static org.wso2.micro.integrator.management.apis.Constants.NOT_FOUND;
 import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD;
 import static org.wso2.micro.integrator.management.apis.Constants.PATTERN;
 import static org.wso2.micro.integrator.management.apis.Constants.ROLE;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
-
 /**
  * Resource for a retrieving and adding users.
  * <p>
@@ -83,7 +85,12 @@ public class UsersResource extends UserResource {
         try {
             switch (httpMethod) {
                 case Constants.HTTP_GET: {
-                    response = handleGet(messageContext);
+                    String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+                    if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
+                        response = populateSearchResults(messageContext, searchKey.toLowerCase());
+                    } else {
+                        response = handleGet(messageContext);
+                    }
                     break;
                 }
                 case Constants.HTTP_POST: {
@@ -110,8 +117,7 @@ public class UsersResource extends UserResource {
         return true;
     }
 
-    @Override
-    protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException {
+    private static List<String> getUserResults(MessageContext messageContext) throws UserStoreException {
         String searchPattern = Utils.getQueryParameter(messageContext, PATTERN);
         if (Objects.isNull(searchPattern)) {
             searchPattern = "*";
@@ -128,7 +134,6 @@ public class UsersResource extends UserResource {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Searching for users with the role: " + roleFilter);
         }
-        JSONObject jsonBody;
         List<String> users;
         if (Objects.isNull(roleFilter)) {
             users = patternUsersList;
@@ -144,7 +149,25 @@ public class UsersResource extends UserResource {
             LOG.debug("Filtered list of users: ");
             users.forEach(LOG::debug);
         }
-        jsonBody = Utils.createJSONList(users.size());
+        return users;
+    }
+
+    @Override
+    protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException {
+        List<String> users = getUserResults(messageContext);
+        return setResponseBody(users);
+    }
+
+    protected JSONObject populateSearchResults(MessageContext messageContext, String searchKey) throws UserStoreException {
+
+        List<String> users = getUserResults(messageContext).stream()
+                .filter(name -> name.toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+        return setResponseBody(users);
+    }
+
+    private JSONObject setResponseBody(List<String> users) {
+        JSONObject jsonBody = Utils.createJSONList(users.size());
         for (String user : users) {
             JSONObject userObject = new JSONObject();
             userObject.put(USER_ID, user);

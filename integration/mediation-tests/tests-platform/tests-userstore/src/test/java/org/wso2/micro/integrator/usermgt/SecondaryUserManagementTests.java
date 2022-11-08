@@ -187,8 +187,20 @@ public class SecondaryUserManagementTests extends ESBIntegrationTest {
         Assert.assertEquals(successResponse.getString("status"), "Added",
                 "Invalid response received " + successResponse);
     }
+    @Test (dependsOnMethods = "testVerifyDeletedRole")
+    public void testGetSearchedRoles() throws Exception {
+        String roles = getSearchedRoles("admin");
+        JSONObject rolesJson = new JSONObject(roles);
+        String errorMessageOnAssertionFailure = "Received response" + roles;
+        //Assert role count
+        Assert.assertEquals(rolesJson.get("count"), 1, errorMessageOnAssertionFailure);
+        //Assert role details
+        Assert.assertEquals((rolesJson.getJSONArray("list")).length(), 1, errorMessageOnAssertionFailure);
+        Assert.assertEquals((rolesJson.getJSONArray("list")).getJSONObject(0).get(ROLE), "admin",
+                errorMessageOnAssertionFailure);
+    }
 
-    @Test(dependsOnMethods = "testAddRoleToSecondary")
+    @Test(dependsOnMethods = "testGetSearchedRoles")
     public void testAddUserToSecondary() throws Exception {
         String response = addValidUser(SECONDARY_USER_ID, "adminpwd", false, SECONDARY_DOMAIN);
         JSONObject successResponse = new JSONObject(response);
@@ -352,6 +364,19 @@ public class SecondaryUserManagementTests extends ESBIntegrationTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         String endpoint = roleResource;
+        HttpResponse response = client.doGet(endpoint, headers);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Unexpected status code");
+        String responseString = client.getResponsePayload(response);
+        log.info("Received payload: " + responseString);
+        return responseString;
+    }
+
+    private String getSearchedRoles(String searchKey) throws IOException {
+
+        SimpleHttpClient client = new SimpleHttpClient();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        String endpoint = roleResource.concat("?searchKey=").concat(searchKey);
         HttpResponse response = client.doGet(endpoint, headers);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Unexpected status code");
         String responseString = client.getResponsePayload(response);

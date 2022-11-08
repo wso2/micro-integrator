@@ -171,12 +171,25 @@ public class Constants {
     public static final String AUDIT_LOG_TYPE_REGISTRY_RESOURCE_PROPERTIES = "registry_resource_properties";
 
     public static final String PROXY_SERVICES = "proxy-services";
+    public static final String NODES = "nodes";
     public static final String APIS = "apis";
     public static final String INBOUND_ENDPOINTS = "inbound-endpoints";
     public static final String SEQUENCE_TEMPLATE = "templates_sequence";
     public static final String SEQUENCES = "sequences";
     public static final String ENDPOINTS = "endpoints";
-
+    public static final String CARBON_APPLICATIONS = "carbonapps";
+    public static final String DATA_SERVICES = "data-services";
+    public static final String DATA_SOURCES = "data-sources";
+    public static final String LOCAL_ENTRIES = "local-entries";
+    public static final String LOG_FILES = "logs";
+    public static final String LOGGING_RESOURCES = "log-configs";
+    public static final String CONNECTORS = "connectors";
+    public static final String MESSAGE_PROCESSORS = "message-processors";
+    public static final String MESSAGE_STORE = "message-stores";
+    public static final String TEMPLATES = "templates";
+    public static final String TASKS = "tasks";
+    public static final String REGISTRY_RESOURCES = "registry-resources";
+    public static final String RESOURCE_TYPE = "resourceType";
     public static final String AUDIT_LOG_ACTION_ENABLE = "enabled";
     public static final String AUDIT_LOG_ACTION_DISABLED = "disabled";
     public static final String AUDIT_LOG_ACTION_CREATED = "created";
@@ -197,6 +210,7 @@ public class Constants {
 
     static final String SERVICE_PID = "service.pid";
     public static final String REGISTRY_PATH = "path";
+    public static final String REGISTRY_PATH_FOR_PROPERTY = "pathForProp";
     public static final String EXPAND_PARAM = "expand";
     public static final String VALUE_TRUE = "true";
     public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "multipart/form-data";
@@ -216,5 +230,8 @@ public class Constants {
     public static final String REGISTRY_PROPERTY_NAME = "propertyName";
     public static final String FILE = "file";
     public static final int MAXIMUM_RETRY_COUNT = 5;
+
+    // Searching constants
+    public static final String SEARCH_KEY = "searchKey";
 
 }

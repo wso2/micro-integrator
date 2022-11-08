@@ -39,14 +39,19 @@ import org.wso2.micro.core.util.AuditLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import java.util.Set;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
 import static org.wso2.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
 import static org.wso2.micro.integrator.management.apis.Constants.NAME;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
 
 /**
@@ -92,8 +97,12 @@ public class MessageProcessorResource extends APIResource {
 
         if (messageContext.isDoingGET()) {
             String nameParameter = Utils.getQueryParameter(messageContext, NAME);
+            String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
             if (Objects.nonNull(nameParameter)) {
                 populateMessageProcessorData(messageContext, nameParameter);
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
+                populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateMessageProcessorList(messageContext);
             }
@@ -117,19 +126,45 @@ public class MessageProcessorResource extends APIResource {
         return true;
     }
 
+    private static List<MessageProcessor> getSearchResults(MessageContext messageContext, String searchKey) {
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<MessageProcessor> searchResultList = configuration.getMessageProcessors().values().stream()
+                .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+
+        return searchResultList;
+    }
+
+
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+
+        List<MessageProcessor> searchResultList = getSearchResults(messageContext, searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
+
+    private void setResponseBody(Collection<MessageProcessor> processorList, MessageContext messageContext) {
+
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+        JSONObject jsonBody = Utils.createJSONList(processorList.size());
+
+        for (MessageProcessor processor : processorList) {
+            addToJSONList(processor, jsonBody.getJSONArray(Constants.LIST));
+        }
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+    }
+
+
     /**
      * Create a JSON response with all available message processors.
      *
      * @param messageContext synapse message context
      */
     private void populateMessageProcessorList(MessageContext messageContext) {
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
         SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
         Map<String, MessageProcessor> processorMap = synapseConfiguration.getMessageProcessors();
-        JSONObject jsonBody = Utils.createJSONList(processorMap.size());
-        processorMap.forEach((key, value) -> addToJSONList(value, jsonBody.getJSONArray(Constants.LIST)));
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Collection<MessageProcessor> processorList = processorMap.values();
+        setResponseBody(processorList, messageContext);
     }
 
     /**

@@ -33,10 +33,15 @@ import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.io.IOException;
+
+import java.util.Set;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 /**
  * Represents template resources defined in the synapse configuration.
@@ -45,10 +50,6 @@ public class TemplateResource extends APIResource {
 
     private static final Log LOG = LogFactory.getLog(TemplateResource.class);
 
-    /* Name of the JSON list of endpoint templates */
-    private static final String ENDPOINT_TEMPLATE_LIST = "endpointTemplateList";
-    /* Name of the JSON list of sequence templates */
-    private static final String SEQUENCE_TEMPLATE_LIST = "sequenceTemplateList";
     /* Template type parameter */
     private static final String TEMPLATE_TYPE_PARAM = "type";
     /* Template name parameter */
@@ -79,7 +80,8 @@ public class TemplateResource extends APIResource {
         buildMessage(msgCtx);
         org.apache.axis2.context.MessageContext axis2MsgCtx = ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
         String templateTypeParam = Utils.getQueryParameter(msgCtx, TEMPLATE_TYPE_PARAM);
-
+        String searchKey = Utils.getQueryParameter(msgCtx, SEARCH_KEY);
+        
         if (msgCtx.isDoingGET()) {
             if (Objects.nonNull(templateTypeParam)) {
                 String templateNameParam = Utils.getQueryParameter(msgCtx, TEMPLATE_NAME_PARAM);
@@ -88,8 +90,10 @@ public class TemplateResource extends APIResource {
                 } else {
                     populateTemplateListByType(msgCtx, templateTypeParam);
                 }
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
+                populateSearchResults(msgCtx, searchKey.toLowerCase());
             } else {
-                populateFullTemplateList(axis2MsgCtx, msgCtx);
+                populateFullTemplateList(msgCtx);
             }
         } else {
             JSONObject response;
@@ -137,31 +141,47 @@ public class TemplateResource extends APIResource {
         return response;
     }
 
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<Template> epSearchResultList = configuration.getEndpointTemplates().values().stream()
+                .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+        List<TemplateMediator> seqSearchResultList = configuration.getSequenceTemplates().values().stream()
+                .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+        setResponseBody(epSearchResultList, seqSearchResultList, messageContext);
+    }
+
+    private void setResponseBody(List<Template> epList, List<TemplateMediator> seqList, MessageContext messageContext) {
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+        int listLength = epList.size() + seqList.size();
+        JSONObject jsonBody = Utils.createJSONList(listLength);
+
+        for (Template epTemplate: epList) {
+            JSONObject templateObject = getEndpointTemplateAsJson(epTemplate);
+            jsonBody.getJSONArray(Constants.LIST).put(templateObject);
+        }
+
+        for (TemplateMediator seqTemplate: seqList) {
+            JSONObject templateObject = getSequenceTemplateAsJson(seqTemplate);
+            jsonBody.getJSONArray(Constants.LIST).put(templateObject);
+        }
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+    }
+
     /**
      * Creates a response json with all templates available in the synapse configuration
      *
-     * @param axis2MessageContext AXIS2 message context
      * @param messageContext      Synapse msg ctx
      */
-    private void populateFullTemplateList(org.apache.axis2.context.MessageContext axis2MessageContext,
-                                          MessageContext messageContext) {
+    private void populateFullTemplateList(MessageContext messageContext) {
 
         SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
         Map<String, Template> endpointTemplateMap = synapseConfiguration.getEndpointTemplates();
         Map<String, TemplateMediator> sequenceTemplateMap = synapseConfiguration.getSequenceTemplates();
-        JSONObject jsonBody = new JSONObject();
-        JSONArray endpointTemplateList = new JSONArray();
-        JSONArray sequenceTemplateList = new JSONArray();
-        jsonBody.put(ENDPOINT_TEMPLATE_LIST, endpointTemplateList);
-        jsonBody.put(SEQUENCE_TEMPLATE_LIST, sequenceTemplateList);
-
-        endpointTemplateMap.forEach((key, value) ->
-                                            addToJsonList(jsonBody.getJSONArray(ENDPOINT_TEMPLATE_LIST),
-                                                          value.getName()));
-        sequenceTemplateMap.forEach((key, value) ->
-                                            addToJsonList(jsonBody.getJSONArray(SEQUENCE_TEMPLATE_LIST),
-                                                          value.getName()));
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        setResponseBody(endpointTemplateMap.values().stream().collect(Collectors.toList()), sequenceTemplateMap.values().stream().collect(Collectors.toList()), messageContext);
     }
 
     /**
@@ -246,6 +266,7 @@ public class TemplateResource extends APIResource {
         endpointTemplateJSONObject.put(PARAMETERS, endpointTemplate.getParameters());
         endpointTemplateJSONObject.put(Constants.SYNAPSE_CONFIGURATION, new TemplateSerializer().
                 serializeEndpointTemplate(endpointTemplate, null));
+        endpointTemplateJSONObject.put(TEMPLATE_TYPE_PARAM, ENDPOINT_TEMPLATE_TYPE);
 
         return endpointTemplateJSONObject;
     }
@@ -261,7 +282,7 @@ public class TemplateResource extends APIResource {
         sequenceTemplateJSONObject.put(PARAMETERS, sequenceTemplate.getParameters());
         sequenceTemplateJSONObject.put(Constants.SYNAPSE_CONFIGURATION, new TemplateMediatorSerializer().
                 serializeMediator(null, sequenceTemplate));
-
+        sequenceTemplateJSONObject.put(TEMPLATE_TYPE_PARAM, SEQUENCE_TEMPLATE_TYPE);
         return sequenceTemplateJSONObject;
     }
 }

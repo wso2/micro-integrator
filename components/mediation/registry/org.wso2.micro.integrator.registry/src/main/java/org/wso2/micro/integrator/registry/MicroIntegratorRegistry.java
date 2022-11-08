@@ -85,7 +85,6 @@ import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstant
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.TYPE_KEY;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.URL_SEPARATOR;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.VALUE_KEY;
-
 public class MicroIntegratorRegistry extends AbstractRegistry {
 
     private static final Log log = LogFactory.getLog(MicroIntegratorRegistry.class);
@@ -1225,7 +1224,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         return null;
     }
 
-    private Properties getMetadata(String fileUrl) {
+    public Properties getMetadata(String fileUrl) {
 
         Properties metadata = new Properties();
         File file = new File(fileUrl);
@@ -1272,34 +1271,37 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     }
 
     /**
-     * Returns a JSON object with the folder structure of the <MI-HOME>/registry directory.
+     * Returns a JSON object with the folder structure of the <MI-HOME>/registry directory,
+     * which contains the files/ leaf level directories matching with the given search key.
      *
+     * @param searchKey String
      * @param folderPath Path of the registry
      * @return JSON object containing the folder structure
      */
-    public JSONObject getRegistryResourceJSON(String folderPath) {
+    public JSONObject getRegistryResourceJSON(String searchKey, String folderPath) {
 
         File node = new File(folderPath);
         JSONObject jsonObject = new JSONObject();
-        addNodesToJSON(node, jsonObject);
-        return jsonObject;
+        addNodesToJSON(searchKey, node, jsonObject);
+
+        JSONObject outputObject = new JSONObject();
+        outputObject.put("list", jsonObject);
+        return outputObject;
     }
 
     /**
-     * Updates the JSON object with existing files and folder in the <MI-HOME>/registry directory.
-     * Updates a MAP with the metadata of each registry.
-     * Updates a MAP with the properties of each registry.
+     * Updates the JSON object with existing files and folder which
+     * match with the searchKey, in the given registry directory.
      *
+     * @param searchKey String
      * @param node       File
      * @param jsonObject JSON object with results
      */
-    private void addNodesToJSON(File node, JSONObject jsonObject) {
+    private void addNodesToJSON(String searchKey, File node, JSONObject jsonObject) {
 
         String nodeName = node.getName();
-        jsonObject.put(NAME_KEY, nodeName);
 
         if (node.isDirectory()) {
-            jsonObject.put(TYPE_KEY, FILE_TYPE_DIRECTORY);
             JSONArray childArray = new JSONArray();
             String[] childNodes = node.list();
             if (childNodes != null) {
@@ -1307,22 +1309,31 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                     if (isNodeNotRequiredToBeFetched(childNode)) {
                         JSONObject nodeJSONObject = new JSONObject();
                         File childFile = new File(node, childNode);
-                        addNodesToJSON(childFile, nodeJSONObject);
-                        childArray.put(nodeJSONObject);
+                        addNodesToJSON(searchKey, childFile, nodeJSONObject);
+                        if (nodeJSONObject.has(NAME_KEY)) {
+                            childArray.put(nodeJSONObject);
+                        }
                     } else if (childNode.endsWith(PROPERTY_EXTENTION)) {
                         String propertyOwner = childNode.replace(PROPERTY_EXTENTION, "");
-                        if (!Arrays.asList(childNodes).contains(propertyOwner)) {
-                            JSONObject nodeJSONObject = new JSONObject();
-                            nodeJSONObject.put(NAME_KEY, propertyOwner);
-                            nodeJSONObject.put(TYPE_KEY, PROPERTY_FILE_VALUE);
-                            nodeJSONObject.put(CHILD_FILES_LIST_KEY, Collections.<String>emptyList());
-                            childArray.put(nodeJSONObject);
+                        if (propertyOwner.toLowerCase().contains(searchKey)) {
+                            if (!Arrays.asList(childNodes).contains(propertyOwner)) {
+                                JSONObject nodeJSONObject = new JSONObject();
+                                nodeJSONObject.put(NAME_KEY, childNode);
+                                nodeJSONObject.put(TYPE_KEY, PROPERTY_FILE_VALUE);
+                                nodeJSONObject.put(CHILD_FILES_LIST_KEY, Collections.<String>emptyList());
+                                childArray.put(nodeJSONObject);
+                            }
                         }
                     }
                 }
             }
-            jsonObject.put(CHILD_FILES_LIST_KEY, childArray);
-        } else {
+            if (nodeName.toLowerCase().contains(searchKey) || childArray.length() != 0) {
+                jsonObject.put(NAME_KEY, nodeName);
+                jsonObject.put(TYPE_KEY, FILE_TYPE_DIRECTORY);
+                jsonObject.put(CHILD_FILES_LIST_KEY, childArray);
+            }
+
+        } else if (nodeName.toLowerCase().contains(searchKey)) {
             String mediaType = DEFAULT_MEDIA_TYPE;
             Properties metadata = getMetadata(formatPath(node.getPath()));
             if (metadata != null) {
@@ -1331,6 +1342,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                     mediaType = mediaTypeValue;
                 }
             }
+            jsonObject.put(NAME_KEY, nodeName);
             jsonObject.put(TYPE_KEY, mediaType);
             jsonObject.put(CHILD_FILES_LIST_KEY, Collections.<String>emptyList());
         }
@@ -1372,7 +1384,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
      * @param carbonHomePath <MI-HOME> path
      * @return converted file path
      */
-    private String getChildPath(String registryPath, String carbonHomePath) {
+    public String getChildPath(String registryPath, String carbonHomePath) {
 
         String resolvedRegKeyPath = registryPath.replace(carbonHomePath + URL_SEPARATOR, "");
         if (resolvedRegKeyPath.startsWith(CONFIGURATION_REGISTRY_PATH)) {

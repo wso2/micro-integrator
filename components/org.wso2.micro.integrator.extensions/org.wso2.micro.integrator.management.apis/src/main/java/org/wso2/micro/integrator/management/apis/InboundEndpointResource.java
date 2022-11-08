@@ -32,12 +32,16 @@ import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.io.IOException;
-import java.util.Collection;
+
+import java.util.Set;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
+import java.util.stream.Collectors;
 
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 import static org.wso2.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 public class InboundEndpointResource extends APIResource {
@@ -64,10 +68,14 @@ public class InboundEndpointResource extends APIResource {
         buildMessage(messageContext);
         org.apache.axis2.context.MessageContext axisMsgCtx =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        String inboundName = Utils.getQueryParameter(messageContext, "inboundEndpointName");
+        String inboundName = Utils.getQueryParameter(messageContext, INBOUND_ENDPOINT_NAME);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(inboundName)) {
                 populateInboundEndpointData(messageContext, inboundName);
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
+                populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
                 populateInboundEndpointList(messageContext);
             }
@@ -75,6 +83,21 @@ public class InboundEndpointResource extends APIResource {
             handlePost(messageContext, axisMsgCtx);
         }
         return true;
+    }
+
+    private static List<InboundEndpoint> getSearchResults (MessageContext messageContext, String searchKey) {
+
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<InboundEndpoint> searchResultList = configuration.getInboundEndpoints().stream()
+                .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+        return searchResultList;
+    }
+
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+
+        List<InboundEndpoint> resultsList = getSearchResults(messageContext, searchKey);
+        setResponseBody(resultsList, messageContext);
     }
 
     private void handlePost(MessageContext msgCtx,
@@ -113,17 +136,18 @@ public class InboundEndpointResource extends APIResource {
 
     private void populateInboundEndpointList(MessageContext messageContext) {
 
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        Collection<InboundEndpoint> inboundEndpoints = configuration.getInboundEndpoints();
+        setResponseBody(inboundEndpoints, messageContext);
+    }
+    private void setResponseBody(Collection<InboundEndpoint> inboundEndpointCollection, MessageContext messageContext) {
+
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        SynapseConfiguration configuration = messageContext.getConfiguration();
+        JSONObject jsonBody = Utils.createJSONList(inboundEndpointCollection.size());
 
-        Collection<InboundEndpoint> inboundEndpoints = configuration.getInboundEndpoints();
-
-        JSONObject jsonBody = Utils.createJSONList(inboundEndpoints.size());
-
-        for (InboundEndpoint inboundEndpoint : inboundEndpoints) {
-
+        for (InboundEndpoint inboundEndpoint : inboundEndpointCollection) {
             JSONObject inboundObject = new JSONObject();
 
             inboundObject.put(Constants.NAME, inboundEndpoint.getName());

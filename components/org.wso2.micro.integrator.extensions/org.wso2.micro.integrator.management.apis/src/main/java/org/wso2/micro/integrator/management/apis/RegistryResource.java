@@ -25,13 +25,14 @@ import org.json.JSONObject;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
+import java.util.Objects;
+import java.util.HashSet;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
 import static org.wso2.micro.integrator.management.apis.Constants.EXPAND_PARAM;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_PATH;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 import static org.wso2.micro.integrator.management.apis.Constants.VALUE_TRUE;
 import static org.wso2.micro.integrator.management.apis.Utils.formatPath;
 import static org.wso2.micro.integrator.management.apis.Utils.validatePath;
@@ -42,7 +43,6 @@ import static org.wso2.micro.integrator.management.apis.Utils.validatePath;
 public class RegistryResource implements MiApiResource {
 
     Set<String> methods;
-
     public RegistryResource() {
 
         methods = new HashSet<>();
@@ -60,12 +60,22 @@ public class RegistryResource implements MiApiResource {
 
         String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
         String validatedPath = validatePath(registryPath, axis2MessageContext);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
 
         if (StringUtils.isEmpty(validatedPath)) {
             axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
             return true;
         }
-        handleGet(messageContext, axis2MessageContext, validatedPath);
+        if (Objects.nonNull(searchKey)) {
+            if (searchKey.trim().isEmpty()) {
+                validatedPath = validatePath(registryPath, axis2MessageContext);
+                handleGet(messageContext, axis2MessageContext, validatedPath);
+            } else {
+                populateRegistryResourceJSON(searchKey, axis2MessageContext, new MicroIntegratorRegistry(), validatedPath);
+            }
+        } else {
+            handleGet(messageContext, axis2MessageContext, validatedPath);
+        }
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
@@ -82,19 +92,21 @@ public class RegistryResource implements MiApiResource {
         String expandedEnabled = Utils.getQueryParameter(messageContext, EXPAND_PARAM);
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
         if (Objects.nonNull(expandedEnabled) && expandedEnabled.equals(VALUE_TRUE)) {
-            populateRegistryResourceJSON(axis2MessageContext, microIntegratorRegistry, validatedPath);
+            populateRegistryResourceJSON("", axis2MessageContext, microIntegratorRegistry, validatedPath);
         } else {
             populateImmediateChildren(axis2MessageContext, microIntegratorRegistry, validatedPath);
         }
     }
 
     /**
-     * This method is used to get the <MI-HOME>/registry directory and its content as a JSON.
+     * This method is used to get the <MI-HOME>/registry directory and its content which match with the search key,
+     * as a JSON.
      *
+     * @param searchKey String
      * @param axis2MessageContext     AXIS2 message context
      * @param microIntegratorRegistry Micro integrator registry
      */
-    private void populateRegistryResourceJSON(org.apache.axis2.context.MessageContext axis2MessageContext,
+    private void populateRegistryResourceJSON(String searchKey, org.apache.axis2.context.MessageContext axis2MessageContext,
             MicroIntegratorRegistry microIntegratorRegistry, String path) {
 
         String carbonHomePath = Utils.getCarbonHome();
@@ -102,7 +114,7 @@ public class RegistryResource implements MiApiResource {
         File node = new File(folderPath);
         JSONObject jsonBody;
         if (node.exists() && node.isDirectory()) {
-            jsonBody = microIntegratorRegistry.getRegistryResourceJSON(folderPath);
+            jsonBody = microIntegratorRegistry.getRegistryResourceJSON(searchKey, folderPath);
         } else {
             jsonBody = Utils.createJsonError("Invalid registry path", axis2MessageContext, BAD_REQUEST);
         }
@@ -132,4 +144,5 @@ public class RegistryResource implements MiApiResource {
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
+
 }

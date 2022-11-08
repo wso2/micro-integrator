@@ -26,9 +26,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.libraries.imports.SynapseImport;
 import org.apache.synapse.libraries.model.Library;
 import org.apache.synapse.libraries.model.SynapseLibrary;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.micro.core.util.AuditLogger;
@@ -37,12 +39,17 @@ import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceMan
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
 
 import java.io.IOException;
+
+import java.util.Set;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.ITEM_TYPE_IMPORT;
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
 /**
  * API Resource to manage connectors deployed
@@ -78,12 +85,16 @@ public class ConnectorResource implements MiApiResource {
                           org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
 
-        String connectorName = Utils.getQueryParameter(messageContext, "connectorName");
+        String connectorName = Utils.getQueryParameter(messageContext, CONNECTOR_NAME);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
+
         if (messageContext.isDoingGET()) {
             if (Objects.nonNull(connectorName)) {
                 populateConnectorData(axis2MessageContext, synapseConfiguration, connectorName);
+            } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
+                populateSearchResults(messageContext, searchKey.toLowerCase());
             } else {
-                populateConnectorList(axis2MessageContext, synapseConfiguration);
+                populateConnectorList(messageContext, synapseConfiguration);
             }
             axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         } else {
@@ -113,14 +124,35 @@ public class ConnectorResource implements MiApiResource {
         }
         return true;
     }
+    private static List<Library> getSearchResults(MessageContext messageContext, String searchKey){
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<Library> searchResultList = configuration.getSynapseLibraries().values().stream()
+                .filter(artifact -> artifact.getFileName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+        return searchResultList;
+    }
+    
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
+        List<Library> searchResultList = getSearchResults(messageContext, searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
 
+    private void setResponseBody(Collection<Library> libraryList, MessageContext messageContext) {
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+        JSONObject jsonBody = Utils.createJSONList(libraryList.size());
+        for (Library library : libraryList) {
+            addToJsonList(jsonBody.getJSONArray(Constants.LIST), (SynapseLibrary) library);
+        }
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+    }
     private void populateConnectorData(org.apache.axis2.context.MessageContext axis2MessageContext,
                                        SynapseConfiguration synapseConfiguration, String connectorName) {
 
         Map<String, Library> libraries = synapseConfiguration.getSynapseLibraries();
 
         for (Map.Entry<String, Library> entry : libraries.entrySet()) {
-            if(((SynapseLibrary)entry.getValue()).getName().equals(connectorName)) {
+            if (((SynapseLibrary)entry.getValue()).getName().equals(connectorName)) {
                 SynapseLibrary connector = (SynapseLibrary)entry.getValue();
                 if (Objects.nonNull(connector)) {
                     Utils.setJsonPayLoad(axis2MessageContext, getConnectorAsJson(connector));
@@ -141,18 +173,14 @@ public class ConnectorResource implements MiApiResource {
     /**
      * Sets the list of all available connectors to the response as json
      *
-     * @param axis2MessageContext AXIS2 message context
+     * @param messageContext MessageContext
      * @param synapseConfiguration Synapse configuration object
      */
-    private void populateConnectorList(org.apache.axis2.context.MessageContext axis2MessageContext,
+    private void populateConnectorList(MessageContext messageContext,
                                        SynapseConfiguration synapseConfiguration) {
-
-        Map<String, Library> libraryList = synapseConfiguration.getSynapseLibraries();
-        JSONObject jsonBody = Utils.createJSONList(libraryList.size());
-        libraryList.forEach((key, value) ->
-                addToJsonList(jsonBody.getJSONArray(Constants.LIST), (SynapseLibrary) value));
-
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Map<String, Library> libraryMap = synapseConfiguration.getSynapseLibraries();
+        Collection<Library> libraryList = libraryMap.values();
+        setResponseBody(libraryList, messageContext);
     }
 
     /**

@@ -33,16 +33,23 @@ import org.apache.synapse.task.TaskDescriptionSerializer;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
+
 import java.util.Set;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.Iterator;
 import javax.xml.namespace.QName;
 
+import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
+
 public class TaskResource extends APIResource {
+
+    private static final String TASK_NAME = "taskName";
 
     public TaskResource(String urlTemplate){
         super(urlTemplate);
@@ -63,10 +70,13 @@ public class TaskResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        String param = Utils.getQueryParameter(messageContext, "taskName");
+        String param = Utils.getQueryParameter(messageContext, TASK_NAME);
+        String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
 
         if (Objects.nonNull(param)) {
             populateTaskData(messageContext, param);
+        } else if (Objects.nonNull(searchKey) && !searchKey.trim().isEmpty()) {
+            populateSearchResults(messageContext, searchKey.toLowerCase());
         } else {
             populateTasksList(messageContext);
         }
@@ -74,15 +84,24 @@ public class TaskResource extends APIResource {
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
+    private static List<Startup> getSearchResults(MessageContext messageContext, String searchKey) {
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        List<Startup> searchResultList = configuration.getStartups().stream()
+                .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
+                .collect(Collectors.toList());
+        return searchResultList;
+    }
+    private void populateSearchResults(MessageContext messageContext, String searchKey) {
 
-    private void populateTasksList(MessageContext messageContext) {
+        List<Startup> searchResultList = getSearchResults(messageContext, searchKey);
+        setResponseBody(searchResultList, messageContext);
+    }
+
+    private void setResponseBody(Collection<Startup> tasks, MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        SynapseConfiguration configuration = messageContext.getConfiguration();
-
-        Collection<Startup> tasks = configuration.getStartups();
         JSONObject jsonBody = Utils.createJSONList(tasks.size());
         for (Startup task : tasks) {
             JSONObject taskObject = new JSONObject();
@@ -90,6 +109,13 @@ public class TaskResource extends APIResource {
             jsonBody.getJSONArray(Constants.LIST).put(taskObject);
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+    }
+
+    private void populateTasksList(MessageContext messageContext) {
+
+        SynapseConfiguration configuration = messageContext.getConfiguration();
+        Collection<Startup> tasks = configuration.getStartups();
+        setResponseBody(tasks, messageContext);
     }
 
     private void populateTaskData(MessageContext messageContext, String taskName) {

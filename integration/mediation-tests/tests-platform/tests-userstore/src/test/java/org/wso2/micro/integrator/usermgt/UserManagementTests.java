@@ -37,7 +37,9 @@ public class UserManagementTests extends ESBIntegrationTest {
     private String userResource;
     private final String USER_ID_PARAM = "userId";
     private final String ADMIN_USER_ID = "adminUser";
-    private final String NON_ADMIN_USER_ID = "nonAdminUser";
+    private final String NON_ADMIN_USER1_ID = "nonAdminUser";
+    private final String NON_ADMIN_USER2_ID = "developerUser";
+    private final String NON_ADMIN_USER3_ID = "observerUser";
 
 
     @BeforeClass
@@ -89,7 +91,7 @@ public class UserManagementTests extends ESBIntegrationTest {
 
     @Test(dependsOnMethods = "testGetInitialUsers")
     public void testAddNonAdmin() throws Exception {
-        String userId = NON_ADMIN_USER_ID;
+        String userId = NON_ADMIN_USER1_ID;
         String response = addValidUser(userId, "pwd-nonadmin", false);
         JSONObject successResponse = new JSONObject(response);
         Assert.assertEquals(successResponse.getString(USER_ID_PARAM), userId,
@@ -101,7 +103,7 @@ public class UserManagementTests extends ESBIntegrationTest {
 
     @Test(dependsOnMethods = "testAddNonAdmin")
     public void testAddExistingUser() throws Exception {
-        HttpResponse response = addUser(NON_ADMIN_USER_ID, "pwd-nonadmin2", false);
+        HttpResponse response = addUser(NON_ADMIN_USER1_ID, "pwd-nonadmin2", false);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 400);
     }
 
@@ -111,7 +113,84 @@ public class UserManagementTests extends ESBIntegrationTest {
         HttpResponse response = deleteUser(userId);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 404);
         // Delete extra users than admin
-        deleteUser(NON_ADMIN_USER_ID);
+        deleteUser(NON_ADMIN_USER1_ID);
+    }
+    @Test(dependsOnMethods = "testDeleteNonExistentUser")
+    public void testAddNonAdminUser2() throws Exception {
+        String userId = NON_ADMIN_USER2_ID;
+        String response = addValidUser(userId, "pwd-nonadmin", false);
+        JSONObject successResponse = new JSONObject(response);
+        Assert.assertEquals(successResponse.getString(USER_ID_PARAM), userId,
+                "Invalid response received " + successResponse);
+        Assert.assertEquals(successResponse.getString("status"), "Added",
+                "Invalid response received " + successResponse);
+        validateUserDetails(userId, new String[]{"Internal/everyone"}, false);
+    }
+
+    @Test(dependsOnMethods = "testAddNonAdminUser2")
+    public void testAddNonAdminUser3() throws Exception {
+        String userId = NON_ADMIN_USER3_ID;
+        String response = addValidUser(userId, "pwd-nonadmin", false);
+        JSONObject successResponse = new JSONObject(response);
+        Assert.assertEquals(successResponse.getString(USER_ID_PARAM), userId,
+                "Invalid response received " + successResponse);
+        Assert.assertEquals(successResponse.getString("status"), "Added",
+                "Invalid response received " + successResponse);
+        validateUserDetails(userId, new String[]{"Internal/everyone"}, false);
+    }
+
+    @Test(dependsOnMethods = "testAddNonAdminUser3")
+    public void testGetAllCurrentUsers() throws Exception {
+        String users = getUsers();
+        JSONObject usersJson = new JSONObject(users);
+        String errorMessageOnAssertionFailure = "Received response" + users;
+        //Assert user count
+        Assert.assertEquals(usersJson.get("count"), 3, errorMessageOnAssertionFailure);
+        //Assert user details
+        Assert.assertEquals((usersJson.getJSONArray("list")).length(), 3, errorMessageOnAssertionFailure);
+        Assert.assertEquals((usersJson.getJSONArray("list")).getJSONObject(0).get(USER_ID_PARAM), "admin",
+                errorMessageOnAssertionFailure);
+        Assert.assertEquals((usersJson.getJSONArray("list")).getJSONObject(1).get(USER_ID_PARAM), "developerUser",
+                errorMessageOnAssertionFailure);
+        Assert.assertEquals((usersJson.getJSONArray("list")).getJSONObject(2).get(USER_ID_PARAM), "observerUser",
+                errorMessageOnAssertionFailure);
+    }
+
+    @Test(dependsOnMethods = "testGetAllCurrentUsers")
+    public void testSearchCurrentUsers() throws Exception {
+        String users = getSearchedUsers("developer");
+        JSONObject usersJson = new JSONObject(users);
+        String errorMessageOnAssertionFailure = "Received response" + users;
+        //Assert user count
+        Assert.assertEquals(usersJson.get("count"), 1, errorMessageOnAssertionFailure);
+        //Assert user details
+        Assert.assertEquals((usersJson.getJSONArray("list")).length(), 1, errorMessageOnAssertionFailure);
+        Assert.assertEquals((usersJson.getJSONArray("list")).getJSONObject(0).get(USER_ID_PARAM), "developerUser",
+                errorMessageOnAssertionFailure);
+    }
+
+    @Test(dependsOnMethods = "testSearchCurrentUsers")
+    public void testDeleteNonAdminUser2() throws Exception {
+        String userId = NON_ADMIN_USER2_ID;
+        String response = deleteUserSuccessfully(userId);
+        JSONObject successResponse = new JSONObject(response);
+        Assert.assertEquals(successResponse.getString(USER_ID_PARAM), userId,
+                "Invalid response received " + successResponse);
+        Assert.assertEquals(successResponse.getString("status"), "Deleted",
+                "Invalid response received " + successResponse);
+        assertNonExistenceOfUser(userId);
+    }
+
+    @Test(dependsOnMethods = "testDeleteNonAdminUser2")
+    public void testDeleteNonAdminUser3() throws Exception {
+        String userId = NON_ADMIN_USER3_ID;
+        String response = deleteUserSuccessfully(userId);
+        JSONObject successResponse = new JSONObject(response);
+        Assert.assertEquals(successResponse.getString(USER_ID_PARAM), userId,
+                "Invalid response received " + successResponse);
+        Assert.assertEquals(successResponse.getString("status"), "Deleted",
+                "Invalid response received " + successResponse);
+        assertNonExistenceOfUser(userId);
     }
 
     private String getUsers() throws IOException {
@@ -122,6 +201,18 @@ public class UserManagementTests extends ESBIntegrationTest {
 
         String endpoint = userResource;
 
+        HttpResponse response = client.doGet(endpoint, headers);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Unexpected status code");
+        String responseString = client.getResponsePayload(response);
+        log.info("Received payload: " + responseString);
+        return responseString;
+    }
+
+    private String getSearchedUsers(String searchKey) throws IOException {
+        SimpleHttpClient client = new SimpleHttpClient();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        String endpoint = userResource.concat("?searchKey=").concat(searchKey);
         HttpResponse response = client.doGet(endpoint, headers);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Unexpected status code");
         String responseString = client.getResponsePayload(response);

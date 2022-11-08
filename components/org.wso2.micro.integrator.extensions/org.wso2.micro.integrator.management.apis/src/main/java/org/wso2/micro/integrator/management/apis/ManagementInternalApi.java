@@ -50,21 +50,20 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOG_FIL
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_PROCESSORS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
-import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_CONTENT;
-import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_METADATA;
-import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_PROPERTIES;
-import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_RESOURCES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_ROLES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SEQUENCES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SERVER_DATA;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TASKS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TEMPLATES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TRANSACTION;
-import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CONFIGS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_USERS;
 import static org.wso2.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
 import static org.wso2.micro.integrator.management.apis.Constants.ROOT_CONTEXT;
-
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_RESOURCES;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_CONTENT;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_METADATA;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REGISTRY_PROPERTIES;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CONFIGS;
 public class ManagementInternalApi implements InternalAPI {
 
     private String name;
