@@ -283,7 +283,7 @@
                                 <bundleDef>javax.validation:validation-api:${javax.validation.version}</bundleDef>
                                 <bundleDef>org.yaml:snakeyaml:${snakeyaml.version}</bundleDef>
                                 <bundleDef>com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${fasterxml.jackson.version}</bundleDef>
-                                <bundleDef>org.wso2.orbit.org.apache.commons:commons-lang3:${commons.lang3.version}</bundleDef>
+                                <bundleDef>org.wso2.orbit.org.apache.commons:commons-lang3:${commons-lang3.orbit.version}</bundleDef>
                                 <bundleDef>org.wso2.ei:javax.cache.wso2:${project.version}</bundleDef>
                             </bundles>
 
