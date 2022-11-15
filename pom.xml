@@ -1415,6 +1415,11 @@
                 <artifactId>saaj-impl</artifactId>
                 <version>${messaging.saaj.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1834,6 +1839,7 @@
         <messaging.saaj.version>1.5.1</messaging.saaj.version>
         <openjdk.nashorn.version>15.3</openjdk.nashorn.version>
         <ow2.asm.version>9.2</ow2.asm.version>
+        <jsoup.version>1.15.1</jsoup.version>
     </properties>
 
     <repositories>
