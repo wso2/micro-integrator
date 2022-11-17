@@ -973,6 +973,14 @@
                 <module>mediation-tests/tests-platform/tests-transaction</module>
             </modules>
         </profile>
+        <profile>
+            <id>http-tests</id>
+            <modules>
+                <module>tests-common</module>
+                <module>mediation-tests/tests-http</module>
+                <module>mediation-tests/coverage-report</module>
+            </modules>
+        </profile>
     </profiles>
 
 </project>
