@@ -50,13 +50,17 @@ public class ExcelDeleteQuery extends DeleteQuery {
     private int executeSQL() throws SQLException {
         TExcelConnection excelCon = (TExcelConnection)getConnection();
         //begin transaction,
-        excelCon.beginExcelTransaction();
-        Sheet currentWorkSheet = excelCon.getWorkbook().getSheet(getTargetTableName());
-        for (Integer rowId : this.getResultantRows().keySet()) {
-            currentWorkSheet.removeRow(currentWorkSheet.getRow(rowId + 1));
+        try {
+            excelCon.beginExcelTransaction();
+            Sheet currentWorkSheet = excelCon.getWorkbook().getSheet(getTargetTableName());
+            for (Integer rowId : this.getResultantRows().keySet()) {
+                currentWorkSheet.removeRow(currentWorkSheet.getRow(rowId + 1));
+            }
+            TDriverUtil.writeRecords(excelCon.getWorkbook(), excelCon.getPath());
+            return this.getResultantRows().size();
+        } finally {
+            excelCon.close();
         }
-        TDriverUtil.writeRecords(excelCon.getWorkbook(), excelCon.getPath());
-        return this.getResultantRows().size();
     }
 
 }

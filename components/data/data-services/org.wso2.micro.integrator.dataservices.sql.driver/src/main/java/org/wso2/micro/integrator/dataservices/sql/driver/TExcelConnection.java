@@ -72,20 +72,33 @@ public class TExcelConnection extends TConnection {
      * @throws SQLException SQLException
      */
     private Workbook createConnectionToExcelDocument(String filePath) throws SQLException {
+        return createConnectionToExcelDocument(filePath, true);
+    }
+
+    private Workbook createConnectionToExcelDocument(String filePath, boolean releaseLock) throws SQLException {
         Workbook workbook;
+        InputStream fin = null;
         try {
             acquireLock();
-            InputStream fin = TDriverUtil.getInputStreamFromPath(filePath);
+            fin = TDriverUtil.getInputStreamFromPath(filePath);
             workbook = WorkbookFactory.create(fin);
         } catch (FileNotFoundException e) {
             throw new SQLException("Could not locate the EXCEL datasource in the provided " +
-                                   "location", e);
+                    "location", e);
         } catch (IOException | InvalidFormatException e) {
             throw new SQLException("Error occurred while initializing the EXCEL datasource", e);
         } catch (InterruptedException e) {
             throw new SQLException("Error Acquiring the lock for the workbook path - " + filePath, e);
         } finally {
-            releaseLock();
+            if (fin != null) {
+                try {
+                    fin.close();
+                } catch (IOException ignore) {
+                }
+            }
+            if (releaseLock) {
+                releaseLock();
+            }
         }
         return workbook;
     }
@@ -199,7 +212,7 @@ public class TExcelConnection extends TConnection {
      * @throws SQLException
      */
     public void beginExcelTransaction() throws SQLException {
-        this.workbook = this.createConnectionToExcelDocument(filePath);
+        this.workbook = this.createConnectionToExcelDocument(filePath, false);
     }
 
     public void commit() throws SQLException {
@@ -211,6 +224,11 @@ public class TExcelConnection extends TConnection {
     }
 
     public void close() throws SQLException {
-        releaseLock();
+        try {
+            workbook.close();
+        } catch (IOException ignore) {
+        } finally {
+            releaseLock();
+        }
     }
 }

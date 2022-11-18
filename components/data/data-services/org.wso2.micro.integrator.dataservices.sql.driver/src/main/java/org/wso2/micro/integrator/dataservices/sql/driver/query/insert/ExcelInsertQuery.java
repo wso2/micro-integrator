@@ -60,44 +60,48 @@ public class ExcelInsertQuery extends InsertQuery {
         }
         TExcelConnection excelConnection = (TExcelConnection) this.getConnection();
         //begin transaction,
-        excelConnection.beginExcelTransaction();
-        Workbook workbook = excelConnection.getWorkbook();
-        Sheet sheet = workbook.getSheet(getTargetTableName());
-        if (sheet == null) {
-            throw new SQLException("Excel sheet named '" + this.getTargetTableName() +
-                    "' does not exist");
-        }
-        int lastRowNo = sheet.getLastRowNum();
-
-        if (getParameters() != null) {
-            Row row = sheet.createRow(lastRowNo + 1);
-            for (ParamInfo param : getParameters()) {
-                Cell cell = row.createCell(param.getOrdinal());
-                switch (param.getSqlType()) {
-                    case Types.VARCHAR:
-                        cell.setCellValue((String) param.getValue());
-                        break;
-                    case Types.INTEGER:
-                        cell.setCellValue((Integer) param.getValue());
-                        break;
-                    case Types.DOUBLE:
-                        cell.setCellValue((Double) param.getValue());
-                        break;
-                    case Types.BOOLEAN:
-                        cell.setCellValue((Boolean) param.getValue());
-                        break;
-                    case Types.DATE:
-                        cell.setCellValue((Date) param.getValue());
-                        break;
-                    default:
-                        cell.setCellValue((String) param.getValue());
-                        break;
-                }
+        try {
+            excelConnection.beginExcelTransaction();
+            Workbook workbook = excelConnection.getWorkbook();
+            Sheet sheet = workbook.getSheet(getTargetTableName());
+            if (sheet == null) {
+                throw new SQLException("Excel sheet named '" + this.getTargetTableName() +
+                        "' does not exist");
             }
-            rowCount++;
+            int lastRowNo = sheet.getLastRowNum();
+
+            if (getParameters() != null) {
+                Row row = sheet.createRow(lastRowNo + 1);
+                for (ParamInfo param : getParameters()) {
+                    Cell cell = row.createCell(param.getOrdinal());
+                    switch (param.getSqlType()) {
+                        case Types.VARCHAR:
+                            cell.setCellValue((String) param.getValue());
+                            break;
+                        case Types.INTEGER:
+                            cell.setCellValue((Integer) param.getValue());
+                            break;
+                        case Types.DOUBLE:
+                            cell.setCellValue((Double) param.getValue());
+                            break;
+                        case Types.BOOLEAN:
+                            cell.setCellValue((Boolean) param.getValue());
+                            break;
+                        case Types.DATE:
+                            cell.setCellValue((Date) param.getValue());
+                            break;
+                        default:
+                            cell.setCellValue((String) param.getValue());
+                            break;
+                    }
+                }
+                rowCount++;
+            }
+            TDriverUtil.writeRecords(workbook, ((TExcelConnection) getConnection()).getPath());
+            return rowCount;
+        } finally {
+            excelConnection.close();
         }
-        TDriverUtil.writeRecords(workbook, ((TExcelConnection) getConnection()).getPath());
-        return rowCount;
     }
 
 }

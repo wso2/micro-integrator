@@ -54,18 +54,22 @@ public class ExcelCreateQuery extends CreateQuery {
     private synchronized void executeSQL() throws SQLException {
         TExcelConnection excelCon = (TExcelConnection)getConnection();
         //begin transaction,
-        excelCon.beginExcelTransaction();
-        if (excelCon.getWorkbook() == null) {
-            throw new SQLException("Connection to EXCEL data source has not been established " +
-                    "properly");
+        try {
+            excelCon.beginExcelTransaction();
+            if (excelCon.getWorkbook() == null) {
+                throw new SQLException("Connection to EXCEL data source has not been established " +
+                        "properly");
+            }
+            Sheet sheet = excelCon.getWorkbook().createSheet(this.getTableName());
+            Row headerRow = sheet.createRow(0);
+            for (int i = 0; i < this.getColumns().size(); i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(this.getColumns().get(i).getName());
+            }
+            TDriverUtil.writeRecords(excelCon.getWorkbook(), excelCon.getPath());
+        } finally {
+            excelCon.close();
         }
-        Sheet sheet = excelCon.getWorkbook().createSheet(this.getTableName());
-        Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < this.getColumns().size(); i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(this.getColumns().get(i).getName());
-        }
-        TDriverUtil.writeRecords(excelCon.getWorkbook(), excelCon.getPath());
     }
     
 }
