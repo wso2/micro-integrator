@@ -111,9 +111,6 @@ public abstract class InsertQuery extends Query {
                 throw new SQLException("Syntax Error : 'PARAM_VALUE' is expected");
             }
             tokens.poll();
-            if (!ParserUtil.isStringLiteral(tokens.peek())) {
-                throw new SQLException("Syntax Error : String literal expected");
-            }
             if ("?".equalsIgnoreCase(tokens.peek())) {
                 if (isInit) {
                     isParameterized = true;
@@ -142,7 +139,7 @@ public abstract class InsertQuery extends Query {
                 }
                 targetColumnValues.put(valCount, b.toString());
                 tokens.poll();
-            } else if (ParserUtil.isStringLiteral(tokens.peek())) {
+            } else {
                 if (isInit) {
                     isInit = false;
                     isParameterized = false;
