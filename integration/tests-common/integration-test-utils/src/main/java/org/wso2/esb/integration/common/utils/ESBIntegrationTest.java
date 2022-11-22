@@ -182,7 +182,15 @@ public abstract class ESBIntegrationTest {
     }
 
     protected String getMainSequenceURL() {
+        return getMainSequenceURL(false);
+    }
+
+    protected String getMainSequenceURL(boolean https) {
+
         String mainSequenceUrl = contextUrls.getServiceUrl();
+        if (https) {
+            mainSequenceUrl = contextUrls.getSecureServiceUrl();
+        }
         if (mainSequenceUrl.endsWith("/services")) {
             mainSequenceUrl = mainSequenceUrl.replace("/services", "");
         }
@@ -190,7 +198,6 @@ public abstract class ESBIntegrationTest {
             mainSequenceUrl = mainSequenceUrl + "/";
         }
         return mainSequenceUrl;
-
     }
 
     protected String getProxyServiceURLHttp(String proxyServiceName) {
@@ -199,6 +206,10 @@ public abstract class ESBIntegrationTest {
 
     protected String getApiInvocationURL(String apiName) {
         return getMainSequenceURL() + apiName;
+    }
+
+    protected String getApiInvocationURLHttps(String apiName) {
+        return getMainSequenceURL(true) + apiName;
     }
 
     protected String getProxyServiceURLHttps(String proxyServiceName) {
