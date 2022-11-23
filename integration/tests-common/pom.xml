@@ -260,7 +260,7 @@
                     <artifactId>httpcore</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
+                    <groupId>org.wso2.httpcomponents</groupId>
                     <artifactId>httpcore-nio</artifactId>
                 </exclusion>
                 <exclusion>
@@ -279,9 +279,10 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
+            <groupId>org.wso2.httpcomponents</groupId>
             <artifactId>httpcore-nio</artifactId>
-            <scope>compile</scope>
+            <version>4.4.15-wso2v2</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>
