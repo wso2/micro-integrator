@@ -260,7 +260,7 @@
                     <artifactId>httpcore</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.wso2.httpcomponents</groupId>
+                    <groupId>org.apache.httpcomponents</groupId>
                     <artifactId>httpcore-nio</artifactId>
                 </exclusion>
                 <exclusion>
