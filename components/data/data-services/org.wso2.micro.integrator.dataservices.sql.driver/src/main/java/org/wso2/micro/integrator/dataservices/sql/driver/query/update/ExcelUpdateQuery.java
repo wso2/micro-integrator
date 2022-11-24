@@ -65,24 +65,28 @@ public class ExcelUpdateQuery extends UpdateQuery {
         }
         TExcelConnection excelConnection = (TExcelConnection) this.getConnection();
         //begin transaction,
-        excelConnection.beginExcelTransaction();
-        Workbook workbook = excelConnection.getWorkbook();
-        Sheet sheet = workbook.getSheet(getTargetTableName());
-        if (sheet == null) {
-            throw new SQLException("Excel sheet named '" + this.getTargetTableName() +
-                    "' does not exist");
-        }
-
-        ColumnInfo[] headers = TDriverUtil.getHeaders(getConnection(), getTargetTableName());
-        for (Map.Entry<Integer, DataRow> row : result.entrySet()) {
-            Row updatedRow = sheet.getRow(row.getKey() + 1);
-            for (ColumnInfo column : getTargetColumns()) {
-                int columnId = findColumnId(headers, column.getName());
-                updatedRow.getCell(columnId).setCellValue(column.getValue().toString());
+        try {
+            excelConnection.beginExcelTransaction();
+            Workbook workbook = excelConnection.getWorkbook();
+            Sheet sheet = workbook.getSheet(getTargetTableName());
+            if (sheet == null) {
+                throw new SQLException("Excel sheet named '" + this.getTargetTableName() +
+                        "' does not exist");
             }
+
+            ColumnInfo[] headers = TDriverUtil.getHeaders(getConnection(), getTargetTableName());
+            for (Map.Entry<Integer, DataRow> row : result.entrySet()) {
+                Row updatedRow = sheet.getRow(row.getKey() + 1);
+                for (ColumnInfo column : getTargetColumns()) {
+                    int columnId = findColumnId(headers, column.getName());
+                    updatedRow.getCell(columnId).setCellValue(column.getValue().toString());
+                }
+            }
+            TDriverUtil.writeRecords(workbook, ((TExcelConnection) getConnection()).getPath());
+            return 0;
+        } finally {
+            excelConnection.close();
         }
-        TDriverUtil.writeRecords(workbook, ((TExcelConnection) getConnection()).getPath());
-        return 0;
     }
 
     private int findColumnId(ColumnInfo[] headers, String headerName) throws SQLException {
