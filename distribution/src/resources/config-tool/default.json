@@ -25,6 +25,8 @@
   "server.synapse_config_server_name": "localhost",
   "server.enable_basic_auth": true,
 
+  "server.blocking.enableMTOM": false,
+  "server.blocking.enableSwA": false,
   "server.blocking.hot_deployment": true,
   "server.blocking.hot_update": false,
   "server.blocking.config_context_timeout_interval": "30000",
