@@ -5,6 +5,9 @@
   "server.identity_server_username": "axis2_transport.parameter.identityServerUserName",
   "server.identity_server_password": "axis2_transport.parameter.identityServerPw",
 
+  "server.blocking.enable_mtom": "server.blocking.enableMTOM",
+  "server.blocking.enable_swa": "server.blocking.enableSwA",
+
   "user_store.read_only":"user_store.properties.ReadOnly",
   "user_store.write_groups":"user_store.properties.WriteGroups",
   "user_store.username_javascript_regex":"user_store.properties.UsernameJavaScriptRegEx",
