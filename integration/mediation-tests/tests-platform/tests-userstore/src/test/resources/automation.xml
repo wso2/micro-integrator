@@ -93,7 +93,20 @@
     </userManagement>
     <platform>
         <productGroup name="ESB" clusteringEnabled="false" default="true">
-            <instance name="micro-integrator" type="standalone" nonBlockingTransportEnabled="true"/>
+            <instance name="esbs001" type="standalone" nonBlockingTransportEnabled="true">
+                <hosts>
+                    <host type="default">localhost</host>
+                </hosts>
+                <ports>
+                    <port type="http">9963</port>
+                    <port type="https">9643</port>
+                    <port type="nhttps">8443</port>
+                    <port type="nhttp">8480</port>
+                </ports>
+                <properties>
+
+                </properties>
+            </instance>
         </productGroup>
     </platform>
 
