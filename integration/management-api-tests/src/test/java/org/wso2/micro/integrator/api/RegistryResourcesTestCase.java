@@ -1,19 +1,19 @@
 /*
- *Copyright (c) 2022, WSO2 LLC. (http://www.wso2.com) All Rights Reserved.
+ * Copyright (c) 2022, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
  *
- *WSO2 Inc. licenses this file to you under the Apache License,
- *Version 2.0 (the "License"); you may not use this file except
- *in compliance with the License.
- *You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *Unless required by applicable law or agreed to in writing,
- *software distributed under the License is distributed on an
- *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *KIND, either express or implied.  See the License for the
- *specific language governing permissions and limitations
- *under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.micro.integrator.api;
@@ -40,6 +40,8 @@ import java.util.concurrent.TimeUnit;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
+import static org.wso2.micro.integrator.api.Constants.LIST;
+
 public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     private String accessToken;
@@ -49,7 +51,7 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding registry content (text)")
+    @Test(groups = {"wso2.esb"}, priority = 2, description = "Test adding registry content (text)")
     public void testRegistryPostText() throws IOException {
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
@@ -70,7 +72,7 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
                 "Invalid response received " + jsonResponse.get("message"));
     }
 
-    @Test(groups = { "wso2.esb" }, priority = 2, description = "Test adding registry content (text) for test delete")
+    @Test(groups = {"wso2.esb"}, priority = 2, description = "Test adding registry content (text) for test delete")
     public void testRegistryPostTextExtraTextFile() throws IOException {
 
         String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
@@ -226,7 +228,7 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
                 response.getStatusLine().getStatusCode() + " returned.");
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        JSONAssert.assertEquals(expected, jsonResponse.get("list").toString(), false);
+        JSONAssert.assertEquals(expected, jsonResponse.get(LIST).toString(), false);
     }
 
     @Test(groups = { "wso2.esb" }, priority = 3, description = "Test fetching registry directory with expanding for searchKey")
@@ -242,7 +244,7 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
                 response.getStatusLine().getStatusCode() + " returned.");
-        JSONObject jsonResponse = new JSONObject(responsePayload).getJSONObject("list");
+        JSONObject jsonResponse = new JSONObject(responsePayload).getJSONObject(LIST);
         Assert.assertTrue(jsonResponse.get("name").toString().contains("registry"));
         JSONArray filesArray = jsonResponse.getJSONArray("files");
         Assert.assertTrue(filesArray.getJSONObject(0).get("name").toString().contains("config"));
@@ -652,7 +654,7 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Invalid response status " +
                 response.getStatusLine().getStatusCode() + " returned.");
-        JSONObject jsonResponse = new JSONObject(responsePayload).getJSONObject("list");
+        JSONObject jsonResponse = new JSONObject(responsePayload).getJSONObject(LIST);
         Assert.assertTrue(jsonResponse.get("name").toString().contains("testFolder"));
         JSONArray filesArray = jsonResponse.getJSONArray("files");
         Assert.assertEquals(filesArray.length(), 4, "Assert Failed due to the mismatch of " +

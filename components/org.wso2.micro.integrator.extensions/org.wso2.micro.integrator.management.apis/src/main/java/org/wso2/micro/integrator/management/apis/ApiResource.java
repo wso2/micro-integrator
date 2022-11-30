@@ -44,11 +44,11 @@ import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import java.util.HashSet;
-import java.util.stream.Collectors;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 
@@ -95,12 +95,11 @@ public class ApiResource extends APIResource {
         return true;
     }
 
-    private static List<API> getSearchResults(MessageContext messageContext, String searchKey) {
+    private List<API> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        List <API>searchResultList = configuration.getAPIs().stream()
+        return configuration.getAPIs().stream()
                 .filter(artifact -> artifact.getAPIName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-        return searchResultList;
     }
 
     private void populateSearchResults(MessageContext messageContext, String searchKey) {

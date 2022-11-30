@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
-import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONObject;
 import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
@@ -33,11 +32,11 @@ import org.wso2.micro.integrator.security.user.core.multiplecredentials.UserAlre
 
 import java.io.IOException;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.Arrays;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
 import static org.wso2.micro.integrator.management.apis.Constants.DOMAIN;
@@ -154,8 +153,7 @@ public class UsersResource extends UserResource {
 
     @Override
     protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException {
-        List<String> users = getUserResults(messageContext);
-        return setResponseBody(users);
+        return setResponseBody(getUserResults(messageContext));
     }
 
     protected JSONObject populateSearchResults(MessageContext messageContext, String searchKey) throws UserStoreException {

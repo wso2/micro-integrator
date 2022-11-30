@@ -78,6 +78,7 @@ import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstant
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.HIDDEN_FILE_PREFIX;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LOCAL_REGISTRY_PATH;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LOCAL_REGISTRY_PREFIX;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LIST;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.NAME_KEY;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTIES_KEY;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.PROPERTY_EXTENTION;
@@ -1224,7 +1225,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         return null;
     }
 
-    public Properties getMetadata(String fileUrl) {
+    private Properties getMetadata(String fileUrl) {
 
         Properties metadata = new Properties();
         File file = new File(fileUrl);
@@ -1285,7 +1286,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         addNodesToJSON(searchKey, node, jsonObject);
 
         JSONObject outputObject = new JSONObject();
-        outputObject.put("list", jsonObject);
+        outputObject.put(LIST, jsonObject);
         return outputObject;
     }
 
@@ -1384,7 +1385,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
      * @param carbonHomePath <MI-HOME> path
      * @return converted file path
      */
-    public String getChildPath(String registryPath, String carbonHomePath) {
+    private String getChildPath(String registryPath, String carbonHomePath) {
 
         String resolvedRegKeyPath = registryPath.replace(carbonHomePath + URL_SEPARATOR, "");
         if (resolvedRegKeyPath.startsWith(CONFIGURATION_REGISTRY_PATH)) {

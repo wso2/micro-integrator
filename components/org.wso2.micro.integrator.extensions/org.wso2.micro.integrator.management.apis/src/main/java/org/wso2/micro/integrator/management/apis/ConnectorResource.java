@@ -40,12 +40,12 @@ import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.Synapse
 
 import java.io.IOException;
 
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.ITEM_TYPE_IMPORT;
@@ -124,12 +124,11 @@ public class ConnectorResource implements MiApiResource {
         }
         return true;
     }
-    private static List<Library> getSearchResults(MessageContext messageContext, String searchKey){
+    private List<Library> getSearchResults(MessageContext messageContext, String searchKey){
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        List<Library> searchResultList = configuration.getSynapseLibraries().values().stream()
+        return configuration.getSynapseLibraries().values().stream()
                 .filter(artifact -> artifact.getFileName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-        return searchResultList;
     }
     
     private void populateSearchResults(MessageContext messageContext, String searchKey) {

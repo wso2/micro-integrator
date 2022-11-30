@@ -33,12 +33,12 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.io.IOException;
 
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
@@ -85,12 +85,11 @@ public class SequenceResource extends APIResource {
         return true;
     }
 
-    private static List<SequenceMediator> getSearchResults(MessageContext messageContext, String searchKey) {
+    private List<SequenceMediator> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        List<SequenceMediator> searchResultList = configuration.getDefinedSequences().values().stream()
+        return configuration.getDefinedSequences().values().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-        return searchResultList;
     }
     
     private void populateSearchResults(MessageContext messageContext, String searchKey) {

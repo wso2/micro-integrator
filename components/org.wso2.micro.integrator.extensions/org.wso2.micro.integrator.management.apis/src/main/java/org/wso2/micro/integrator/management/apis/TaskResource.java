@@ -33,16 +33,15 @@ import org.apache.synapse.task.TaskDescriptionSerializer;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
-
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.HashMap;
-import java.util.stream.Collectors;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.xml.namespace.QName;
 
 import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
@@ -86,10 +85,9 @@ public class TaskResource extends APIResource {
     }
     private static List<Startup> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        List<Startup> searchResultList = configuration.getStartups().stream()
+        return configuration.getStartups().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-        return searchResultList;
     }
     private void populateSearchResults(MessageContext messageContext, String searchKey) {
 

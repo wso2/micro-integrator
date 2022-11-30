@@ -40,12 +40,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import static org.wso2.micro.integrator.management.apis.Constants.NO_ENTITY_BODY;
 import static org.wso2.micro.integrator.management.apis.Constants.ROOT_LOGGER;
@@ -59,9 +59,9 @@ public class LoggingResource extends APIResource {
             new Level[] { Level.OFF, Level.TRACE, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL };
 
     private JSONObject jsonBody;
-    private static String filePath = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH) + File.separator
+    private static final String FILE_PATH = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH) + File.separator
             + "log4j2.properties";
-    private static File logPropFile = new File(filePath);
+    private static final File LOG_PROP_FILE = new File(FILE_PATH);
 
     private PropertiesConfiguration config;
     private PropertiesConfigurationLayout layout;
@@ -240,7 +240,7 @@ public class LoggingResource extends APIResource {
         jsonBody = new JSONObject();
         config = new PropertiesConfiguration();
         layout = new PropertiesConfigurationLayout(config);
-        layout.load(new InputStreamReader(new FileInputStream(logPropFile)));
+        layout.load(new InputStreamReader(new FileInputStream(LOG_PROP_FILE)));
     }
 
     private boolean isLoggerExist(String loggerName) throws IOException {
@@ -251,7 +251,7 @@ public class LoggingResource extends APIResource {
     }
 
     private static String getLoggers() throws IOException {
-        return Utils.getProperty(logPropFile, LOGGERS_PROPERTY);
+        return Utils.getProperty(LOG_PROP_FILE, LOGGERS_PROPERTY);
     }
 
     private JSONObject getLoggerData(org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName) {
@@ -261,10 +261,10 @@ public class LoggingResource extends APIResource {
         jsonBody = new JSONObject();
         try {
             if (loggerName.equals(Constants.ROOT_LOGGER)) {
-                logLevel = Utils.getProperty(logPropFile, loggerName + LOGGER_LEVEL_SUFFIX);
+                logLevel = Utils.getProperty(LOG_PROP_FILE, loggerName + LOGGER_LEVEL_SUFFIX);
             } else {
-                componentName = Utils.getProperty(logPropFile, LOGGER_PREFIX + loggerName + LOGGER_NAME_SUFFIX);
-                logLevel = Utils.getProperty(logPropFile, LOGGER_PREFIX + loggerName + LOGGER_LEVEL_SUFFIX);
+                componentName = Utils.getProperty(LOG_PROP_FILE, LOGGER_PREFIX + loggerName + LOGGER_NAME_SUFFIX);
+                logLevel = Utils.getProperty(LOG_PROP_FILE, LOGGER_PREFIX + loggerName + LOGGER_LEVEL_SUFFIX);
             }
         } catch (IOException exception) {
             jsonBody = createJsonError("Error while obtaining logger data ", exception, axis2MessageContext);
@@ -276,7 +276,7 @@ public class LoggingResource extends APIResource {
         return jsonBody;
     }
 
-    private static String[] getAllLoggers() throws IOException {
+    private String[] getAllLoggers() throws IOException {
         //along with root logger
         String[] loggers = getLoggers().split(",");
         // add root logger
@@ -288,12 +288,13 @@ public class LoggingResource extends APIResource {
         }
         return allLoggers;
     }
+
     private void getAllLoggerDetails(MessageContext messageContext) throws IOException {
         String[] loggers = getAllLoggers();
         setResponseBody(Arrays.asList(loggers), messageContext);
     }
 
-    private static List<String> getSearchResults(String searchKey) throws IOException {
+    private List<String> getSearchResults(String searchKey) throws IOException {
         String[] allLoggers = getAllLoggers();
         List<String> filteredLoggers = new ArrayList<>();
 
@@ -340,7 +341,7 @@ public class LoggingResource extends APIResource {
     }
 
     private void applyConfigs() throws IOException, ConfigurationException {
-        layout.save(new FileWriter(filePath, false));
+        layout.save(new FileWriter(FILE_PATH, false));
         Utils.updateLoggingConfiguration();
     }
 }

@@ -40,12 +40,12 @@ import org.wso2.micro.core.util.AuditLogger;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
@@ -126,13 +126,11 @@ public class MessageProcessorResource extends APIResource {
         return true;
     }
 
-    private static List<MessageProcessor> getSearchResults(MessageContext messageContext, String searchKey) {
+    private List<MessageProcessor> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        List<MessageProcessor> searchResultList = configuration.getMessageProcessors().values().stream()
+        return configuration.getMessageProcessors().values().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-
-        return searchResultList;
     }
 
 

@@ -143,7 +143,7 @@ public class RolesResource implements MiApiResource {
         return jsonBody;
     }
 
-    private static List<String> getSearchResults(String searchKey) throws UserStoreException {
+    private List<String> getSearchResults(String searchKey) throws UserStoreException {
         String[] roles = Utils.getUserStore(null).getRoleNames();
         List<String> searchResults = new ArrayList<>();
 
