@@ -347,9 +347,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.httpcomponents</groupId>
+                <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore-nio</artifactId>
-                <version>${httpcore-nio.wso2.version}</version>
+                <version>${httpcore.nio.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -831,11 +831,11 @@
         <esotericsoftware.kryo.version>3.0.3</esotericsoftware.kryo.version>
         <rabbitmq.version>5.8.0</rabbitmq.version>
         <httpclient.wso2.version>4.3.2.wso2v1</httpclient.wso2.version>
-        <httpcore.version>4.4.15</httpcore.version>
+        <httpcore.version>4.4.16</httpcore.version>
+        <httpcore.nio.version>4.4.16</httpcore.nio.version>
         <rampart.apache.version>1.7.0-wso2v1</rampart.apache.version>
         <httpclient.version>4.3.2</httpclient.version>
-        <httpcore-nio.wso2.version>4.4.15-wso2v2</httpcore-nio.wso2.version>
-        <httpcore.wso2.version>4.4.15.wso2v1</httpcore.wso2.version>
+        <httpcore.wso2.version>4.4.16.wso2v1</httpcore.wso2.version>
         <automation.framework.version>4.4.4</automation.framework.version>
         <automation.framework.utils.version>4.5.0</automation.framework.utils.version>
         <commons-digester.version>2.1</commons-digester.version>
