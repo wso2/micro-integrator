@@ -11,10 +11,11 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
+      - name: Set up JDK 11
         uses: joschi/setup-jdk@v2
         with:
-          java-version: openjdk8
+          distribution: 'adopt'
+          java-version: 11
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml -fae
   windows:
@@ -25,9 +26,10 @@ jobs:
       - name: Support longpaths
         run: git config --system core.longpaths true
       - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
+      - name: Set up JDK 11
         uses: joschi/setup-jdk@v2
         with:
-          java-version: openjdk8
+          distribution: 'adopt'
+          java-version: 11
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml -fae
