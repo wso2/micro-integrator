@@ -32,6 +32,7 @@ import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -656,6 +657,10 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         JSONArray filesArray = jsonResponse.getJSONArray("files");
         Assert.assertEquals(filesArray.length(), 4, "Assert Failed due to the mismatch of " +
                 "actual vs expected resource count");
+        for (int i = 0; i < filesArray.length(); i++) {
+            log.info("printing fileArray element " + i + ": " + filesArray.getJSONObject(i).get("name").toString());
+        }
+        log.info("filesArray.getJSONObject(0).get(\"name\")::: " + filesArray.getJSONObject(0).get("name"));
         Assert.assertTrue(filesArray.getJSONObject(0).get("name").toString().contains("test-json.json"));
         Assert.assertTrue(filesArray.getJSONObject(1).get("name").toString().contains("test-text.txt"));
     }
