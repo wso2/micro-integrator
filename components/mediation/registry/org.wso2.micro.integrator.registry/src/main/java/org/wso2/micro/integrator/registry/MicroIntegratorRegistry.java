@@ -141,7 +141,6 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         //Default registry governance registry location : <CARBON_HOME>/registry/governance
         this.govRegistry = getUri(defaultFSRegRoot, "governance");
 
-        initSecurityRepo();
         initRegistryListener(defaultFSRegRoot);
     }
 
@@ -201,8 +200,9 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                 addConfigProperty(name, value);
             }
         }
-        log.debug("EI lightweight registry is initialized.");
+        log.debug("MI lightweight registry is initialized.");
 
+        initSecurityRepo();
     }
 
     @Override
