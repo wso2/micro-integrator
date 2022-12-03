@@ -138,6 +138,7 @@ public abstract class ESBIntegrationTest {
         esbUtils = new ESBTestCaseUtils();
         tenantInfo = context.getContextTenant();
         userInfo = tenantInfo.getContextUser();
+        hostName = UrlGenerationUtil.getManagerHost(context.getInstance());
     }
 
     protected void init(TestUserMode userMode) throws Exception {
