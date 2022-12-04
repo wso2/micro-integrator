@@ -126,6 +126,25 @@
             <class name="org.wso2.carbon.esb.vfs.transport.test.ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase"/>
         </classes>
     </test>
+    <!-- To enable this follow the below steps
+       sudo apt-get install samba cifs-utils
+       Add share in /etc/samba/smb.conf file
+       set samba password for the user using - sudo smbpasswd -a "username"
+       sudo systemctl restart smbd.service
+       Define following properties as env variables
+       export PATH_TO_SMB2_ROOT="root folder defined in etc/samba/smb.conf file "
+       export SMB2_PASSWORD="the samba password used above"
+       export SMB2_USER="user which owns the root directory"
+       export PASSWORD="the user password"
+       -->
+    <!--test name="VFS SMB2 tests" preserve-order="true" verbose="2">
+           <packages>
+               <package name="org.wso2.carbon.esb.vfs.transport.test.connection.failure"/>
+           </packages>
+    </test-->
+
+
+
     <!-- Commented the test case due to a regression issue occurred due to this fix.
              Need to enable this test case once the original issue is fixed properly -->
     <!--test
