@@ -301,6 +301,10 @@
             <artifactId>ojdbc8</artifactId>
         </dependency>
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ibm.db2</groupId>
             <artifactId>jcc</artifactId>
         </dependency>
