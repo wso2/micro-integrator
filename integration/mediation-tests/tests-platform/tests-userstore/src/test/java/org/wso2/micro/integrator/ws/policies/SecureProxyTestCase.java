@@ -148,7 +148,7 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
     }
-    //
+    
     @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Proxy service Enabling only HTTP")
     public void testSecureProxyEnableOnlyHTTP() throws Exception {
 
