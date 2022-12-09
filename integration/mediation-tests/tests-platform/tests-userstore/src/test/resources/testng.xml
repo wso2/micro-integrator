@@ -33,6 +33,7 @@
             <!--<class name="org.wso2.micro.integrator.usermgt.SecondaryUserManagementTests"/>-->
             <class name="org.wso2.micro.integrator.ws.policies.WSPoliciesTests"/>
             <class name="org.wso2.micro.integrator.ws.policies.SecureProxyTestCase"/>
+            <class name="org.wso2.micro.integrator.ws.policies.ProxyServiceSecurityTestCase"/>
         </classes>
     </test>
 

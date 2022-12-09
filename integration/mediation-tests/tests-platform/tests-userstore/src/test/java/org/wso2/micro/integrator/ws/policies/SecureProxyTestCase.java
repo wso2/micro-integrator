@@ -22,13 +22,10 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SecureServiceClient;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
-import java.io.IOException;
 import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
@@ -38,21 +35,21 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     private SecureServiceClient secureAxisServiceClient;
 
-    private ServerConfigurationManager serverConfigurationManager;
+    private SampleAxis2Server axis2Server;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         secureAxisServiceClient = new SecureServiceClient();
-        SampleAxis2Server axis2Server = new SampleAxis2Server();
+        axis2Server = new SampleAxis2Server();
         axis2Server.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
         axis2Server.start();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        clearUploadedResource();
+        axis2Server.stop();
         super.cleanup();
     }
 
@@ -166,9 +163,6 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
-    }
-
-    private void clearUploadedResource() throws IOException, AutomationUtilException {
     }
 
 }
