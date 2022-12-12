@@ -64,7 +64,7 @@ public class Main {
     protected static final String DEPLOYMENT_CONFIG_FILE_PATH = "deployment.config.file.path";
     protected static final String AVOID_CONFIGURATION_UPDATE = "avoidConfigUpdate";
     protected static final String ONLY_PARSE_CONFIGURATION = "configParseOnly";
-    protected static final String READ_ONLY_FILE_SYSTEM_MODE = "readOnlyFileSystemMode";
+    protected static final String SKIP_STARTUP_EXTENSIONS = "skipStartupExtensions";
     protected static final String LOGFILES_HOME = "logfiles.home";
 
     static File platformDirectory;
@@ -110,12 +110,12 @@ public class Main {
         }
         processCmdLineArgs(args);
 
-        boolean isReadOnlyFileSystem = false;
-        if (StringUtils.equalsIgnoreCase(System.getProperty(READ_ONLY_FILE_SYSTEM_MODE) , "true")) {
-            isReadOnlyFileSystem = true;
+        boolean skipExtensions = false;
+        if (StringUtils.equalsIgnoreCase(System.getProperty(SKIP_STARTUP_EXTENSIONS) , "true")) {
+            skipExtensions = true;
         }
         handleConfiguration();          // handle config mapper configurations
-        if (!isReadOnlyFileSystem) {
+        if (!skipExtensions) {
             writePID(System.getProperty(LauncherConstants.CARBON_HOME));
             invokeExtensions();
         }
