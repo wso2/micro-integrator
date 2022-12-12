@@ -279,10 +279,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.httpcomponents</groupId>
+            <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore-nio</artifactId>
-            <version>4.4.15-wso2v2</version>
-            <scope>test</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>
