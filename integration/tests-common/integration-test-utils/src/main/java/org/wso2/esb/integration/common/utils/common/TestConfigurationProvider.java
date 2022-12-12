@@ -45,7 +45,7 @@ public class TestConfigurationProvider {
     }
 
     public static String getSecurityPolicyLocation() {
-        return getResourceLocation() + File.separator + "security" + File.separator + "policies";
+        return getResourceLocation() + "security" + File.separator + "policies";
     }
 
     public static String getKeyStoreLocation() throws XPathExpressionException {

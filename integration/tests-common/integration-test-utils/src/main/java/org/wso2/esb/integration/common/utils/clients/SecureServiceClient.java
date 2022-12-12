@@ -65,7 +65,7 @@ public class SecureServiceClient {
 
         } else {
             keyStorePath =
-                    TestConfigurationProvider.getResourceLocation() + File.separator + "keystores" + File.separator
+                    TestConfigurationProvider.getResourceLocation() + "keystores" + File.separator
                             + "products" + File.separator + "wso2carbon.jks";
             userCertAlias = "wso2carbon";
             encryptionUser = "wso2carbon";

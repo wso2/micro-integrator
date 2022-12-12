@@ -15,22 +15,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.esb.proxyservice.test.secureProxy;
+package org.wso2.micro.integrator.ws.policies;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConfigExceptionException;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SecureServiceClient;
-import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
+import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
@@ -40,21 +35,21 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     private SecureServiceClient secureAxisServiceClient;
 
+    private SampleAxis2Server axis2Server;
+
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
 
-        super.init();
-        uploadResourcesToConfigRegistry();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/secureProxy/secure_proxy_service_scenarios.xml");
-        applySecurity();
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
         secureAxisServiceClient = new SecureServiceClient();
-
+        axis2Server = new SampleAxis2Server();
+        axis2Server.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
+        axis2Server.start();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        clearUploadedResource();
+        axis2Server.stop();
         super.cleanup();
     }
 
@@ -62,7 +57,7 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
     public void testSecureProxyEndPointThruUri() throws Exception {
 
         OMElement response = secureAxisServiceClient
-                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy11"), 1, "WSO2");
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxyScenario11"), 1, "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -78,7 +73,7 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
     public void testSecureProxyEndPointFromReg() throws Exception {
 
         OMElement response = secureAxisServiceClient
-                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy12"), 1, "WSO2");
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxyScenario12"), 1, "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -94,7 +89,7 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
     public void testSecureProxyWSDLInline() throws Exception {
 
         OMElement response = secureAxisServiceClient
-                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy13"), 1, "WSO2");
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxyScenario13"), 1, "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -110,7 +105,7 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
     public void testSecureProxyWSDLSourceUri() throws Exception {
 
         OMElement response = secureAxisServiceClient
-                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy14"), 1, "WSO2");
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxyScenario14"), 1, "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -126,7 +121,7 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
     public void testSecureProxyWSDLFromReg() throws Exception {
 
         OMElement response = secureAxisServiceClient
-                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy15"), 1, "WSO2");
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxyScenario15"), 1, "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -142,7 +137,7 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
     public void testSecureProxyEnableOnlyHTTPS() throws Exception {
 
         OMElement response = secureAxisServiceClient
-                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy16"), 1, "WSO2");
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxyScenario16"), 1, "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -153,12 +148,12 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
     }
-
+    
     @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Proxy service Enabling only HTTP")
     public void testSecureProxyEnableOnlyHTTP() throws Exception {
 
         OMElement response = secureAxisServiceClient
-                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttp("StockQuoteProxy17"), 5, "WSO2");
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttp("StockQuoteProxyScenario17"), 5, "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -168,52 +163,6 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
-    }
-
-    private void applySecurity()
-            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException, InterruptedException {
-
-        for (int i = 1; i < 7; i++) {
-            applySecurity("StockQuoteProxy1" + i, 1, getUserRole());
-        }
-        applySecurity("StockQuoteProxy17", 5, getUserRole());
-
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), sessionCookie);
-
-        resourceAdminServiceStub.deleteResource("/_system/config/policy");
-        resourceAdminServiceStub.addCollection("/_system/config/", "policy", "", "Contains test policy files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/policy/scenario1-policy.xml", "application/xml", "policy files",
-                        new DataHandler(new URL("file:///" + TestConfigurationProvider.getResourceLocation()
-                                + "/security/policies/scenario1-policy.xml")));
-
-        resourceAdminServiceStub.addCollection("/_system/config/", "proxy", "", "Contains test proxy tests files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/proxy/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/proxyconfig/proxy/utils/registry_endpoint.xml"))));
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/proxy/sample_proxy_1.wsdl", "application/wsdl+xml", "wsdl+xml files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/proxyconfig/proxy/utils/sample_proxy_1.wsdl")));
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), sessionCookie);
-
-        resourceAdminServiceStub.deleteResource("/_system/config/policy");
-        resourceAdminServiceStub.deleteResource("/_system/config/proxy");
     }
 
 }
