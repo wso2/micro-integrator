@@ -59,8 +59,7 @@ public class SequenceResourceTestCase extends ESBIntegrationTest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Sequences resource for search key")
     public void retrieveSearchedSequences() throws IOException {
-        endpoint = endpoint.concat("?searchKey=ABC");
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        String responsePayload = sendHttpRequestAndGetPayload(endpoint.concat("?searchKey=ABC"), accessToken);
         JSONObject jsonResponse = new JSONObject(responsePayload);
         Assert.assertEquals(jsonResponse.get(COUNT), 1, "Assert Failed due to the mismatch of " +
                 "actual vs expected resource count");

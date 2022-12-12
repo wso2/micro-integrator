@@ -54,8 +54,7 @@ public class TaskResourceTestCase extends ESBIntegrationTest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Tasks resource for search key")
     public void retrieveSearchedTasks() throws IOException {
-        endpoint = endpoint.concat("?searchKey=ABCd");
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        String responsePayload = sendHttpRequestAndGetPayload(endpoint.concat("?searchKey=ABCd"), accessToken);
         JSONObject jsonResponse = new JSONObject(responsePayload);
         Assert.assertEquals(jsonResponse.get(COUNT), 0, "Assert Failed due to the mismatch of " +
                 "actual vs expected resource count");
