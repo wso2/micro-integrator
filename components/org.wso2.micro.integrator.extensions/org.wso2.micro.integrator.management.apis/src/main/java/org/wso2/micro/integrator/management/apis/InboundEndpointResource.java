@@ -85,13 +85,12 @@ public class InboundEndpointResource extends APIResource {
         return true;
     }
 
-    private static List<InboundEndpoint> getSearchResults (MessageContext messageContext, String searchKey) {
+    private List<InboundEndpoint> getSearchResults (MessageContext messageContext, String searchKey) {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        List<InboundEndpoint> searchResultList = configuration.getInboundEndpoints().stream()
+        return configuration.getInboundEndpoints().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-        return searchResultList;
     }
 
     private void populateSearchResults(MessageContext messageContext, String searchKey) {
@@ -140,6 +139,7 @@ public class InboundEndpointResource extends APIResource {
         Collection<InboundEndpoint> inboundEndpoints = configuration.getInboundEndpoints();
         setResponseBody(inboundEndpoints, messageContext);
     }
+
     private void setResponseBody(Collection<InboundEndpoint> inboundEndpointCollection, MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =

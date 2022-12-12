@@ -1220,4 +1220,22 @@ public abstract class ESBIntegrationTest {
     protected void deployProxyService(String name, String resourcePath) throws IOException {
         copyArtifactToDeploymentDirectory(resourcePath, name, PROXY_DIRECTORY);
     }
+
+    protected String sendHttpRequestAndGetPayload(String endpoint, String accessToken) throws IOException {
+        if (!isManagementApiAvailable) {
+            Awaitility.await().pollInterval(100, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+                    until(isManagementApiAvailable());
+        }
+        Assert.assertNotNull(accessToken);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        headers.put("Authorization", "Bearer " + accessToken);
+        SimpleHttpClient client = new SimpleHttpClient();
+        HttpResponse response = client.doGet(endpoint, headers);
+        String responsePayload = client.getResponsePayload(response);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+        return responsePayload;
+    }
+
 }
+

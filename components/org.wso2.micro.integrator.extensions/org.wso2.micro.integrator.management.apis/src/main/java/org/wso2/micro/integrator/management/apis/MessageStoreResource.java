@@ -33,13 +33,13 @@ import org.apache.synapse.message.store.impl.resequencer.ResequenceMessageStore;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD;
@@ -98,13 +98,11 @@ public class MessageStoreResource implements MiApiResource {
         return true;
     }
 
-    private static List<MessageStore> getSearchResults(MessageContext messageContext, String searchKey) {
+    private List<MessageStore> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        List<MessageStore> searchResultList = configuration.getMessageStores().values().stream()
+        return configuration.getMessageStores().values().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-
-        return searchResultList;
     }
 
     private void populateSearchResults(MessageContext messageContext, String searchKey) {

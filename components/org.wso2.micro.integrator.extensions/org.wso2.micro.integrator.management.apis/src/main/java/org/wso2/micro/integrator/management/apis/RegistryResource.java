@@ -68,7 +68,6 @@ public class RegistryResource implements MiApiResource {
         }
         if (Objects.nonNull(searchKey)) {
             if (searchKey.trim().isEmpty()) {
-                validatedPath = validatePath(registryPath, axis2MessageContext);
                 handleGet(messageContext, axis2MessageContext, validatedPath);
             } else {
                 populateRegistryResourceJSON(searchKey, axis2MessageContext, new MicroIntegratorRegistry(), validatedPath);

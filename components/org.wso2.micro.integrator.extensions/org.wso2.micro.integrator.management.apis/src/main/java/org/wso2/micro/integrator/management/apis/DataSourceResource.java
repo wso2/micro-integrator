@@ -113,12 +113,11 @@ public class DataSourceResource implements MiApiResource {
         return true;
     }
 
-    private static List<CarbonDataSource> getSearchResults(DataSourceRepository dataSourceRepository, String searchKey) {
-        Collection<CarbonDataSource> datasources = dataSourceRepository.getAllDataSources();
-        List<CarbonDataSource> searchResultList = datasources.stream()
+    private List<CarbonDataSource> getSearchResults(DataSourceRepository dataSourceRepository, String searchKey) {
+        Collection<CarbonDataSource> dataSources = dataSourceRepository.getAllDataSources();
+        return dataSources.stream()
                 .filter(artifact -> artifact.getDSMInfo().getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-        return searchResultList;
     }
 
     /**

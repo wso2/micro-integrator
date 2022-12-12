@@ -37,12 +37,12 @@ import org.wso2.micro.core.util.AuditLogger;
 import javax.xml.namespace.QName;
 import java.io.IOException;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
@@ -113,7 +113,7 @@ public class EndpointResource implements MiApiResource {
         return true;
     }
 
-    private static List<Endpoint> getSearchResults(MessageContext messageContext, String searchKey) {
+    private List<Endpoint> getSearchResults(MessageContext messageContext, String searchKey) {
         return messageContext.getConfiguration().getDefinedEndpoints().values().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());

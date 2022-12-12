@@ -17,26 +17,27 @@
  */
 package org.wso2.micro.integrator.api;
 
-import org.apache.http.HttpResponse;
-import org.awaitility.Awaitility;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+
+import static org.wso2.micro.integrator.api.Constants.COUNT;
+import static org.wso2.micro.integrator.api.Constants.LIST;
 
 public class DataSourceResourceTestCase extends ESBIntegrationTest {
 
+    private String accessToken;
+    private String endpoint;
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
+        accessToken = TokenUtil.getAccessToken(hostName, portOffset);
+        endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/data-sources";
     }
 
     /**
@@ -46,49 +47,24 @@ public class DataSourceResourceTestCase extends ESBIntegrationTest {
      */
     @Test(groups = {"wso2.esb"}, description = "Test get data source info")
     public void retrieveDataSourceInfo() throws IOException {
-
-        String responsePayload = sendHttpRequestAndGetPayload("MySQLConnection2", null);
+        String endpoint1 = endpoint.concat("?name=").concat("MySQLConnection2");
+        String responsePayload = sendHttpRequestAndGetPayload(endpoint1, accessToken);
         JSONObject jsonResponse = new JSONObject(responsePayload);
         String datasourceType = jsonResponse.get("type").toString();
         Assert.assertEquals(datasourceType, "RDBMS");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test get data-source resource for search key")
+    @Test(groups = { "wso2.esb"}, description = "Test get data-source resource for search key")
     public void retrieveSearchedDataSources() throws IOException {
-
-        String responsePayload = sendHttpRequestAndGetPayload(null, "MYSQL");
+        String endpoint2 = endpoint.concat("?searchKey=MYSQL");
+        String responsePayload = sendHttpRequestAndGetPayload(endpoint2, accessToken);
         JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get("count"), 1, "Assert Failed due to the mismatch of " +
+        Assert.assertEquals(jsonResponse.get(COUNT), 1, "Assert Failed due to the mismatch of " +
                 "actual vs expected resource count");
-        Assert.assertTrue(jsonResponse.get("list").toString().contains("MySQLConnection2"), "Assert failed " +
+        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("MySQLConnection2"), "Assert failed " +
                 "since expected resource name not found in the list");
     }
-
-    private String sendHttpRequestAndGetPayload(String name, String searchKey) throws IOException {
-
-        if (!isManagementApiAvailable) {
-            Awaitility.await().pollInterval(100, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
-                    until(isManagementApiAvailable());
-        }
-        String accessToken = TokenUtil.getAccessToken(hostName, portOffset);
-        Assert.assertNotNull(accessToken);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Accept", "application/json");
-        headers.put("Authorization", "Bearer " + accessToken);
-        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/data-sources";
-        if (name != null) {
-            endpoint = endpoint.concat("?name=").concat(name);
-        }
-        if (searchKey != null) {
-            endpoint = endpoint.concat("?searchKey=").concat(searchKey);
-        }
-        SimpleHttpClient client = new SimpleHttpClient();
-        HttpResponse response = client.doGet(endpoint, headers);
-        String responsePayload = client.getResponsePayload(response);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-        return responsePayload;
-    }
-
+    
     @AfterClass(alwaysRun = true)
     public void cleanState() throws Exception {
         super.cleanup();

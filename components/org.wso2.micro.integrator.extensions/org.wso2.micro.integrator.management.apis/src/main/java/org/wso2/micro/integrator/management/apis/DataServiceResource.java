@@ -105,12 +105,11 @@ public class DataServiceResource extends APIResource {
         return true;
     }
 
-    private static List<String> getSearchResults(MessageContext messageContext, String searchKey) throws AxisFault {
+    private List<String> getSearchResults(MessageContext messageContext, String searchKey) throws AxisFault {
         SynapseConfiguration configuration = messageContext.getConfiguration();
         AxisConfiguration axisConfiguration = configuration.getAxisConfiguration();
-        List<String> dataServicesNames = Arrays.stream(DBUtils.getAvailableDS(axisConfiguration))
+        return Arrays.stream(DBUtils.getAvailableDS(axisConfiguration))
                 .filter(serviceName -> serviceName.toLowerCase().contains(searchKey)).collect(Collectors.toList());
-        return dataServicesNames;
     }
 
     private void populateSearchResults(MessageContext messageContext, String searchKey) throws Exception {

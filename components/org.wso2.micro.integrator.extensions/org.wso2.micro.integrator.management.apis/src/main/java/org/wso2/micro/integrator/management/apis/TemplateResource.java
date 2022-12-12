@@ -34,11 +34,11 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.io.IOException;
 
-import java.util.Set;
-import java.util.List;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;

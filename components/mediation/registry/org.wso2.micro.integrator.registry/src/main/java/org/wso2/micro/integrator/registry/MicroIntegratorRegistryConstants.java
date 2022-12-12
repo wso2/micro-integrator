@@ -37,6 +37,8 @@ public class MicroIntegratorRegistryConstants {
     public static final String GOV_REG_ROOT = "GovRegRoot";
     public static final String LOCAL_REG_ROOT = "LocalRegRoot";
 
+    public static final String LIST = "list";
+
     public static final String PROTOCOL_FILE = "file";
     public static final String PROTOCOL_HTTP = "http";
     public static final String PROTOCOL_HTTPS = "https";

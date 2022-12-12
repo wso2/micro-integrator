@@ -60,6 +60,9 @@ public class ProxyServiceResource extends APIResource {
 
     private static ServiceAdmin serviceAdmin = null;
 
+    private static final String WSDL11 = "wsdl1_1";
+    private static final String WSDL20 = "wsdl2_0";
+
     public ProxyServiceResource(String urlTemplate) {
 
         super(urlTemplate);
@@ -124,13 +127,11 @@ public class ProxyServiceResource extends APIResource {
         return true;
     }
 
-    private static List<ProxyService> getSearchResults(MessageContext messageContext, String searchKey) {
+    private List<ProxyService> getSearchResults(MessageContext messageContext, String searchKey) {
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        List<ProxyService> searchResultList = configuration.getProxyServices().stream()
+        return configuration.getProxyServices().stream()
                 .filter(artifact -> artifact.getName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-
-        return searchResultList;
     }
 
     private void populateSearchResults(MessageContext messageContext, String searchKey) {
@@ -148,8 +149,8 @@ public class ProxyServiceResource extends APIResource {
                 ServiceMetaData data = serviceAdmin.getServiceData(proxyService.getName());
                 proxyObject.put(Constants.NAME, proxyService.getName());
                 String[] wsdlUrls = data.getWsdlURLs();
-                proxyObject.put("wsdl1_1", wsdlUrls[0]);
-                proxyObject.put("wsdl2_0", wsdlUrls[1]);
+                proxyObject.put(WSDL11, wsdlUrls[0]);
+                proxyObject.put(WSDL20, wsdlUrls[1]);
             } catch (Exception e) {
                 LOG.error("Error occurred while processing service data", e);
             }
@@ -222,8 +223,8 @@ public class ProxyServiceResource extends APIResource {
 
             String[] wsdlUrls = data.getWsdlURLs();
 
-            proxyObject.put("wsdl1_1", wsdlUrls[0]);
-            proxyObject.put("wsdl2_0", wsdlUrls[1]);
+            proxyObject.put(WSDL11, wsdlUrls[0]);
+            proxyObject.put(WSDL20, wsdlUrls[1]);
         } catch (Exception e) {
             LOG.error("Error occurred while processing service data", e);
         }

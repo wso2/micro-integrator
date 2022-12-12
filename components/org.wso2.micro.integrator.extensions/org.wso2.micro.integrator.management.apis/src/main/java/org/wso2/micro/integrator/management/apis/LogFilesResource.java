@@ -44,11 +44,11 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.activation.DataHandler;
@@ -99,17 +99,16 @@ public class LogFilesResource extends APIResource {
         setResponseBody(logFileInfoList, messageContext);
     }
 
-    private static List<LogFileInfo> getSearchResults(String searchKey) {
+    private List<LogFileInfo> getSearchResults(String searchKey) {
 
-        List <LogFileInfo>searchResultList = Utils.getLogFileInfoList().stream()
+        return Utils.getLogFileInfoList().stream()
                 .filter(resource -> resource.getLogName().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-        return searchResultList;
     }
 
     private void populateSearchResults(MessageContext messageContext, String searchKey) {
 
-        List <LogFileInfo>searchResultList = getSearchResults(searchKey);
+        List<LogFileInfo> searchResultList = getSearchResults(searchKey);
         setResponseBody(searchResultList, messageContext);
     }
 

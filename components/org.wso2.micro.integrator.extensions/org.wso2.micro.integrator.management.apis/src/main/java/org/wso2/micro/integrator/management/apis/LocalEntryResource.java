@@ -30,12 +30,12 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
@@ -94,12 +94,11 @@ public class LocalEntryResource implements MiApiResource {
         return false;
     }
 
-    private static List<Entry> getSearchResults(MessageContext messageContext, String searchKey) throws AxisFault {
+    private List<Entry> getSearchResults(MessageContext messageContext, String searchKey) throws AxisFault {
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        List<Entry> searchResultList = configuration.getDefinedEntries().values().stream()
+        return configuration.getDefinedEntries().values().stream()
                 .filter(entry -> entry.getKey().toLowerCase().contains(searchKey))
                 .collect(Collectors.toList());
-        return searchResultList;
     }
 
     private void populateSearchResults(MessageContext messageContext, String searchKey) throws AxisFault {
