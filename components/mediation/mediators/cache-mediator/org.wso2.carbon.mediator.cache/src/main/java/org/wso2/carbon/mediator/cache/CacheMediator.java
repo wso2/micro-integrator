@@ -376,8 +376,7 @@ public class CacheMediator extends AbstractMediator implements ManagedLifecycle,
         if ((headerProperties = cachedResponse.getHeaderProperties()) != null) {
             Map clonedMap = new HashMap();
             clonedMap.putAll(headerProperties);
-            msgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS,
-                    clonedMap);
+            msgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS, clonedMap);
             msgCtx.setProperty(Constants.Configuration.MESSAGE_TYPE,
                     clonedMap.get(Constants.Configuration.MESSAGE_TYPE));
             msgCtx.setProperty(Constants.Configuration.CONTENT_TYPE,
