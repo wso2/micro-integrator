@@ -106,7 +106,8 @@ public class Main {
         }
         if (System.getProperty(LOGFILES_HOME) == null) {
             System.setProperty(LOGFILES_HOME,
-                    System.getProperty(LauncherConstants.CARBON_HOME) + "repository/logs/" );
+                    System.getProperty(LauncherConstants.CARBON_HOME) +
+                            File.separator + "repository" + File.separator + "logs" + File.separator);
         }
         processCmdLineArgs(args);
 
