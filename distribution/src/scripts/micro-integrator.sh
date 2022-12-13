@@ -293,6 +293,7 @@ do
     -Dqpid.conf="/conf/advanced/" \
     $JAVA_VER_BASED_OPTS \
     -Dcarbon.home="$CARBON_HOME" \
+    -Dlogfiles.home="$CARBON_HOME/repository/logs" \
     -Dlogger.server.name="micro-integrator" \
     -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager \
     -Dcarbon.config.dir.path="$CARBON_HOME/conf" \
@@ -327,6 +328,7 @@ do
     -Dproperties.file.path=default \
     -DenableReadinessProbe=true \
     -DenableManagementApi=true \
+    -DskipStartupExtensions=false \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
     -Dorg.ops4j.pax.logging.logReaderEnabled=false \
     -Dorg.ops4j.pax.logging.eventAdminEnabled=false \

@@ -64,6 +64,8 @@ public class Main {
     protected static final String DEPLOYMENT_CONFIG_FILE_PATH = "deployment.config.file.path";
     protected static final String AVOID_CONFIGURATION_UPDATE = "avoidConfigUpdate";
     protected static final String ONLY_PARSE_CONFIGURATION = "configParseOnly";
+    protected static final String SKIP_STARTUP_EXTENSIONS = "skipStartupExtensions";
+    protected static final String LOGFILES_HOME = "logfiles.home";
 
     static File platformDirectory;
     private static Log logger = LogFactory.getLog(Main.class);
@@ -102,10 +104,21 @@ public class Main {
             String carbon_instance_name = timeStamp + "_" + hostName + "_" + ipAddr + "_" + uuId;
             System.setProperty("carbon.instance.name", carbon_instance_name);
         }
-        writePID(System.getProperty(LauncherConstants.CARBON_HOME));
+        if (System.getProperty(LOGFILES_HOME) == null) {
+            System.setProperty(LOGFILES_HOME,
+                    System.getProperty(LauncherConstants.CARBON_HOME) + "repository/logs/" );
+        }
         processCmdLineArgs(args);
+
+        boolean skipExtensions = false;
+        if (StringUtils.equalsIgnoreCase(System.getProperty(SKIP_STARTUP_EXTENSIONS) , "true")) {
+            skipExtensions = true;
+        }
         handleConfiguration();          // handle config mapper configurations
-        invokeExtensions();
+        if (!skipExtensions) {
+            writePID(System.getProperty(LauncherConstants.CARBON_HOME));
+            invokeExtensions();
+        }
         startEquinox();
     }
 
