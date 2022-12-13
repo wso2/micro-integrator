@@ -45,6 +45,9 @@ public class TestMicroIntegratorRegistry {
 
     @BeforeClass
     public static void init() throws IOException {
+        //create registry folder
+        File registryFolder = new File("./registry");
+        registryFolder.mkdir();
 
         microIntegratorRegistry = new MicroIntegratorRegistry();
 
