@@ -26,9 +26,6 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
 
-import static org.wso2.micro.integrator.api.Constants.COUNT;
-import static org.wso2.micro.integrator.api.Constants.LIST;
-
 public class DataSourceResourceTestCase extends ESBIntegrationTest {
 
     private String accessToken;
@@ -48,8 +45,7 @@ public class DataSourceResourceTestCase extends ESBIntegrationTest {
     @Test(groups = {"wso2.esb"}, description = "Test get data source info")
     public void retrieveDataSourceInfo() throws IOException {
         String endpoint1 = endpoint.concat("?name=").concat("MySQLConnection2");
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint1, accessToken);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint1, accessToken);
         String datasourceType = jsonResponse.get("type").toString();
         Assert.assertEquals(datasourceType, "RDBMS");
     }
@@ -57,12 +53,9 @@ public class DataSourceResourceTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb"}, description = "Test get data-source resource for search key")
     public void retrieveSearchedDataSources() throws IOException {
         String endpoint2 = endpoint.concat("?searchKey=MYSQL");
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint2, accessToken);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get(COUNT), 1, "Assert Failed due to the mismatch of " +
-                "actual vs expected resource count");
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("MySQLConnection2"), "Assert failed " +
-                "since expected resource name not found in the list");
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint2, accessToken);
+        verifyResourceCount(jsonResponse, 1);
+        verifyResourceInfo(jsonResponse, new String[]{"MySQLConnection2"});
     }
     
     @AfterClass(alwaysRun = true)

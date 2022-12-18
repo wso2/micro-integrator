@@ -19,16 +19,12 @@
 package org.wso2.micro.integrator.api;
 
 import org.json.JSONObject;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
-
-import static org.wso2.micro.integrator.api.Constants.COUNT;
-import static org.wso2.micro.integrator.api.Constants.LIST;
 
 public class TemplatesResourceTestCase extends ESBIntegrationTest {
 
@@ -44,24 +40,16 @@ public class TemplatesResourceTestCase extends ESBIntegrationTest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Templates resource")
     public void retrieveTemplates() throws IOException {
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint, accessToken);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get(COUNT), 2, "Assert Failed due to the mismatch of " +
-                "actual vs expected resource count");
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("AbcTemplate"), "Assert failed " +
-                "since expected resource name not found in the list");
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("testSequenceTemplate"), "Assert failed " +
-                "since expected resource name not found in the list");
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        verifyResourceCount(jsonResponse, 2);
+        verifyResourceInfo(jsonResponse, new String[]{"AbcTemplate", "testSequenceTemplate"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Templates resource for search key")
     public void retrieveSearchedTemplates() throws IOException {
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint.concat("?searchKey=Abc"), accessToken);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get(COUNT), 1, "Assert Failed due to the mismatch of " +
-                "actual vs expected resource count");
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("AbcTemplate"), "Assert failed " +
-                "since expected resource name not found in the list");
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint.concat("?searchKey=Abc"), accessToken);
+        verifyResourceCount(jsonResponse, 1);
+        verifyResourceInfo(jsonResponse, new String[]{"AbcTemplate"});
     }
 
     @AfterClass(alwaysRun = true)

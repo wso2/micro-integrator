@@ -114,7 +114,8 @@ public abstract class ESBIntegrationTest {
     protected int portOffset;
     protected final int DEFAULT_TIMEOUT = 60;
     protected boolean isManagementApiAvailable = false;
-
+    private static final String LIST = "list";
+    private static final String COUNT = "count";
     private final String SERVER_DEPLOYMENT_DIR =
             System.getProperty(ESBTestConstant.CARBON_HOME) + File.separator + "repository" + File.separator
             + "deployment" + File.separator + "server" + File.separator + "synapse-configs" + File.separator
@@ -1221,7 +1222,7 @@ public abstract class ESBIntegrationTest {
         copyArtifactToDeploymentDirectory(resourcePath, name, PROXY_DIRECTORY);
     }
 
-    protected String sendHttpRequestAndGetPayload(String endpoint, String accessToken) throws IOException {
+    protected JSONObject sendHttpRequestAndGetPayload(String endpoint, String accessToken) throws IOException {
         if (!isManagementApiAvailable) {
             Awaitility.await().pollInterval(100, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
                     until(isManagementApiAvailable());
@@ -1234,7 +1235,20 @@ public abstract class ESBIntegrationTest {
         HttpResponse response = client.doGet(endpoint, headers);
         String responsePayload = client.getResponsePayload(response);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-        return responsePayload;
+        JSONObject jsonResponse = new JSONObject(responsePayload);
+        return jsonResponse;
+    }
+
+    protected void verifyResourceCount(JSONObject jsonResponse, int expectedCount) {
+        Assert.assertEquals(jsonResponse.get(COUNT), expectedCount, "Assert Failed due to the mismatch of " +
+                "actual vs expected resource count");
+    }
+
+    protected void verifyResourceInfo(JSONObject jsonResponse, String[] expectedResourceNames ) {
+        for (String expectedResourceName : expectedResourceNames) {
+            Assert.assertTrue(jsonResponse.get(LIST).toString().contains(expectedResourceName), "Assert failed " +
+                    "since expected resource name not found in the list");
+        }
     }
 
 }

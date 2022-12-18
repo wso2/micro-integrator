@@ -19,16 +19,12 @@
 package org.wso2.micro.integrator.api;
 
 import org.json.JSONObject;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
-
-import static org.wso2.micro.integrator.api.Constants.COUNT;
-import static org.wso2.micro.integrator.api.Constants.LIST;
 
 public class LogFilesResourceTestCase extends ESBIntegrationTest {
 
@@ -44,22 +40,17 @@ public class LogFilesResourceTestCase extends ESBIntegrationTest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Logfiles resource")
     public void retrieveLogs() throws IOException {
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint, accessToken);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get(COUNT), 9, "Assert Failed due to the mismatch of " +
-                "actual vs expected resource count");
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("wso2error.log"));
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("wso2-mi-service.log"));
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        verifyResourceCount(jsonResponse, 9);
+        verifyResourceInfo(jsonResponse, new String[]{"wso2error.log", "wso2-mi-service.log"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get log file resource for search key")
     public void retrieveSearchedLogs() throws IOException {
         endpoint = endpoint.concat("?searchKey=error");
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint, accessToken);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get(COUNT), 1, "Assert Failed due to the mismatch of " +
-                "actual vs expected resource count");
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("wso2error.log"));
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        verifyResourceCount(jsonResponse, 1);
+        verifyResourceInfo(jsonResponse, new String[]{"wso2error.log"});
     }
 
     @AfterClass(alwaysRun = true)
