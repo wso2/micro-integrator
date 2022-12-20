@@ -20,35 +20,25 @@ package org.wso2.micro.integrator.api;
 
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
 
-public class SequenceResourceTestCase extends ESBIntegrationTest {
+public class SequenceResourceTestCase extends ManagementAPITest {
 
-    private String accessToken;
-    private String endpoint;
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        accessToken = TokenUtil.getAccessToken(hostName, portOffset);
-        endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/sequences";
-    }
+    private static String resourcePath = "sequences";
 
     @Test(groups = {"wso2.esb"}, description = "Test get Sequences resource")
     public void retrieveSequences() throws IOException {
 
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
         verifyResourceCount(jsonResponse, 5);
         verifyResourceInfo(jsonResponse, new String[]{"AbcSequence", "fault", "main"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Sequences resource for search key")
     public void retrieveSearchedSequences() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint.concat("?searchKey=ABC"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=ABC"), accessToken);
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"AbcSequence"});
     }

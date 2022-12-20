@@ -20,34 +20,24 @@ package org.wso2.micro.integrator.api;
 
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
 
-public class TaskResourceTestCase extends ESBIntegrationTest {
+public class TaskResourceTestCase extends ManagementAPITest {
 
-    private String accessToken;
-    private String endpoint;
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        accessToken = TokenUtil.getAccessToken(hostName, portOffset);
-        endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/tasks";
-    }
+    private static String resourcePath = "tasks";
 
     @Test(groups = {"wso2.esb"}, description = "Test get Tasks resource")
     public void retrieveTasks() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"AbcScheduledTask"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Tasks resource for search key")
     public void retrieveSearchedTasks() throws IOException {
-        verifyResourceCount(sendHttpRequestAndGetPayload(endpoint.concat("?searchKey=ABCd"), accessToken),
+        verifyResourceCount(sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=ABCd"), accessToken),
                 0);
     }
 

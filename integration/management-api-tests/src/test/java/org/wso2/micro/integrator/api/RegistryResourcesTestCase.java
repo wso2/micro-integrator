@@ -39,10 +39,11 @@ import java.util.concurrent.TimeUnit;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
+import static org.wso2.micro.integrator.api.ManagementAPITest.LIST;
+
 public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
     private String accessToken;
-    private static final String LIST = "list";
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {

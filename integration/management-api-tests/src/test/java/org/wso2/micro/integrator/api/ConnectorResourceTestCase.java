@@ -20,35 +20,24 @@ package org.wso2.micro.integrator.api;
 
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
 
-public class ConnectorResourceTestCase extends ESBIntegrationTest {
+public class ConnectorResourceTestCase extends ManagementAPITest {
 
-    private String accessToken;
-    private String endpoint;
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        accessToken = TokenUtil.getAccessToken(hostName, portOffset);
-        endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/connectors";
-    }
+    private static String resourcePath = "connectors";
 
     @Test(groups = {"wso2.esb"}, description = "Test get Connectors resource")
     public void retrieveConnectors() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
         verifyResourceCount(jsonResponse, 2);
         verifyResourceInfo(jsonResponse, new String[]{"CSV"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Connectors resource for search key")
     public void retrieveSearchedConnectors() throws IOException {
-        endpoint = endpoint.concat("?searchKey=csv");
-        verifyResourceCount(sendHttpRequestAndGetPayload(endpoint, accessToken), 1);
+        verifyResourceCount(sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=csv"), accessToken), 1);
     }
 
     @AfterClass(alwaysRun = true)

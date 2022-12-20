@@ -20,22 +20,13 @@ package org.wso2.micro.integrator.api;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
 
-public class DataSourceResourceTestCase extends ESBIntegrationTest {
+public class DataSourceResourceTestCase extends ManagementAPITest {
 
-    private String accessToken;
-    private String endpoint;
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        accessToken = TokenUtil.getAccessToken(hostName, portOffset);
-        endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/data-sources";
-    }
+    private static String resourcePath = "data-sources";
 
     /**
      * This test case verifies if datasource information is retrieved successfully.
@@ -44,16 +35,14 @@ public class DataSourceResourceTestCase extends ESBIntegrationTest {
      */
     @Test(groups = {"wso2.esb"}, description = "Test get data source info")
     public void retrieveDataSourceInfo() throws IOException {
-        String endpoint1 = endpoint.concat("?name=").concat("MySQLConnection2");
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint1, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?name=").concat("MySQLConnection2"), accessToken);
         String datasourceType = jsonResponse.get("type").toString();
         Assert.assertEquals(datasourceType, "RDBMS");
     }
 
     @Test(groups = { "wso2.esb"}, description = "Test get data-source resource for search key")
     public void retrieveSearchedDataSources() throws IOException {
-        String endpoint2 = endpoint.concat("?searchKey=MYSQL");
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint2, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=MYSQL"), accessToken);
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"MySQLConnection2"});
     }

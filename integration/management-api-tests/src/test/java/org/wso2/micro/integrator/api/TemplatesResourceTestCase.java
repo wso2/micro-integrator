@@ -20,34 +20,24 @@ package org.wso2.micro.integrator.api;
 
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
 
-public class TemplatesResourceTestCase extends ESBIntegrationTest {
+public class TemplatesResourceTestCase extends ManagementAPITest {
 
-    private String accessToken;
-    private String endpoint;
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        accessToken = TokenUtil.getAccessToken(hostName, portOffset);
-        endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/templates";
-    }
+    private static String resourcePath = "templates";
 
     @Test(groups = {"wso2.esb"}, description = "Test get Templates resource")
     public void retrieveTemplates() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
         verifyResourceCount(jsonResponse, 2);
         verifyResourceInfo(jsonResponse, new String[]{"AbcTemplate", "testSequenceTemplate"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Templates resource for search key")
     public void retrieveSearchedTemplates() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint.concat("?searchKey=Abc"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=Abc"), accessToken);
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"AbcTemplate"});
     }

@@ -20,35 +20,24 @@ package org.wso2.micro.integrator.api;
 
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
 
-public class ApiResourceTestCase extends ESBIntegrationTest {
+public class ApiResourceTestCase extends ManagementAPITest {
 
-    private String accessToken;
-    private String endpoint;
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        accessToken = TokenUtil.getAccessToken(hostName, portOffset);
-        endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/apis";
-    }
+    private static String resourcePath = "apis";
 
     @Test(groups = {"wso2.esb"}, description = "Test get APIs resource")
     public void retrieveAPIs() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
         verifyResourceCount(jsonResponse, 4);
         verifyResourceInfo(jsonResponse, new String[]{"AbcRestApi", "HelloRestApi"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get APIs resource for search key")
     public void retrieveSearchedAPIs() throws IOException {
-        endpoint = endpoint.concat("?searchKey=HeLloRest");
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(endpoint, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=HeLloRest"), accessToken);
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"HelloRestApi"});
     }
