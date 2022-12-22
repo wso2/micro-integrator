@@ -38,6 +38,7 @@
         <classes>
             <class name="org.wso2.carbon.esb.api.test.ESBJAVA3751UriTemplateReservedCharacterEncodingTest"/>
             <class name="org.wso2.carbon.esb.api.test.ESBJAVA4176MethodNotAllowedTest"/>
+            <class name="org.wso2.carbon.esb.api.test.LargeJSONPayloadTest"/>
             <class name="org.wso2.carbon.esb.api.apidefinition.ESBJAVA4907SwaggerGenerationTestCase"/>
             <class name="org.wso2.carbon.esb.api.apidefinition.ESBJAVA4936SwaggerGenerationJsonYamlTestCase"/>
             <class name="org.wso2.carbon.esb.api.apidefinition.CustomSwaggerWithSpecialCharactersTestCase"/>
