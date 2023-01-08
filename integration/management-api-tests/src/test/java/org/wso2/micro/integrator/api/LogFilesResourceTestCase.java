@@ -30,14 +30,14 @@ public class LogFilesResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Logfiles resource")
     public void retrieveLogs() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 9);
         verifyResourceInfo(jsonResponse, new String[]{"wso2error.log", "wso2-mi-service.log"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get log file resource for search key")
     public void retrieveSearchedLogs() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=error"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=error"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"wso2error.log"});
     }

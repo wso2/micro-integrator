@@ -30,14 +30,14 @@ public class DataServiceResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Data Services resource")
     public void retrieveDataServices() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 2);
         verifyResourceInfo(jsonResponse, new String[]{"AbcDataService", "HelloDataService"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Data Services resource for search key")
     public void retrieveSearchedDataServices() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=Hello"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=Hello"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"HelloDataService"});
     }

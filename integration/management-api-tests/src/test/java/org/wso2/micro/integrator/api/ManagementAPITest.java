@@ -33,7 +33,7 @@ public abstract class ManagementAPITest extends ESBIntegrationTest {
         super.init();
     }
 
-    protected JSONObject sendHttpRequestAndGetPayload(String resourcePath, String accessToken) throws IOException {
+    protected JSONObject sendHttpRequestAndGetPayload(String resourcePath) throws IOException {
         if (!isManagementApiAvailable) {
             Awaitility.await().pollInterval(100, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
                     until(isManagementApiAvailable());

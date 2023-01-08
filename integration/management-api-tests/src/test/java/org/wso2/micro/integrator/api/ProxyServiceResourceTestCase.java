@@ -30,14 +30,14 @@ public class ProxyServiceResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Proxy Service resource")
     public void retrieveProxyServices() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 3);
         verifyResourceInfo(jsonResponse, new String[]{"AbcProxyService", "HelloProxyService", "testProxy"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Proxy Service resource for search key")
     public void retrieveSearchedProxyServices() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=HelloProxy"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=HelloProxy"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"HelloProxyService"});
     }

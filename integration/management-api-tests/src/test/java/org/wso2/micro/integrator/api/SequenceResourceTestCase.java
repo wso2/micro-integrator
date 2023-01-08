@@ -31,14 +31,14 @@ public class SequenceResourceTestCase extends ManagementAPITest {
     @Test(groups = {"wso2.esb"}, description = "Test get Sequences resource")
     public void retrieveSequences() throws IOException {
 
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 5);
         verifyResourceInfo(jsonResponse, new String[]{"AbcSequence", "fault", "main"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Sequences resource for search key")
     public void retrieveSearchedSequences() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=ABC"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=ABC"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"AbcSequence"});
     }

@@ -30,14 +30,14 @@ public class TaskResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Tasks resource")
     public void retrieveTasks() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"AbcScheduledTask"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Tasks resource for search key")
     public void retrieveSearchedTasks() throws IOException {
-        verifyResourceCount(sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=ABCd"), accessToken),
+        verifyResourceCount(sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=ABCd")),
                 0);
     }
 

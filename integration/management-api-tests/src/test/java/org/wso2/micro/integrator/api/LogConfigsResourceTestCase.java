@@ -30,14 +30,14 @@ public class LogConfigsResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Log Configs resource")
     public void retrieveLogConfigs() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 80);
         verifyResourceInfo(jsonResponse, new String[]{"axis2Deployment", "Axis2SynapseController"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Log Configs resource for search key")
     public void retrieveSearchedLogConfigs() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=audit"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=audit"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"AUDIT_LOG"});
     }

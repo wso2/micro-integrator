@@ -30,14 +30,14 @@ public class ConnectorResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Connectors resource")
     public void retrieveConnectors() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 2);
         verifyResourceInfo(jsonResponse, new String[]{"CSV"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Connectors resource for search key")
     public void retrieveSearchedConnectors() throws IOException {
-        verifyResourceCount(sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=csv"), accessToken), 1);
+        verifyResourceCount(sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=csv")), 1);
     }
 
     @AfterClass(alwaysRun = true)

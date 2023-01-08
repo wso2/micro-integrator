@@ -30,14 +30,14 @@ public class MessageStoreResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Message Stores resource")
     public void retrieveMessageStores() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 3);
         verifyResourceInfo(jsonResponse, new String[]{"AbcMessageStore", "HelloMessageStore", "teststore"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Message Stores resource for search key")
     public void retrieveSearchedMessageStores() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=HelloMessage"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=HelloMessage"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"HelloMessageStore"});
     }

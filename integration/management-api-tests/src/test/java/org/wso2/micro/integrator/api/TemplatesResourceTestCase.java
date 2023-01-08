@@ -30,14 +30,14 @@ public class TemplatesResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Templates resource")
     public void retrieveTemplates() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 2);
         verifyResourceInfo(jsonResponse, new String[]{"AbcTemplate", "testSequenceTemplate"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Templates resource for search key")
     public void retrieveSearchedTemplates() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=Abc"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=Abc"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"AbcTemplate"});
     }

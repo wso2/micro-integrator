@@ -35,14 +35,14 @@ public class DataSourceResourceTestCase extends ManagementAPITest {
      */
     @Test(groups = {"wso2.esb"}, description = "Test get data source info")
     public void retrieveDataSourceInfo() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?name=").concat("MySQLConnection2"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?name=").concat("MySQLConnection2"));
         String datasourceType = jsonResponse.get("type").toString();
         Assert.assertEquals(datasourceType, "RDBMS");
     }
 
     @Test(groups = { "wso2.esb"}, description = "Test get data-source resource for search key")
     public void retrieveSearchedDataSources() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=MYSQL"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=MYSQL"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"MySQLConnection2"});
     }

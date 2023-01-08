@@ -30,14 +30,14 @@ public class CarbonAppResourceTestCase extends ManagementAPITest {
 
     @Test(groups = { "wso2.esb" }, description = "Test get carbon applications resource")
     public void retrieveCApps() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 4);
         verifyResourceInfo(jsonResponse, new String[]{"FaultyCAppCompositeExporter", "hello-worldCompositeExporter"});
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test get carbon applications resource for search key")
     public void retrieveSearchedCApps() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=FaultyCApp"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=FaultyCApp"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"FaultyCAppCompositeExporter"});
     }

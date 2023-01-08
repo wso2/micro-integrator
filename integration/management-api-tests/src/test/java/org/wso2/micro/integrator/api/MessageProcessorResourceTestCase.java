@@ -30,14 +30,14 @@ public class MessageProcessorResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Message Processors resource")
     public void retrieveMessageProcessors() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 3);
         verifyResourceInfo(jsonResponse, new String[]{"AbcMessageProcessor", "HelloMessageProcessor"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Message Processors resource for search key")
     public void retrieveSearchedMessageProcessors() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=test"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=test"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"testMessageProcessor"});
     }

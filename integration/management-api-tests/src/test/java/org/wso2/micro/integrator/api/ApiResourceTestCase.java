@@ -30,14 +30,14 @@ public class ApiResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get APIs resource")
     public void retrieveAPIs() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         verifyResourceCount(jsonResponse, 4);
         verifyResourceInfo(jsonResponse, new String[]{"AbcRestApi", "HelloRestApi"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get APIs resource for search key")
     public void retrieveSearchedAPIs() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=HeLloRest"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=HeLloRest"));
         verifyResourceCount(jsonResponse, 1);
         verifyResourceInfo(jsonResponse, new String[]{"HelloRestApi"});
     }

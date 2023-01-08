@@ -30,7 +30,7 @@ public class LocalEntryResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Local Entries resource")
     public void retrieveLocalEntries() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath, accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
         /* (-2) to account for the 2 local entries defined by the server
          * entire count is 4. the count that should be returned should be 4-2 = 2
          */
@@ -40,7 +40,7 @@ public class LocalEntryResourceTestCase extends ManagementAPITest {
 
     @Test(groups = {"wso2.esb"}, description = "Test get Local Entries resource for search key")
     public void retrieveSearchedLocalEntries() throws IOException {
-        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=Hello"), accessToken);
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=Hello"));
 
         /* (-2) to account for the 2 local entries defined by the server
         * entire count is 1. the count that should be returned should be 1-2 = -1
