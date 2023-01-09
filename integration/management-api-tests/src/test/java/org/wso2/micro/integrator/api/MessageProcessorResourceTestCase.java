@@ -19,47 +19,27 @@
 package org.wso2.micro.integrator.api;
 
 import org.json.JSONObject;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
 
-import static org.wso2.micro.integrator.api.Constants.COUNT;
-import static org.wso2.micro.integrator.api.Constants.LIST;
+public class MessageProcessorResourceTestCase extends ManagementAPITest {
 
-public class MessageProcessorResourceTestCase extends ESBIntegrationTest {
-
-    private String accessToken;
-    private String endpoint;
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        accessToken = TokenUtil.getAccessToken(hostName, portOffset);
-        endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/message-processors";
-    }
+    private static String resourcePath = "message-processors";
 
     @Test(groups = {"wso2.esb"}, description = "Test get Message Processors resource")
     public void retrieveMessageProcessors() throws IOException {
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint, accessToken);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get(COUNT), 3, "Assert Failed due to the mismatch of " +
-                "actual vs expected resource count");
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("AbcMessageProcessor"));
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("HelloMessageProcessor"));
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
+        verifyResourceCount(jsonResponse, 3);
+        verifyResourceInfo(jsonResponse, new String[]{"AbcMessageProcessor", "HelloMessageProcessor"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Message Processors resource for search key")
     public void retrieveSearchedMessageProcessors() throws IOException {
-        endpoint = endpoint.concat("?searchKey=test");
-        String responsePayload = sendHttpRequestAndGetPayload(endpoint, accessToken);
-        JSONObject jsonResponse = new JSONObject(responsePayload);
-        Assert.assertEquals(jsonResponse.get(COUNT), 1, "Assert Failed due to the mismatch of " +
-                "actual vs expected resource count");
-        Assert.assertTrue(jsonResponse.get(LIST).toString().contains("testMessageProcessor"));
+        JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath.concat("?searchKey=test"));
+        verifyResourceCount(jsonResponse, 1);
+        verifyResourceInfo(jsonResponse, new String[]{"testMessageProcessor"});
     }
 
     @AfterClass(alwaysRun = true)

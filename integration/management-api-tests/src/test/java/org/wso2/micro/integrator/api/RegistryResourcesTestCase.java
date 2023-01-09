@@ -32,7 +32,6 @@ import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
-import static org.wso2.micro.integrator.api.Constants.LIST;
+import static org.wso2.micro.integrator.api.ManagementAPITest.LIST;
 
 public class RegistryResourcesTestCase extends ESBIntegrationTest {
 
