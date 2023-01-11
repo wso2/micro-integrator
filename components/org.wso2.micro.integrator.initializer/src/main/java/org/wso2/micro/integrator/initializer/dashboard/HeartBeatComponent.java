@@ -19,6 +19,7 @@ package org.wso2.micro.integrator.initializer.dashboard;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -111,7 +112,7 @@ public class HeartBeatComponent {
                 httpPost.setEntity(entity);
                 CloseableHttpResponse response = client.execute(httpPost);
                 JsonObject jsonResponse = getJsonResponse(response);
-                if (jsonResponse.get("status").getAsString().equals("success")) {
+                if (jsonResponse != null && jsonResponse.get("status").getAsString().equals("success")) {
                     int deployedArtifactsCount = heartbeatPayload.get(CHANGE_NOTIFICATION).getAsJsonObject()
                                                                     .get(DEPLOYED_ARTIFACTS).getAsJsonArray().size();
                     int undeployedArtifactsCount = heartbeatPayload.get(CHANGE_NOTIFICATION).getAsJsonObject()
@@ -123,7 +124,7 @@ public class HeartBeatComponent {
                     ArtifactUpdateListener.removeFromUpdatedArtifactQueue(updatedArtifactsCount);
                 }
             } catch (IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-                log.debug("Error occurred while sending heartbeat request to dashboard.");
+                log.debug("Error occurred while sending heartbeat request to dashboard.", e);
             } 
         };
         scheduledExecutorService.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
@@ -205,7 +206,13 @@ public class HeartBeatComponent {
 
     public static JsonObject getJsonResponse(CloseableHttpResponse response) {
         String stringResponse = getStringResponse(response);
-        return new JsonParser().parse(stringResponse).getAsJsonObject();
+        JsonObject responseObject = null;
+        try {
+            responseObject = new JsonParser().parse(stringResponse).getAsJsonObject();
+        } catch (JsonParseException e) {
+            log.error("Error occurred while parsing the heartbeat response.", e);
+        }
+        return responseObject;
     }
 
     public static String getStringResponse(CloseableHttpResponse response) {
