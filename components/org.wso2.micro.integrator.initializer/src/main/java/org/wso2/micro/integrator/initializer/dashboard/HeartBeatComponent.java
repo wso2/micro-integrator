@@ -123,9 +123,9 @@ public class HeartBeatComponent {
                     ArtifactDeploymentListener.removeFromDeployedArtifactsQueue(deployedArtifactsCount);
                     ArtifactUpdateListener.removeFromUpdatedArtifactQueue(updatedArtifactsCount);
                 }
-            } catch (IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-                log.debug("Error occurred while sending heartbeat request to dashboard.", e);
-            } 
+            } catch (Exception e) {
+                log.debug("Error occurred while processing the heartbeat.", e);
+            }
         };
         scheduledExecutorService.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
     }
@@ -210,7 +210,7 @@ public class HeartBeatComponent {
         try {
             responseObject = new JsonParser().parse(stringResponse).getAsJsonObject();
         } catch (JsonParseException e) {
-            log.error("Error occurred while parsing the heartbeat response.", e);
+            log.debug("Error occurred while parsing the heartbeat response.", e);
         }
         return responseObject;
     }
@@ -221,7 +221,7 @@ public class HeartBeatComponent {
         try {
             stringResponse = EntityUtils.toString(entity, "UTF-8");
         } catch (IOException e) {
-            log.error("Error occurred while converting entity to string.", e);
+            log.debug("Error occurred while converting entity to string.", e);
         }
         return stringResponse;
     }
