@@ -215,7 +215,7 @@ public class ODataSuperTenantUserTestCase extends DSSIntegrationTest {
         HttpDelete httpDelete = new HttpDelete(endpoint);
         httpDelete.setHeader("Accept", acceptType);
         HttpResponse httpResponse = httpClient.execute(httpDelete);
-        log.info("ValidateDelete:::::::" + httpResponse.getEntity());
+        log.info("ValidateDelete response:::::::" + httpResponse.getEntity());
         return httpResponse.getStatusLine().getStatusCode();
     }
 }
