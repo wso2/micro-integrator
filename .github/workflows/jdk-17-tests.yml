@@ -28,4 +28,4 @@ jobs:
       - name: check java version
         run: echo "JAVA_VERSION=$(java -version)"
       - name: JDK 17 Tests
-        run: mvn -B clean install --file integration/pom.xml -fae
+        run: mvn -B clean install --file integration/pom.xml
