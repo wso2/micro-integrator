@@ -19,6 +19,8 @@ package org.wso2.ei.dataservice.integration.test;
 
 import org.apache.axiom.attachments.ByteArrayDataSource;
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -50,6 +52,7 @@ public abstract class DSSIntegrationTest {
     protected User userInfo;
     protected String sessionCookie;
     protected TestUserMode userMode;
+    protected final static Log log = LogFactory.getLog(DSSIntegrationTest.class);
 
    /* protected void init() throws Exception {
         userMode = TestUserMode.SUPER_TENANT_ADMIN;
