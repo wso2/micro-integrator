@@ -22,7 +22,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": null
             }
           }
         ],
@@ -34,10 +35,13 @@
                 "type": "object",
                 "properties": {
                   "payload": {
-                    "type": "object"
+                    "type": "object",
+                    "example": null
                   }
-                }
-              }
+                },
+                "example": null
+              },
+              "example": null
             }
           },
           "required": false
@@ -59,10 +63,13 @@
                 "type": "object",
                 "properties": {
                   "payload": {
-                    "type": "object"
+                    "type": "object",
+                    "example": null
                   }
-                }
-              }
+                },
+                "example": null
+              },
+              "example": null
             }
           },
           "required": false
@@ -82,10 +89,13 @@
                 "type": "object",
                 "properties": {
                   "payload": {
-                    "type": "object"
+                    "type": "object",
+                    "example": null
                   }
-                }
-              }
+                },
+                "example": null
+              },
+              "example": null
             }
           },
           "required": false
@@ -123,7 +133,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": null
             }
           }
         ],
@@ -140,7 +151,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": null
             }
           }
         ],
@@ -152,10 +164,13 @@
                 "type": "object",
                 "properties": {
                   "payload": {
-                    "type": "object"
+                    "type": "object",
+                    "example": null
                   }
-                }
-              }
+                },
+                "example": null
+              },
+              "example": null
             }
           },
           "required": false
@@ -173,7 +188,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": null
             }
           }
         ],
@@ -194,10 +210,13 @@
                 "type": "object",
                 "properties": {
                   "payload": {
-                    "type": "object"
+                    "type": "object",
+                    "example": null
                   }
-                }
-              }
+                },
+                "example": null
+              },
+              "example": null
             }
           },
           "required": false
@@ -217,7 +236,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": null
             }
           }
         ],
@@ -234,7 +254,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": null
             }
           }
         ],
@@ -264,10 +285,13 @@
                 "type": "object",
                 "properties": {
                   "payload": {
-                    "type": "object"
+                    "type": "object",
+                    "example": null
                   }
-                }
-              }
+                },
+                "example": null
+              },
+              "example": null
             }
           },
           "required": false
@@ -289,10 +313,13 @@
                 "type": "object",
                 "properties": {
                   "payload": {
-                    "type": "object"
+                    "type": "object",
+                    "example": null
                   }
-                }
-              }
+                },
+                "example": null
+              },
+              "example": null
             }
           },
           "required": false
@@ -312,7 +339,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": null
             }
           }
         ],
@@ -329,7 +357,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": null
             }
           }
         ],
@@ -341,10 +370,13 @@
                 "type": "object",
                 "properties": {
                   "payload": {
-                    "type": "object"
+                    "type": "object",
+                    "example": null
                   }
-                }
-              }
+                },
+                "example": null
+              },
+              "example": null
             }
           },
           "required": false
@@ -362,7 +394,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": null
             }
           }
         ],
@@ -401,10 +434,13 @@
                 "type": "object",
                 "properties": {
                   "payload": {
-                    "type": "object"
+                    "type": "object",
+                    "example": null
                   }
-                }
-              }
+                },
+                "example": null
+              },
+              "example": null
             }
           },
           "required": false
