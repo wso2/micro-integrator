@@ -236,6 +236,9 @@
                 <Type>{{transport.http.listener.keystore.type}}</Type>
                 <Password>{{transport.http.listener.keystore.password}}</Password>
                 <KeyPassword>{{transport.http.listener.keystore.key_password}}</KeyPassword>
+                {% if transport.http.listener.keystore.key_alias is defined %}
+                <KeyAlias>{{transport.http.listener.keystore.key_alias}}</KeyAlias>
+                {% endif %}
             </KeyStore>
         </parameter>
         <parameter name="truststore" locked="false">
@@ -483,6 +486,9 @@
                 <Type>{{transport.http.sender.keystore.type}}</Type>
                 <Password>{{transport.http.sender.keystore.password}}</Password>
                 <KeyPassword>{{transport.http.sender.keystore.key_password}}</KeyPassword>
+                {% if transport.http.sender.keystore.key_alias is defined %}
+                <KeyAlias>{{transport.http.sender.keystore.key_alias}}</KeyAlias>
+                {% endif %}
             </KeyStore>
         </parameter>
         <parameter name="truststore" locked="false">
