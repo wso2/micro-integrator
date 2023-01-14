@@ -72,8 +72,7 @@ public class Utils {
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         // Run a shell command
-        processBuilder.command("/bin/bash", "-c", "echo " + getPassword() + "| sudo -S service smbd stop" +
-                ".service");
+        processBuilder.command("/bin/bash", "-c", "echo " + getPassword() + "| sudo -S service smbd stop");
         try {
             Process process = processBuilder.start();
             int exitVal = process.waitFor();
@@ -112,8 +111,7 @@ public class Utils {
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         // Run a shell command
-        processBuilder.command("/bin/bash", "-c", "echo " + getPassword() + "| sudo -S service smbd start" +
-                ".service");
+        processBuilder.command("/bin/bash", "-c", "echo " + getPassword() + "| sudo -S service smbd start");
         try {
             Process process = processBuilder.start();
             int exitVal = process.waitFor();
@@ -151,7 +149,11 @@ public class Utils {
             int exitVal = process.waitFor();
             if (exitVal == 0 || exitVal == 3) {
                 log.info("Successfully get the the Samba Server Status: " + output);
-                return output.toString().contains("running");
+                if (output.toString().contains("not running")) {
+                    return false;
+                } else {
+                    return true;
+                }
             } else {
                 throw new Exception("Getting SAMBA Server Status failed");
             }
