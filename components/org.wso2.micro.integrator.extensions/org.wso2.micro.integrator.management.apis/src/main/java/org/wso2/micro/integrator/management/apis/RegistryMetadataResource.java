@@ -60,13 +60,13 @@ public class RegistryMetadataResource implements MiApiResource {
             SynapseConfiguration synapseConfiguration) {
 
         String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
-        String validatedPath = validatePath(registryPath, axis2MessageContext);
+        String validatedPath = validatePath(registryPath, axis2MessageContext, messageContext);
 
         if (StringUtils.isEmpty(validatedPath)) {
             axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
             return true;
         }
-        handleGet(axis2MessageContext, registryPath, validatedPath);
+        handleGet(messageContext, axis2MessageContext, registryPath, validatedPath);
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
@@ -76,11 +76,11 @@ public class RegistryMetadataResource implements MiApiResource {
      *
      * @param axis2MessageContext AXIS2 message context
      */
-    private void handleGet(org.apache.axis2.context.MessageContext axis2MessageContext,
+    private void handleGet(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
             String registryPath, String validatedPath) {
 
         MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
-        if (!isRegistryExist(validatedPath)) {
+        if (!isRegistryExist(validatedPath, messageContext)) {
             JSONObject jsonBody = Utils.createJsonError("Can not find the registry: " + registryPath,
                     axis2MessageContext, BAD_REQUEST);
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
@@ -99,8 +99,8 @@ public class RegistryMetadataResource implements MiApiResource {
     private void populateRegistryMetadata(org.apache.axis2.context.MessageContext axis2MessageContext,
             MicroIntegratorRegistry microIntegratorRegistry, String path) {
 
-        String carbonHomePath = Utils.getCarbonHome();
-        String registryPath = formatPath(carbonHomePath + File.separator + path);
+        String regRoot = microIntegratorRegistry.getRegRoot();
+        String registryPath = formatPath(regRoot + File.separator + path);
         JSONObject jsonBody = microIntegratorRegistry.getRegistryMediaType(registryPath);
         try {
             String error = jsonBody.getString(ERROR_KEY);

@@ -71,11 +71,13 @@ import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstant
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.CONFIG_REGISTRY_PREFIX;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.DEFAULT_MEDIA_TYPE;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.ERROR_KEY;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.FILE_PROTOCOL_PREFIX;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.FILE_TYPE_DIRECTORY;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.GOVERNANCE_DIRECTORY_NAME;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.GOVERNANCE_REGISTRY_PATH;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.GOVERNANCE_REGISTRY_PREFIX;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.HIDDEN_FILE_PREFIX;
+import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LOCAL_DIRECTORY_NAME;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LOCAL_REGISTRY_PATH;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LOCAL_REGISTRY_PREFIX;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.LIST;
@@ -111,7 +113,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
     private String localRegistry;
     private String configRegistry;
     private String govRegistry;
-
+    private String regRoot;
     /**
      * Specifies whether the registry is in the local host or a remote registry.
      * Local host means the same computer as ESB is running.
@@ -141,6 +143,8 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         this.configRegistry = getUri(defaultFSRegRoot, "config");
         //Default registry governance registry location : <CARBON_HOME>/registry/governance
         this.govRegistry = getUri(defaultFSRegRoot, "governance");
+
+        this.regRoot = defaultFSRegRoot;
 
         initRegistryListener(defaultFSRegRoot);
     }
@@ -765,7 +769,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                 Thread.sleep(DELETE_RETRY_SLEEP_TIME);
             } catch (InterruptedException e) {
                 // ignore the exception
-                log.error("Sleep wait interrupted while waiting for second retry to delete registry resource" ,e);
+                log.error("Sleep wait interrupted while waiting for second retry to delete registry resource", e);
             }
 
             success = file.delete();
@@ -1121,9 +1125,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                 log.debug("Processing registry configuration property : [Name: " + name + " Value: "+ value + "]");
             }
 
-            if (name.equals(MicroIntegratorRegistryConstants.CONF_REG_ROOT) ||
-                    name.equals(MicroIntegratorRegistryConstants.GOV_REG_ROOT) ||
-                    name.equals(MicroIntegratorRegistryConstants.LOCAL_REG_ROOT)) {
+            if (name.equals(MicroIntegratorRegistryConstants.REG_ROOT)) {
                 try {
                     URL rootPathUrl = new URL(value);
                     if (MicroIntegratorRegistryConstants.PROTOCOL_FILE.equals(rootPathUrl.getProtocol())) {
@@ -1174,22 +1176,19 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                     }
 
                     // Set config/gov/local registry properties
-                    if (MicroIntegratorRegistryConstants.CONF_REG_ROOT.equals(name)) {
-                        configRegistry = value;
-                        if (log.isDebugEnabled()) {
-                            log.debug("Configuration Registry Location : " + configRegistry);
-                        }
-                    } else if (MicroIntegratorRegistryConstants.GOV_REG_ROOT.equals(name)) {
-                        govRegistry = value;
-                        if (log.isDebugEnabled()) {
-                            log.debug("Governance Registry Location : " + govRegistry);
-                        }
-                    } else {
-                        localRegistry = value;
-                        if (log.isDebugEnabled()) {
-                            log.debug("Local Registry Location : " + localRegistry);
-                        }
+                    configRegistry = value + CONFIG_DIRECTORY_NAME + URL_SEPARATOR;
+                    if (log.isDebugEnabled()) {
+                        log.debug("Configuration Registry Location : " + configRegistry);
                     }
+                    govRegistry = value + GOVERNANCE_DIRECTORY_NAME + URL_SEPARATOR;
+                    if (log.isDebugEnabled()) {
+                        log.debug("Governance Registry Location : " + govRegistry);
+                    }
+                    localRegistry = value + LOCAL_DIRECTORY_NAME + URL_SEPARATOR;
+                    if (log.isDebugEnabled()) {
+                        log.debug("Local Registry Location : " + localRegistry);
+                    }
+                    regRoot = value;
 
                 } catch (MalformedURLException e) {
                     // don't set the root if this is not a valid URL
@@ -1199,6 +1198,13 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         } else {
             log.debug("Name and Value must need");
         }
+    }
+
+    public String getRegRoot() {
+        if (regRoot.toLowerCase().startsWith(FILE_PROTOCOL_PREFIX)) {
+            return regRoot.substring(FILE_PROTOCOL_PREFIX.length()) + ".." + URL_SEPARATOR;
+        }
+        return regRoot + ".." + URL_SEPARATOR;
     }
 
     @Override

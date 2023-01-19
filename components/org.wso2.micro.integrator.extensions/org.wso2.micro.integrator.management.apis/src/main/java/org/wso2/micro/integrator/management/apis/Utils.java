@@ -39,6 +39,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.wso2.micro.core.util.AuditLogger;
 import org.wso2.micro.integrator.initializer.dashboard.ArtifactUpdateListener;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
+import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
@@ -474,7 +475,7 @@ public class Utils {
      * @return Validated path
      */
     public static String validatePath(String registryPath,
-            org.apache.axis2.context.MessageContext axis2MessageContext) {
+            org.apache.axis2.context.MessageContext axis2MessageContext, MessageContext messageContext) {
 
         if (StringUtils.isEmpty(registryPath)) {
             JSONObject jsonBody = Utils.createJsonError("Registry path not found in the request", axis2MessageContext,
@@ -482,13 +483,14 @@ public class Utils {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
             return null;
         }
-
-        String carbonHomePath = formatPath(Utils.getCarbonHome());
-        String registryRoot = formatPath(carbonHomePath + File.separator + REGISTRY_ROOT_PATH);
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
+        String registryParentPath = formatPath(microIntegratorRegistry.getRegRoot());
+        String registryRoot = formatPath(registryParentPath + REGISTRY_ROOT_PATH);
         String validatedPath;
 
         try {
-            File validatedPathFile = new File(formatPath(carbonHomePath + File.separator + registryPath));
+            File validatedPathFile = new File(formatPath(registryParentPath + File.separator + registryPath));
             File registryRootFile = new File(registryRoot);
             if (!validatedPathFile.getCanonicalPath().startsWith(registryRootFile.getCanonicalPath())) {
                 JSONObject jsonBody = Utils.createJsonError("The registry path  '" + registryPath
@@ -535,10 +537,12 @@ public class Utils {
      * @param registryPath  Registry path
      * @return              Boolean output indicating the existence of the registry
      */
-    public static boolean isRegistryExist(String registryPath) {
-
-        String carbonHomePath = Utils.getCarbonHome();
-        String resolvedPath = formatPath(carbonHomePath + File.separator + registryPath + File.separator);
+    public static boolean isRegistryExist(String registryPath,
+                                          MessageContext messageContext) {
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
+        String regRoot = microIntegratorRegistry.getRegRoot();
+        String resolvedPath = formatPath(regRoot + File.separator + registryPath + File.separator);
         try {
             File file = new File(resolvedPath);
             return file.exists();
