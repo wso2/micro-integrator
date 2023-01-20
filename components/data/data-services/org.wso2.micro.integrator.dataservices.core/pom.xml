@@ -62,6 +62,14 @@
                     <groupId>org.apache.poi.wso2</groupId>
                     <artifactId>poi-ooxml</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.orbit.org.apache.poi</groupId>
+                    <artifactId>poi-scratchpad</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.orbit.org.apache.poi</groupId>
+                    <artifactId>poi-ooxml</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -329,9 +337,22 @@
                             com.datastax.driver.core;version="${cassandra-driver-core.orbit.imp.pkg.version}",
                             com.datastax.driver.core.policies;version="${cassandra-driver-core.orbit.imp.pkg.version}",
                             au.com.bytecode.opencsv;version="${opencsv.orbit.imp.pkg.version}",
-                            org.apache.poi.hssf.usermodel;version="${poi.orbit.imp.pkg.version}",
-                            org.apache.poi.openxml4j.exceptions;version="${poi-ooxml.orbit.imp.pkg.version}",
-                            org.apache.poi.ss.usermodel;version="${poi.orbit.imp.pkg.version}",
+<!--                            org.apache.poi.hssf.usermodel,-->
+<!--                            org.apache.poi.openxml4j.exceptions,-->
+<!--                            org.apache.poi.ss.usermodel,-->
+
+<!--                            org.apache.poi.*,-->
+<!--                            org.openxmlformats.*,-->
+<!--                            schemaorg_apache_xmlbeans.*,-->
+
+                            org.apache.poi.*;version="5.2.3.wso2v1",
+<!--                            org.apache.poi.ooxml.*,-->
+<!--                            org.openxmlformats.schemas.*,-->
+<!--                            org.etsi.uri.*,-->
+<!--                            org.w3.x2000.*,-->
+<!--                            com.microsoft.schemas.*,-->
+<!--                            schemaorg_apache_xmlbeans.*,-->
+
                             org.apache.commons.collections4;version="${commons-collections4.orbit.imp.pkg.version}",
                             com.mongodb;version="${mongo-java-driver.orbit.imp.pkg.version}",
                             com.mongodb.util;version="${mongo-java-driver.orbit.imp.pkg.version}",
@@ -370,9 +391,10 @@
                             org.apache.olingo.server.core;version="${olingo.orbit.imp.pkg.version}",
                             org.apache.olingo.server.core.requests;version="${olingo.orbit.imp.pkg.version}",
                             org.apache.olingo.server.core.responses;version="${olingo.orbit.imp.pkg.version}",
-                            org.apache.olingo.server.core.uri.parser;version="${olingo.orbit.imp.pkg.version}"
+                            org.apache.olingo.server.core.uri.parser;version="${olingo.orbit.imp.pkg.version}",
                             <!--javax.transaction todo need to check this and add if needed. this needs jboss transactions, but for now it's not included in the server-->
                             <!--org.apache.axis2.*; version="${apache.axis2.orbit.imp.pkg.version}"-->
+                            *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Axis2Deployer>DataServicesDeployer</Axis2Deployer>

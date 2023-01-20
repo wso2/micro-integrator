@@ -17,17 +17,17 @@
  */
 package org.wso2.micro.integrator.dataservices.sql.driver.processor.writer;
 
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.wso2.micro.integrator.dataservices.sql.driver.TExcelConnection;
 import org.wso2.micro.integrator.dataservices.sql.driver.processor.reader.DataCell;
 import org.wso2.micro.integrator.dataservices.sql.driver.processor.reader.DataRow;
 import org.wso2.micro.integrator.dataservices.sql.driver.processor.reader.DataTable;
+
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Set;
 
 public class ExcelDataWriter implements DataWriter {
 
@@ -62,19 +62,14 @@ public class ExcelDataWriter implements DataWriter {
     }
 
     private void commitCell(DataCell cell) {
-        int cellType = cell.getCellType();
+        CellType cellType = CellType.forInt(cell.getCellType());
         switch(cellType) {
-            case Cell.CELL_TYPE_NUMERIC:
-
-            case Cell.CELL_TYPE_BLANK:
-            case Cell.CELL_TYPE_FORMULA:
-            case Cell.CELL_TYPE_STRING:
-
-            case Cell.CELL_TYPE_BOOLEAN:
-
+            case NUMERIC:
+            case BLANK:
+            case FORMULA:
+            case STRING:
+            case BOOLEAN:
             default:
-
         }
     }
-    
 }
