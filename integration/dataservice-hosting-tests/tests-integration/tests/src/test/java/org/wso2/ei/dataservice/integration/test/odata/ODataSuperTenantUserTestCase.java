@@ -27,9 +27,7 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -154,100 +152,69 @@ public class ODataSuperTenantUserTestCase extends DSSIntegrationTest {
     }
 
     private static int sendPOST(String endpoint, String content, String acceptType) throws IOException {
-        HttpPost httpPost = null;
-        int statusCode = 0;
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()){
-            httpPost = new HttpPost(endpoint);
-            httpPost.setHeader("Accept", acceptType);
-            if (null != content) {
-                HttpEntity httpEntity = new ByteArrayEntity(content.getBytes("UTF-8"));
-                httpPost.setHeader("Content-Type", "application/json");
-                httpPost.setEntity(httpEntity);
-            }
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-            statusCode = httpResponse.getStatusLine().getStatusCode();
-        } finally {
-            httpPost.releaseConnection();
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(endpoint);
+        httpPost.setHeader("Accept", acceptType);
+        if (null != content) {
+            HttpEntity httpEntity = new ByteArrayEntity(content.getBytes("UTF-8"));
+            httpPost.setHeader("Content-Type", "application/json");
+            httpPost.setEntity(httpEntity);
         }
-        return statusCode;
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        return httpResponse.getStatusLine().getStatusCode();
     }
 
     private static Object[] sendGET(String endpoint, String acceptType) throws IOException {
-        HttpGet httpGet = null;
-        Object[] responseObject = null;
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            httpGet = new HttpGet(endpoint);
-            httpGet.setHeader("Accept", acceptType);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(endpoint);
+        httpGet.setHeader("Accept", acceptType);
+        HttpResponse httpResponse = httpClient.execute(httpGet);
+        if (httpResponse.getEntity() != null) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
 
-            if (httpResponse.getEntity() != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-                while ((inputLine = reader.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                reader.close();
-                responseObject = new Object[] { httpResponse.getStatusLine().getStatusCode(), response.toString() };
-            } else {
-                responseObject = new Object[] { httpResponse.getStatusLine().getStatusCode() };
+            while ((inputLine = reader.readLine()) != null) {
+                response.append(inputLine);
             }
-        } finally {
-            httpGet.releaseConnection();
+            reader.close();
+            return new Object[] { httpResponse.getStatusLine().getStatusCode(), response.toString() };
+        } else {
+            return new Object[] { httpResponse.getStatusLine().getStatusCode() };
         }
-        return responseObject;
     }
 
     private static int sendPUT(String endpoint, String content, String acceptType) throws IOException {
-        int statusCode;
-        HttpPut httpPut = null;
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            httpPut = new HttpPut(endpoint);
-            httpPut.setHeader("Accept", acceptType);
-            if (null != content) {
-                HttpEntity httpEntity = new ByteArrayEntity(content.getBytes("UTF-8"));
-                httpPut.setHeader("Content-Type", "application/json");
-                httpPut.setEntity(httpEntity);
-            }
-            HttpResponse httpResponse = httpClient.execute(httpPut);
-            statusCode = httpResponse.getStatusLine().getStatusCode();
-        } finally {
-            httpPut.releaseConnection();
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPut httpPut = new HttpPut(endpoint);
+        httpPut.setHeader("Accept", acceptType);
+        if (null != content) {
+            HttpEntity httpEntity = new ByteArrayEntity(content.getBytes("UTF-8"));
+            httpPut.setHeader("Content-Type", "application/json");
+            httpPut.setEntity(httpEntity);
         }
-        return statusCode;
+        HttpResponse httpResponse = httpClient.execute(httpPut);
+        return httpResponse.getStatusLine().getStatusCode();
     }
 
     private static int sendPATCH(String endpoint, String content, String acceptType) throws IOException {
-        HttpPatch httpPatch = null;
-        int statusCode = 0;
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            httpPatch = new HttpPatch(endpoint);
-            httpPatch.setHeader("Accept", acceptType);
-            if (null != content) {
-                HttpEntity httpEntity = new ByteArrayEntity(content.getBytes("UTF-8"));
-                httpPatch.setHeader("Content-Type", "application/json");
-                httpPatch.setEntity(httpEntity);
-            }
-            HttpResponse httpResponse = httpClient.execute(httpPatch);
-            statusCode = httpResponse.getStatusLine().getStatusCode();
-        } finally {
-            httpPatch.releaseConnection();
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPatch httpPatch = new HttpPatch(endpoint);
+        httpPatch.setHeader("Accept", acceptType);
+        if (null != content) {
+            HttpEntity httpEntity = new ByteArrayEntity(content.getBytes("UTF-8"));
+            httpPatch.setHeader("Content-Type", "application/json");
+            httpPatch.setEntity(httpEntity);
         }
-        return statusCode;
+        HttpResponse httpResponse = httpClient.execute(httpPatch);
+        return httpResponse.getStatusLine().getStatusCode();
     }
 
     private static int sendDELETE(String endpoint, String acceptType) throws IOException {
-        HttpDelete httpDelete = null;
-        int statusCode = 0;
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            httpDelete = new HttpDelete(endpoint);
-            httpDelete.setHeader("Accept", acceptType);
-            HttpResponse httpResponse = httpClient.execute(httpDelete);
-            statusCode = httpResponse.getStatusLine().getStatusCode();
-        } finally {
-            httpDelete.releaseConnection();
-        }
-        return statusCode;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpDelete httpDelete = new HttpDelete(endpoint);
+        httpDelete.setHeader("Accept", acceptType);
+        HttpResponse httpResponse = httpClient.execute(httpDelete);
+        return httpResponse.getStatusLine().getStatusCode();
     }
 }
