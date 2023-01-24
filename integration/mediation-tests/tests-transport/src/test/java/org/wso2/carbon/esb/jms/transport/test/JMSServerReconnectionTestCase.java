@@ -36,8 +36,8 @@ import static org.testng.Assert.assertEquals;
 
 public class JMSServerReconnectionTestCase extends ESBIntegrationTest {
     private static final String url = "http://localhost:8480/services/RESTProxy/new/add?name=jms";
-    private static final String logLine0 = "Trying to reconnect to JMS store JMSMS";
-    private static final String logLine1 = "Successfully connected to JMS store JMSMS";
+    private static final String logLine0 = "Trying to reconnect to JMS store";
+    private static final String logLine1 = "Successfully connected to JMS store";
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
     private final Map<String, String> headers = new HashMap<String, String>(1);
     private final String payload =  "{\n" +
