@@ -293,7 +293,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
         if (UserCoreUtil.isEveryoneRole(roleName, realmConfig)) {
             if (Boolean.parseBoolean(System.getProperty(HybridJDBCConstants.NON_USER_CORE_MODE))) {
                 // Primary User Store
-                return getPrimaryRoles();
+                return getPrimaryUsers();
             } else {
                 return userRealm.getUserStoreManager().listUsers("*", -1);
             }
@@ -319,10 +319,10 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
         }
     }
 
-    public String[] getPrimaryRoles() throws UserStoreException {
+    private String[] getPrimaryUsers() throws UserStoreException {
         String filter = HybridJDBCConstants.ALL_FILTER;
         List<String> lst = new LinkedList<String>();
-        String sqlStmt = HybridJDBCConstants.GET_PRIMARY_USER_ROLES;
+        String sqlStmt = HybridJDBCConstants.GET_PRIMARY_USERS;
         Connection dbConnection = null;
         PreparedStatement prepStmt = null;
         ResultSet rs = null;
