@@ -87,14 +87,14 @@
                         <Bundle-Vendor>WSO2 Inc</Bundle-Vendor>
                         <Bundle-SymbolicName>javax.cache.wso2</Bundle-SymbolicName>
                         <Export-Package>
-                            javax.cache.*,
-                            org.wso2.carbon.caching.impl.*,
+                            javax.cache.*;-split-package:=merge-first,
+                            org.wso2.carbon.caching.impl.*;-split-package:=merge-first,
                             !org.wso2.carbon.caching.impl.internal.*,
                             !org.wso2.carbon.caching.impl.eviction.*
                         </Export-Package>
                         <Private-Package>
-                            org.wso2.carbon.caching.impl.internal.*,
-                            org.wso2.carbon.caching.impl.eviction.*
+                            org.wso2.carbon.caching.impl.internal.*;-split-package:=merge-first,
+                            org.wso2.carbon.caching.impl.eviction.*;-split-package:=merge-first
                         </Private-Package>
                         <Import-Package>
                             javax.transaction.*,
