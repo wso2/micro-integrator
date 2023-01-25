@@ -163,6 +163,7 @@
             <class name="org.wso2.carbon.esb.car.deployment.test.ESBJAVA4116CAppArtifactDeploymentFailureDueToNameTestCase"/>
             <class name="org.wso2.carbon.esb.car.deployment.test.CARBON16113DeployArtifactsBeforeTransportStarsTestCase"/>
             <class name="org.wso2.carbon.esb.car.deployment.test.FaultyCAppSwaggerRemovalTestCase"></class>
+            <class name="org.wso2.carbon.esb.car.deployment.test.RegistryResourceDeploymentTestCase"/>
         </classes>
     </test>
 
