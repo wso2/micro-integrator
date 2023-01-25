@@ -1545,7 +1545,7 @@
 
         <carbon.analytics.common.version>5.2.50</carbon.analytics.common.version>
         <carbon.analytics.common.imp.pkg.version>[5.2.0, 6.0.0)</carbon.analytics.common.imp.pkg.version>
-        <fasterxml.jackson.version>2.13.3</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.14.1</fasterxml.jackson.version>
         <carbon.commons.version>4.7.49</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
@@ -1628,7 +1628,7 @@
         <org.wso2.orbit.sun.xml.ws.version>2.3.2.wso2v1</org.wso2.orbit.sun.xml.ws.version>
         <apache.felix.scr.ds.annotations.version>1.2.4</apache.felix.scr.ds.annotations.version>
         <org.wso2.carbon.caching.core.version>4.2.0</org.wso2.carbon.caching.core.version>
-        <orbit.version.snakeyaml>1.26.0.wso2v1</orbit.version.snakeyaml>
+        <orbit.version.snakeyaml>1.33.0.wso2v1</orbit.version.snakeyaml>
         <json.smart.version>2.4.7</json.smart.version>
         <google.guava.version>31.0.1-jre</google.guava.version>
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
@@ -1825,7 +1825,7 @@
         <!-- OAS3 Versions -->
         <swagger.parser.orbit.version>2.0.30.wso2v1</swagger.parser.orbit.version>
         <swagger.core.v2.version>1.6.5</swagger.core.v2.version>
-        <snakeyaml.version>1.30</snakeyaml.version>
+        <snakeyaml.version>1.33</snakeyaml.version>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <version.disruptor>3.4.2</version.disruptor>
         <version.geronimo.jta.spec>1.1</version.geronimo.jta.spec>
