@@ -99,6 +99,7 @@
             <class name="org.wso2.carbon.esb.jms.transport.test.JMSTransportProxyTestCase"/>
             <class name="org.wso2.carbon.esb.jms.transport.test.JMSMessageStoreUnavailableTestCase"/>
             <class name="org.wso2.carbon.esb.jms.transport.test.SpecialCharacterTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSServerReconnectionTestCase"/>
             <class name="org.wso2.carbon.esb.jms.transport.test.topic.JMSTopicAsProxyEndpointTestCase"/>
         </classes>
     </test>
