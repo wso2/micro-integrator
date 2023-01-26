@@ -43,6 +43,8 @@ public class TestMicroIntegratorRegistry {
     private static MicroIntegratorRegistry microIntegratorRegistry;
     private static Path governanceRegistry;
 
+    private static Path registryRoot;
+
     @BeforeClass
     public static void init() throws IOException {
         //create registry folder
@@ -50,12 +52,13 @@ public class TestMicroIntegratorRegistry {
         registryFolder.mkdir();
 
         microIntegratorRegistry = new MicroIntegratorRegistry();
+        registryRoot = Paths.get("src", "test", "resources", "registry").toAbsolutePath();
 
         governanceRegistry = Paths.get("src", "test", "resources", "registry", "governance").toAbsolutePath();
         Files.createDirectories(governanceRegistry);
 
         Properties properties = new Properties();
-        properties.setProperty(MicroIntegratorRegistryConstants.GOV_REG_ROOT, governanceRegistry.toUri().toURL().toString());
+        properties.setProperty(MicroIntegratorRegistryConstants.REG_ROOT, registryRoot.toUri().toURL().toString());
         microIntegratorRegistry.init(properties);
     }
 

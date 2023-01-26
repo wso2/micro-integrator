@@ -34,6 +34,7 @@ public class MicroIntegratorRegistryConstants {
     public static final String FILE = "http://wso2.org/projects/esb/registry/types/file";
 
     public static final String CONF_REG_ROOT = "ConfigRegRoot";
+    public static final String REG_ROOT = "RegRoot";
     public static final String GOV_REG_ROOT = "GovRegRoot";
     public static final String LOCAL_REG_ROOT = "LocalRegRoot";
 
@@ -42,6 +43,7 @@ public class MicroIntegratorRegistryConstants {
     public static final String PROTOCOL_FILE = "file";
     public static final String PROTOCOL_HTTP = "http";
     public static final String PROTOCOL_HTTPS = "https";
+    public static final String FILE_PROTOCOL_PREFIX = "file:";
 
 
     public static final String CONFIG_REGISTRY_PREFIX = "conf:";
@@ -50,6 +52,7 @@ public class MicroIntegratorRegistryConstants {
 
     public static final String CONFIG_DIRECTORY_NAME = "config";
     public static final String GOVERNANCE_DIRECTORY_NAME = "governance";
+    public static final String LOCAL_DIRECTORY_NAME = "local";
 
     public static final char URL_SEPARATOR_CHAR = '/';
     public static final String URL_SEPARATOR = "/";

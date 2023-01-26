@@ -90,7 +90,7 @@ public class RegistryPropertiesResource implements MiApiResource {
 
         String httpMethod = axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString();
         String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
-        String validatedPath = validatePath(registryPath, axis2MessageContext);
+        String validatedPath = validatePath(registryPath, axis2MessageContext, messageContext);
 
         if (StringUtils.isEmpty(validatedPath)) {
             axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
@@ -150,8 +150,9 @@ public class RegistryPropertiesResource implements MiApiResource {
             String registryPath, String validatedPath) {
 
         String propertyName = Utils.getQueryParameter(messageContext, NAME);
-        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
-        if (!isRegistryExist(validatedPath)) {
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
+        if (!isRegistryExist(validatedPath, messageContext)) {
             JSONObject jsonBody = Utils.createJsonError("Can not find the registry: " + registryPath,
                     axis2MessageContext, BAD_REQUEST);
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
@@ -239,9 +240,10 @@ public class RegistryPropertiesResource implements MiApiResource {
         JSONObject jsonBody;
         String pathWithPrefix = getRegistryPathPrefix(validatedPath);
         if (Objects.nonNull(pathWithPrefix)) {
-            if (isRegistryExist(validatedPath) && isRegistryExist(validatedPath + PROPERTY_EXTENSION)) {
+            if (isRegistryExist(validatedPath, messageContext) &&
+                    isRegistryExist(validatedPath + PROPERTY_EXTENSION, messageContext)) {
                 jsonBody = postRegistryProperties(messageContext, axis2MessageContext, pathWithPrefix);
-            } else if (isRegistryExist(validatedPath)) {
+            } else if (isRegistryExist(validatedPath, messageContext)) {
                 jsonBody = postNewRegistryProperties(messageContext, axis2MessageContext, pathWithPrefix);
             } else {
                 jsonBody = postEmptyRegistryProperties(messageContext, axis2MessageContext, pathWithPrefix);
@@ -265,7 +267,8 @@ public class RegistryPropertiesResource implements MiApiResource {
 
         String propertiesPayload = getPayload(axis2MessageContext);
         JSONObject jsonBody = new JSONObject();
-        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
         Properties oldProperties = microIntegratorRegistry.getResourceProperties(registryPath);
         String performedBy = ANONYMOUS_USER;
         JSONObject info = new JSONObject();
@@ -317,7 +320,8 @@ public class RegistryPropertiesResource implements MiApiResource {
 
         String propertiesPayload = getPayload(axis2MessageContext);
         JSONObject jsonBody = new JSONObject();
-        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
         String performedBy = ANONYMOUS_USER;
         JSONObject info = new JSONObject();
 
@@ -362,7 +366,8 @@ public class RegistryPropertiesResource implements MiApiResource {
 
         String propertiesPayload = getPayload(axis2MessageContext);
         JSONObject jsonBody = new JSONObject();
-        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
         String performedBy = ANONYMOUS_USER;
         JSONObject info = new JSONObject();
 
@@ -458,7 +463,7 @@ public class RegistryPropertiesResource implements MiApiResource {
         if (Objects.nonNull(propertyName)) {
             String pathWithPrefix = getRegistryPathPrefix(validatedPath);
             if (Objects.nonNull(pathWithPrefix)) {
-                if (isRegistryExist(validatedPath + PROPERTY_EXTENSION)) {
+                if (isRegistryExist(validatedPath + PROPERTY_EXTENSION, messageContext)) {
                     jsonBody = deleteRegistryProperty(messageContext, axis2MessageContext, pathWithPrefix,
                             propertyName);
                 } else {
@@ -484,7 +489,8 @@ public class RegistryPropertiesResource implements MiApiResource {
      */
     private JSONObject deleteRegistryProperty(MessageContext messageContext,
             org.apache.axis2.context.MessageContext axis2MessageContext, String registryPath, String propertyName) {
-        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
         Properties properties = microIntegratorRegistry.getResourceProperties(registryPath);
         JSONObject jsonBody = new JSONObject();
         String performedBy = ANONYMOUS_USER;

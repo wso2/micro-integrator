@@ -59,7 +59,7 @@ public class RegistryResource implements MiApiResource {
             SynapseConfiguration synapseConfiguration) {
 
         String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
-        String validatedPath = validatePath(registryPath, axis2MessageContext);
+        String validatedPath = validatePath(registryPath, axis2MessageContext, messageContext);
         String searchKey = Utils.getQueryParameter(messageContext, SEARCH_KEY);
 
         if (StringUtils.isEmpty(validatedPath)) {
@@ -70,7 +70,7 @@ public class RegistryResource implements MiApiResource {
             if (searchKey.trim().isEmpty()) {
                 handleGet(messageContext, axis2MessageContext, validatedPath);
             } else {
-                populateRegistryResourceJSON(searchKey, axis2MessageContext, new MicroIntegratorRegistry(), validatedPath);
+                populateRegistryResourceJSON(searchKey, axis2MessageContext, (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry(), validatedPath);
             }
         } else {
             handleGet(messageContext, axis2MessageContext, validatedPath);
@@ -89,7 +89,7 @@ public class RegistryResource implements MiApiResource {
             String validatedPath) {
 
         String expandedEnabled = Utils.getQueryParameter(messageContext, EXPAND_PARAM);
-        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        MicroIntegratorRegistry microIntegratorRegistry = (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
         if (Objects.nonNull(expandedEnabled) && expandedEnabled.equals(VALUE_TRUE)) {
             populateRegistryResourceJSON("", axis2MessageContext, microIntegratorRegistry, validatedPath);
         } else {
@@ -108,8 +108,8 @@ public class RegistryResource implements MiApiResource {
     private void populateRegistryResourceJSON(String searchKey, org.apache.axis2.context.MessageContext axis2MessageContext,
             MicroIntegratorRegistry microIntegratorRegistry, String path) {
 
-        String carbonHomePath = Utils.getCarbonHome();
-        String folderPath = formatPath(carbonHomePath + File.separator + path + File.separator);
+        String regRoot = microIntegratorRegistry.getRegRoot();
+        String folderPath = formatPath(regRoot + File.separator + path + File.separator);
         File node = new File(folderPath);
         JSONObject jsonBody;
         if (node.exists() && node.isDirectory()) {
@@ -130,12 +130,12 @@ public class RegistryResource implements MiApiResource {
     private void populateImmediateChildren(org.apache.axis2.context.MessageContext axis2MessageContext,
             MicroIntegratorRegistry microIntegratorRegistry, String path) {
 
-        String carbonHomePath = formatPath(Utils.getCarbonHome());
-        String registryPath = formatPath(carbonHomePath + File.separator + path);
+        String regRoot = microIntegratorRegistry.getRegRoot();
+        String registryPath = formatPath(regRoot + File.separator + path);
         File node = new File(registryPath);
         JSONObject jsonBody;
         if (node.exists() && node.isDirectory()) {
-            JSONArray childrenList = microIntegratorRegistry.getChildrenList(registryPath, carbonHomePath);
+            JSONArray childrenList = microIntegratorRegistry.getChildrenList(registryPath, regRoot);
             jsonBody = Utils.createJSONList(childrenList.length());
             jsonBody.put(Constants.LIST, childrenList);
         } else {

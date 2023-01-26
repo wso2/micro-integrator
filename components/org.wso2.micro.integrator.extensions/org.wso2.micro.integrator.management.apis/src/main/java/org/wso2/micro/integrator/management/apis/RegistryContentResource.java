@@ -105,7 +105,7 @@ public class RegistryContentResource implements MiApiResource {
 
         String httpMethod = axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString();
         String registryPath = Utils.getQueryParameter(messageContext, REGISTRY_PATH);
-        String validatedPath = validatePath(registryPath, axis2MessageContext);
+        String validatedPath = validatePath(registryPath, axis2MessageContext, messageContext);
 
         if (StringUtils.isEmpty(validatedPath)) {
             axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
@@ -157,7 +157,7 @@ public class RegistryContentResource implements MiApiResource {
     private void handleGet(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
             String registryPath, String validatedPath) {
 
-        if (!isRegistryExist(validatedPath)) {
+        if (!isRegistryExist(validatedPath, messageContext)) {
             JSONObject jsonBody = Utils.createJsonError("Can not find the registry: " + registryPath,
                     axis2MessageContext, BAD_REQUEST);
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
@@ -176,7 +176,7 @@ public class RegistryContentResource implements MiApiResource {
     private void populateRegistryContent(MessageContext synCtx,
             org.apache.axis2.context.MessageContext axis2MessageContext, String pathParameter) {
 
-        DataHandler dataHandler = downloadRegistryFiles(pathParameter);
+        DataHandler dataHandler = downloadRegistryFiles(pathParameter, synCtx);
         if (dataHandler != null) {
             try {
                 InputStream fileInput = dataHandler.getInputStream();
@@ -217,11 +217,13 @@ public class RegistryContentResource implements MiApiResource {
      * @param path  Registry path
      * @return      DataHandler object with registry content
      */
-    private DataHandler downloadRegistryFiles(String path) {
+    private DataHandler downloadRegistryFiles(String path, MessageContext messageContext) {
 
         ByteArrayDataSource bytArrayDS;
-        String carbonHomePath = Utils.getCarbonHome();
-        String registryPath = formatPath(carbonHomePath + File.separator + path);
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
+        String regRoot = microIntegratorRegistry.getRegRoot();
+        String registryPath = formatPath(regRoot + File.separator + path);
         File file = new File(registryPath);
         if (file.exists() && !file.isDirectory()) {
             try (InputStream is = new BufferedInputStream(new FileInputStream(registryPath))) {
@@ -251,7 +253,7 @@ public class RegistryContentResource implements MiApiResource {
 
         JSONObject jsonBody;
         String pathWithPrefix = getRegistryPathPrefix(validatedPath);
-        if (isRegistryExist(validatedPath)) {
+        if (isRegistryExist(validatedPath, messageContext)) {
             jsonBody = Utils.createJsonError("Registry already exists. Can not POST an existing registry",
                     axis2MessageContext, BAD_REQUEST);
         } else if (Objects.nonNull(pathWithPrefix)) {
@@ -289,7 +291,8 @@ public class RegistryContentResource implements MiApiResource {
         info.put(REGISTRY_RESOURCE_NAME, name);
 
         JSONObject jsonBody = new JSONObject();
-        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
         if (Objects.nonNull(contentType) && contentType.contains(CONTENT_TYPE_MULTIPART_FORM_DATA)) {
             byte[] fileContent = getPayloadFromMultipart(messageContext);
             if (Objects.nonNull(fileContent)) {
@@ -330,7 +333,7 @@ public class RegistryContentResource implements MiApiResource {
 
         JSONObject jsonBody;
         String pathWithPrefix = getRegistryPathPrefix(validatedPath);
-        if (!isRegistryExist(validatedPath)) {
+        if (!isRegistryExist(validatedPath, messageContext)) {
             jsonBody = Utils.createJsonError("Registry does not exists in the path: " + registryPath,
                     axis2MessageContext, BAD_REQUEST);
         } else if (Objects.nonNull(pathWithPrefix)) {
@@ -363,7 +366,8 @@ public class RegistryContentResource implements MiApiResource {
         info.put(REGISTRY_RESOURCE_NAME, name);
 
         JSONObject jsonBody = new JSONObject();
-        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
         if (Objects.nonNull(contentType) && contentType.contains(CONTENT_TYPE_MULTIPART_FORM_DATA)) {
             byte[] fileContent = getPayloadFromMultipart(messageContext);
             if (Objects.nonNull(fileContent)) {
@@ -404,7 +408,7 @@ public class RegistryContentResource implements MiApiResource {
 
         JSONObject jsonBody;
         String pathWithPrefix = getRegistryPathPrefix(validatedPath);
-        if (!isRegistryExist(validatedPath)) {
+        if (!isRegistryExist(validatedPath, messageContext)) {
             jsonBody = Utils.createJsonError("Registry does not exists in the path: " + registryPath,
                     axis2MessageContext, BAD_REQUEST);
         } else if (Objects.nonNull(pathWithPrefix)) {
@@ -433,11 +437,12 @@ public class RegistryContentResource implements MiApiResource {
         }
         String name = getResourceName(registryPath);
         info.put(REGISTRY_RESOURCE_NAME, name);
-        MicroIntegratorRegistry microIntegratorRegistry = new MicroIntegratorRegistry();
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
 
         for (int i = 0; i < MAXIMUM_RETRY_COUNT; i++) {
             microIntegratorRegistry.delete(registryPath);
-            if (!isRegistryExist(validatedPath)) {
+            if (!isRegistryExist(validatedPath, messageContext)) {
                 JSONObject jsonBody = new JSONObject();
                 jsonBody.put("message", "Successfully deleted the registry resource");
                 AuditLogger.logAuditMessage(performedBy, AUDIT_LOG_TYPE_REGISTRY_RESOURCE,
