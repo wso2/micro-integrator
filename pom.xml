@@ -1562,7 +1562,7 @@
         <orbit.version.poi.ooxml>3.17.0.wso2v1</orbit.version.poi.ooxml>
         <org.wso2.json.version>3.0.0.wso2v1</org.wso2.json.version>
         <version.equinox.http.servlet>1.1.400.v20130418-1354</version.equinox.http.servlet>
-        <version.tomcat>9.0.58</version.tomcat>
+        <version.tomcat>9.0.70</version.tomcat>
         <orbit.version.tomcat.jsp.api>${version.tomcat}.wso2v1</orbit.version.tomcat.jsp.api>
         <orbit.version.tomcat.el.api>${version.tomcat}.wso2v1</orbit.version.tomcat.el.api>
         <orbit.version.tomcat.servlet.api>${version.tomcat}.wso2v1</orbit.version.tomcat.servlet.api>
