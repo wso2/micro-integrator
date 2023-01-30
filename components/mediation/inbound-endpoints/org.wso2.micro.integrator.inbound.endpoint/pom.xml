@@ -204,11 +204,11 @@
                             org.wso2.carbon.inbound.endpoint.protocol.grpc ; version="${project.version}"
                         </Export-Package>
                         <Private-Package>
-                            io.grpc.* ; version="${grpc.version}",
+                            io.grpc.* ; version="${grpc.version}";-split-package:=merge-first,
                             io.grpc.netty.shaded.io.* ; version="${grpc.version}",
                             io.opencensus.*,
                             org.wso2.carbon.inbound.endpoint.* ; version="${project.version}",
-                            com.google.* ; version="${google.guava.version}"
+                            com.google.* ; version="${google.guava.version}";-split-package:=merge-first
                         </Private-Package>
                         <Import-Package>
                             org.wso2.carbon.inbound.endpoint.persistence,
