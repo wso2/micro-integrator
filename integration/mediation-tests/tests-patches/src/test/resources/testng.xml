@@ -64,6 +64,7 @@
             <class name="org.wso2.carbon.esb.mediators.cache.DistributedCachingHeaderSerializationTestcase"/>
             <!--class name="org.wso2.carbon.esb.mediators.cache.ESBJAVA4318Testcase"/-->
             <class name="org.wso2.carbon.esb.mediators.rule.ESBJAVA2506RuleFetchFromRegistryFailsForTheFirstTime"/>
+            <class name="org.wso2.carbon.esb.mediators.script.ScriptMediatorWithImports"/>
         </classes>
     </test>
 
