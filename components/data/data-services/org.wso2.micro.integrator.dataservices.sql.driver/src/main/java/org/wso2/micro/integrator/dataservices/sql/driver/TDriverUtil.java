@@ -121,7 +121,7 @@ public class TDriverUtil {
             Cell header = cellItr.next();
             ColumnInfo column = new ColumnInfo(header.getStringCellValue());
             column.setTableName(tableName);
-            column.setSqlType(header.getCellType());
+            column.setSqlType(header.getCellType().getCode());
             column.setId(header.getColumnIndex());
 
             columns.add(column);

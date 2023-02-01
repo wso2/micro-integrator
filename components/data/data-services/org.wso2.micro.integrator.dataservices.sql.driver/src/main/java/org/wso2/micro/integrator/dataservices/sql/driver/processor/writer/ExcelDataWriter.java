@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.ss.usermodel.Cell;
 import org.wso2.micro.integrator.dataservices.sql.driver.TExcelConnection;
 import org.wso2.micro.integrator.dataservices.sql.driver.processor.reader.DataCell;
 import org.wso2.micro.integrator.dataservices.sql.driver.processor.reader.DataRow;
@@ -60,21 +59,4 @@ public class ExcelDataWriter implements DataWriter {
     public Map<String, DataTable> getData() {
         return data;
     }
-
-    private void commitCell(DataCell cell) {
-        int cellType = cell.getCellType();
-        switch(cellType) {
-            case Cell.CELL_TYPE_NUMERIC:
-
-            case Cell.CELL_TYPE_BLANK:
-            case Cell.CELL_TYPE_FORMULA:
-            case Cell.CELL_TYPE_STRING:
-
-            case Cell.CELL_TYPE_BOOLEAN:
-
-            default:
-
-        }
-    }
-    
 }

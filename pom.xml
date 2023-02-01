@@ -1686,7 +1686,7 @@
         <opencsv.orbit.version>1.8.wso2v1</opencsv.orbit.version>
         <opencsv.orbit.imp.pkg.version>0.0.0</opencsv.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([1.8.wso2v1,1.9)) after osgi bundle was corrected -->
 
-        <poi-ooxml.orbit.version>3.17.0.wso2v1</poi-ooxml.orbit.version>
+        <poi-ooxml.orbit.version>5.2.3.wso2v1</poi-ooxml.orbit.version>
         <poi-ooxml.orbit.imp.pkg.version>0.0.0</poi-ooxml.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0.wso2v3,4.0.0)) after osgi bundle is corrected - rajith-->
 
         <commons-collections4.orbit.version>4.4.wso2v1</commons-collections4.orbit.version>
@@ -1745,7 +1745,7 @@
         <google-oauth-client.orbit.version>1.33.3.wso2v1</google-oauth-client.orbit.version>
         <google-oauth-client.orbit.imp.pkg.version>[1.33.1,2.0)</google-oauth-client.orbit.imp.pkg.version>
 
-        <poi.orbit.version>3.17.0.wso2v1</poi.orbit.version>
+        <poi.orbit.version>5.2.3.wso2v1</poi.orbit.version>
         <poi.orbit.imp.pkg.version>0.0.0</poi.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0,4.0.0)) after osgi bundle is corrected - rajith-->
 
         <google-api-client.orbit.version>1.33.1.wso2v1</google-api-client.orbit.version>
