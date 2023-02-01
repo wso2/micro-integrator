@@ -1751,7 +1751,7 @@
         <google-api-client.orbit.version>1.33.1.wso2v1</google-api-client.orbit.version>
         <google-api-client.orbit.imp.pkg.version>[1.33.1,2.0)</google-api-client.orbit.imp.pkg.version>
 
-        <olingo.orbit.version>4.4.0.wso2v3</olingo.orbit.version>
+        <olingo.orbit.version>4.8.0.wso2v1</olingo.orbit.version>
 
         <bson4jackson.orbit.version>2.9.0</bson4jackson.orbit.version>
 
