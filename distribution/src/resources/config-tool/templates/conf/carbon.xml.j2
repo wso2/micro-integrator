@@ -89,8 +89,11 @@
     <!--
        Webapp context root of WSO2 Carbon management console.
     -->
+    {% if server.web_context_root is defined %}
+    <WebContextRoot>{{ server.web_context_root }}</WebContextRoot>
+    {% else %}
     <WebContextRoot>/</WebContextRoot>
-
+    {% endif %}
     <!--
     	Proxy context path is a useful parameter to add a proxy path when a Carbon server is fronted by reverse proxy. In addtion
         to the proxy host and proxy port this parameter allows you add a path component to external URLs. e.g.
