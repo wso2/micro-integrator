@@ -1420,6 +1420,16 @@
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.io.grpc</groupId>
+                <artifactId>grpc-context</artifactId>
+                <version>${grpc-context.orbit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.io.opencensus</groupId>
+                <artifactId>opencensus</artifactId>
+                <version>${opencensus.orbit.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1739,7 +1749,7 @@
 
         <olingo.orbit.imp.pkg.version>[4.4,5)</olingo.orbit.imp.pkg.version>
 
-        <google-http-client.orbit.version>1.41.2.wso2v1</google-http-client.orbit.version>
+        <google-http-client.orbit.version>1.41.2.wso2v2</google-http-client.orbit.version>
         <google-http-client.orbit.imp.pkg.version>[1.41.2,2.0)</google-http-client.orbit.imp.pkg.version>
 
         <google-oauth-client.orbit.version>1.33.3.wso2v1</google-oauth-client.orbit.version>
@@ -1748,7 +1758,7 @@
         <poi.orbit.version>3.17.0.wso2v1</poi.orbit.version>
         <poi.orbit.imp.pkg.version>0.0.0</poi.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0,4.0.0)) after osgi bundle is corrected - rajith-->
 
-        <google-api-client.orbit.version>1.33.1.wso2v1</google-api-client.orbit.version>
+        <google-api-client.orbit.version>1.33.1.wso2v2</google-api-client.orbit.version>
         <google-api-client.orbit.imp.pkg.version>[1.33.1,2.0)</google-api-client.orbit.imp.pkg.version>
 
         <olingo.orbit.version>4.4.0.wso2v3</olingo.orbit.version>
@@ -1839,6 +1849,8 @@
         <openjdk.nashorn.version>15.3</openjdk.nashorn.version>
         <ow2.asm.version>9.2</ow2.asm.version>
         <jsoup.version>1.15.1</jsoup.version>
+        <grpc-context.orbit.version>1.27.2.wso2v1</grpc-context.orbit.version>
+        <opencensus.orbit.version>0.30.0.wso2v1</opencensus.orbit.version>
     </properties>
 
     <repositories>
