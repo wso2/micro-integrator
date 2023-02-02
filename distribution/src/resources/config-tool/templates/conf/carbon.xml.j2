@@ -89,8 +89,8 @@
     <!--
        Webapp context root of WSO2 Carbon management console.
     -->
-    {% if server.webcontexroot is defined %}
-    <WebContextRoot>{{ server.webcontexroot }}</WebContextRoot>
+    {% if server.web_context_root is defined %}
+    <WebContextRoot>{{ server.web_context_root }}</WebContextRoot>
     {% else %}
     <WebContextRoot>/</WebContextRoot>
     {% endif %}
