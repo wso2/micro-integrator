@@ -1420,6 +1420,16 @@
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.io.grpc</groupId>
+                <artifactId>grpc-context</artifactId>
+                <version>${grpc-context.orbit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.io.opencensus</groupId>
+                <artifactId>opencensus</artifactId>
+                <version>${opencensus.orbit.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1515,9 +1525,9 @@
         <com.sun.jaxb.version>2.3.0</com.sun.jaxb.version>
         <com.sun.jaxb.impl.version>2.3.1</com.sun.jaxb.impl.version>
 
-        <synapse.version>4.0.0-wso2v9</synapse.version>
+        <synapse.version>4.0.0-wso2v14</synapse.version>
         <imp.pkg.version.synapse>[4.0.0, 4.0.1)</imp.pkg.version.synapse>
-        <carbon.mediation.version>4.7.153</carbon.mediation.version>
+        <carbon.mediation.version>4.7.165</carbon.mediation.version>
         <carbon.crypto.version>1.1.3</carbon.crypto.version>
         <carbon.crypto.api.imp.pkg.version.range>[1.1.0,1.2.0)</carbon.crypto.api.imp.pkg.version.range>
         <carbon.data.version>4.5.2</carbon.data.version>
@@ -1633,7 +1643,7 @@
         <google.guava.version>31.0.1-jre</google.guava.version>
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
         <junit.version>4.8.2</junit.version>
-        <netty.version>4.1.79.Final</netty.version>
+        <netty.version>4.1.86.Final</netty.version>
         <netty.tcnative.version>2.0.53.Final</netty.tcnative.version>
         <jacoco.agent.version>0.8.8</jacoco.agent.version>
         <activemq.version>5.2.0</activemq.version>
@@ -1654,7 +1664,7 @@
         <imp.package.version.osgi.services>[1.2.0,2.0.0)</imp.package.version.osgi.services>
 
         <org.apache.bsf.wso2.version>3.0.0.wso2v5</org.apache.bsf.wso2.version>
-        <rhino.wso2.js.version>1.7.14.wso2v1</rhino.wso2.js.version>
+        <rhino.wso2.js.version>1.7.13.wso2v1</rhino.wso2.js.version>
         <org.apache.velocity.version>2.3</org.apache.velocity.version>
 
         <javax.servlet.version>3.0.0.v201112011016</javax.servlet.version>
@@ -1739,7 +1749,7 @@
 
         <olingo.orbit.imp.pkg.version>[4.4,5)</olingo.orbit.imp.pkg.version>
 
-        <google-http-client.orbit.version>1.41.2.wso2v1</google-http-client.orbit.version>
+        <google-http-client.orbit.version>1.41.2.wso2v2</google-http-client.orbit.version>
         <google-http-client.orbit.imp.pkg.version>[1.41.2,2.0)</google-http-client.orbit.imp.pkg.version>
 
         <google-oauth-client.orbit.version>1.33.3.wso2v1</google-oauth-client.orbit.version>
@@ -1748,7 +1758,7 @@
         <poi.orbit.version>3.17.0.wso2v1</poi.orbit.version>
         <poi.orbit.imp.pkg.version>0.0.0</poi.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0,4.0.0)) after osgi bundle is corrected - rajith-->
 
-        <google-api-client.orbit.version>1.33.1.wso2v1</google-api-client.orbit.version>
+        <google-api-client.orbit.version>1.33.1.wso2v2</google-api-client.orbit.version>
         <google-api-client.orbit.imp.pkg.version>[1.33.1,2.0)</google-api-client.orbit.imp.pkg.version>
 
         <olingo.orbit.version>4.4.0.wso2v3</olingo.orbit.version>
@@ -1839,6 +1849,8 @@
         <openjdk.nashorn.version>15.3</openjdk.nashorn.version>
         <ow2.asm.version>9.2</ow2.asm.version>
         <jsoup.version>1.15.3</jsoup.version>
+        <grpc-context.orbit.version>1.27.2.wso2v1</grpc-context.orbit.version>
+        <opencensus.orbit.version>0.30.0.wso2v1</opencensus.orbit.version>
     </properties>
 
     <repositories>

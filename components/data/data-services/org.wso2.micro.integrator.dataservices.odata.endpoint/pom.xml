@@ -91,7 +91,7 @@
                             !org.wso2.micro.integrator.dataservices.odata.endpoint.internal,
                             org.wso2.micro.integrator.dataservices.odata.endpoint.*;version="${project.version}",
                             org.wso2.caching.*; version="${wso2.caching.version}",
-                            org.apache.http.protocol.*; version="${apache.http.protocol.version}",
+                            org.apache.http.protocol.*; version="${apache.http.protocol.version}";-split-package:=merge-first,
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.micro.integrator.dataservices.odata.endpoint.*,

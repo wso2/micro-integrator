@@ -430,87 +430,22 @@
     <!-- ================================================= -->
     <!-- Phases  -->
     <!-- ================================================= -->
-    <phaseOrder type="InFlow">
-        <!--  System pre defined phases       -->
-        <phase name="Transport">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
-                <order phase="Transport"/>
-            </handler>
-            <handler name="SOAPActionBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
-                <order phase="Transport"/>
-            </handler>
-        </phase>
-        <phase name="Addressing">
-             <handler name="AddressingBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.AddressingBasedDispatcher">
-                 <order phase="Addressing"/>
-            </handler>
-        </phase>
-        <phase name="Security"/>
-        <phase name="PreDispatch"/>
-        <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"/>
-            <handler name="SOAPActionBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"/>
-            <handler name="RequestURIOperationDispatcher"
-                     class="org.apache.axis2.dispatchers.RequestURIOperationDispatcher"/>
-            <handler name="SOAPMessageBodyBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher"/>
-
-            <handler name="HTTPLocationBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"/>
-        </phase>
-        <phase name="RMPhase"/>
-        <!--  System predefined phases       -->
-        <!--   After Postdispatch phase module author or service author can add any phase he want      -->
-        <phase name="OperationInPhase"/>
-        <phase name="soapmonitorPhase"/>
-    </phaseOrder>
-    <phaseOrder type="OutFlow">
-        <!--      user can add his own phases to this area  -->
-        <phase name="soapmonitorPhase"/>
-        <phase name="OperationOutPhase"/>
-        <!--system predefined phase-->
-        <!--these phase will run irrespective of the service-->
-        <phase name="RMPhase"/>
-        <phase name="PolicyDetermination"/>
-        <phase name="MessageOut"/>
-        <phase name="Security"/>
-    </phaseOrder>
-    <phaseOrder type="InFaultFlow">
-        <phase name="Addressing">
-             <handler name="AddressingBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.AddressingBasedDispatcher">
-                 <order phase="Addressing"/>
-            </handler>
-        </phase>
-        <phase name="Security"/>
-        <phase name="PreDispatch"/>
-        <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"/>
-            <handler name="SOAPActionBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"/>
-            <handler name="RequestURIOperationDispatcher"
-                     class="org.apache.axis2.dispatchers.RequestURIOperationDispatcher"/>
-            <handler name="SOAPMessageBodyBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher"/>
-
-            <handler name="HTTPLocationBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"/>
-        </phase>
-        <phase name="RMPhase"/>
-        <!--      user can add his own phases to this area  -->
-        <phase name="OperationInFaultPhase"/>
-        <phase name="soapmonitorPhase"/>
-    </phaseOrder>
-    <phaseOrder type="OutFaultFlow">
-        <!--      user can add his own phases to this area  -->
-        <phase name="soapmonitorPhase"/>
-        <phase name="OperationOutFaultPhase"/>
-        <phase name="RMPhase"/>
-        <phase name="PolicyDetermination"/>
-        <phase name="MessageOut"/>
-        <phase name="Security"/>
-    </phaseOrder>
+    {% for phaseOrder in transport.blocking.phase_order %}
+           <phaseOrder type="{{phaseOrder.phase_type}}">
+               {% for phase in phaseOrder.phases %}
+               <phase name="{{phase.phase_name}}" {% if phase.phase_class is defined %} class="{{phase.phase_class}}"{% endif %}>
+                   {% for handler in phase.handlers %}
+                   <handler name="{{handler.handler_name}}" class="{{handler.handler_class}}">
+                       {% if handler.handler_order_phase is defined %}
+                       <order {% if handler.handler_order_phase is defined %} phase = "{{handler.handler_order_phase}}" {% endif %} {% if handler.order_before is defined %} before = "{{handler.order_before}}"{% endif %} {% if handler.order_after is defined %} after = "{{handler.order_after}}"{% endif %} {% if handler.order_phase_first is defined %} phaseFirst = "{{handler.order_phase_first}}"{% endif %} {% if handler.order_phase_last is defined %} phaseLast = "{{handler.order_phase_last}}"{% endif %} />
+                       {% endif %}
+                       {% for handler_handler in handler.handler_handlers %}
+                       <handler name="{{handler_handler.handler_name}}" class="{{handler_handler.handler_class}}" />
+                       {% endfor %}
+                   </handler>
+                   {% endfor %}
+               </phase>
+               {% endfor %}
+           </phaseOrder>
+       {% endfor %}
 </axisconfig>
