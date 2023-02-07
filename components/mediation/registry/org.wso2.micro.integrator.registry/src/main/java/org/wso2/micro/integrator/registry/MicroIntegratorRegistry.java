@@ -1483,7 +1483,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                         childArray.put(childJSONObject);
                     } else if (childNode.endsWith(PROPERTY_EXTENTION)) {
                         String propertyOwner = childNode.replace(PROPERTY_EXTENTION, "");
-                        if (!Arrays.asList(childNodes).contains(propertyOwner)) {
+                        if (Arrays.asList(childNodes).contains(propertyOwner)) {
                             JSONObject childJSONObject = new JSONObject();
                             File childFile = new File(node, propertyOwner);
                             childJSONObject.put(NAME_KEY, childNode);

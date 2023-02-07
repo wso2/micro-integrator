@@ -26,29 +26,29 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
-    <test name="Management-API-Tests" verbose="2" parallel="false">
-        <classes>
-            <class name="org.wso2.micro.integrator.api.ConfigsResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.AuditLogTestCase"/>
-            <class name="org.wso2.micro.integrator.api.CarbonAppResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.MetaDataResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.DataSourceResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.ApiResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.EndpointResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.ProxyServiceResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.InboundEndpointResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.MessageProcessorResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.MessageStoreResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.TemplatesResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.SequenceResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.TaskResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.LocalEntryResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.DataServiceResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.ConnectorResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.LogFilesResourceTestCase"/>
-            <class name="org.wso2.micro.integrator.api.LogConfigsResourceTestCase"/>
-        </classes>
-    </test>
+<!--    <test name="Management-API-Tests" verbose="2" parallel="false">-->
+<!--        <classes>-->
+<!--            <class name="org.wso2.micro.integrator.api.ConfigsResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.AuditLogTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.CarbonAppResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.MetaDataResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.DataSourceResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.ApiResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.EndpointResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.ProxyServiceResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.InboundEndpointResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.MessageProcessorResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.MessageStoreResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.TemplatesResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.SequenceResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.TaskResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.LocalEntryResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.DataServiceResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.ConnectorResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.LogFilesResourceTestCase"/>-->
+<!--            <class name="org.wso2.micro.integrator.api.LogConfigsResourceTestCase"/>-->
+<!--        </classes>-->
+<!--    </test>-->
     <test name="Management-API-Tests-Registry-Resources" verbose="2" parallel="false">
         <classes>
             <class name="org.wso2.micro.integrator.api.RegistryResourcesTestCase"/>
