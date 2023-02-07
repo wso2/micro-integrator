@@ -1392,8 +1392,12 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
      * @return converted file path
      */
     private String getChildPath(String registryPath, String carbonHomePath) {
-
-        String resolvedRegKeyPath = registryPath.replace(carbonHomePath + URL_SEPARATOR, "");
+        String resolvedRegKeyPath;
+        if (carbonHomePath.endsWith(URL_SEPARATOR)) {
+            resolvedRegKeyPath = registryPath.replace(carbonHomePath, "");
+        } else {
+            resolvedRegKeyPath = registryPath.replace(carbonHomePath + URL_SEPARATOR, "");
+        }
         if (resolvedRegKeyPath.startsWith(CONFIGURATION_REGISTRY_PATH)) {
             resolvedRegKeyPath = resolvedRegKeyPath.replace(CONFIGURATION_REGISTRY_PATH, CONFIG_REGISTRY_PREFIX);
         } else if (resolvedRegKeyPath.startsWith(GOVERNANCE_REGISTRY_PATH)) {
