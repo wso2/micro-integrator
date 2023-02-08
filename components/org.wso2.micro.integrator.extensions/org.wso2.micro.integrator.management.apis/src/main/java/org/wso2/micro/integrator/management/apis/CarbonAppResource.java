@@ -172,16 +172,14 @@ public class CarbonAppResource extends APIResource {
             jsonBody = new JSONObject();
             jsonBody.put("error", "Error while getting the Carbon Faulty Application List");
         } else {
-            int listLength = appList.size() + faultyAppList.size();
-            jsonBody = Utils.createJSONList(listLength);
+            jsonBody = Utils.createCAppJSONList(appList.size(), faultyAppList.size());
             for (CarbonApplication app : appList) {
                 JSONObject appObject = convertCarbonAppToJsonObject(app);
-                jsonBody.getJSONArray(LIST).put(appObject);
+                jsonBody.getJSONArray(Constants.ACTIVE_LIST).put(appObject);
             }
             for (CarbonApplication faultyApp : faultyAppList) {
-
                 JSONObject appObject = convertCarbonAppToJsonObject(faultyApp);
-                jsonBody.getJSONArray(LIST).put(appObject);
+                jsonBody.getJSONArray(Constants.FAULTY_LIST).put(appObject);
             }
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
