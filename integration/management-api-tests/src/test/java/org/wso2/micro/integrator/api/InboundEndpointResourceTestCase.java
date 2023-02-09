@@ -31,8 +31,9 @@ public class InboundEndpointResourceTestCase extends ManagementAPITest {
     @Test(groups = {"wso2.esb"}, description = "Test get Inbound Endpoints resource")
     public void retrieveInboundEPs() throws IOException {
         JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
-        verifyResourceCount(jsonResponse, 1);
+        verifyResourceCount(jsonResponse, 2);
         verifyResourceInfo(jsonResponse, new String[]{"HL7_Inbound"});
+        verifyResourceInfo(jsonResponse, new String[]{"testInboundEndpoint"});
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test get Inbound Endpoints resource for search key")
