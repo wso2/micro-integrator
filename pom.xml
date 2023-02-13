@@ -1545,7 +1545,7 @@
 
         <carbon.analytics.common.version>5.2.50</carbon.analytics.common.version>
         <carbon.analytics.common.imp.pkg.version>[5.2.0, 6.0.0)</carbon.analytics.common.imp.pkg.version>
-        <fasterxml.jackson.version>2.14.1</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.13.5</fasterxml.jackson.version>
         <carbon.commons.version>4.7.49</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
