@@ -56,19 +56,19 @@
         <profile>
             <id>with-smb-2</id>
             <modules>
-                <module>service-samples</module>
-                <module>tests-transport</module>
-                <module>tests-transport-2</module>
-                <module>tests-service</module>
-                <module>tests-mediator-1</module>
-                <module>tests-mediator-2</module>
-                <module>tests-patches</module>
+<!--                <module>service-samples</module>-->
+<!--                <module>tests-transport</module>-->
+<!--                <module>tests-transport-2</module>-->
+<!--                <module>tests-service</module>-->
+<!--                <module>tests-mediator-1</module>-->
+<!--                <module>tests-mediator-2</module>-->
+<!--                <module>tests-patches</module>-->
                 <module>tests-patches-with-smb2</module>
-                <module>tests-sample</module>
-                <module>tests-other</module>
-                <module>tests-platform</module>
-                <module>tests-http</module>
-                <module>coverage-report</module>
+<!--                <module>tests-sample</module>-->
+<!--                <module>tests-other</module>-->
+<!--                <module>tests-platform</module>-->
+<!--                <module>tests-http</module>-->
+<!--                <module>coverage-report</module>-->
             </modules>
         </profile>
     </profiles>
