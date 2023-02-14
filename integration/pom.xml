@@ -879,12 +879,12 @@
         <profile>
             <id>with-smb-2</id>
             <modules>
-<!--                <module>samples/product</module>-->
+                <module>samples/product</module>
                 <module>automation-extensions</module>
                 <module>tests-common</module>
                 <module>mediation-tests</module>
-<!--                <module>dataservice-hosting-tests</module>-->
-<!--                <module>management-api-tests</module>-->
+                <module>dataservice-hosting-tests</module>
+                <module>management-api-tests</module>
             </modules>
         </profile>
         <profile>
@@ -945,14 +945,14 @@
                     -->
             <id>full</id>
             <modules>
-<!--                <module>samples/product</module>-->
+                <module>samples/product</module>
                 <module>automation-extensions</module>
                 <module>tests-common</module>
                 <module>mediation-tests</module>
 <!--                Commenting out since micli is no longer usable with MI. Need to use apictl instead-->
 <!--                <module>cli-tests</module>-->
-<!--                <module>dataservice-hosting-tests</module>-->
-<!--                <module>management-api-tests</module>-->
+                <module>dataservice-hosting-tests</module>
+                <module>management-api-tests</module>
             </modules>
         </profile>
         <profile>
