@@ -40,9 +40,11 @@
        export PASSWORD="the user password"
        -->
     <test name="VFS SMB2 tests" preserve-order="true" verbose="2">
-           <packages>
-               <package name="org.wso2.carbon.esb.vfs.transport.test.connection.failure"/>
-           </packages>
+           <classes>
+               <class name="org.wso2.carbon.esb.vfs.transport.test.connection.failure.SMB2FileTransferResumingTestCaseWithMultipleProxyAfterConResetNServerReset"/>
+               <class name="org.wso2.carbon.esb.vfs.transport.test.connection.failure.SMB2FileTransferResumingTestCaseAfterConnectionFailureToSambaServer"/>
+               <class name="org.wso2.carbon.esb.vfs.transport.test.connection.failure.SMB2FileTransferTestCase"/>
+           </classes>
     </test>
 
 </suite>
