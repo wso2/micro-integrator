@@ -639,7 +639,7 @@
   "prometheus_api.authorization_handler.enable": false,
 
   "readiness_probe.protocols": "http",
-
+  "liveness_probe.protocols": "http",
   "management_api.protocols": "https http",
   "management_api.jwt_token_security_handler.enable": "true",
   "management_api.jwt_token_security_handler.token_store_config.max_size": "200",
