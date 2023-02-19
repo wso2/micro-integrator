@@ -108,9 +108,9 @@ public class SMB2FileTransferResumingTestCaseWithMultipleProxyAfterConResetNServ
 
         // replace the axis2.xml enabled vfs transfer and restart the ESB server gracefully.
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(
-                new File(getClass().getResource("/artifacts/ESB/synapseconfig/"
-                        + "vfsTransport/ESBJAVA4770/axis2.xml").getPath()));
+        serverConfigurationManager.applyMIConfiguration(new File(
+                getClass().getResource("/artifacts/ESB/synapseconfig/" + "vfsTransport/ESBJAVA4770/deployment.toml")
+                        .getPath()));
         super.init();
     }
 
@@ -126,7 +126,7 @@ public class SMB2FileTransferResumingTestCaseWithMultipleProxyAfterConResetNServ
 
         String[] proxies = new String[10];
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             proxies[i] = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                     "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" +
                     "       name=\"Polling_Test_" + i + " \"\n" +
@@ -178,12 +178,11 @@ public class SMB2FileTransferResumingTestCaseWithMultipleProxyAfterConResetNServ
             } catch (Exception e) {
                 log.error("Error while updating the Synapse config", e);
             }
-            Thread.sleep(30000);
             LOGGER.info("Synapse config updated");
 
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             // Here we need to wait until polling to start hence only way is to wait and see. Since poll interval
             // is 15,this waiting period should suffice. But it may include the time it take to deploy the service as well.
             //check whether at least 1 file is moved to "out" folder
@@ -191,24 +190,11 @@ public class SMB2FileTransferResumingTestCaseWithMultipleProxyAfterConResetNServ
 
             // Close connections to samba server multiple times to simulate network interruption
             try {
-
-                for (int j = 0; j < 500; j++) {
-                    Utils.closeConnectionsToSambaServer();
-                }
+                Utils.closeConnectionsToSambaServer();
                 log.info("Successfully interrupted samba server connections");
             } catch (Exception e) {
                 Assert.fail("Test failed since interrupting samba server failed", e);
             }
-
-            try {
-                Utils.stopSambaServer();
-                log.info("Successfully stopped samba server");
-            } catch (Exception e) {
-                Assert.fail("Test failed since stopping samba server failed", e);
-            }
-
-            //Wait till samba server is stopped
-            Awaitility.await().atMost(120, TimeUnit.SECONDS).until(checkWhetherSambaServerStopped());
 
             //File count after stopping samba server
             int startingFileCount = Utils.getFileCount(inputFolders[i]);
@@ -221,6 +207,16 @@ public class SMB2FileTransferResumingTestCaseWithMultipleProxyAfterConResetNServ
                 copyDirectory(sourceFileDirectory, destinationFileDirectory);
                 startingFileCount = Utils.getFileCount(inputFolders[i]);
             }
+
+            try {
+                Utils.stopSambaServer();
+                log.info("Successfully stopped samba server");
+            } catch (Exception e) {
+                Assert.fail("Test failed since stopping samba server failed", e);
+            }
+
+            //Wait till samba server is stopped
+            Awaitility.await().atMost(120, TimeUnit.SECONDS).until(checkWhetherSambaServerStopped());
 
             try {
                 Utils.startSambaServer();

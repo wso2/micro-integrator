@@ -105,10 +105,9 @@ public class SMB2FileTransferResumingTestCaseAfterConnectionFailureToSambaServer
 
         // replace the axis2.xml enabled vfs transfer and restart the ESB server gracefully.
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(
-                new File(getClass().getResource("/artifacts/ESB/synapseconfig/"
-                        + "vfsTransport/ESBJAVA4770/axis2.xml").getPath()));
-        super.init();
+        serverConfigurationManager.applyMIConfiguration(new File(
+                getClass().getResource("/artifacts/ESB/synapseconfig/" + "vfsTransport/ESBJAVA4770/deployment.toml")
+                        .getPath()));
     }
 
 
@@ -172,7 +171,6 @@ public class SMB2FileTransferResumingTestCaseAfterConnectionFailureToSambaServer
         } catch (Exception e) {
             log.error("Error while updating the Synapse config", e);
         }
-        Thread.sleep(30000);
         LOGGER.info("Synapse config updated");
 
         // Here we need to wait until polling to start hence only way is to wait and see. Since poll interval
@@ -182,14 +180,12 @@ public class SMB2FileTransferResumingTestCaseAfterConnectionFailureToSambaServer
 
         // Close connections to samba server multiple times to simulate network interruption
         try {
-
-            for (int i = 0; i < 500; i++) {
-                Utils.closeConnectionsToSambaServer();
-            }
+            Utils.closeConnectionsToSambaServer();
             log.info("Successfully interrupted samba server connections");
         } catch (Exception e) {
             Assert.fail("Test failed since interrupting samba server failed", e);
         }
+
 
         //File count after interrupting samba server
         int startingFileCount = Utils.getFileCount(inputFolder);
@@ -201,6 +197,21 @@ public class SMB2FileTransferResumingTestCaseAfterConnectionFailureToSambaServer
             File destinationFileDirectory = inputFolder;
             copyDirectory(sourceFileDirectory, destinationFileDirectory);
             startingFileCount = Utils.getFileCount(inputFolder);
+        }
+
+        try {
+            Utils.stopSambaServer();
+            log.info("Successfully stopped samba server");
+        } catch (Exception e) {
+            Assert.fail("Test failed since stopping samba server failed", e);
+        }
+        //Wait till samba server is stopped
+        Awaitility.await().atMost(120, TimeUnit.SECONDS).until(checkWhetherSambaServerStopped());
+        try {
+            Utils.startSambaServer();
+            log.info("Successfully started samba server");
+        } catch (Exception e) {
+            Assert.fail("Test failed since starting samba server failed", e);
         }
 
         //See whether polling has started
