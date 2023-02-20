@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -26,7 +26,6 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
-import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +38,6 @@ public class LivenessResource extends APIResource {
     private static final Log log = LogFactory.getLog(LivenessResource.class);
     private static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     private static final String HTTP_SC = "HTTP_SC";
-    public static final String UPDATE_LEVEL = "UPDATE_LEVEL";
 
     /**
      * Constructor for creating an API Resource.
@@ -70,15 +68,7 @@ public class LivenessResource extends APIResource {
         // Sending a response body for a GET request
         axisCtx.removeProperty(NO_ENTITY_BODY);
 
-        String response = "";
-
-        // appending MI server version number to the response
-        CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
-        String miVersion = serverConfig.getServerVersion();
-        response = "{\"version\":\"" + miVersion + "\", \"update_level\":\"" + System.getProperty(UPDATE_LEVEL) +
-                "\", ";
-
-        response += "\"server\" : \"started\"}";
+        String response = "{\"server\" : \"started\"}";
         int responseCode = 200;
 
         try {
