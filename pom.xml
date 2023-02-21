@@ -1533,7 +1533,7 @@
         <carbon.data.version>4.5.2</carbon.data.version>
         <securevault.version>1.1.2</securevault.version>
         <hashicorp.vault.version>5.1.0</hashicorp.vault.version>
-        <carbon.identity.oauth.version>6.1.0</carbon.identity.oauth.version>
+        <carbon.identity.oauth.version>6.8.0</carbon.identity.oauth.version>
         <carbon.identity.oauth.imp.pkg.version>[6.1.0, 7.0.0)</carbon.identity.oauth.imp.pkg.version>
 
         <!-- SAP adapter - sap transport feature version -->
