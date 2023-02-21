@@ -328,6 +328,7 @@ do
     -DavoidConfigHashRead=true \
     -Dproperties.file.path=default \
     -DenableReadinessProbe=true \
+    -DenableLivenessProbe=true \
     -DenableManagementApi=true \
     -DskipStartupExtensions=false \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \

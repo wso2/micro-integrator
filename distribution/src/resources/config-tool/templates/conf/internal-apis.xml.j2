@@ -55,6 +55,7 @@
             {% endif %}
         </api>
         <api name="ReadinessProbe" protocol="{{readiness_probe.protocols}}" class="org.wso2.micro.integrator.probes.ReadinessProbe"/>
+        <api name="LivenessProbe" protocol="{{liveness_probe.protocols}}" class="org.wso2.micro.integrator.probes.LivenessProbe"/>
         <api name="ManagementApi" protocol="{{management_api.protocols}}" class="org.wso2.micro.integrator.management.apis.ManagementInternalApi">
             <handlers>
                 {% if management_api.basic_security_handler.enable == true %}
