@@ -97,4 +97,6 @@ public class Constants {
     public static final String TRUST = "Trust";
     public static final String TRUST_MODULE = "rahas";
 
+    public static final String BOUNCY_CASTLE_PROVIDER = "BC";
+    public static final String BOUNCY_CASTLE_FIPS_PROVIDER = "BCFIPS";
 }

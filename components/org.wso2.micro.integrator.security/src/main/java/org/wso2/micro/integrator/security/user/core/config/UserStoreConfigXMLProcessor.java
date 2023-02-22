@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
+import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
@@ -452,17 +453,17 @@ public class UserStoreConfigXMLProcessor {
                 if (log.isDebugEnabled()) {
                     log.debug("Cipher transformation for decryption : " + cipherHolder.getTransformation());
                 }
-                keyStoreCipher = Cipher.getInstance(cipherHolder.getTransformation(), "BC");
+                keyStoreCipher = Cipher.getInstance(cipherHolder.getTransformation(), getJceProvider());
                 cipherTextBytes = cipherHolder.getCipherBase64Decoded();
             } else {
                 // If the ciphertext is not a self-contained, directly decrypt using transformation configured in
                 // carbon.properties file
-                keyStoreCipher = Cipher.getInstance(cipherTransformation, "BC");
+                keyStoreCipher = Cipher.getInstance(cipherTransformation, getJceProvider());
             }
         } else {
             // If reach here, user have removed org.wso2.CipherTransformation property or carbon.properties file
             // hence RSA is considered as default transformation
-            keyStoreCipher = Cipher.getInstance("RSA", "BC");
+            keyStoreCipher = Cipher.getInstance("RSA", getJceProvider());
         }
         keyStoreCipher.init(Cipher.DECRYPT_MODE, privateKey);
         return new String(keyStoreCipher.doFinal(cipherTextBytes), Charset.defaultCharset());
@@ -485,6 +486,19 @@ public class UserStoreConfigXMLProcessor {
             }
             return null;
         }
+    }
+
+    /**
+        * Get the JCE provider to be used.
+        *
+        * @return JCE provider
+        */
+    private String getJceProvider() {
+        String provider = CarbonServerConfigurationService.getInstance().getFirstProperty("JCEProvider");
+        if (provider == null && Constants.BOUNCY_CASTLE_FIPS_PROVIDER.equals(provider)) {
+            return Constants.BOUNCY_CASTLE_FIPS_PROVIDER;
+        }
+        return Constants.BOUNCY_CASTLE_PROVIDER;
     }
 
     /**
