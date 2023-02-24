@@ -85,6 +85,7 @@
   "synapse_properties.'opentelemetry.class'": "org.apache.synapse.aspects.flow.statistics.tracing.opentelemetry.management.JaegerTelemetryManager",
 
   "synapse_properties.'analytics.enabled'": false,
+  "synapse_properties.'analytics.publisher'": "log",
   "synapse_properties.'analytics.prefix'": "SYNAPSE_ANALYTICS_DATA",
   "synapse_properties.'analytics.id'": "$ref{server.hostname}",
   "synapse_properties.'analytics.api_analytics.enabled'": true,
