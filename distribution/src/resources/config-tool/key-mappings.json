@@ -505,6 +505,7 @@
   "custom_transport.sender:parameter.non_blocking": "custom_transport.sender:parameter.non-blocking",
 
   "analytics.enabled" : "synapse_properties.'analytics.enabled'",
+  "analytics.publisher":   "synapse_properties.'analytics.publisher'",
   "analytics.prefix" : "synapse_properties.'analytics.prefix'",
   "analytics.id" : "synapse_properties.'analytics.id'",
   "analytics.api_analytics.enabled" : "synapse_properties.'analytics.api_analytics.enabled'",
