@@ -28,6 +28,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.stream.StreamSource;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,12 +61,15 @@ public class FileBasedTaskRepository implements TaskRepository {
             getHome() + File.separator + "registry" + File.separator + "governance" + File.separator;
     private static Marshaller taskMarshaller;
     private static Unmarshaller taskUnmarshaller;
+    private static final XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
 
     static {
         try {
             JAXBContext ctx = JAXBContext.newInstance(org.wso2.micro.integrator.ntask.core.TaskInfo.class);
             taskMarshaller = ctx.createMarshaller();
             taskUnmarshaller = ctx.createUnmarshaller();
+            xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+            xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
         } catch (JAXBException e) {
             throw new RuntimeException("Error creating task marshaller/unmarshaller: " + e.getMessage());
         }
@@ -168,7 +176,7 @@ public class FileBasedTaskRepository implements TaskRepository {
                         try {
                             taskInfo = this.getTaskInfoRegistryPath(taskPath.getAbsolutePath());
                             result.add(taskInfo);
-                        } catch (JAXBException | IOException ex) {
+                        } catch (JAXBException | IOException | XMLStreamException ex) {
                             log.error("Invalid/ corrupted entry found in : " + taskPath.getAbsolutePath(), ex);
                         }
                     }
@@ -177,7 +185,8 @@ public class FileBasedTaskRepository implements TaskRepository {
         return new ArrayList<>(result);
     }
 
-    private org.wso2.micro.integrator.ntask.core.TaskInfo getTaskInfoRegistryPath(String path) throws IOException, JAXBException {
+    private org.wso2.micro.integrator.ntask.core.TaskInfo getTaskInfoRegistryPath(String path) throws IOException,
+            JAXBException, XMLStreamException {
         InputStream in = null;
         try {
             in = new FileInputStream(path);
@@ -188,7 +197,8 @@ public class FileBasedTaskRepository implements TaskRepository {
              * not thread safe
              */
             synchronized (getTaskUnmarshaller()) {
-                taskInfo = (org.wso2.micro.integrator.ntask.core.TaskInfo) getTaskUnmarshaller().unmarshal(in);
+                taskInfo =
+                        (org.wso2.micro.integrator.ntask.core.TaskInfo) getTaskUnmarshaller().unmarshal(getXMLStreamReader(in));
             }
             in.close();
             taskInfo.getProperties().put(org.wso2.micro.integrator.ntask.core.TaskInfo.TENANT_ID_PROP,
@@ -331,5 +341,10 @@ public class FileBasedTaskRepository implements TaskRepository {
             throw new TaskException("Error in getting task metadata properties: " + e.getMessage(),
                                     TaskException.Code.UNKNOWN, e);
         }
+    }
+
+    private static XMLStreamReader getXMLStreamReader(InputStream input) throws XMLStreamException {
+
+        return xmlInputFactory.createXMLStreamReader(new StreamSource(input));
     }
 }
