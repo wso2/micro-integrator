@@ -21,7 +21,6 @@ package org.wso2.micro.integrator.core.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -38,11 +37,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementPermission;
+import java.security.Provider;
 import java.security.Security;
 
 public class Activator implements BundleActivator {
 
     private static Log log = LogFactory.getLog(Activator.class);
+
+    public static final String BOUNCY_CASTLE_FIPS_PROVIDER = "BCFIPS";
 
     private ServiceRegistration registration;
 
@@ -66,7 +68,18 @@ public class Activator implements BundleActivator {
 
             logServerInfo();
 
-            Security.addProvider(new BouncyCastleProvider());
+            initializeCarbonServerConfigurationService(bundleContext);
+
+            String jceProvider = CarbonServerConfigurationService.getInstance().getFirstProperty("JCEProvider");
+            String providerClass;
+            if (BOUNCY_CASTLE_FIPS_PROVIDER.equals(jceProvider)) {
+                providerClass = "org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider";
+            } else {
+                providerClass = "org.bouncycastle.jce.provider.BouncyCastleProvider";
+            }
+            Security.addProvider((Provider) Class.forName(providerClass).getDeclaredConstructor().newInstance());
+
+
             if (log.isDebugEnabled()){
                 log.debug("BouncyCastle security provider is successfully registered in JVM.");
             }
@@ -74,8 +87,6 @@ public class Activator implements BundleActivator {
 //            GhostServiceMetaArtifactsLoader serviceMetaArtifactsLoader = new GhostServiceMetaArtifactsLoader();
 //            bundleContext.registerService(GhostMetaArtifactsLoader.class.getName(), serviceMetaArtifactsLoader, null);
 //            CarbonCoreDataHolder.getInstance().setBundleContext(bundleContext);
-
-            initializeCarbonServerConfigurationService(bundleContext);
 
             if (Boolean.parseBoolean(System.getProperty("NonUserCoreMode"))) {
                 log.debug("UserCore component activated in NonUserCoreMode Mode");

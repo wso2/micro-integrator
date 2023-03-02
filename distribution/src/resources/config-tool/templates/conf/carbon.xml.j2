@@ -607,4 +607,8 @@
         <Password>{{monitoring.ei_analytics.password}}</Password>
     </Analytics>
 
+    <!-- Configure JCE provider -->
+    {% if jce_provider.provider_name is defined %}
+        <JCEProvider>{{jce_provider.provider_name}}</JCEProvider>
+    {% endif %}
 </Server>
