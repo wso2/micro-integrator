@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,20 +15,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.micro.integrator.management.apis;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 
 /**
- * This resource will handle requests coming to roles/{role}.
- * Handle fetching details of a given role and deleting a given role.
+ * role resource which supports encoded domain names.
  */
-public class RoleResource extends RoleResourceBase implements MiApiResource {
+public class RoleResourceV1_1 extends RoleResourceBase implements MiApiResource {
 
     @Override
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
-        return super.invoke(messageContext, axis2MessageContext, synapseConfiguration,false);
+        return super.invoke(messageContext, axis2MessageContext, synapseConfiguration,true);
     }
 }

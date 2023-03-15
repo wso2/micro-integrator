@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class ReadinessProbe implements InternalAPI {
 
+    private String version;
     private String name;
     private List<InternalAPIHandler> handlerList = null;
     private CORSConfiguration apiCORSConfiguration = null;
@@ -71,5 +72,15 @@ public class ReadinessProbe implements InternalAPI {
     @Override
     public CORSConfiguration getCORSConfiguration() {
         return apiCORSConfiguration;
+    }
+
+    @Override
+    public String getVersion() {
+        return version;
+    }
+
+    @Override
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

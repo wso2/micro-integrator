@@ -55,6 +55,55 @@
             {% endif %}
         </api>
         <api name="ReadinessProbe" protocol="{{readiness_probe.protocols}}" class="org.wso2.micro.integrator.probes.ReadinessProbe"/>
+        <api name="ManagementApiV1_1" protocol="{{management_api_V1_1.protocols}}" class="org.wso2.micro.integrator.management.apis.ManagementInternalApiV1_1" version="{{management_api_V1_1.version}}">
+            <handlers>
+                {% if management_api_V1_1.basic_security_handler.enable == true %}
+                <handler name="BasicSecurityHandler" class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"/>
+                {% endif %}
+                {% if management_api_V1_1.jwt_token_security_handler.enable == true %}
+                <handler name="JWTTokenSecurityHandler" class="org.wso2.micro.integrator.management.apis.security.handler.JWTTokenSecurityHandler">
+                    <TokenStoreConfig>
+                        <MaxSize>{{management_api_V1_1.jwt_token_security_handler.token_store_config.max_size}}</MaxSize>
+                        <TokenCleanupTaskInterval>{{management_api_V1_1.jwt_token_security_handler.token_store_config.clean_up_interval}}</TokenCleanupTaskInterval><!--Seconds /-->
+                        <RemoveOldestTokenOnOverflow>{{management_api_V1_1.jwt_token_security_handler.token_store_config.remove_oldest_token_on_overflow}}</RemoveOldestTokenOnOverflow>
+                    </TokenStoreConfig>
+                    <TokenConfig>
+                        <expiry>{{management_api_V1_1.jwt_token_security_handler.token_config.expiry}}</expiry><!--Seconds /-->
+                        <size>{{management_api_V1_1.jwt_token_security_handler.token_config.size}}</size>
+                    </TokenConfig>
+                </handler>
+                {% endif %}
+                {% if management_api_V1_1.authorization_handler.enable == true %}
+                <handler name="AuthorizationHandler" class="org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler">
+                    {% if management_api_V1_1.authorization_handler.resources is defined %}
+                    <resources>
+                        {% for resource in management_api_V1_1.authorization_handler.resources %}
+                        <resource>{{resource.path}}</resource>
+                        {% endfor %}
+                    </resources>
+                    {% endif %}
+                </handler>
+                {% endif %}
+                {% if management_api_V1_1.custom_handlers is defined %}
+                {% for handler in management_api_V1_1.custom_handlers %}
+                <handler name="{{handler.name}}" class="{{handler.class}}">
+                    {% if handler.resources is defined %}
+                    <resources>
+                        {% for resource in handler.resources %}
+                        <resource>{{resource.path}}</resource>
+                        {% endfor %}
+                    </resources>
+                    {% endif %}
+                </handler>
+                {% endfor %}
+                {% endif %}
+            </handlers>
+            <cors>
+                <enabled>{{management_api_V1_1.cors.enable}}</enabled>
+                <allowedOrigins>{{management_api_V1_1.cors.allowed_origins}}</allowedOrigins>
+                <allowedHeaders>{{management_api_V1_1.cors.allowed_headers}}</allowedHeaders>
+            </cors>
+        </api>
         <api name="ManagementApi" protocol="{{management_api.protocols}}" class="org.wso2.micro.integrator.management.apis.ManagementInternalApi">
             <handlers>
                 {% if management_api.basic_security_handler.enable == true %}

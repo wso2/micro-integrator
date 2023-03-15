@@ -59,6 +59,7 @@ public class ConfigurationLoader {
     private static final QName ROOT_Q = new QName("internalApis");
     private static final QName API_Q = new QName("api");
     private static final QName CLASS_Q = new QName("class");
+    private static final QName VERSION_ATT = new QName("version");
     private static final QName NAME_ATT = new QName("name");
     private static final QName PROTOCOL_Q = new QName("protocol");
     private static final QName HANDLERS_Q = new QName("handlers");
@@ -126,7 +127,11 @@ public class ConfigurationLoader {
 
                         OMElement apiElement = (OMElement) apiList.next();
                         String name = null;
+                        String version = null;
 
+                        if (apiElement.getAttribute(VERSION_ATT) != null) {
+                            version = apiElement.getAttributeValue(VERSION_ATT);
+                        }
                         if (apiElement.getAttribute(NAME_ATT) != null) {
                             name = apiElement.getAttributeValue(NAME_ATT);
                             if (name == null || name.isEmpty()) {
@@ -146,6 +151,7 @@ public class ConfigurationLoader {
 
                                 InternalAPI internalApi = createApi(className);
                                 internalApi.setName(name);
+                                internalApi.setVersion(version);
                                 populateHandlers(apiElement, internalApi);
                                 internalApi.setCORSConfiguration(getCORSConfiguration(apiElement));
                                 if (apiElement.getAttribute(PROTOCOL_Q) != null) {

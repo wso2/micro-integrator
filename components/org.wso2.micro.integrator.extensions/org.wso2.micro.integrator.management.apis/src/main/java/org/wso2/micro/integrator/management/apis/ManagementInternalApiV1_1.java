@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -15,43 +15,39 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.observability.metric.publisher;
 
 
-import java.util.List;
+package org.wso2.micro.integrator.management.apis;
 
 import org.apache.synapse.api.cors.CORSConfiguration;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 
-public class MetricAPI implements InternalAPI {
+import java.util.List;
 
+
+/**
+ * Version 1.1 of the management API with changes added to the user resource.
+ */
+public class ManagementInternalApiV1_1 implements InternalAPI {
     private String version;
     private String name;
     private List<InternalAPIHandler> handlerList = null;
     private CORSConfiguration apiCORSConfiguration = null;
 
-    @Override
     public APIResource[] getResources() {
-
-        APIResource[] resources = new APIResource[1];
-        resources[0] = new MetricResource("/metrics");
-        return resources;
+        return ManagementInternalApiUtil.getResources(version);
     }
 
-    @Override
     public String getContext() {
-        return "/metric-service";
+        return ManagementInternalApiUtil.getContext(version);
     }
 
-    @Override
     public String getName() {
-
-        return this.name;
+        return name;
     }
 
-    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -73,7 +69,7 @@ public class MetricAPI implements InternalAPI {
 
     @Override
     public CORSConfiguration getCORSConfiguration() {
-        return  apiCORSConfiguration;
+        return apiCORSConfiguration;
     }
 
     @Override
@@ -85,4 +81,5 @@ public class MetricAPI implements InternalAPI {
     public void setVersion(String version) {
         this.version = version;
     }
+
 }

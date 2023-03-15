@@ -26,6 +26,7 @@ import java.util.List;
 
 public class SampleInternalAPI implements InternalAPI {
 
+    private String version;
     private String name;
     private List<InternalAPIHandler> handlerList = null;
     private CORSConfiguration corsConfiguration = null;
@@ -71,5 +72,15 @@ public class SampleInternalAPI implements InternalAPI {
     public CORSConfiguration getCORSConfiguration() {
 
         return corsConfiguration;
+    }
+
+    @Override
+    public String getVersion() {
+        return version;
+    }
+
+    @Override
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

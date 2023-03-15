@@ -654,6 +654,21 @@
   "management_api.basic_security_handler.enable": "false",
   "management_api.authorization_handler.enable": "true",
 
+  "management_api_V1_1.protocols": "https http",
+  "management_api_V1_1.jwt_token_security_handler.enable": "true",
+  "management_api_V1_1.jwt_token_security_handler.token_store_config.max_size": "200",
+  "management_api_V1_1.jwt_token_security_handler.token_store_config.clean_up_interval": "600",
+  "management_api_V1_1.jwt_token_security_handler.token_store_config.remove_oldest_token_on_overflow": "true",
+  "management_api_V1_1.jwt_token_security_handler.token_config.expiry": "3600",
+  "management_api_V1_1.jwt_token_security_handler.token_config.size": "2048",
+
+  "management_api_V1_1.cors.enable": "true",
+  "management_api_V1_1.cors.allowed_origins": "*",
+  "management_api_V1_1.cors.allowed_headers": "Authorization, Content-Type",
+  "management_api_V1_1.basic_security_handler.enable": "false",
+  "management_api_V1_1.authorization_handler.enable": "true",
+  "management_api_V1_1.version": "1.1",
+
   "internal_apis.file_user_store.enable": true,
   "internal_apis.users": [
     {

@@ -75,4 +75,12 @@ public interface InternalAPI {
      * Gets the CORS Configuration of the API
      */
     CORSConfiguration getCORSConfiguration();
+    /**
+     * Gets the version of the API
+     */
+    String getVersion();
+    /**
+     * Sets the version of the API
+     */
+    void setVersion(String version);
 }

@@ -151,7 +151,6 @@ public class UsersResource extends UserResource {
         return users;
     }
 
-    @Override
     protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException {
         return setResponseBody(getUserResults(messageContext));
     }

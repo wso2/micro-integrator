@@ -23,6 +23,7 @@ import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import javax.xml.namespace.QName;
 
 public class Constants {
+    public static final String MGT_API_VERSION = "management.api.version";
     //Constants for the API resource prefixes
     public static final String REST_API_CONTEXT = "/management";
     public static final String PREFIX_APIS = "/apis";

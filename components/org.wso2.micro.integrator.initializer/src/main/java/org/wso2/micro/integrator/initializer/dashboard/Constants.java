@@ -9,6 +9,7 @@ public class Constants {
     public static final String PRODUCT_MI = "mi";
     public static final String NODE_ID_SYSTEM_PROPERTY = "node.id";
     public static final String DASHBOARD_CONFIG_URL = "dashboard_config.dashboard_url";
+    public static final String DASHBOARD_MGT_API_VERSION = "dashboard_config.management_api_version";
     public static final String DASHBOARD_CONFIG_GROUP_ID = "dashboard_config.group_id";
     public static final String DASHBOARD_CONFIG_NODE_ID = "dashboard_config.node_id";
     public static final String DASHBOARD_CONFIG_HEARTBEAT_INTERVAL = "dashboard_config.heartbeat_interval";

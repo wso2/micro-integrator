@@ -89,13 +89,21 @@ public class InternalAPIDispatcher {
 
     /* Finds the API that the message should be dispatched to */
     private InternalAPI findAPI(String path) {
+        InternalAPI bestmatch = null;
+        int matchLength = 0;
         for (InternalAPI internalApi : internalApis) {
             String context = internalApi.getContext();
-            if (path.startsWith(context + "/") || path.startsWith(context + "?") || context.equals(path)) {
+            if (context.equals(path)) {
                 return internalApi;
+            } else if (path.startsWith(context + "/") || path.startsWith(context + "?")) {
+                int matchLen = context.length();
+                if (matchLen > matchLength) {
+                    bestmatch = internalApi;
+                    matchLength = matchLen;
+                }
             }
         }
-        return null;
+        return bestmatch;
     }
 
     /* Finds the Resource that the message should be dispatched to */

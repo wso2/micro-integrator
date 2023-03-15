@@ -22,6 +22,34 @@
         <api name="PrometheusApi" protocol="http"
              class="org.wso2.micro.integrator.observability.metric.publisher.MetricAPI"/>
         <api name="ReadinessProbe" protocol="http" class="org.wso2.micro.integrator.probes.ReadinessProbe"/>
+        <api class="org.wso2.micro.integrator.management.apis.ManagementInternalApiV1_1" name="ManagementApiV1_1" version="1.1"
+             protocol="https http">
+            <handlers>
+                <handler class="org.wso2.micro.integrator.management.apis.security.handler.JWTTokenSecurityHandler"
+                         name="JWTTokenSecurityHandler">
+                    <TokenStoreConfig>
+                        <MaxSize>200</MaxSize>
+                        <TokenCleanupTaskInterval>600</TokenCleanupTaskInterval><!--Seconds /-->
+                        <RemoveOldestTokenOnOverflow>true</RemoveOldestTokenOnOverflow>
+                    </TokenStoreConfig>
+                    <TokenConfig>
+                        <expiry>3600</expiry><!--Seconds /-->
+                        <size>2048</size>
+                    </TokenConfig>
+                </handler>
+                <handler class="org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler" name="AuthorizationHandler">
+                </handler>
+                <!--handler class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"
+                         name="BasicSecurityHandler">
+                </handler-->
+            </handlers>
+            <cors>
+                <enabled>true</enabled>
+                <allowedOrigins>*</allowedOrigins>
+                <!-- comma separated values-->
+                <allowedHeaders>Authorization, Content-Type</allowedHeaders>
+            </cors>
+        </api>
         <api class="org.wso2.micro.integrator.management.apis.ManagementInternalApi" name="ManagementApi"
              protocol="https http">
             <handlers>
