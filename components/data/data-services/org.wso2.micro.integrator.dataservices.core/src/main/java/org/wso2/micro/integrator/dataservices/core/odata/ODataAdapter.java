@@ -1223,6 +1223,9 @@ public class ODataAdapter implements ServiceHandler {
         errorResponse.writeError(oDataServerError);
     }
 
+    @Override
+    public void apply(DataRequest dataRequest, ODataResponse oDataResponse) { }
+
     /**
      * Returns entity collection from the data entry list to use in olingo.
      *

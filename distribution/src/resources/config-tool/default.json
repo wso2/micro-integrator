@@ -85,6 +85,7 @@
   "synapse_properties.'opentelemetry.class'": "org.apache.synapse.aspects.flow.statistics.tracing.opentelemetry.management.JaegerTelemetryManager",
 
   "synapse_properties.'analytics.enabled'": false,
+  "synapse_properties.'analytics.publisher'": "log",
   "synapse_properties.'analytics.prefix'": "SYNAPSE_ANALYTICS_DATA",
   "synapse_properties.'analytics.id'": "$ref{server.hostname}",
   "synapse_properties.'analytics.api_analytics.enabled'": true,
@@ -639,7 +640,7 @@
   "prometheus_api.authorization_handler.enable": false,
 
   "readiness_probe.protocols": "http",
-
+  "liveness_probe.protocols": "http",
   "management_api.protocols": "https http",
   "management_api.jwt_token_security_handler.enable": "true",
   "management_api.jwt_token_security_handler.token_store_config.max_size": "200",
