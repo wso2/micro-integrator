@@ -1,4 +1,4 @@
-# WSO2 Micro Integrator 4.2.0-beta-performance Performance Test Results
+# WSO2 Micro Integrator 4.2.0 Performance Test Results
 
 During each release, we execute various automated performance test scenarios and publish the results.
 
@@ -21,8 +21,8 @@ delays.
 
 The main performance metrics:
 
-1. **Throughput**: The number of requests that the WSO2 Micro Integrator 4.2.0-beta-performance processes during a specific time interval (e.g. per second).
-2. **Response Time**: The end-to-end latency for an operation of invoking a service in WSO2 Micro Integrator 4.2.0-beta-performance . The complete distribution of response times was recorded.
+1. **Throughput**: The number of requests that the WSO2 Micro Integrator 4.2.0 processes during a specific time interval (e.g. per second).
+2. **Response Time**: The end-to-end latency for an operation of invoking a service in WSO2 Micro Integrator 4.2.0 . The complete distribution of response times was recorded.
 
 In addition to the above metrics, we measure the load average and several memory-related metrics.
 
@@ -42,7 +42,7 @@ The measurement results are collected after the warm-up period.
 The performance tests were executed on 1 AWS CloudFormation stack.
 
 
-System information for WSO2 Micro Integrator 4.2.0-beta-performance in 1st AWS CloudFormation stack.
+System information for WSO2 Micro Integrator 4.2.0 in 1st AWS CloudFormation stack.
 
 | Class | Subclass | Description | Value |
 | --- | --- | --- | --- |
@@ -74,7 +74,7 @@ test parameters.
 
 The following is the summary of performance test results collected for the measurement period.
 
-|  Scenario Name | Heap Size | Concurrent Users | Message Size (Bytes) | Back-end Service Delay (ms) | Error % | Throughput (Requests/sec) | Average Response Time (ms) | Standard Deviation of Response Time (ms) | 99th Percentile of Response Time (ms) | WSO2 Micro Integrator 4.2.0-beta-performance GC Throughput (%) | Average WSO2 Micro Integrator 4.2.0-beta-performance Memory Footprint After Full GC (M) |
+|  Scenario Name | Heap Size | Concurrent Users | Message Size (Bytes) | Back-end Service Delay (ms) | Error % | Throughput (Requests/sec) | Average Response Time (ms) | Standard Deviation of Response Time (ms) | 99th Percentile of Response Time (ms) | WSO2 Micro Integrator 4.2.0 GC Throughput (%) | Average WSO2 Micro Integrator 4.2.0 Memory Footprint After Full GC (M) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 |  CBR Proxy | 2G | 100 | 500 | 0 | 0 | 5602.69 | 17.78 | 10.9 | 59 | N/A | N/A |
 |  CBR Proxy | 2G | 100 | 1000 | 0 | 0 | 4700.14 | 21.2 | 11.87 | 64 | N/A | N/A |
