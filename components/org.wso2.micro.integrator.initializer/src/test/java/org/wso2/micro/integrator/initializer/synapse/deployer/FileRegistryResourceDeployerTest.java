@@ -124,6 +124,13 @@ public class FileRegistryResourceDeployerTest {
         tempFile1.delete();
         tempFile2.delete();
         tempDir.delete();
+        tempFile3Meta.delete();
+        tempFile4Meta.delete();
+        metaSubDir.delete();
+        tempFile3.delete();
+        tempFile4.delete();
+        subDir.delete();
+
     }
 
     /**
