@@ -312,7 +312,7 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
      @param directory the directory to traverse
      @return an ArrayList of SubFileInfo objects, each representing a file in the directory and its media type
      */
-    private static ArrayList<SubFileInfo> traverseDirectory(File directory) {
+    public static ArrayList<SubFileInfo> traverseDirectory(File directory) {
         ArrayList<SubFileInfo> fileList = new ArrayList<>();
         if (directory.isDirectory()) {
             File[] files = directory.listFiles();
@@ -339,7 +339,7 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
      @param file the file to check
      @return true if the file should be ignored, false otherwise
      */
-    private static boolean isFileIgnored(File file) {
+    public static boolean isFileIgnored(File file) {
         if (file.isDirectory()) {
             for (String excludedDirectoryName : excludedDirectoryNames) {
                 if (file.getName().equals(excludedDirectoryName)) {
@@ -355,7 +355,7 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
      @param file the file for which to determine the media type
      @return the media type for the file, or an empty string if it couldn't be determined
      */
-    private static String getMediaTypeFromMeta(File file) {
+    public static String getMediaTypeFromMeta(File file) {
         try {
             if (!file.isDirectory()) {
                 String metaInfoFileName = String.format("%s%s.meta%s~%s.xml",
@@ -374,13 +374,21 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
     /**
      * A pojo class to store the file and media type.
      */
-    private static class SubFileInfo {
+    public static class SubFileInfo {
         private final File file;
         private final String mediaType;
 
         public SubFileInfo(File file, String mediaType) {
             this.file = file;
             this.mediaType = mediaType;
+        }
+
+        public File getFile() {
+            return file;
+        }
+
+        public String getMediaType() {
+            return mediaType;
         }
     }
 }
