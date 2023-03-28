@@ -76,6 +76,7 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/plugins/saxon_*.jar</exclude>
+                <exclude>**/plugins/xalan_*.jar</exclude>
                 <exclude>**/lib/endorsed/xalan*.jar</exclude>
                 <exclude>**/conf/tomcat/catalina-server.xml</exclude>
                 <exclude>**/conf/tomcat/webapp-classloading-environments.xml</exclude>
