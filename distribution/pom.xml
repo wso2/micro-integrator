@@ -47,6 +47,10 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
             <artifactId>utsecurity</artifactId>
             <type>mar</type>
         </dependency>
