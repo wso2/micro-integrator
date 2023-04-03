@@ -17,6 +17,7 @@
  */
 package org.wso2.micro.integrator.initializer.deployment.synapse.deployer;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.engine.AxisConfiguration;
@@ -40,10 +41,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import static org.wso2.micro.application.deployer.AppDeployerUtils.createRegistryPath;
+import static org.wso2.micro.application.deployer.AppDeployerUtils.readChildText;
 
 /**
  * Carbon application deployer to deploy registry artifacts to file based registry
@@ -53,6 +58,8 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
     private Registry lightweightRegistry;
 
     public static final Log log = LogFactory.getLog(FileRegistryResourceDeployer.class);
+    private static final String[] excludedDirectoryNames = new String[]{".meta"};
+    private static final String MEDIA_TYPE = "mediaType";
 
     private static final String REGISTRY_RESOURCE_TYPE = "registry/resource";
     
@@ -217,9 +224,19 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
                 log.error("Specified file to be written as a resource is " + "not found at : " + filePath);
                 continue;
             }
+            String directoryRegistryPath = createRegistryPath(collection.getPath());
             ((MicroIntegratorRegistry)lightweightRegistry).addNewNonEmptyResource(
-                    createRegistryPath(collection.getPath()), true, "", "",
+                    directoryRegistryPath, true, "", "",
                     collection.getProperties());
+            ArrayList<SubFileInfo> fileList = traverseDirectory(file);
+            for (SubFileInfo subFileInfo : fileList) {
+                Path subFilePath =subFileInfo.file.toPath();
+                String subFileRelativePath = directoryRegistryPath + File.separator + file.toPath().relativize(subFilePath);
+                String mediaType = subFileInfo.mediaType;
+                ((MicroIntegratorRegistry)lightweightRegistry).addNewNonEmptyResource(
+                        subFileRelativePath, false, mediaType, "",
+                        collection.getProperties());
+            }
         }
     }
 
@@ -288,6 +305,91 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
             log.error("Error occurred while reading the content of file: " + file.getAbsolutePath());
         }
         return null;
+    }
+
+    /**
+     Recursively traverses a directory and returns a list of all the files in the directory and its subdirectories.
+     @param directory the directory to traverse
+     @return an ArrayList of SubFileInfo objects, each representing a file in the directory and its media type
+     */
+    public static ArrayList<SubFileInfo> traverseDirectory(File directory) {
+        ArrayList<SubFileInfo> fileList = new ArrayList<>();
+        if (directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (isFileIgnored(file)) {
+                        continue;
+                    }
+                    if (file.isDirectory()) {
+                        fileList.addAll(traverseDirectory(file));
+                    } else {
+                        String mediaType = getMediaTypeFromMeta(file);
+                        fileList.add(new SubFileInfo(file, mediaType));
+                        getMediaTypeFromMeta(file);
+                    }
+                }
+            }
+        }
+        return fileList;
+    }
+
+    /**
+     Determines if a file or directory should be ignored based on its name.
+     @param file the file to check
+     @return true if the file should be ignored, false otherwise
+     */
+    public static boolean isFileIgnored(File file) {
+        if (file.isDirectory()) {
+            for (String excludedDirectoryName : excludedDirectoryNames) {
+                if (file.getName().equals(excludedDirectoryName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     Returns the media type for a given file by reading the media type information from its meta file.
+     @param file the file for which to determine the media type
+     @return the media type for the file, or an empty string if it couldn't be determined
+     */
+    public static String getMediaTypeFromMeta(File file) {
+        try {
+            if (!file.isDirectory()) {
+                String metaInfoFileName = String.format("%s%s.meta%s~%s.xml",
+                        file.getParent(), File.separator, File.separator, file.getName());
+                InputStream xmlInputStream = new FileInputStream(metaInfoFileName);
+                OMElement resourcesElement = new StAXOMBuilder(xmlInputStream).getDocumentElement();
+                String mediaType = readChildText(resourcesElement, MEDIA_TYPE);
+                return mediaType;
+            }
+        } catch (FileNotFoundException | XMLStreamException e) {
+            log.error("Error while determining media type for the file: " + file.getAbsolutePath(), e);
+        }
+        return "";
+    }
+
+    /**
+     * A pojo class to store the file and media type.
+     */
+    public static class SubFileInfo {
+        private final File file;
+        private final String mediaType;
+
+        public SubFileInfo(File file, String mediaType) {
+            this.file = file;
+            this.mediaType = mediaType;
+        }
+
+        public File getFile() {
+            return file;
+        }
+
+        public String getMediaType() {
+            return mediaType;
+        }
     }
 }
 
