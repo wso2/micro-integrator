@@ -380,6 +380,7 @@
   "transport.rabbitmq.listener:parameter.truststore_location": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.truststore.location'",
   "transport.rabbitmq.listener:parameter.truststore_type": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.truststore.type'",
   "transport.rabbitmq.listener:parameter.truststore_password": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.truststore.password'",
+  "transport.rabbitmq.listener:parameter.virtual_host": "transport.rabbitmq.listener:parameter.'rabbitmq.server.virtual.host'",
 
   "transport.rabbitmq.sender:parameter.hostname": "transport.rabbitmq.sender:parameter.'rabbitmq.server.host.name'",
   "transport.rabbitmq.sender:parameter.port": "transport.rabbitmq.sender:parameter.'rabbitmq.server.port'",
@@ -407,6 +408,7 @@
   "transport.rabbitmq.sender:parameter.truststore_location": "transport.rabbitmq.sender:parameter.'rabbitmq.connection.ssl.truststore.location'",
   "transport.rabbitmq.sender:parameter.truststore_type": "transport.rabbitmq.sender:parameter.'rabbitmq.connection.ssl.truststore.type'",
   "transport.rabbitmq.sender:parameter.truststore_password": "transport.rabbitmq.sender:parameter.'rabbitmq.connection.ssl.truststore.password'",
+  "transport.rabbitmq.sender:parameter.virtual_host": "transport.rabbitmq.sender:parameter.'rabbitmq.server.virtual.host'",
 
   "transport.blocking.rabbitmq.listener:parameter.hostname": "transport.blocking.rabbitmq.listener:parameter.'rabbitmq.server.host.name'",
   "transport.blocking.rabbitmq.listener:parameter.port": "transport.blocking.rabbitmq.listener:parameter.'rabbitmq.server.port'",
