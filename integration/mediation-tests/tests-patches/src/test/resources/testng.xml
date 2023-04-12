@@ -183,6 +183,7 @@
             <class name="org.wso2.carbon.esb.registry.task.ESBJAVA4565TestCase"/>
             <class name="org.wso2.carbon.esb.header.preserve.ESBJAVA4631PreserveContentTypeHeaderTestCase"/>
             <class name="org.wso2.carbon.esb.getprocessor.test.FaviconTest"/>
+            <class name="org.wso2.carbon.esb.healthcheck.HealthCheckTestCase"/>
         </classes>
     </test>
 
