@@ -18,6 +18,14 @@
 <handlers>
     <handler name="IntegratorSynapseHandler" class="org.wso2.micro.integrator.dataservices.odata.endpoint.ODataPassThroughHandler"/>
     {% for handler in synapse_handlers %}
+        {% if handler.parameters is defined %}
+    <handler name="{{handler.name}}" class="{{handler.class}}">
+            {% for parameter in handler.parameters %}
+        <parameter name="{{parameter.name}}" value="{{parameter.value}}"/>
+            {% endfor %}
+    </handler>
+        {% else %}
     <handler name="{{handler.name}}" class="{{handler.class}}"/>
+        {% endif %}
     {% endfor %}
 </handlers>
