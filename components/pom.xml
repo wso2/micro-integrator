@@ -58,5 +58,6 @@
         <module>business-adaptors</module>
         <module>org.wso2.micro.integrator.log4j2.plugins</module>
         <module>javax.cache</module>
+        <module>org.wso2.micro.integrator.logging.updater</module>
     </modules>
 </project>

@@ -203,6 +203,9 @@
                                 <featureArtifactDef>
                                     org.wso2.transport.http:org.wso2.transport.http.netty.feature:${transport.http.netty.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.logging.updater.feature:${project.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -417,6 +420,10 @@
                                 <feature>
                                     <id>org.wso2.transport.http.netty.feature.group</id>
                                     <version>${transport.http.netty.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.micro.integrator.logging.updater.feature.group</id>
+                                    <version>${project.version}</version>
                                 </feature>
                             </features>
                         </configuration>
