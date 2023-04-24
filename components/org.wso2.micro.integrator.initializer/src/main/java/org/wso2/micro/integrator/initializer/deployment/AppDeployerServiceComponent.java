@@ -41,6 +41,8 @@ import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileReg
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
 import org.wso2.micro.integrator.initializer.deployment.user.store.deployer.UserStoreDeployer;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
+import org.wso2.micro.integrator.initializer.state.monitor.ArtifactClusterStateManager;
+import org.wso2.micro.integrator.initializer.state.monitor.ClusterDatabaseHandler;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
 
@@ -76,6 +78,12 @@ public class AppDeployerServiceComponent {
         if (HeartBeatComponent.isDashboardConfigured()) {
             log.info("Dashboard is configured. Initiating heartbeat component.");
             HeartBeatComponent.invokeHeartbeatExecutorService();
+        }
+        if (ClusterDatabaseHandler.isDataSourceAvailable()) {
+            ArtifactClusterStateManager artifactClusterStateManager = new ArtifactClusterStateManager();
+            artifactClusterStateManager.start();
+            //ArtifactStartupStateManager artifactStartupStateManager = new ArtifactStartupStateManager();
+            //artifactStartupStateManager.updateArtifactState();
         }
 
         // Finalize server startup
