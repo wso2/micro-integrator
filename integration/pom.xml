@@ -877,6 +877,20 @@
             </modules>
         </profile>
         <profile>
+            <id>components</id>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+            <modules>
+                <module>samples/product</module>
+                <module>automation-extensions</module>
+                <module>tests-common</module>
+                <module>mediation-tests</module>
+                <module>dataservice-hosting-tests</module>
+                <module>management-api-tests</module>
+            </modules>
+        </profile>
+        <profile>
             <id>with-smb-2</id>
             <modules>
                 <module>samples/product</module>
