@@ -36,8 +36,8 @@ public class FastXSLTTransformFileFromLocalFileUsingSample8TestCase extends ESBI
         super.init();
     }
 
-    @Test(groups = {
-            "wso2.esb"}, description = "Test for local entry XSLT file refer from File System by FastXSLT - Sample 8")
+    @Test(groups = {"wso2.esb"},
+            description = "Test for local entry XSLT file refer from File System by FastXSLT - Sample 8")
     public void testLocalEntryFastXSLTFileFromLocalFile() throws Exception {
         OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("FastXSLTTransformFileFromLocalFileProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
