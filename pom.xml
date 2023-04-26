@@ -1570,7 +1570,7 @@
 
         <carbon.analytics.common.version>5.2.52</carbon.analytics.common.version>
         <carbon.analytics.common.imp.pkg.version>[5.2.0, 6.0.0)</carbon.analytics.common.imp.pkg.version>
-        <fasterxml.jackson.version>2.13.5</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.15.0</fasterxml.jackson.version>
         <carbon.commons.version>4.7.49</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
@@ -1654,7 +1654,7 @@
         <org.wso2.orbit.sun.xml.ws.version>2.3.2.wso2v1</org.wso2.orbit.sun.xml.ws.version>
         <apache.felix.scr.ds.annotations.version>1.2.4</apache.felix.scr.ds.annotations.version>
         <org.wso2.carbon.caching.core.version>4.2.0</org.wso2.carbon.caching.core.version>
-        <orbit.version.snakeyaml>1.33.0.wso2v1</orbit.version.snakeyaml>
+        <orbit.version.snakeyaml>2.0.0.wso2v1</orbit.version.snakeyaml>
         <json.smart.version>2.4.7</json.smart.version>
         <google.guava.version>31.0.1-jre</google.guava.version>
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
@@ -1675,7 +1675,7 @@
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <import.package.version.commons.logging>[1.2.0,2.0.0)</import.package.version.commons.logging>
-        <orbit.snakeyaml.import.version.range>[1.16.0.wso2v1, 2.0.0)</orbit.snakeyaml.import.version.range>
+        <orbit.snakeyaml.import.version>2.0.0</orbit.snakeyaml.import.version>
         <axiom.osgi.version.range>[1.2.11, 1.3.0)</axiom.osgi.version.range>
         <imp.package.version.osgi.services>[1.2.0,2.0.0)</imp.package.version.osgi.services>
 
@@ -1850,7 +1850,7 @@
         <!-- OAS3 Versions -->
         <swagger.parser.orbit.version>2.0.30.wso2v1</swagger.parser.orbit.version>
         <swagger.core.v2.version>1.6.5</swagger.core.v2.version>
-        <snakeyaml.version>1.33</snakeyaml.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <version.disruptor>3.4.2</version.disruptor>
         <version.geronimo.jta.spec>1.1</version.geronimo.jta.spec>
