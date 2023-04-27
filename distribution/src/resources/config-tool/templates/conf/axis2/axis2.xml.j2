@@ -387,7 +387,7 @@
             </KeyStore>
         </parameter>
         {% endif %}
-        {% if transport_item.trust_store is defined %}
+        {% if transport_item.truststore is defined %}
         <parameter name="truststore" locked="false">
             <TrustStore>
                 <Location>{{transport_item.truststore.location}}</Location>
@@ -696,7 +696,7 @@
             </KeyStore>
         </parameter>
         {% endif %}
-        {% if transport_item.trust_store is defined %}
+        {% if transport_item.truststore is defined %}
         <parameter name="truststore" locked="false">
             <TrustStore>
                 <Location>{{transport_item.truststore.location}}</Location>
