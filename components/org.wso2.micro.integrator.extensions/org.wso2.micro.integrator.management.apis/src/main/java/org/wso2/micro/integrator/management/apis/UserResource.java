@@ -17,9 +17,11 @@
  */
 package org.wso2.micro.integrator.management.apis;
 
+import com.google.gson.JsonObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,10 +32,12 @@ import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.wso2.micro.integrator.management.apis.Constants.ADMIN;
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
 import static org.wso2.micro.integrator.management.apis.Constants.DOMAIN;
 import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
@@ -43,7 +47,9 @@ import static org.wso2.micro.integrator.management.apis.Constants.ROLES;
 import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 import static org.wso2.micro.integrator.management.apis.Constants.USER_ID;
-
+import static org.wso2.micro.integrator.management.apis.Constants.NEW_PASSWORD;
+import static org.wso2.micro.integrator.management.apis.Constants.CONFIRM_PASSWORD;
+import static org.wso2.micro.integrator.management.apis.Constants.OLD_PASSWORD;
 
 /**
  * Resource for a retrieving and deleting a single user with the userId provided.
@@ -61,6 +67,7 @@ public class UserResource implements MiApiResource {
         methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
         methods.add(Constants.HTTP_DELETE);
+        methods.add(Constants.HTTP_METHOD_PATCH);
     }
 
     @Override
@@ -92,10 +99,15 @@ public class UserResource implements MiApiResource {
                     response = handleDelete(messageContext);
                     break;
                 }
+                case Constants.HTTP_METHOD_PATCH: {
+                    response = handlePatch(messageContext, axis2MessageContext);
+                    break;
+                }
                 default: {
-                    response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET and "
-                                                     + "DELETE methods are supported",
-                                                     axis2MessageContext, BAD_REQUEST);
+                    response = Utils.createJsonError(
+                            "Unsupported HTTP method, " + httpMethod + ". Only GET ,"
+                                    + " DELETE and PATCH methods are supported",
+                            axis2MessageContext, BAD_REQUEST);
                     break;
                 }
             }
@@ -130,31 +142,106 @@ public class UserResource implements MiApiResource {
         return userObject;
     }
 
-    protected JSONObject handleDelete(MessageContext messageContext) throws UserStoreException, IOException,
-            ResourceNotFoundException {
+    protected JSONObject handleDelete(MessageContext messageContext)
+            throws UserStoreException, IOException, ResourceNotFoundException {
         String domain = Utils.getQueryParameter(messageContext, DOMAIN);
         String user = getUserFromPathParam(messageContext, domain);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Request received to delete the user: " + user);
         }
-        String userName = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
-        if (Objects.isNull(userName)) {
-            LOG.warn("Deleting a user without authenticating/authorizing the request sender. Adding "
-                    + "authentication and authorization handlers is recommended.");
+        String performedBy = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
+        if (Objects.isNull(performedBy)) {
+            LOG.warn(
+                    "Deleting a user without authenticating/authorizing the request sender. Adding "
+                            + "authentication and authorization handlers is recommended.");
         } else {
-            if (userName.equals(user)) {
-                throw new IOException("Attempt to delete the logged in user. Operation not allowed. Please login "
-                        + "from another user.");
+            if (performedBy.equals(user)) {
+                throw new IllegalArgumentException(
+                        "Attempt to delete the logged in user. Operation not allowed. Please login "
+                                + "from another user.");
             }
         }
         UserStoreManager userStoreManager = Utils.getUserStore(domain);
-        userStoreManager.deleteUser(user);
+        String[] roles = userStoreManager.getRoleListOfUser(user);
+
+        if (ADMIN.equals(performedBy)) {
+            userStoreManager.deleteUser(user);
+        } else if (!Arrays.asList(roles).contains(ADMIN)) {
+            userStoreManager.deleteUser(user);
+        } else {
+            throw new UserStoreException("Only super admin user can delete admins");
+        }
         JSONObject jsonBody = new JSONObject();
         jsonBody.put(USER_ID, user);
         jsonBody.put(STATUS, "Deleted");
         JSONObject info = new JSONObject();
         info.put(USER_ID, user);
-        AuditLogger.logAuditMessage(userName, Constants.AUDIT_LOG_TYPE_USER, Constants.AUDIT_LOG_ACTION_DELETED, info);
+        AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_USER, Constants.AUDIT_LOG_ACTION_DELETED,
+                info);
+        return jsonBody;
+    }
+
+    protected JSONObject handlePatch(MessageContext messageContext,
+            org.apache.axis2.context.MessageContext axis2MessageContext)
+            throws UserStoreException, IOException, ResourceNotFoundException {
+        String domain = Utils.getQueryParameter(messageContext, DOMAIN);
+        String user = getUserFromPathParam(messageContext, domain);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Request received to update user credentials: " + user);
+        }
+        String performedBy = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
+        if (Objects.isNull(performedBy)) {
+            LOG.warn(
+                    "Update a user without authenticating/authorizing the request sender. Adding "
+                            + "authentication and authorization handlers is recommended.");
+        }
+        if (!JsonUtil.hasAJsonPayload(axis2MessageContext)) {
+            return Utils.createJsonErrorObject("JSON payload is missing");
+        }
+        JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
+
+        if (payload.has(NEW_PASSWORD) && payload.has(CONFIRM_PASSWORD)) {
+            String newPassword = payload.get(NEW_PASSWORD).getAsString();
+            String confirmPassword = payload.get(CONFIRM_PASSWORD).getAsString();
+            String oldPassword = payload.get(OLD_PASSWORD).getAsString();
+            if (newPassword.equals(confirmPassword)) {
+                UserStoreManager userStoreManager = Utils.getUserStore(domain);
+                String[] roles = userStoreManager.getRoleListOfUser(user);
+                try {
+                    synchronized (this) {
+                        if (user.equals(performedBy)) {
+                            if (oldPassword == null) {
+                                throw new NullPointerException("The old password cannot be null");
+                            }
+                            userStoreManager.updateCredential(user, newPassword, oldPassword);
+                        } else if (ADMIN.equals(performedBy)) {
+                            userStoreManager.updateCredentialByAdmin(user, newPassword);
+                        } else if (!Arrays.asList(roles).contains(ADMIN)) {
+                            userStoreManager.updateCredentialByAdmin(user, newPassword);
+                        } else {
+                            throw new UserStoreException(
+                                    "Only super admin user can update the credentials of other admins");
+                        }
+                    }
+                } catch (UserStoreException e) {
+                    throw new UserStoreException("Error occurred while updating the credentials of the user : " + user,
+                            e);
+                }
+            } else {
+                throw new IOException(NEW_PASSWORD + " and " + CONFIRM_PASSWORD + " does not matches " + "payload.");
+            }
+        } else {
+            throw new IOException(
+                    "Missing one or more of the fields, '" + NEW_PASSWORD + "', '" + CONFIRM_PASSWORD + "' in the "
+                            + "payload.");
+        }
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put(USER_ID, user);
+        jsonBody.put(STATUS, "Password updated");
+        JSONObject info = new JSONObject();
+        info.put(USER_ID, user);
+        AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_USER, Constants.AUDIT_LOG_ACTION_UPDATED,
+                info);
         return jsonBody;
     }
 
