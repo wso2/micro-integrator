@@ -75,4 +75,4 @@ WSO2 Micro Integrator is licensed under the [Apache License](http://www.apache.o
 
 ## Copyright
 
-(c) 2020, [WSO2 Inc.](http://www.wso2.org) All Rights Reserved.
+(c) 2023, [WSO2 Inc.](http://www.wso2.org) All Rights Reserved.
