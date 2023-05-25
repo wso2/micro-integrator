@@ -21,6 +21,7 @@ package org.wso2.micro.integrator.ndatasource.rdbms;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.sql.CallableStatement;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -147,7 +148,11 @@ public class CorrelationLogInterceptor extends AbstractQueryReport {
             if (sql != null) {
                 this.prepareStatement(sql, time);
             }
-        } else if (!this.compare("prepareCall", name)) {
+        } else if (this.compare("prepareCall", name)) {
+            sql = (String) args[0];
+            constructor = this.getConstructor(2, CallableStatement.class);
+            this.prepareCall(sql, time);
+        } else {
             return statement;
         }
 
