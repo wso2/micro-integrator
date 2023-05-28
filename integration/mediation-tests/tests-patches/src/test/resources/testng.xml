@@ -104,6 +104,7 @@
             <class name="org.wso2.carbon.esb.passthru.transport.test.ForceMessageValidationTestCase" />
             <!--<class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4931PreserveContentTypeHeaderCharSetTestCase"/>-->
             <class name="org.wso2.carbon.esb.passthru.transport.test.PreserveResponseHeaderTestCase"/>
+            <class name="org.wso2.carbon.esb.passthru.transport.test.MalformedHeaderWithCorrelationLogsEnabled"/>
         </classes>
     </test>
 
