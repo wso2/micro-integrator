@@ -1,0 +1,15 @@
+<api xmlns="http://ws.apache.org/ns/synapse"
+     name="TestAPI"
+     context="/test">
+    <resource methods="POST GET">
+        <inSequence>
+            <payloadFactory media-type="json">
+                <format>{"Hello":"World"}</format>
+                <args/>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
