@@ -1,6 +1,6 @@
 <api xmlns="http://ws.apache.org/ns/synapse"
-     name="TestAPI"
-     context="/test">
+     name="TestMalformedHeaderAPI"
+     context="/testmalformed">
     <resource methods="POST GET">
         <inSequence>
             <payloadFactory media-type="json">
