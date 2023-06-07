@@ -293,9 +293,15 @@ public class RabbitMQConsumer implements Consumer {
      * Return connection back to the pool when undeploying the listener proxy
      */
     public void close() {
-        connection.abort();
+        if (connection != null) {
+            try {
+                connection.abort();
+            } catch (Exception e) {
+                log.error("Error occurred while closing connection: " + e.getMessage());
+            }
+            connection = null;
+        }
         channel = null;
-        connection = null;
     }
 
     public String getInboundName() {
