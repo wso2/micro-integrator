@@ -673,6 +673,8 @@ public final class DBConstants {
         public static final String CONNECT_TIMEOUT = "mongoDB_connectTimeout";
         public static final String MAX_WAIT_TIME = "mongoDB_maxWaitTime";
         public static final String SOCKET_TIMEOUT = "mongoDB_socketTimeout";
+        public static final String SSL_ENABLED = "mongoDB_ssl_enabled";
+        public static final String AUTH_SOURCE = "mongoDB_auth_source";
         public static final String CONNECTIONS_PER_HOST = "mongoDB_connectionsPerHost";
         public static final String THREADS_ALLOWED_TO_BLOCK_CONN_MULTIPLIER = "mongoDB_threadsAllowedToBlockForConnectionMultiplier";
         public static final String RESULT_COLUMN_NAME = "Document";
