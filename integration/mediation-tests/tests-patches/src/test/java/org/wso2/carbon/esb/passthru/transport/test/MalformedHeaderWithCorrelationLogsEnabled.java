@@ -45,9 +45,8 @@ public class MalformedHeaderWithCorrelationLogsEnabled extends ESBIntegrationTes
     private ServerConfigurationManager serverConfigurationManager;
     private final String startUpScript = "micro-integrator.sh";
     private final String invalidTransferEncoder = "incorrect-value";
-    private final String apiName = "TestAPI";
+    private final String apiName = "TestMalformedHeaderAPI";
     private final String method = "POST";
-    private final String path = "/TestAPI";
     private String serviceUrl;
     private final String CRLF = "\r\n";
     private int port;
@@ -76,7 +75,7 @@ public class MalformedHeaderWithCorrelationLogsEnabled extends ESBIntegrationTes
         String headers = HttpHeaders.HOST + ": " + hostName + CRLF + HttpHeaders.TRANSFER_ENCODING + ": "
                 + invalidTransferEncoder + CRLF;
         Socket socket = new Socket(hostName, port);
-        String request = method + " " + path + " " + HttpVersion.HTTP_1_1 + CRLF + headers + CRLF;
+        String request = method + " " + File.separator + apiName + " " + HttpVersion.HTTP_1_1 + CRLF + headers + CRLF;
         OutputStream outputStream = socket.getOutputStream();
         outputStream.write(request.getBytes());
         outputStream.flush();
