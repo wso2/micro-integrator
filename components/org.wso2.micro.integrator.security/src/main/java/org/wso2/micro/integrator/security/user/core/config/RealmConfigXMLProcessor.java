@@ -332,11 +332,11 @@ public class RealmConfigXMLProcessor {
                     .getText().trim();
         } else {
             if (supperTenant) {
-                log.error("AddAdmin configuration not found or invalid in user-mgt.xml. Cannot start server!");
+                log.error("Add Admin configuration not found or invalid in user-mgt.xml. Cannot start server!");
                 throw new UserStoreException(
-                        "AddAdmin configuration not found or invalid user-mgt.xml. Cannot start server!");
+                        "Add Admin configuration not found or invalid user-mgt.xml. Cannot start server!");
             } else {
-                log.debug("AddAdmin configuration not found");
+                log.debug("Add Admin configuration not found");
                 addAdmin = "true";
             }
         }

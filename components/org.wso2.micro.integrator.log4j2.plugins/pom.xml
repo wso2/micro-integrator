@@ -69,7 +69,9 @@
                             org.wso2.micro.integrator.log4j.plugins.*,
                         </Export-Package>
                         <Import-Package>
-                            org.wso2.micro.integrator.core.util.*
+                            org.wso2.micro.integrator.core.util.*,
+                            org.wso2.micro.integrator.utils.*,
+                            org.wso2.micro.integrator.security.*
                         </Import-Package>
                         <Include-Resource>${project.build.directory}/classes/</Include-Resource>
                     </instructions>

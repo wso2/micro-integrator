@@ -82,24 +82,17 @@ ant -buildfile "$CARBON_HOME"/bin/build.xml
 
 # update classpath
 CARBON_CLASSPATH=""
-for f in "$CARBON_HOME"/wso2/lib/*.jar
+for k in "$CARBON_HOME"/lib/*.jar
 do
-  CARBON_CLASSPATH=$CARBON_CLASSPATH:$f
+  CARBON_CLASSPATH=$CARBON_CLASSPATH:$k
 done
-
-for g in "$CARBON_HOME"/repository/lib/*.jar
+for l in "$CARBON_HOME"/wso2/components/plugins/*.jar
 do
-  CARBON_CLASSPATH=$CARBON_CLASSPATH:$g
+  CARBON_CLASSPATH=$CARBON_CLASSPATH:$l
 done
-
-for h in "$CARBON_HOME"/wso2/lib/api/*.jar
+for m in "$CARBON_HOME"/wso2/lib/*.jar
 do
-  CARBON_CLASSPATH=$CARBON_CLASSPATH:$h
-done
-
-for i in "$CARBON_HOME"/bin/*.jar
-do
-  CARBON_CLASSPATH=$CARBON_CLASSPATH:$i
+  CARBON_CLASSPATH=$CARBON_CLASSPATH:$m
 done
 
 CARBON_CLASSPATH=$CARBON_CLASSPATH:$CLASSPATH
@@ -117,5 +110,5 @@ cd "$CARBON_HOME"
 
 CARBON_CLASSPATH="$CARBON_HOME/lib/patches":"$CARBON_HOME/conf":$CARBON_CLASSPATH
 
-$JAVA_HOME/bin/java -Dcarbon.config.dir.path="$CARBON_HOME/conf" -cp "$CARBON_CLASSPATH" org.wso2.carbon.core.util.PasswordUpdater $*
+$JAVA_HOME/bin/java -Dcarbon.config.dir.path="$CARBON_HOME/conf" -cp "$CARBON_CLASSPATH" org.wso2.micro.integrator.utils.PasswordUpdater $*
 

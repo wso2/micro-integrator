@@ -650,6 +650,13 @@
             </includes>
         </dependencySet>
         <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>wso2mi-${pom.version}/lib</outputDirectory>
+            <includes>
+                <include>org.wso2.ei:org.wso2.micro.integrator.utils:jar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
             <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/axis2modules
             </outputDirectory>
             <includes>

@@ -37,9 +37,9 @@
 	         Note: Do not comment within UserStoreManager tags. Cause, specific tag names are used as tokens
 	         when building configurations for products.
 	    -->
-        <!--UserStoreManager class="org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager">
+        <UserStoreManager class="org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager">
             <Property name="TenantManager">org.wso2.carbon.user.core.tenant.JDBCTenantManager</Property>
-            <Property name="ReadOnly">true</Property>
+            <Property name="ReadOnly">false</Property>
             <Property name="ReadGroups">true</Property>
             <Property name="WriteGroups">true</Property>
             <Property name="UsernameJavaRegEx">^[\S]{3,30}$</Property>
@@ -60,14 +60,14 @@
             <Property name="MaxRoleNameListLength">100</Property>
             <Property name="UserRolesCacheEnabled">true</Property>
             <Property name="UserNameUniqueAcrossTenants">false</Property>
-        </UserStoreManager-->
+        </UserStoreManager>
 	
 	    <!-- If product is using an external LDAP as the user store in READ ONLY mode, use following user manager.
 		     In case if user core cache domain is needed to identify uniquely set property
 		     <Property name="UserCoreCacheIdentifier">domain</Property>
  	    -->
-        <UserStoreManager class="org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreManager">
-            <!--<Property name="TenantManager">org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager</Property>-->
+        <!--UserStoreManager class="org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreManager">
+            <Property name="TenantManager">org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager</Property>
             <Property name="ConnectionURL">ldap://localhost:10389</Property>
             <Property name="ConnectionName">uid=admin,ou=system</Property>
             <Property name="ConnectionPassword">admin</Property>
@@ -98,7 +98,7 @@
             <Property name="ReadTimeout"/>
             <Property name="RetryAttempts"/>
             <Property name="ReplaceEscapeCharactersAtUserLogin">true</Property>
-        </UserStoreManager>
+        </UserStoreManager-->
 	    <!-- Active directory configuration is as follows.
 	         In case if user core cache domain is needed to identify uniquely set property
 	         <Property name="UserCoreCacheIdentifier">domain</Property>
