@@ -142,7 +142,7 @@
                                 <bundleDef>org.wso2.securevault:org.wso2.securevault:${securevault.version}</bundleDef>
 <!--                                <bundleDef>org.wso2.orbit.com.h2database:h2:${version.h2.engine}</bundleDef>-->
                                 <bundleDef>org.apache.axis2.wso2:axis2-json:${axis2.wso2.version}</bundleDef>
-                                <bundleDef>org.codehaus.jettison.wso2:jettison:${orbit.version.jettison}</bundleDef>
+                                <bundleDef>org.codehaus.jettison:jettison:${version.jettison}</bundleDef>
 <!--                                <bundleDef>commons-pool.wso2:commons-pool:${orbit.version.commons.pool}</bundleDef>-->
 <!--                                <bundleDef>commons-dbcp.wso2:commons-dbcp:${orbit.version.commons.dbcp}</bundleDef>-->
 <!--                                <bundleDef>org.apache.abdera.wso2:abdera:${orbit.version.abdera}</bundleDef>-->
