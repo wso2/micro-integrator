@@ -702,7 +702,8 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                                              + "</proxy>");
         carbonLogReader.start();
         addProxy(proxy, PROXY_NAME_INVALID_URI);
-        Thread.sleep(10000);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).until(
+                isProxyDeploymentSuccessful(PROXY_NAME_INVALID_URI));
         Assert.assertTrue(carbonLogReader.checkForLog(expectedLogMsgInvalidUri, DEFAULT_TIMEOUT),
                           ERROR_MSG_INVALID_URI_LOG_NOT_FOUND);
         carbonLogReader.stop();
@@ -1264,6 +1265,21 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
     private boolean deleteFile(File file) {
         return file.exists() && file.delete();
+    }
+
+    /**
+     * Checks if the deployment of a proxy with the given name is successful.
+     *
+     * @param proxyName The name of the proxy to check.
+     * @return A {@code Callable<Boolean>} that returns {@code true} if the deployment is successful,
+     * {@code false} otherwise.
+     */
+    private Callable<Boolean> isProxyDeploymentSuccessful(String proxyName) {
+        return new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                return checkProxyServiceExistence(proxyName);
+            }
+        };
     }
 
     private Callable<Boolean> isFileExist(final File file) {
