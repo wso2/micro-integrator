@@ -29,6 +29,7 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
@@ -39,21 +40,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.core.MediaType;
 
 /**
  * This test class in skipped when user mode is tenant because of this release not support vfs transport for tenants
  */
 public class VFSTransportTestCase extends ESBIntegrationTest {
 
+    private CarbonLogReader carbonLogReader;
     private String pathToVfsDir;
     private File rootFolder;
     private HashMap<String, File> proxyVFSRoots = new HashMap<>();
+    private static final String PROXY_NAME_INVALID_URI = "VFSInvalidURIProxy";
+    private static final String ERROR_MSG_INVALID_URI_LOG_NOT_FOUND = "The log for invalid File URI is not printed";
+    private static String invalidUri;
+    private static String expectedLogMsgInvalidUri;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
         pathToVfsDir = getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/").getPath();
 
+        invalidUri = "file://" + pathToVfsDir + "invalidDirectory";
+        expectedLogMsgInvalidUri = "Provided file uri: " + invalidUri + " is invalid. File does not exist";
         rootFolder = new File(pathToVfsDir + "test" + File.separator);
         File outFolder = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator);
         File inFolder = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator);
@@ -97,6 +106,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         addVFSProxy24();
 
         CarbonServerExtension.restartServer();
+        carbonLogReader = new CarbonLogReader();
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -669,6 +679,36 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Assert.assertFalse(outfile.exists());
     }
 
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test VFS Proxy with an invalid URI")
+    public void testVFSProxyInvalidURI() throws Exception {
+
+        OMElement proxy =
+                AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                                             + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\""
+                                             + PROXY_NAME_INVALID_URI + "\" transports=\"vfs\">\n"
+                                             + "    <parameter name=\"transport.vfs.FileURI\">"
+                                             + invalidUri + "</parameter>\n"
+                                             + "    <parameter name=\"transport.vfs.ContentType\">"
+                                             + MediaType.TEXT_XML + "</parameter>\n"
+                                             + "    <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
+                                             + "    <parameter name=\"transport.PollInterval\">5</parameter>\n"
+                                             + "    <target faultSequence=\"faultSequence\">\n"
+                                             + "        <inSequence>\n"
+                                             + "            <log level=\"full\"/>\n"
+                                             + "        </inSequence>\n"
+                                             + "        <outSequence/>\n"
+                                             + "    </target>\n"
+                                             + "</proxy>");
+        carbonLogReader.start();
+        addProxy(proxy, PROXY_NAME_INVALID_URI);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).until(
+                isProxyDeploymentSuccessful(PROXY_NAME_INVALID_URI));
+        Assert.assertTrue(carbonLogReader.checkForLog(expectedLogMsgInvalidUri, DEFAULT_TIMEOUT),
+                          ERROR_MSG_INVALID_URI_LOG_NOT_FOUND);
+        carbonLogReader.stop();
+    }
+
     private void addVFSProxy1() throws Exception {
 
         String proxyName = "VFSProxy1";
@@ -1225,6 +1265,21 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
     private boolean deleteFile(File file) {
         return file.exists() && file.delete();
+    }
+
+    /**
+     * Checks if the deployment of a proxy with the given name is successful.
+     *
+     * @param proxyName The name of the proxy to check.
+     * @return A {@code Callable<Boolean>} that returns {@code true} if the deployment is successful,
+     * {@code false} otherwise.
+     */
+    private Callable<Boolean> isProxyDeploymentSuccessful(String proxyName) {
+        return new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                return checkProxyServiceExistence(proxyName);
+            }
+        };
     }
 
     private Callable<Boolean> isFileExist(final File file) {
