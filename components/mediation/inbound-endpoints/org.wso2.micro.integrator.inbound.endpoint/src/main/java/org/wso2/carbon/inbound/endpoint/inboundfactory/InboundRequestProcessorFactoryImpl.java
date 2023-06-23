@@ -21,6 +21,7 @@ import org.apache.synapse.SynapseException;
 import org.apache.synapse.inbound.InboundProcessorParams;
 import org.apache.synapse.inbound.InboundRequestProcessor;
 import org.apache.synapse.inbound.InboundRequestProcessorFactory;
+import org.wso2.carbon.inbound.endpoint.protocol.cdc.CDCListener;
 import org.wso2.carbon.inbound.endpoint.protocol.generic.GenericEventBasedConsumer;
 import org.wso2.carbon.inbound.endpoint.protocol.generic.GenericEventBasedListener;
 import org.wso2.carbon.inbound.endpoint.protocol.generic.GenericInboundListener;
@@ -44,7 +45,7 @@ import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSProcessor;
  */
 public class InboundRequestProcessorFactoryImpl implements InboundRequestProcessorFactory {
 
-    public static enum Protocols {jms, file, http, https, hl7, kafka, mqtt, rabbitmq, ws, wss, grpc, httpws, httpswss}
+    public static enum Protocols {jms, file, http, https, hl7, kafka, mqtt, rabbitmq, ws, wss, grpc, httpws, httpswss, cdc}
 
     /**
      * return underlying Request Processor Implementation according to protocol
@@ -97,6 +98,8 @@ public class InboundRequestProcessorFactoryImpl implements InboundRequestProcess
                 case grpc:
                     inboundRequestProcessor = new InboundGRPCListener(params);
                     break;
+                case cdc:
+                    inboundRequestProcessor = new CDCListener(params);
             }
         } else if (params.getClassImpl() != null) {
             if (GenericInboundListener.isListeningInboundEndpoint(params)) {
