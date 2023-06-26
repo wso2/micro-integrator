@@ -26,6 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.AbstractExtendedSynapseHandler;
+import org.apache.synapse.MessageContext;
 import org.apache.synapse.ServerConfigurationInformation;
 import org.apache.synapse.ServerConfigurationInformationFactory;
 import org.apache.synapse.ServerContextInformation;
@@ -35,6 +36,7 @@ import org.apache.synapse.SynapseHandler;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;
+import org.apache.synapse.mediators.base.SequenceMediator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -47,11 +49,13 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
+import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.ServerShutdownHandler;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
 import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandler;
@@ -218,6 +222,20 @@ public class ServiceBusInitializer {
                     configurationManager);*/
             // Start Inbound Endpoint Listeners
             EndpointListenerLoader.loadListeners();
+            String injectCarName = System.getProperty(ServiceBusConstants.AUTOMATION_MODE_CAR_NAME_SYSTEM_PROPERTY);
+            if (injectCarName != null) {
+                String sequenceName = getMainSequenceName(injectCarName);
+                if (sequenceName == null) {
+                    log.error("Invalid cApp name or main sequence name not found");
+                } else {
+                    MessageContext synCtx = synapseEnvironment.createMessageContext();
+                    SequenceMediator seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration().
+                            getSequence(sequenceName);
+                    synapseEnvironment.getSequenceObservers().add(new MicroIntegratorSequenceController());
+                    synCtx.setProperty(ServiceBusConstants.AUTOMATION_MODE_INITIALIZED_PROPERTY, "true");
+                    synCtx.getEnvironment().injectMessage(synCtx, seq);
+                }
+            }
         } catch (Exception e) {
             handleFatal("Couldn't initialize the ESB...", e);
         } catch (Throwable t) {
@@ -226,6 +244,14 @@ public class ServiceBusInitializer {
         if (log.isDebugEnabled()) {
             log.debug(ServiceBusInitializer.class.getName() + "#activate() COMPLETED - " + System.currentTimeMillis());
         }
+    }
+
+    private String getMainSequenceName(String cappName) {
+        CarbonApplication capp = CappDeployer.getCarbonAppByName(cappName);
+        if (capp != null) {
+            return capp.getMainSequence();
+        }
+        return null;
     }
 
     @Deactivate
