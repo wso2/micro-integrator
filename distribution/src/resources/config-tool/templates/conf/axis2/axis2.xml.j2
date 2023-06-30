@@ -290,30 +290,18 @@
         {% endfor %}
     </transportReceiver>
     {% endif %}
-    {% if transport.jms.listener_enable is defined %}
-        {% if transport.jms.listener_enable and transport.jms.listener|length==0 %}
-    <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener"/>
-        {% elif transport.jms.listener_enable %}
-    <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
-            {% for listener in transport.jms.listener %}
-        <parameter name="{{listener.name}}" locked="false">
-                {% for name,value in listener.parameter.items() %}
-            <parameter name="{{name}}" locked="false">{{value}}</parameter>
-                {% endfor %}
-        </parameter>
-            {% endfor %}
-    </transportReceiver>
-        {% endif %}
+    {% if transport.jms.listener|length==0 %}
+        <transportReceiver name="jms" class="{{transport.jms.listener_class}}"/>
     {% elif transport.jms.listener|length>0 %}
-    <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
+        <transportReceiver name="jms" class="{{transport.jms.listener_class}}">
         {% for listener in transport.jms.listener %}
-        <parameter name="{{listener.name}}" locked="false">
+            <parameter name="{{listener.name}}" locked="false">
             {% for name,value in listener.parameter.items() %}
-            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                <parameter name="{{name}}" locked="false">{{value}}</parameter>
             {% endfor %}
-        </parameter>
+            </parameter>
         {% endfor %}
-    </transportReceiver>
+        </transportReceiver>
     {% endif %}
     {% if transport.fix.listener.enable == true %}
     <transportReceiver name="fix" class="org.apache.synapse.transport.fix.FIXTransportListener">
@@ -565,30 +553,18 @@
             {% endif %}
         </transportSender>
     {% endif %}
-    {% if transport.jms.sender_enable is defined %}
-        {% if transport.jms.sender_enable and transport.jms.sender|length==0 %}
-    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender"/>
-        {% elif transport.jms.sender_enable %}
-    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
-            {% for sender in transport.jms.sender %}
-        <parameter name="{{sender.name}}" locked="false">
-                {% for name,value in sender.parameter.items() %}
-            <parameter name="{{name}}" locked="false">{{value}}</parameter>
-                {% endfor %}
-        </parameter>
-            {% endfor %}
-    </transportSender>
-        {% endif %}
+    {% if transport.jms.sender|length==0 %}
+        <transportSender name="jms" class="{{transport.jms.sender_class}}"/>
     {% elif transport.jms.sender|length>0 %}
-    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
+        <transportSender name="jms" class="{{transport.jms.sender_class}}">
         {% for sender in transport.jms.sender %}
-        <parameter name="{{sender.name}}" locked="false">
+            <parameter name="{{sender.name}}" locked="false">
             {% for name,value in sender.parameter.items() %}
-            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                <parameter name="{{name}}" locked="false">{{value}}</parameter>
             {% endfor %}
-        </parameter>
+            </parameter>
         {% endfor %}
-    </transportSender>
+        </transportSender>
     {% endif %}
     {% if transport.local.sender.nonblocking.enable == true %}
     <transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>
