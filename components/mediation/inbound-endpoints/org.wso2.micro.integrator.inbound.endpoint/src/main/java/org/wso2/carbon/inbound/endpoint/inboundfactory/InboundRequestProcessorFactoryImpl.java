@@ -21,7 +21,7 @@ import org.apache.synapse.SynapseException;
 import org.apache.synapse.inbound.InboundProcessorParams;
 import org.apache.synapse.inbound.InboundRequestProcessor;
 import org.apache.synapse.inbound.InboundRequestProcessorFactory;
-import org.wso2.carbon.inbound.endpoint.protocol.cdc.CDCListener;
+import org.wso2.carbon.inbound.endpoint.protocol.cdc.CDCProcessor;
 import org.wso2.carbon.inbound.endpoint.protocol.generic.GenericEventBasedConsumer;
 import org.wso2.carbon.inbound.endpoint.protocol.generic.GenericEventBasedListener;
 import org.wso2.carbon.inbound.endpoint.protocol.generic.GenericInboundListener;
@@ -99,7 +99,7 @@ public class InboundRequestProcessorFactoryImpl implements InboundRequestProcess
                     inboundRequestProcessor = new InboundGRPCListener(params);
                     break;
                 case cdc:
-                    inboundRequestProcessor = new CDCListener(params);
+                    inboundRequestProcessor = new CDCProcessor(params);
             }
         } else if (params.getClassImpl() != null) {
             if (GenericInboundListener.isListeningInboundEndpoint(params)) {

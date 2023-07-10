@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.carbon.inbound.endpoint.protocol.cdc;
 
 import io.debezium.engine.ChangeEvent;
@@ -12,21 +30,13 @@ import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.TABLE;
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.TS_MS;
 
-
 public class CDCEventOutput {
 
-    private Object beforeEvent;
-    private Object afterEvent;
-    private Long ts_ms;
-
-    private String database;
-    private Object table;
-    private String op;
     private JSONObject payload;
 
     private enum operations {c, r, u, d};
 
-    CDCEventOutput (ChangeEvent event) {
+    CDCEventOutput(ChangeEvent event) {
         String valueString = event.value().toString();
         JSONObject value = new JSONObject(valueString);
         this.payload = value.getJSONObject(PAYLOAD);
@@ -41,10 +51,6 @@ public class CDCEventOutput {
 
     }
 
-    public void setJsonPayloadBeforeEvent(Object beforeEvent) {
-        this.beforeEvent = beforeEvent;
-    }
-
     public Object getJsonPayloadAfterEvent() {
         Object afterObject = null;
         if (payload.has(AFTER)) {
@@ -53,19 +59,11 @@ public class CDCEventOutput {
         return afterObject;
     }
 
-    public void setJsonPayloadAfterEvent(Object afterEvent) {
-        this.afterEvent = afterEvent;
-    }
-
     public Long getTs_ms() {
         if (payload.has(TS_MS)) {
             return payload.getLong(TS_MS);
         }
         return null;
-    }
-
-    public void setTs_ms(Long ts_ms) {
-        this.ts_ms = ts_ms;
     }
 
     public String getDatabase() {
@@ -78,10 +76,6 @@ public class CDCEventOutput {
         return null;
     }
 
-    public void setDatabase(String database) {
-        this.database = database;
-    }
-
     public Object getTable() {
         Object tableObject = null;
         if (getSource() != null) {
@@ -90,10 +84,6 @@ public class CDCEventOutput {
             }
         }
         return tableObject;
-    }
-
-    public void setTable(Object table) {
-        this.table = table;
     }
 
     private JSONObject getSource () {
@@ -109,6 +99,7 @@ public class CDCEventOutput {
         }
         return null;
     }
+
     private String getOpString(String op) {
         if (op != null) {
             switch (operations.valueOf(op)) {
@@ -123,10 +114,6 @@ public class CDCEventOutput {
             }
         }
         return null;
-    }
-
-    public void setOp(String op) {
-        this.op = op;
     }
 
     public JSONObject getOutputJsonPayload () {
