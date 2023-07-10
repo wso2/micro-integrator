@@ -72,11 +72,17 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
                                 analyticsEnabledForInboundEndpoints) ||
                         (StatisticsConstants.FLOW_STATISTICS_PROXYSERVICE.equals(event.getComponentType()) &&
                                 analyticsEnabledForProxyServices)) {
+                    if ((StatisticsConstants.FLOW_STATISTICS_SEQUENCE.equals(event.getComponentType()) &&
+                            event.getElasticMetadata().getSequence(event.getComponentName()) == null) ||
+                            (StatisticsConstants.FLOW_STATISTICS_ENDPOINT.equals(event.getComponentType()) &&
+                            event.getElasticMetadata().getEndpoint(event.getComponentName()) == null)) {
+                        // If Endpoint or Sequence is null
+                        return;
+                    }
                     publishAnalytics(event);
                 }
             });
         }
-
     }
 
     private void publishAnalytics(PublishingEvent event) {
@@ -154,11 +160,11 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
                 return metadata.getProperty(RESTConstants.SYNAPSE_REST_API).toString();
             case "Endpoint":
                 return metadata.getEndpoint(event.getComponentName()).getName();
-            case "ProxyService":
-            case "InboundEndpoint":
+            case "Sequence":
+                return metadata.getSequence(event.getComponentName()).getName();
+            case "Proxy Service":
+            case "Inbound EndPoint":
                 return event.getComponentName();
-            case "SequenceMediator":
-                return event.getElasticMetadata().getSequence(event.getComponentName()).getName();
             default:
                 return null;
         }
