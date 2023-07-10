@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.analytics.messageflow.data.publisher.observer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.aspects.flow.statistics.publishing.PublishingFlow;
+import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.choreo.ChoreoStatisticsPublisher;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.ei.EIStatisticsPublisher;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.StatisticsPublisher;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.elasticsearch.ElasticStatisticsPublisher;
@@ -38,12 +39,16 @@ public class AnalyticsMediationFlowObserver implements MessageFlowObserver, Tena
     public AnalyticsMediationFlowObserver(List<String> publisherTypes) {
         if (publisherTypes != null && !publisherTypes.isEmpty() &&
                 (publisherTypes.contains(MediationDataPublisherConstants.DATABRIDGE_PUBLISHER_TYPE )
-                        || publisherTypes.contains(MediationDataPublisherConstants.LOG_PUBLISHER_TYPE))) {
+                        || publisherTypes.contains(MediationDataPublisherConstants.LOG_PUBLISHER_TYPE)
+                        || publisherTypes.contains(MediationDataPublisherConstants.CHOREO_PUBLISHER_TYPE))) {
             if (publisherTypes.contains(MediationDataPublisherConstants.DATABRIDGE_PUBLISHER_TYPE)) {
                 statPublishers.add(EIStatisticsPublisher.GetInstance());
             }
             if (publisherTypes.contains(MediationDataPublisherConstants.LOG_PUBLISHER_TYPE)) {
                 statPublishers.add(ElasticStatisticsPublisher.GetInstance());
+            }
+            if (publisherTypes.contains(MediationDataPublisherConstants.CHOREO_PUBLISHER_TYPE)) {
+                statPublishers.add(ChoreoStatisticsPublisher.GetInstance());
             }
         } else {
             statPublishers.add(ElasticStatisticsPublisher.GetInstance());
