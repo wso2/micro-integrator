@@ -12,12 +12,12 @@ import org.apache.synapse.aspects.flow.statistics.publishing.PublishingFlow;
 import org.apache.synapse.aspects.flow.statistics.util.StatisticsConstants;
 import org.apache.synapse.commons.CorrelationConstants;
 import org.apache.synapse.config.SynapsePropertiesLoader;
-import org.apache.synapse.mediators.base.SequenceMediator;
 import org.apache.synapse.rest.RESTConstants;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.StatisticsPublisher;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.elasticsearch.ElasticConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusInitializer;
 
+import java.time.Instant;
 import java.util.Objects;
 
 public class ChoreoStatisticsPublisher implements StatisticsPublisher {
@@ -106,7 +106,7 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
             // Message related information
             // All artifact related messages should contain below information
             pL.addProperty("name", getName(type, event));
-            pL.addProperty("timestamp", event.getStartTime());
+            pL.addProperty("timestamp", getTimeStamp(event.getStartTime()));
             pL.addProperty("entityType", event.getComponentType());
             pL.addProperty("faultResponse", metadata.isFaultResponse());
             pL.addProperty("failure", event.getFaultCount() != 0);
@@ -168,5 +168,12 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
             default:
                 return null;
         }
+    }
+
+    private String getTimeStamp(long startTime) {
+        if (startTime == 0) {
+            return Instant.now().toString();
+        }
+        return Instant.ofEpochMilli(startTime).toString();
     }
 }
