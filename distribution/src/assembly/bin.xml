@@ -315,13 +315,6 @@
                 <exclude>empty.txt</exclude>
             </excludes>
         </fileSet>
-
-        <fileSet>
-            <directory>src/resources/security</directory>
-            <outputDirectory>wso2mi-${pom.version}/repository/resources/security</outputDirectory>
-            <fileMode>444</fileMode>
-        </fileSet>
-
         <fileSet> <!-- Create empty registry directory -->
             <outputDirectory>wso2mi-${pom.version}/registry</outputDirectory>
             <excludes><exclude>**/*</exclude></excludes>

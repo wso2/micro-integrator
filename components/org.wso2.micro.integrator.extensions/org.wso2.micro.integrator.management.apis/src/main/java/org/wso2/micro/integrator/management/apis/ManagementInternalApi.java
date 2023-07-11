@@ -32,7 +32,6 @@ import java.util.List;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_CARBON_APP_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_EXTERNAL_VAULT_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_ROLE;
-import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_TRANSACTION;
 import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_USER;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_APIS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
@@ -55,7 +54,6 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SEQUENC
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SERVER_DATA;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TASKS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TEMPLATES;
-import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TRANSACTION;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_USERS;
 import static org.wso2.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
 import static org.wso2.micro.integrator.management.apis.Constants.ROOT_CONTEXT;
@@ -101,8 +99,6 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGOUT, new LogoutResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_SERVER_DATA, new MetaDataResource()));
         resourcesList.add(new LogFilesResource(PREFIX_LOG_FILES));
-        resourcesList.add(new ApiResourceAdapter(PREFIX_TRANSACTION + PATH_PARAM_TRANSACTION,
-                                                 new RequestCountResource()));
         resourcesList.add(new ExternalVaultResource(PREFIX_EXTERNAL_VAULTS
                 + PATH_PARAM_EXTERNAL_VAULT_NAME));
         resourcesList.add(new ApiResourceAdapter(PREFIX_DATA_SOURCES, new DataSourceResource()));

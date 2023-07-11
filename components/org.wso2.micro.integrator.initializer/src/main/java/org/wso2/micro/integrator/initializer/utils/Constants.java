@@ -77,5 +77,7 @@ public class Constants {
     public static final String HTTPS_LISTENER_PORT = "transport.https.listener.parameter.port";
     public static final String HTTP_LISTENER_PORT = "transport.http.listener.parameter.port";
     public static final String SERVER_PORT_OFFSET = "portOffset";
-
+    public static final String IS_THERE_ASSOCIATED_INCOMING_REQUEST = "is_there_incoming_request";
+    public static final String TRANSPORT_WS = "ws";
+    public static final String TRANSPORT_WSS = "wss";
 }

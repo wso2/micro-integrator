@@ -429,10 +429,6 @@ public class JMSUtils {
             log.error("Error while reading the Transport Headers from JMS Message", e);
         }
 
-        // remove "INTERNAL_TRANSACTION_COUNTED" header from the transport level headers map.
-        // this property will be maintained in the message context. Therefore, no need to set this in the transport
-        // headers.
-        map.remove(BaseConstants.INTERNAL_TRANSACTION_COUNTED);
         return map;
     }
 
