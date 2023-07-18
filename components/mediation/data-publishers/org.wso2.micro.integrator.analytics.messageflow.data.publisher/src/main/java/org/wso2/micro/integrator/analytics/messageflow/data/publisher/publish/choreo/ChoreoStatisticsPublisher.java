@@ -24,16 +24,21 @@
  *
  * 1. Add the following to the deployment.toml file.
  *
+ * i. Enabling statistics for artifacts
  * [mediation]
  * flow.statistics.enable=true
  * flow.statistics.capture_all=true
  *
+ * ii. Enabling Choreo Analytics
  * [analytics]
  * enabled=true
- * publisher="choreo" (Adding this required. If not added, the default publisher will be used which is ELK flow)
+ * publisher="choreo"
+ *
+ * **Adding publisher is required. If not added, the default publisher will be used which is ELK flow**
  *
  * 2. Optionally, you can add the following to the deployment.toml file.
  *
+ * [analytics]
  * api_analytics.enabled = true
  * proxy_service_analytics.enabled = true
  * sequence_analytics.enabled = true
