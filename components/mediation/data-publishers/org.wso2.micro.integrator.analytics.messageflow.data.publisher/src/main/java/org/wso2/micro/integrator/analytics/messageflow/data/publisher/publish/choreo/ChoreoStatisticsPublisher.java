@@ -1,3 +1,54 @@
+/*
+ * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+ */
+
+/*
+ * Documentation
+ *
+ * Enable Choreo Analytics
+ *
+ * 1. Add the following to the deployment.toml file.
+ *
+ * [mediation]
+ * flow.statistics.enable=true
+ * flow.statistics.capture_all=true
+ *
+ * [analytics]
+ * enabled=true
+ * publisher="choreo" (Adding this required. If not added, the default publisher will be used which is ELK flow)
+ *
+ * 2. Optionally, you can add the following to the deployment.toml file.
+ *
+ * api_analytics.enabled = true
+ * proxy_service_analytics.enabled = true
+ * sequence_analytics.enabled = true
+ * endpoint_analytics.enabled = true
+ * inbound_endpoint_analytics.enabled = true
+ *
+ * Note that default value for above 5 will be true (If not added). If you want to disable analytics for any of the
+ * above, change the value to false.
+ *
+ * 3. Restart the server.
+ *
+ * Special Note - This is a WIP code so publishing to Choreo is not fully implemented.
+ *
+ */
+
 package org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.choreo;
 
 import com.google.gson.JsonObject;
