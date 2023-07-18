@@ -1,6 +1,10 @@
 package org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.choreo;
 
 import com.google.gson.JsonObject;
+
+import java.time.Instant;
+import java.util.Objects;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.ServerConfigurationInformation;
@@ -8,16 +12,13 @@ import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.aspects.flow.statistics.elasticsearch.ElasticMetadata;
 import org.apache.synapse.aspects.flow.statistics.publishing.PublishingEvent;
 import org.apache.synapse.aspects.flow.statistics.publishing.PublishingFlow;
-
 import org.apache.synapse.aspects.flow.statistics.util.StatisticsConstants;
 import org.apache.synapse.commons.CorrelationConstants;
 import org.apache.synapse.config.SynapsePropertiesLoader;
 import org.apache.synapse.rest.RESTConstants;
+
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.StatisticsPublisher;
 import org.wso2.micro.integrator.initializer.ServiceBusInitializer;
-
-import java.time.Instant;
-import java.util.Objects;
 
 public class ChoreoStatisticsPublisher implements StatisticsPublisher {
     private static ChoreoStatisticsPublisher instance = null;
@@ -123,6 +124,7 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
         // Where entry has assigned by payload data.
         // https://github.com/wso2/apim-analytics-publisher handles API-M analytics publishing for Choreo.
         // Should be able to reuse the same method to publish data to event hub with some changes.
+        log.info("Choreo Analytics is enabled. Payload: " + payload);
     }
 
     /**
@@ -185,7 +187,6 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
                 pL.addProperty(ChoreoConstants.PayloadKeys.CORRELATION_ID,
                         metadata.getProperty(CorrelationConstants.CORRELATION_ID).toString());
             }
-            System.out.println(pL);
             return pL;
         } catch (Exception e) {
             log.error("Error while collecting information for Choreo Statistics Payload. Exception : ", e);
