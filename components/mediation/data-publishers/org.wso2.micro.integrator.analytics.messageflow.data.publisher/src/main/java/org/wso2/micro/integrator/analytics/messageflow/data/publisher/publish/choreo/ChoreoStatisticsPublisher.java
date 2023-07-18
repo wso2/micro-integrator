@@ -31,6 +31,8 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
     private boolean analyticsEnabledForEndpoints;
     private boolean analyticsEnabledForInboundEndpoints;
 
+    private boolean analyticsEnabled;
+
     public static ChoreoStatisticsPublisher GetInstance() {
         if (instance == null) {
             instance = new ChoreoStatisticsPublisher();
@@ -38,6 +40,11 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
         return instance;
     }
 
+    /**
+     * Load Configurations.
+     *
+     * This method is used to load configurations from synapse.properties file.
+     */
     private void loadConfigurations() {
         analyticsEnabledForAPI = SynapsePropertiesLoader.getBooleanProperty(
                 ElasticConstants.SynapseConfigKeys.API_ANALYTICS_ENABLED, true);
@@ -49,14 +56,30 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
                 ElasticConstants.SynapseConfigKeys.ENDPOINT_ANALYTICS_ENABLED, true);
         analyticsEnabledForInboundEndpoints = SynapsePropertiesLoader.getBooleanProperty(
                 ElasticConstants.SynapseConfigKeys.INBOUND_ENDPOINT_ANALYTICS_ENABLED, true);
+        analyticsEnabled = SynapsePropertiesLoader.getBooleanProperty(
+                ElasticConstants.SynapseConfigKeys.ELASTICSEARCH_ENABLED, false);
     }
 
     protected ChoreoStatisticsPublisher() {
         loadConfigurations();
     }
 
+    /**
+     * Process Method of data publisher.
+     *
+     * In this,
+     * It will be checked if analytics is enabled by configuration.
+     * Then, it will be checked if the artifact's analytics is disabled by configuration.
+     * Then, if artifact is Endpoint or Sequence, it will be checked if the artifact is null.
+     *
+     * @param publishingFlow The publishing flow
+     * @param tenantId       The tenant id
+     */
     @Override
     public void process(PublishingFlow publishingFlow, int tenantId) {
+        if (!analyticsEnabled) {
+            return;
+        }
         if (publishingFlow.getEvents().toArray().length > 0) {
             publishingFlow.getEvents().forEach(event -> {
                 if (event.getElasticMetadata() == null || !event.getElasticMetadata().isValid()) {
@@ -85,10 +108,32 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
         }
     }
 
+    /**
+     * Publish the analytics.
+     *
+     * Publish the analytics to Event Hub (For Choreo Analytics).
+     *
+     * @param event This is the event published by synapse.
+     */
     private void publishAnalytics(PublishingEvent event) {
         JsonObject payload = choreoPayload(event);
+        // In here, publishing data to event hub should be handled.
+        // For example,
+        // builder.addAttribute(entry.getKey(), entry.getValue());
+        // counterMetric.incrementCount(builder);
+        // Where entry has assigned by payload data.
+        // https://github.com/wso2/apim-analytics-publisher handles API-M analytics publishing for Choreo.
+        // Should be able to reuse the same method to publish data to event hub with some changes.
     }
 
+    /**
+     * Generate the payload.
+     *
+     * Generate the payload to send to Event Hub (For Choreo Analytics).
+     *
+     * @param event This is the event published by synapse.
+     * @return This returns a JsonObject which contains the required flat Json by Choreo.
+     */
     private JsonObject choreoPayload (PublishingEvent event) {
         try {
             ElasticMetadata metadata = event.getElasticMetadata();
@@ -115,10 +160,12 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
 
             if (Objects.equals(type, "API")) {
                 // Only APIs have below 4 information
-                pL.addProperty("apiSubRequestPath", metadata.getProperty(RESTConstants.REST_SUB_REQUEST_PATH).toString());
+                pL.addProperty("apiSubRequestPath", metadata.getProperty(RESTConstants.REST_SUB_REQUEST_PATH)
+                        .toString());
                 pL.addProperty("apiMethod", metadata.getProperty(RESTConstants.REST_METHOD).toString());
                 pL.addProperty("apiContext", metadata.getProperty(RESTConstants.REST_API_CONTEXT).toString());
-                pL.addProperty("apiTransport", metadata.getProperty(SynapseConstants.TRANSPORT_IN_NAME).toString());
+                pL.addProperty("apiTransport", metadata.getProperty(SynapseConstants.TRANSPORT_IN_NAME)
+                        .toString());
             } else {
                 // Setting N/A because pL (Payload) is required to be common for all 5 artifacts.
                 pL.addProperty("apiSubRequestPath", "N/A");
@@ -134,7 +181,8 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
                 // isInbound is only available for inbound messages.
                 pL.addProperty("correlationId", "N/A");
             } else {
-                pL.addProperty("correlationId", metadata.getProperty(CorrelationConstants.CORRELATION_ID).toString());
+                pL.addProperty("correlationId", metadata.getProperty(CorrelationConstants.CORRELATION_ID)
+                        .toString());
             }
             System.out.println(pL);
             return pL;
@@ -170,6 +218,14 @@ public class ChoreoStatisticsPublisher implements StatisticsPublisher {
         }
     }
 
+    /**
+     * Get the starting timestamp of the artifact.
+     *
+     * Timestamp comes as a long (In Unix timestamp). Using this method, it can be converted to  ISO 8601 format.
+     *
+     * @param startTime This is the event starting time.
+     * @return This returns a String which contains the time in ISO 8601 format.
+     */
     private String getTimeStamp(long startTime) {
         if (startTime == 0) {
             return Instant.now().toString();
