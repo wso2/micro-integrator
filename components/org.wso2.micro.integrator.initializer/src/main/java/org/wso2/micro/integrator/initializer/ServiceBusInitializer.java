@@ -223,7 +223,7 @@ public class ServiceBusInitializer {
             // Start Inbound Endpoint Listeners
             EndpointListenerLoader.loadListeners();
             String injectCarName = System.getProperty(ServiceBusConstants.AUTOMATION_MODE_CAR_NAME_SYSTEM_PROPERTY);
-            if (injectCarName != null) {
+            if (injectCarName != null && !injectCarName.isEmpty()) {
                 String sequenceName = getMainSequenceName(injectCarName);
                 if (sequenceName == null) {
                     log.error("Invalid cApp name or main sequence name not found");
