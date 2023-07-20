@@ -37,20 +37,22 @@ public class AnalyticsMediationFlowObserver implements MessageFlowObserver, Tena
     private final Collection<StatisticsPublisher> statPublishers = new ArrayList<>();
 
     public AnalyticsMediationFlowObserver(List<String> publisherTypes) {
-        if (publisherTypes != null && !publisherTypes.isEmpty() &&
-                (publisherTypes.contains(MediationDataPublisherConstants.DATABRIDGE_PUBLISHER_TYPE )
-                        || publisherTypes.contains(MediationDataPublisherConstants.LOG_PUBLISHER_TYPE)
-                        || publisherTypes.contains(MediationDataPublisherConstants.CHOREO_PUBLISHER_TYPE))) {
+        boolean useDefaultPublisher = true;
+        if (publisherTypes != null && !publisherTypes.isEmpty()) {
             if (publisherTypes.contains(MediationDataPublisherConstants.DATABRIDGE_PUBLISHER_TYPE)) {
                 statPublishers.add(EIStatisticsPublisher.GetInstance());
+                useDefaultPublisher = false;
             }
             if (publisherTypes.contains(MediationDataPublisherConstants.LOG_PUBLISHER_TYPE)) {
                 statPublishers.add(ElasticStatisticsPublisher.GetInstance());
+                useDefaultPublisher = false;
             }
             if (publisherTypes.contains(MediationDataPublisherConstants.CHOREO_PUBLISHER_TYPE)) {
                 statPublishers.add(ChoreoStatisticsPublisher.GetInstance());
+                useDefaultPublisher = false;
             }
-        } else {
+        }
+        if (useDefaultPublisher) {
             statPublishers.add(ElasticStatisticsPublisher.GetInstance());
         }
     }
