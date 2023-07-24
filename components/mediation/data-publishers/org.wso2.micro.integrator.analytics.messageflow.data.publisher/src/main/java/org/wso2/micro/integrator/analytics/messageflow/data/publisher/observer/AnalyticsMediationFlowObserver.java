@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.analytics.messageflow.data.publisher.observer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.aspects.flow.statistics.publishing.PublishingFlow;
+import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.choreo.ChoreoStatisticsPublisher;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.ei.EIStatisticsPublisher;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.StatisticsPublisher;
 import org.wso2.micro.integrator.analytics.messageflow.data.publisher.publish.elasticsearch.ElasticStatisticsPublisher;
@@ -36,16 +37,22 @@ public class AnalyticsMediationFlowObserver implements MessageFlowObserver, Tena
     private final Collection<StatisticsPublisher> statPublishers = new ArrayList<>();
 
     public AnalyticsMediationFlowObserver(List<String> publisherTypes) {
-        if (publisherTypes != null && !publisherTypes.isEmpty() &&
-                (publisherTypes.contains(MediationDataPublisherConstants.DATABRIDGE_PUBLISHER_TYPE )
-                        || publisherTypes.contains(MediationDataPublisherConstants.LOG_PUBLISHER_TYPE))) {
+        boolean useDefaultPublisher = true;
+        if (publisherTypes != null && !publisherTypes.isEmpty()) {
             if (publisherTypes.contains(MediationDataPublisherConstants.DATABRIDGE_PUBLISHER_TYPE)) {
                 statPublishers.add(EIStatisticsPublisher.GetInstance());
+                useDefaultPublisher = false;
             }
             if (publisherTypes.contains(MediationDataPublisherConstants.LOG_PUBLISHER_TYPE)) {
                 statPublishers.add(ElasticStatisticsPublisher.GetInstance());
+                useDefaultPublisher = false;
             }
-        } else {
+            if (publisherTypes.contains(MediationDataPublisherConstants.CHOREO_PUBLISHER_TYPE)) {
+                statPublishers.add(ChoreoStatisticsPublisher.GetInstance());
+                useDefaultPublisher = false;
+            }
+        }
+        if (useDefaultPublisher) {
             statPublishers.add(ElasticStatisticsPublisher.GetInstance());
         }
     }

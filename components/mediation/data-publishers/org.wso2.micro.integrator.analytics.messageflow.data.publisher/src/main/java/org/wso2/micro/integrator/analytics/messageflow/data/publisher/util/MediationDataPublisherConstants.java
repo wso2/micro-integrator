@@ -26,6 +26,7 @@ public class MediationDataPublisherConstants {
     public static final String CONFIG_STREAM_VERSION = "1.0.0";
     public static final String DATABRIDGE_PUBLISHER_TYPE = "databridge";
     public static final String LOG_PUBLISHER_TYPE = "log";
+    public static final String CHOREO_PUBLISHER_TYPE = "choreo";
     public static final String ANALYTICS_TYPE = "analytics.publisher";
 
 
