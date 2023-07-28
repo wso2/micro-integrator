@@ -20,7 +20,7 @@
     <parent>
         <artifactId>inbound-endpoints</artifactId>
         <groupId>org.wso2.ei</groupId>
-        <version>4.2.0-SNAPSHOT</version>
+        <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -171,6 +171,10 @@
             <artifactId>axis2-transport-rabbitmq-amqp</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.orbit.debezium</groupId>
+            <artifactId>debezium</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <scope>test</scope>
@@ -181,24 +185,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.inbound.endpoint.persistence</artifactId>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.debezium</groupId>
-            <artifactId>debezium-embedded</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.debezium</groupId>
-            <artifactId>debezium-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.debezium</groupId>
-            <artifactId>debezium-connector-mysql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.securevault</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -232,7 +224,8 @@
                         </Private-Package>
                         <Import-Package>
                             org.wso2.carbon.inbound.endpoint.persistence,
-                            org.wso2.carbon.inbound.endpoint.osgi.service;
+                            org.wso2.carbon.inbound.endpoint.osgi.service,
+                            *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Fragment-Host>

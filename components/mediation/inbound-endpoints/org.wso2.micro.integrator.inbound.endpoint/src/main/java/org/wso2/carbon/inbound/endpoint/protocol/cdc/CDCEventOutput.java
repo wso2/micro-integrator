@@ -18,8 +18,10 @@
 
 package org.wso2.carbon.inbound.endpoint.protocol.cdc;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.debezium.engine.ChangeEvent;
-import org.json.JSONObject;
 
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.AFTER;
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.BEFORE;
@@ -32,36 +34,27 @@ import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.
 
 public class CDCEventOutput {
 
-    private JSONObject payload;
+    private JsonObject payload;
 
     private enum operations {c, r, u, d};
 
     CDCEventOutput(ChangeEvent event) {
         String valueString = event.value().toString();
-        JSONObject value = new JSONObject(valueString);
-        this.payload = value.getJSONObject(PAYLOAD);
+        JsonObject value = new Gson().fromJson(valueString, JsonObject.class);
+        this.payload = value.getAsJsonObject(PAYLOAD);
     }
 
-    public Object getJsonPayloadBeforeEvent() {
-        Object beforeObject = null;
-        if (payload.has(BEFORE)) {
-            beforeObject = payload.get(BEFORE);
-        }
-        return beforeObject;
-
+    public JsonElement getJsonPayloadBeforeEvent() {
+        return payload.get(BEFORE);
     }
 
-    public Object getJsonPayloadAfterEvent() {
-        Object afterObject = null;
-        if (payload.has(AFTER)) {
-            afterObject = payload.get(AFTER);
-        }
-        return afterObject;
+    public JsonElement getJsonPayloadAfterEvent() {
+        return payload.get(AFTER);
     }
 
     public Long getTs_ms() {
         if (payload.has(TS_MS)) {
-            return payload.getLong(TS_MS);
+            return payload.get(TS_MS).getAsLong();
         }
         return null;
     }
@@ -69,15 +62,15 @@ public class CDCEventOutput {
     public String getDatabase() {
         if (getSource() != null) {
             if (getSource().has(DB)) {
-                return getSource().getString(DB);
+                return getSource().get(DB).getAsString();
             }
             return null;
         }
         return null;
     }
 
-    public Object getTable() {
-        Object tableObject = null;
+    public JsonElement getTable() {
+        JsonElement tableObject = null;
         if (getSource() != null) {
             if (getSource().has(TABLE)) {
                 tableObject = getSource().get(TABLE);
@@ -86,16 +79,16 @@ public class CDCEventOutput {
         return tableObject;
     }
 
-    private JSONObject getSource () {
+    private JsonObject getSource () {
         if (payload.has(SOURCE)) {
-            return payload.getJSONObject(SOURCE);
+            return payload.getAsJsonObject(SOURCE);
         }
         return null;
     }
 
     public String getOp() {
         if (payload.has(OP)) {
-            return getOpString(payload.getString(OP));
+            return getOpString(payload.get(OP).getAsString());
         }
         return null;
     }
@@ -116,14 +109,14 @@ public class CDCEventOutput {
         return null;
     }
 
-    public JSONObject getOutputJsonPayload () {
+    public JsonObject getOutputJsonPayload () {
         if (payload == null) {
             return null;
         }
-        JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(OP, getOp());
-        jsonPayload.put(BEFORE, getJsonPayloadBeforeEvent());
-        jsonPayload.put(AFTER, getJsonPayloadAfterEvent());
+        JsonObject jsonPayload = new JsonObject();
+        jsonPayload.addProperty(OP, getOp());
+        jsonPayload.add(BEFORE, getJsonPayloadBeforeEvent());
+        jsonPayload.add(AFTER, getJsonPayloadAfterEvent());
         return jsonPayload;
     }
 }

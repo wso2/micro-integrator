@@ -1,19 +1,22 @@
 <inboundEndpoint name="cdc-inbound-endpoint" onError="fault" protocol="cdc" sequence="cdc_process_seq" suspend="false" xmlns="http://ws.apache.org/ns/synapse">
     <parameters>
-        <parameter name="inbound.cdc.port">9091</parameter>
+        <parameter name="interval">1000</parameter>
         <parameter name="name">engine</parameter>
+        <parameter name="snapshot.mode">initial</parameter>
         <parameter name="offset.storage">org.apache.kafka.connect.storage.FileOffsetBackingStore</parameter>
-        <!--parameter name="offset.storage.file.filename">~Documents/mytemp1/offsets.dat</parameter-->
+        <parameter name="offset.storage.file.filename">cdc/offsetStorage/offsets1_.dat</parameter>
         <parameter name="connector.class">io.debezium.connector.mysql.MySqlConnector</parameter>
         <parameter name="database.hostname">localhost</parameter>
         <parameter name="database.port">3306</parameter>
         <parameter name="database.user">root</parameter>
-        <parameter name="database.password">rusiri@wso2</parameter>
+         <parameter name="database.password">{wso2:vault-lookup('mysql_password')}</parameter>
         <parameter name="database.dbname">students</parameter>
-        <parameter name="database.server.id">85744</parameter>
+        <parameter name="database.server.id">8574444</parameter>
+        <parameter name="database.server.name">server_1</parameter>
+        <parameter name="topic.prefix">topic2</parameter>
         <parameter name="schema.history.internal">io.debezium.storage.file.history.FileSchemaHistory</parameter>
-        <!--parameter name="schema.history.internal.file.filename">~Documents/mytemp1/schemahistory.dat</parameter-->
+        <parameter name="schema.history.internal.file.filename">cdc/schemaHistory/schema_history1_.dat</parameter>
         <parameter name="table.include.list">students.marks</parameter>
-        <parameter name="skipped.operations">c</parameter>
+        <parameter name="allowed.operations">create</parameter>
     </parameters>
 </inboundEndpoint>

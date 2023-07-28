@@ -42,9 +42,7 @@ public class CDCTask extends InboundTask {
     }
 
     protected void taskExecute() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("CDC Task executing.");
-        }
+        logger.debug("CDC Task executing.");
         pollingConsumer.execute();
     }
 
@@ -54,14 +52,10 @@ public class CDCTask extends InboundTask {
     }
 
     public void init(SynapseEnvironment synapseEnvironment) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Initializing Task.");
-        }
+        logger.debug("Initializing Task.");
     }
 
     public void destroy() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Destroying Task. ");
-        }
+        logger.debug("Destroying Task. ");
     }
 }

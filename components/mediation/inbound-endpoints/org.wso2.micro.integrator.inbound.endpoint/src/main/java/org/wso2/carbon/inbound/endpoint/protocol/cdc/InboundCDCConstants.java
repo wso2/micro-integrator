@@ -36,11 +36,15 @@ class InboundCDCConstants {
 
     public static final String DEBEZIUM_SCHEMA_HISTORY_INTERNAL = "schema.history.internal";
     public static final String DEBEZIUM_SCHEMA_HISTORY_INTERNAL_FILE_FILENAME = "schema.history.internal.file.filename";
+    public static final String DEBEZIUM_SKIPPED_OPERATIONS = "skipped.operations";
+    public static final String DEBEZIUM_ALLOWED_OPERATIONS = "allowed.operations";
+
 
     /** Output Properties **/
-    public static final String DATABASE_NAME = "database";
-    public static final String TABLES ="tables";
-    public static final String OPERATIONS ="operations";
+    public static final String CDC_DATABASE_NAME = "cdc.database";
+    public static final String CDC_TABLES ="cdc.tables";
+    public static final String CDC_OPERATIONS ="cdc.operations";
+    public static final String CDC_TS_MS = "cdc.ts_ms";
     public static final String TS_MS = "ts_ms";
 
     public static final String BEFORE = "before";

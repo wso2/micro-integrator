@@ -18,34 +18,27 @@
 
 package org.wso2.carbon.inbound.endpoint.protocol.cdc;
 
-import io.debezium.engine.ChangeEvent;
-import io.debezium.engine.DebeziumEngine;
-import io.debezium.engine.format.Json;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.inbound.InboundProcessorParams;
 import org.apache.synapse.inbound.InboundTaskProcessor;
-import org.apache.synapse.mediators.Value;
 import org.apache.synapse.task.TaskStartupObserver;
-import org.apache.synapse.util.xpath.SynapseXPath;
-import org.jaxen.JaxenException;
+import org.apache.synapse.util.resolver.SecureVaultResolver;
 import org.wso2.carbon.inbound.endpoint.common.InboundRequestProcessorImpl;
 import org.wso2.carbon.inbound.endpoint.common.InboundTask;
 import org.wso2.carbon.inbound.endpoint.protocol.PollingConstants;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.DEBEZIUM_ALLOWED_OPERATIONS;
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.DEBEZIUM_DATABASE_ALLOW_PUBLIC_KEY_RETRIEVAL;
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.DEBEZIUM_DATABASE_PASSWORD;
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.DEBEZIUM_KEY_CONVERTER;
@@ -58,6 +51,7 @@ import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.DEBEZIUM_TOPIC_PREFIX;
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.DEBEZIUM_VALUE_CONVERTER;
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.DEBEZIUM_VALUE_CONVERTER_SCHEMAS_ENABLE;
+import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.DEBEZIUM_SKIPPED_OPERATIONS;
 import static org.wso2.carbon.inbound.endpoint.protocol.cdc.InboundCDCConstants.TRUE;
 
 public class CDCProcessor extends InboundRequestProcessorImpl implements TaskStartupObserver, InboundTaskProcessor {
@@ -67,15 +61,13 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
     private String injectingSeq;
     private String onErrorSeq;
     private boolean sequential;
-
-    private static final String SECURE_VAULT_REGEX = "(wso2:vault-lookup\\('(.*?)'\\))";
-    private static Pattern vaultLookupPattern = Pattern.compile(SECURE_VAULT_REGEX);
     private static final String ENDPOINT_POSTFIX = "CDC" + COMMON_ENDPOINT_POSTFIX;
     private static final String FILE_OFFSET_STORAGE_CLASS = "org.apache.kafka.connect.storage.FileOffsetBackingStore";
     private static final String FILE_SCHEMA_HISTORY_STORAGE_CLASS = "io.debezium.storage.file.history.FileSchemaHistory";
     private static final Log LOGGER = LogFactory.getLog(CDCProcessor.class);
-    protected static Map<String, BlockingQueue> inboundEpEventQueueMap = new HashMap();
-    private ExecutorService executorService = null;
+
+    private enum operations {create, update, delete, truncate};
+    private enum opCodes {c, u, d, t};
 
     public CDCProcessor(InboundProcessorParams params) {
         this.name = params.getName();
@@ -88,8 +80,6 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
             this.interval = Long.parseLong(cdcProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_INTERVAL));
         } catch (NumberFormatException nfe) {
             throw new SynapseException("Invalid numeric value for interval.", nfe);
-        } catch (Exception e) {
-            throw new SynapseException("Invalid value for interval.", e);
         }
         this.sequential = true;
         if (cdcProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL) != null) {
@@ -99,10 +89,6 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
         this.coordination = true;
         if (cdcProperties.getProperty(PollingConstants.INBOUND_COORDINATION) != null) {
             this.coordination = Boolean.parseBoolean(cdcProperties.getProperty(PollingConstants.INBOUND_COORDINATION));
-        }
-        if (!inboundEpEventQueueMap.containsKey(this.name)) {
-            BlockingQueue<ChangeEvent<String, String>> eventQueue = new LinkedBlockingQueue<>();
-            inboundEpEventQueueMap.put(this.name, eventQueue);
         }
     }
 
@@ -129,30 +115,27 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
 
             String passwordString = this.cdcProperties.getProperty(DEBEZIUM_DATABASE_PASSWORD);
             SynapseEnvironment synapseEnvironment = this.synapseEnvironment;
-            MessageContext messageContext = synapseEnvironment.createMessageContext();
 
-            this.cdcProperties.setProperty(DEBEZIUM_DATABASE_PASSWORD, resolveSecureVault(messageContext, passwordString));
+            this.cdcProperties.setProperty(DEBEZIUM_DATABASE_PASSWORD, SecureVaultResolver.resolve(synapseEnvironment, passwordString));
 
             if (this.cdcProperties.getProperty(DEBEZIUM_DATABASE_ALLOW_PUBLIC_KEY_RETRIEVAL) == null) {
                 this.cdcProperties.setProperty(DEBEZIUM_DATABASE_ALLOW_PUBLIC_KEY_RETRIEVAL, TRUE);
+            }
+
+            if (this.cdcProperties.getProperty(DEBEZIUM_ALLOWED_OPERATIONS) != null) {
+                this.cdcProperties.setProperty(DEBEZIUM_SKIPPED_OPERATIONS,
+                        getSkippedOperationsString(this.cdcProperties.getProperty(DEBEZIUM_ALLOWED_OPERATIONS)));
             }
 
             if (this.cdcProperties.getProperty(DEBEZIUM_TOPIC_PREFIX) == null) {
                 this.cdcProperties.setProperty(DEBEZIUM_TOPIC_PREFIX, this.name +"_topic");
             }
 
-            if (this.cdcProperties.getProperty(DEBEZIUM_VALUE_CONVERTER) == null) {
-                this.cdcProperties.setProperty(DEBEZIUM_VALUE_CONVERTER, "org.apache.kafka.connect.json.JsonConverter");
-            }
-            if (this.cdcProperties.getProperty(DEBEZIUM_KEY_CONVERTER) == null) {
-                this.cdcProperties.setProperty(DEBEZIUM_KEY_CONVERTER, "org.apache.kafka.connect.json.JsonConverter");
-            }
-            if (this.cdcProperties.getProperty(DEBEZIUM_KEY_CONVERTER_SCHEMAS_ENABLE) == null) {
-                this.cdcProperties.setProperty(DEBEZIUM_KEY_CONVERTER_SCHEMAS_ENABLE, TRUE);
-            }
-            if (this.cdcProperties.getProperty(DEBEZIUM_VALUE_CONVERTER_SCHEMAS_ENABLE) == null) {
-                this.cdcProperties.setProperty(DEBEZIUM_VALUE_CONVERTER_SCHEMAS_ENABLE, TRUE);
-            }
+            // set the output format as json in a way a user cannot override
+            this.cdcProperties.setProperty(DEBEZIUM_VALUE_CONVERTER, "org.apache.kafka.connect.json.JsonConverter");
+            this.cdcProperties.setProperty(DEBEZIUM_KEY_CONVERTER, "org.apache.kafka.connect.json.JsonConverter");
+            this.cdcProperties.setProperty(DEBEZIUM_KEY_CONVERTER_SCHEMAS_ENABLE, TRUE);
+            this.cdcProperties.setProperty(DEBEZIUM_VALUE_CONVERTER_SCHEMAS_ENABLE, TRUE);
 
             if (this.cdcProperties.getProperty(DEBEZIUM_SCHEMA_HISTORY_INTERNAL) == null) {
                 this.cdcProperties.setProperty(DEBEZIUM_SCHEMA_HISTORY_INTERNAL, FILE_SCHEMA_HISTORY_STORAGE_CLASS);
@@ -170,10 +153,9 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (NullPointerException e) {
-            LOGGER.error("A required property value is not defined", e);
-            throw new RuntimeException(e);
+            String msg = "Error While creating the SCHEMAHISTORY or OFFSET storage file";
+            LOGGER.error(msg);
+            throw new RuntimeException(msg, e);
         }
     }
 
@@ -185,32 +167,6 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
         }
     }
 
-    private static synchronized String resolveSecureVault(MessageContext messageContext, String passwordString) {
-        if (passwordString == null) {
-            return null;
-        }
-        Matcher lookupMatcher = vaultLookupPattern.matcher(passwordString);
-        String resolvedValue = "";
-        if (lookupMatcher.find()) {
-            Value expression;
-            String expressionStr = lookupMatcher.group(1);
-            try {
-                expression = new Value(new SynapseXPath(expressionStr));
-
-            } catch (JaxenException e) {
-                throw new SynapseException("Error while building the expression : " + expressionStr, e);
-            }
-            resolvedValue = expression.evaluateValue(messageContext);
-            if (StringUtils.isEmpty(resolvedValue)) {
-                LOGGER.warn("Found Empty value for expression : " + expression.getExpression());
-                resolvedValue = "";
-            }
-        } else {
-            resolvedValue = passwordString;
-        }
-        return resolvedValue;
-    }
-
 
     /**
      * This will be called at the time of synapse artifact deployment.
@@ -220,19 +176,6 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
         pollingConsumer = new CDCPollingConsumer(cdcProperties, name, synapseEnvironment, interval);
         pollingConsumer.registerHandler(new CDCInjectHandler(injectingSeq, onErrorSeq, sequential,
                 synapseEnvironment, cdcProperties));
-
-        DebeziumEngine<ChangeEvent<String, String>> engine = DebeziumEngine.create(Json.class)
-                .using(this.cdcProperties)
-                .notifying(record -> {
-                    try {
-                        inboundEpEventQueueMap.get(this.name).offer(record, interval, TimeUnit.MILLISECONDS);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).build();
-
-        executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(engine);
         start();
     }
 
@@ -254,12 +197,42 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
     public void destroy(boolean removeTask) {
         if (removeTask) {
             destroy();
-            executorService.shutdown();
+            pollingConsumer.destroy();
         }
     }
 
     @Override
     public void update() {
         // This will not be called for inbound endpoints
+    }
+
+    private String getOpCode(String op) {
+        if (op != null) {
+            switch (operations.valueOf(op)) {
+                case create:
+                    return opCodes.c.toString();
+                case update:
+                    return opCodes.u.toString();
+                case delete:
+                    return opCodes.d.toString();
+                case truncate:
+                    return opCodes.t.toString();
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Get the comma separated list containing allowed operations and returns the string of skipped operation codes
+     * @param allowedOperationsString string
+     * @return the coma separated string of skipped operation codes
+     */
+    private String getSkippedOperationsString(String allowedOperationsString) {
+        List<String> allOperations = Stream.of(opCodes.values()).map(Enum :: toString).collect(Collectors.toList());
+        Set<String> allowedOperationsSet = Stream.of(allowedOperationsString.split(",")).
+                map(String :: trim).map(String :: toLowerCase).map(op -> getOpCode(op)).
+                collect(Collectors.toSet());
+        allOperations.removeAll(allowedOperationsSet);
+        return String.join(",", allOperations);
     }
 }
