@@ -38,6 +38,8 @@ import java.util.Map;
 public class DBInOutMessageReceiver extends RawXMLINOutMessageReceiver {
 	
 	private static final Log log = LogFactory.getLog(DBInOutMessageReceiver.class);
+
+	private static final String DATA_SERVICE_LATENCY_TIMER = "DATA_SERVICE_LATENCY_TIMER";
 	
 	/**
 	 * Invokes the business logic invocation on the service implementation class
@@ -94,6 +96,10 @@ public class DBInOutMessageReceiver extends RawXMLINOutMessageReceiver {
 			msgContext.setProperty(Constants.FAULT_NAME, DBConstants.DS_FAULT_NAME);
 			throw DBUtils.createAxisFault(e);
 		} finally {
+			if (msgContext.getProperty(DATA_SERVICE_LATENCY_TIMER) != null) {
+				newMsgContext.setProperty(DATA_SERVICE_LATENCY_TIMER,
+						msgContext.getProperty(DATA_SERVICE_LATENCY_TIMER));
+			}
 			if (log.isDebugEnabled()) {
 				String response;
 				if (msgContext.getProperty(Constants.FAULT_NAME) != null &&

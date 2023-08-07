@@ -29,13 +29,10 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.apache.synapse.rest.RESTUtils;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
-import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
-import org.wso2.micro.integrator.observability.metric.handler.prometheus.reporter.PrometheusReporter;
 import org.wso2.micro.integrator.observability.util.MetricConstants;
-
-import java.util.Map;
+import org.wso2.micro.integrator.observability.util.MetricUtils;
 
 /**
  * Class for extracting metric information by wrapping the implementation and
@@ -44,7 +41,6 @@ import java.util.Map;
 public class MetricHandler extends AbstractExtendedSynapseHandler {
 
     private static Log log = LogFactory.getLog(MetricHandler.class);
-    private static final String METRIC_REPORTER = "metric_reporter";
     private static final String DELIMITER = "/";
     private static final String EMPTY = "";
 
@@ -61,7 +57,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
 
     @Override
     public boolean handleServerInit() {
-        metricReporterInstance = this.getMetricReporter();
+        metricReporterInstance = MetricUtils.getMetricReporter();
         CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
         String miVersion = serverConfig.getServerVersion();
         String updateLevel = System.getProperty(MetricConstants.UPDATE_LEVEL);
@@ -69,47 +65,6 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         metricReporterInstance.serverUp(HOST, PORT, JAVA_HOME, JAVA_VERSION);
         metricReporterInstance.serverVersion(miVersion, updateLevel);
         return true;
-    }
-
-    /**
-     * Load the MetricReporter class from the deployment.toml file if a user has defined a MetricReporter.
-     * Use default PrometheusReporter if the user hasn't defined a MetricReporter or an error occurs
-     * during custom MetricReporter class invocation.
-     */
-    private MetricReporter getMetricReporter() {
-        Map<String, Object> configs = ConfigParser.getParsedConfigs();
-        Object metricReporterClass = configs.get(MetricConstants.METRIC_HANDLER + "." + METRIC_REPORTER);
-        Class loadedMetricClass;
-        MetricReporter reporterInstance;
-
-        if (metricReporterClass != null) {
-            try {
-                loadedMetricClass = Class.forName(metricReporterClass.toString());
-                reporterInstance = (MetricReporter) loadedMetricClass.newInstance();
-                if (log.isDebugEnabled()) {
-                    log.debug("The class " + metricReporterClass + " loaded successfully");
-                }
-            } catch (IllegalAccessException | ClassNotFoundException | InstantiationException e) {
-                log.error("Error in loading the class " + metricReporterClass.toString() +
-                        " .Hence loading the default PrometheusReporter class ", e);
-                reporterInstance = loadDefaultPrometheusReporter();
-            }
-        } else {
-            reporterInstance = loadDefaultPrometheusReporter();
-        }
-        return reporterInstance;
-    }
-
-    /**
-     * Load the PrometheusReporter class by default.
-     */
-    private MetricReporter loadDefaultPrometheusReporter() {
-        MetricReporter reporterInstance = new PrometheusReporter();
-        if (log.isDebugEnabled()) {
-            log.debug("The class org.wso2.micro.integrator.obsrvability.handler.metrics.publisher.prometheus." +
-                    "reporter.PrometheusReporter was loaded successfully");
-        }
-        return reporterInstance;
     }
 
     @Override
