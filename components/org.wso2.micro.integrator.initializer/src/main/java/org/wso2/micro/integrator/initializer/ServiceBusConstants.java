@@ -117,6 +117,11 @@ public final class ServiceBusConstants {
     public static final String SUSPEND_PERSISTENCE = "suspend.mediation.persistence";
     public static final String CONNECTOR_SECURE_VAULT_CONFIG_REPOSITORY = "/repository/components/secure-vault";
 
+    //constant for prometheus API
+    public static final String ENABLE_PROMETHEUS_API_PROPERTY = "enablePrometheusApi";
+    public static final String DISPATCH_PHASE_NAME = "Dispatch";
+    public static final String MESSAGE_OUT_PHASE_NAME = "MessageOut";
+
 
     public static final String ESB_DEBUG_SYSTEM_PROPERTY = "esb.debug";
     public static final String ESB_DEBUG_EVENT_PORT = "synapse.debugger.port.event";

@@ -22,6 +22,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisServiceGroup;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.engine.Phase;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,6 +72,8 @@ import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
+import org.wso2.micro.integrator.observability.metric.handler.DSMetricHandler;
+import org.wso2.micro.integrator.observability.metric.handler.MetricHandler;
 import org.wso2.securevault.SecurityConstants;
 
 import java.io.File;
@@ -176,6 +179,33 @@ public class ServiceBusInitializer {
             }
             SynapseEnvironment synapseEnvironment = contextInfo.getSynapseEnvironment();
             List handlers = synapseEnvironment.getSynapseHandlers();
+            if (System.getProperty(ServiceBusConstants.ENABLE_PROMETHEUS_API_PROPERTY) != null) {
+                if (!handlers.stream().anyMatch(c -> c instanceof MetricHandler)) {
+                    handlers.add(new MetricHandler());
+                }
+                AxisConfiguration axisConfig = configCtxSvc.getServerConfigContext().getAxisConfiguration();
+                for (Phase inPhase : axisConfig.getInFlowPhases()) {
+                    if (ServiceBusConstants.DISPATCH_PHASE_NAME.equals(inPhase.getPhaseName())) {
+                        if (!inPhase.getHandlers().stream().anyMatch(c -> c instanceof DSMetricHandler)) {
+                            inPhase.addHandler(new DSMetricHandler());
+                        }
+                    }
+                }
+                for (Phase outPhase : axisConfig.getOutFlowPhases()) {
+                    if (ServiceBusConstants.MESSAGE_OUT_PHASE_NAME.equals(outPhase.getPhaseName())) {
+                        if (!outPhase.getHandlers().stream().anyMatch(c -> c instanceof DSMetricHandler)) {
+                            outPhase.addHandler(new DSMetricHandler());
+                        }
+                    }
+                }
+                for (Phase faultPhase : axisConfig.getOutFaultFlowPhases()) {
+                    if (ServiceBusConstants.MESSAGE_OUT_PHASE_NAME.equals(faultPhase.getPhaseName())) {
+                        if (!faultPhase.getHandlers().stream().anyMatch(c -> c instanceof DSMetricHandler)) {
+                            faultPhase.addHandler(new DSMetricHandler());
+                        }
+                    }
+                }
+            }
             Iterator<SynapseHandler> iterator = handlers.iterator();
             while (iterator.hasNext()) {
                 SynapseHandler handler = iterator.next();
