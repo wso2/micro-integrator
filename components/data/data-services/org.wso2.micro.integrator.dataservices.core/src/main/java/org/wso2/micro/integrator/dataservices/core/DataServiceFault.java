@@ -18,6 +18,7 @@
 package org.wso2.micro.integrator.dataservices.core;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,28 +41,28 @@ import org.wso2.micro.integrator.dataservices.core.engine.ParamValue;
 public class DataServiceFault extends Exception {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * The type of data service fault, this can be used to identify what kind
 	 * of an error condition occurred.
 	 */
 	private String code;
-	
+
 	/**
 	 * The detailed explanation of the data service fault.
 	 */
 	private String dsFaultMessage;
-	
+
 	/**
-	 * The originating data service of the exception, if available. 
+	 * The originating data service of the exception, if available.
 	 */
 	private DataService sourceDataService;
-	
+
 	/**
 	 * The on-going operation/resource name when the data service fault occurs, if available.
 	 */
 	private String currentRequestName;
-	
+
 	/**
 	 * The current parameters of the current operation/resource, if available.
 	 */
@@ -71,7 +72,7 @@ public class DataServiceFault extends Exception {
      * This map contains all the properties related to data services fault message
      */
     private Map<String, Object> propertyMap = new HashMap<String, Object>();
-	
+
 	public DataServiceFault(Throwable nestedException, String code, String dsFaultMessage) {
 		super(nestedException);
 		this.code = code;
@@ -91,7 +92,19 @@ public class DataServiceFault extends Exception {
             OMElement root = fac.createOMElement(new QName(
                     DBConstants.WSO2_DS_NAMESPACE, DBConstants.DS_FAULT_ELEMENT));
             OMNamespace ns = root.getNamespace();
-            for (Map.Entry<String, Object> rootEntry : ((DataServiceFault) throwable).getPropertyMap().entrySet()) {
+            // Adding data from HashMap to a LikedHashMap to preserve the order
+            Map<String, Object> propLinkedHashMap = new LinkedHashMap<>();
+            propLinkedHashMap.put(DBConstants.FaultParams.CURRENT_PARAMS,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.CURRENT_PARAMS));
+            propLinkedHashMap.put(DBConstants.FaultParams.CURRENT_REQUEST_NAME,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.CURRENT_REQUEST_NAME));
+            propLinkedHashMap.put(DBConstants.FaultParams.NESTED_EXCEPTION,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.NESTED_EXCEPTION));
+            propLinkedHashMap.put(DBConstants.FaultParams.SOURCE_DATA_SERVICE,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.SOURCE_DATA_SERVICE));
+            propLinkedHashMap.put(DBConstants.FaultParams.DS_CODE,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.DS_CODE));
+            for (Map.Entry<String, Object> rootEntry : propLinkedHashMap.entrySet()) {
                 OMElement keyElement = fac.createOMElement(rootEntry.getKey(), ns);
                 if (rootEntry.getValue() instanceof Map) {
                     for (Map.Entry dataServiceEntry : (Set<Map.Entry>) ((Map) rootEntry.getValue()).entrySet()) {
@@ -123,11 +136,11 @@ public class DataServiceFault extends Exception {
             return null;
         }
     }
-	
+
 	public static String extractFaultCode(Throwable throwable) {
 		if (throwable instanceof DataServiceFault) {
 			return ((DataServiceFault) throwable).getCode();
-		} else if (throwable instanceof XMLStreamException) { 
+		} else if (throwable instanceof XMLStreamException) {
 			return extractFaultCode(((XMLStreamException) throwable).getNestedException());
 		} else if (throwable != null) {
 			Throwable cause = throwable.getCause();
@@ -137,39 +150,39 @@ public class DataServiceFault extends Exception {
 				return FaultCodes.UNKNOWN_ERROR;
 			}
 		} else {
-			return FaultCodes.UNKNOWN_ERROR; 
+			return FaultCodes.UNKNOWN_ERROR;
 		}
 	}
-	
+
 	public DataServiceFault(Throwable nestedException) {
 		this(nestedException, null, null);
 	}
-	
+
 	public DataServiceFault(Throwable nestedException, String dsFaultMessage) {
 		this(nestedException, null, dsFaultMessage);
 	}
-	
+
 	public DataServiceFault(String code, String dsFaultMessage) {
 		this(null, code, dsFaultMessage);
 	}
-	
+
 	public DataServiceFault(String dsFaultMessage) {
 		this(null, null, dsFaultMessage);
 	}
-	
+
 	public String getCode() {
 		return code;
 	}
-	
+
 	public String getDsFaultMessage() {
 		return dsFaultMessage;
 	}
-	
+
 	@Override
 	public String getMessage() {
 		return this.getFullMessage();
 	}
-	
+
 	/**
 	 * Returns a detailed description of the data service fault.
 	 */
@@ -201,13 +214,13 @@ public class DataServiceFault extends Exception {
 			buff.append("Current Params: " + this.getCurrentParams() + "\n");
             getPropertyMap().put(DBConstants.FaultParams.CURRENT_PARAMS, this.getCurrentParams().toString());
 		}
-		if (this.getCause() != null) {			
+		if (this.getCause() != null) {
 			buff.append("Nested Exception:-\n" + this.getCause() + "\n");
             getPropertyMap().put(DBConstants.FaultParams.NESTED_EXCEPTION, this.getCause().toString());
 		}
 		return buff.toString();
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.getFullMessage();
