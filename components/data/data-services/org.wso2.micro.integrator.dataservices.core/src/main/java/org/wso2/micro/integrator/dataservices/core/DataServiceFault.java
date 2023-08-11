@@ -18,6 +18,7 @@
 package org.wso2.micro.integrator.dataservices.core;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -91,7 +92,19 @@ public class DataServiceFault extends Exception {
             OMElement root = fac.createOMElement(new QName(
                     DBConstants.WSO2_DS_NAMESPACE, DBConstants.DS_FAULT_ELEMENT));
             OMNamespace ns = root.getNamespace();
-            for (Map.Entry<String, Object> rootEntry : ((DataServiceFault) throwable).getPropertyMap().entrySet()) {
+            // Add values from hash map to a linked hash map to preserve the order
+            Map<String, Object> propLinkedHashMap = new LinkedHashMap<>();
+            propLinkedHashMap.put(DBConstants.FaultParams.CURRENT_PARAMS,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.CURRENT_PARAMS));
+            propLinkedHashMap.put(DBConstants.FaultParams.CURRENT_REQUEST_NAME,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.CURRENT_REQUEST_NAME));
+            propLinkedHashMap.put(DBConstants.FaultParams.NESTED_EXCEPTION,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.NESTED_EXCEPTION));
+            propLinkedHashMap.put(DBConstants.FaultParams.SOURCE_DATA_SERVICE,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.SOURCE_DATA_SERVICE));
+            propLinkedHashMap.put(DBConstants.FaultParams.DS_CODE,
+                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.DS_CODE));
+            for (Map.Entry<String, Object> rootEntry : propLinkedHashMap.entrySet()) {
                 OMElement keyElement = fac.createOMElement(rootEntry.getKey(), ns);
                 if (rootEntry.getValue() instanceof Map) {
                     for (Map.Entry dataServiceEntry : (Set<Map.Entry>) ((Map) rootEntry.getValue()).entrySet()) {
