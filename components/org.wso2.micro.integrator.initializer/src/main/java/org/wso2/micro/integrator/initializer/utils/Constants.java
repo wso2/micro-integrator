@@ -42,10 +42,11 @@ public class Constants {
     public static final String USER_NAME = "username";
     public static final String PASSWORD = "password";
     public static final String SERVICE_CATALOG_EXECUTOR_THREADS = "executor_threads";
-
-    public static final String SERVICE_CATALOG_PUBLISH_ENDPOINT = "api/am/service-catalog/v1/services/import?overwrite" +
-            "=true";
-    public static final String SERVICE_CATALOG_GET_SERVICES_ENDPOINT = "api/am/service-catalog/v1/services";
+    public static final String SERVICE_CATALOG_API_VERSION_PROPERTY = "service-catalog.api.version";
+    public static final String SERVICE_CATALOG_DEFAULT_API_VERSION = "v1";
+    public static final String SERVICE_CATALOG_ENDPOINT_PREFIX = "api/am/service-catalog/";
+    public static final String SERVICE_CATALOG_PUBLISH_ENDPOINT = "/services/import?overwrite=true";
+    public static final String SERVICE_CATALOG_GET_SERVICES_ENDPOINT = "/services";
 
     // creating the payload.zip related constants
     public static final String SERVICE_CATALOG = "ServiceCatalog";
