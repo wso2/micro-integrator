@@ -50,6 +50,9 @@
     <!-- settings of your servlet container to map this context path to proper Axis2 servlets -->
     <parameter name="servicePath" locked="false">{{server.service_path}}</parameter>
 
+    <!-- This property will enable strict service URL validation -->
+    <parameter name="strictServicePathValidation" locked="false">{{server.strict_service_path_validation}}</parameter>
+
     <!--the directory in which .aar services are deployed inside axis2 repository-->
     <parameter name="ServicesDirectory">{{server.services_directory}}</parameter>
 
