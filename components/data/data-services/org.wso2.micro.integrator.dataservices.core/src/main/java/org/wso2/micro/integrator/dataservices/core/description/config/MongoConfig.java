@@ -143,6 +143,11 @@ public class MongoConfig extends Config {
             builder.threadsAllowedToBlockForConnectionMultiplier(
                     Integer.parseInt(threadsAllowedToBlockForConnectionMultiplier));
         }
+
+        String sslEnabled = (properties.get(DBConstants.MongoDB.SSL_ENABLED));
+        if (Boolean.parseBoolean(sslEnabled)) {
+            builder.sslEnabled(true);
+        }
         return builder.build();
     }
 
@@ -169,17 +174,23 @@ public class MongoConfig extends Config {
         String authenticationType = properties.get(DBConstants.MongoDB.AUTHENTICATION_TYPE);
         String username = properties.get(DBConstants.MongoDB.USERNAME);
         String password = properties.get(DBConstants.MongoDB.PASSWORD);
-        String database = properties.get(DBConstants.MongoDB.DATABASE);
+        String authSource = properties.get(DBConstants.MongoDB.AUTH_SOURCE);
+        if (authSource == null || authSource.isEmpty()) {
+            // For MONGODB-CR, SCRAM-SHA-1, and SCRAM-SHA-256, PLAIN the default auth source is the database tyring to connect
+            // refer: https://docs.mongodb.com/ruby-driver/master/reference/authentication/
+            // since database is mandatory, we will not address the case where DB is not defined.
+            authSource = properties.get(DBConstants.MongoDB.DATABASE);
+        }
         if (authenticationType != null) {
             switch (authenticationType) {
                 case DBConstants.MongoDB.MongoAuthenticationTypes.PLAIN:
-                    credential = MongoCredential.createPlainCredential(username, database, password.toCharArray());
+                    credential = MongoCredential.createPlainCredential(username, authSource, password.toCharArray());
                     break;
                 case DBConstants.MongoDB.MongoAuthenticationTypes.SCRAM_SHA_1:
-                    credential = MongoCredential.createScramSha1Credential(username, database, password.toCharArray());
+                    credential = MongoCredential.createScramSha1Credential(username, authSource, password.toCharArray());
                     break;
                 case DBConstants.MongoDB.MongoAuthenticationTypes.MONGODB_CR:
-                    credential = MongoCredential.createMongoCRCredential(username, database, password.toCharArray());
+                    credential = MongoCredential.createMongoCRCredential(username, authSource, password.toCharArray());
                     break;
                 case DBConstants.MongoDB.MongoAuthenticationTypes.GSSAPI:
                     credential = MongoCredential.createGSSAPICredential(username);
