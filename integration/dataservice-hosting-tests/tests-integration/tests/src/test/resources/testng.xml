@@ -83,6 +83,12 @@
         </classes>
     </test>
 
+    <test name="DSS fault tests" parallel="false" verbose="2">
+        <classes>
+            <class name="org.wso2.ei.dataservice.integration.test.fault.ErrorMessageVerifyTestCase"/>
+        </classes>
+    </test>
+
     <!--  TODO need to fix  <test name="SPARQL-tests" parallel="false" verbose="2">
             <packages>
                 <package name="org.wso2.ei.dataservice.integration.test.sparql"/>

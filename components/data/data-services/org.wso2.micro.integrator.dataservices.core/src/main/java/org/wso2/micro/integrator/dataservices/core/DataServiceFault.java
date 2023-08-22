@@ -71,7 +71,7 @@ public class DataServiceFault extends Exception {
     /**
      * This map contains all the properties related to data services fault message
      */
-    private Map<String, Object> propertyMap = new HashMap<String, Object>();
+    private Map<String, Object> propertyMap = new LinkedHashMap<>();
 	
 	public DataServiceFault(Throwable nestedException, String code, String dsFaultMessage) {
 		super(nestedException);
@@ -92,19 +92,7 @@ public class DataServiceFault extends Exception {
             OMElement root = fac.createOMElement(new QName(
                     DBConstants.WSO2_DS_NAMESPACE, DBConstants.DS_FAULT_ELEMENT));
             OMNamespace ns = root.getNamespace();
-            // Add values from hash map to a linked hash map to preserve the order
-            Map<String, Object> propLinkedHashMap = new LinkedHashMap<>();
-            propLinkedHashMap.put(DBConstants.FaultParams.CURRENT_PARAMS,
-                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.CURRENT_PARAMS));
-            propLinkedHashMap.put(DBConstants.FaultParams.CURRENT_REQUEST_NAME,
-                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.CURRENT_REQUEST_NAME));
-            propLinkedHashMap.put(DBConstants.FaultParams.NESTED_EXCEPTION,
-                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.NESTED_EXCEPTION));
-            propLinkedHashMap.put(DBConstants.FaultParams.SOURCE_DATA_SERVICE,
-                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.SOURCE_DATA_SERVICE));
-            propLinkedHashMap.put(DBConstants.FaultParams.DS_CODE,
-                    ((DataServiceFault) throwable).getPropertyMap().get(DBConstants.FaultParams.DS_CODE));
-            for (Map.Entry<String, Object> rootEntry : propLinkedHashMap.entrySet()) {
+            for (Map.Entry<String, Object> rootEntry : ((DataServiceFault) throwable).getPropertyMap().entrySet()) {
                 OMElement keyElement = fac.createOMElement(rootEntry.getKey(), ns);
                 if (rootEntry.getValue() instanceof Map) {
                     for (Map.Entry dataServiceEntry : (Set<Map.Entry>) ((Map) rootEntry.getValue()).entrySet()) {
@@ -116,9 +104,11 @@ public class DataServiceFault extends Exception {
                         keyElement.addChild(dataServiceKeyElement);
                     }
                 } else {
-                    OMText valueElement = fac.createOMText(
-                            keyElement, rootEntry.getValue().toString());
-                    keyElement.addChild(valueElement);
+                    if (rootEntry.getValue() != null) {
+                        OMText valueElement = fac.createOMText(
+                                keyElement, rootEntry.getValue().toString());
+                        keyElement.addChild(valueElement);
+                    }
                 }
                 root.addChild(keyElement);
             }
@@ -186,40 +176,50 @@ public class DataServiceFault extends Exception {
 	/**
 	 * Returns a detailed description of the data service fault.
 	 */
-	public String getFullMessage() {
-		StringBuffer buff = new StringBuffer();
-		if (this.getDsFaultMessage() != null) {
-			buff.append("DS Fault Message: " + this.getDsFaultMessage() + "\n");
-		}
-		if (this.getCode() != null) {
-			buff.append("DS Code: " + this.getCode() + "\n");
-            getPropertyMap().put(DBConstants.FaultParams.DS_CODE, this.getCode());
-		}
-		if (this.getSourceDataService() != null) {
-			buff.append("Source Data Service:-\n");
-			buff.append(this.getSourceDataService().toString());
-            Map<String, String> sourcePropertyMap = new HashMap<String, String>();
-            sourcePropertyMap.put(DBConstants.FaultParams.DATA_SERVICE_NAME, this.getSourceDataService().getName());
+    public String getFullMessage() {
+        StringBuffer buff = new StringBuffer();
+        if (this.getDsFaultMessage() != null) {
+            buff.append("DS Fault Message: " + this.getDsFaultMessage() + "\n");
+        }
+        if (this.getCurrentParams() != null && !("true".equalsIgnoreCase(DBUtils.getCurrentParamsDisabledProperty()))) {
+            buff.append("Current Params: " + this.getCurrentParams() + "\n");
+            getPropertyMap().put(DBConstants.FaultParams.CURRENT_PARAMS, this.getCurrentParams().toString());
+        } else {
+            getPropertyMap().put(DBConstants.FaultParams.CURRENT_PARAMS, null);
+        }
+        if (this.getCurrentRequestName() != null) {
+            buff.append("Current Request Name: " + this.getCurrentRequestName() + "\n");
+            getPropertyMap().put(DBConstants.FaultParams.CURRENT_REQUEST_NAME, this.getCurrentRequestName());
+        } else {
+            getPropertyMap().put(DBConstants.FaultParams.CURRENT_REQUEST_NAME, null);
+        }
+        if (this.getCause() != null) {
+            buff.append("Nested Exception:-\n" + this.getCause() + "\n");
+            getPropertyMap().put(DBConstants.FaultParams.NESTED_EXCEPTION, this.getCause().toString());
+        } else {
+            getPropertyMap().put(DBConstants.FaultParams.NESTED_EXCEPTION, null);
+        }
+        if (this.getSourceDataService() != null) {
+            buff.append("Source Data Service:-\n");
+            buff.append(this.getSourceDataService().toString());
+            Map<String, String> sourcePropertyMap = new LinkedHashMap<>();
             sourcePropertyMap.put(DBConstants.FaultParams.LOCATION, this.getSourceDataService().getRelativeDsLocation());
+            sourcePropertyMap.put(DBConstants.FaultParams.DEFAULT_NAMESPACE, this.getSourceDataService().getDefaultNamespace());
             sourcePropertyMap.put(DBConstants.FaultParams.DESCRIPTION, this.getSourceDataService().getDescription() != null ?
                     this.getSourceDataService().getDescription() : "N/A");
-            sourcePropertyMap.put(DBConstants.FaultParams.DEFAULT_NAMESPACE, this.getSourceDataService().getDefaultNamespace());
+            sourcePropertyMap.put(DBConstants.FaultParams.DATA_SERVICE_NAME, this.getSourceDataService().getName());
             getPropertyMap().put(DBConstants.FaultParams.SOURCE_DATA_SERVICE, sourcePropertyMap);
-		}
-		if (this.getCurrentRequestName() != null) {
-			buff.append("Current Request Name: " + this.getCurrentRequestName() + "\n");
-            getPropertyMap().put(DBConstants.FaultParams.CURRENT_REQUEST_NAME, this.getCurrentRequestName());
-		}
-		if (this.getCurrentParams() != null && !("true".equalsIgnoreCase(DBUtils.getCurrentParamsDisabledProperty()))) {
-			buff.append("Current Params: " + this.getCurrentParams() + "\n");
-            getPropertyMap().put(DBConstants.FaultParams.CURRENT_PARAMS, this.getCurrentParams().toString());
-		}
-		if (this.getCause() != null) {			
-			buff.append("Nested Exception:-\n" + this.getCause() + "\n");
-            getPropertyMap().put(DBConstants.FaultParams.NESTED_EXCEPTION, this.getCause().toString());
-		}
-		return buff.toString();
-	}
+        } else {
+            getPropertyMap().put(DBConstants.FaultParams.SOURCE_DATA_SERVICE, null);
+        }
+        if (this.getCode() != null) {
+            buff.append("DS Code: " + this.getCode() + "\n");
+            getPropertyMap().put(DBConstants.FaultParams.DS_CODE, this.getCode());
+        } else {
+            getPropertyMap().put(DBConstants.FaultParams.DS_CODE, null);
+        }
+        return buff.toString();
+    }
 	
 	@Override
 	public String toString() {
