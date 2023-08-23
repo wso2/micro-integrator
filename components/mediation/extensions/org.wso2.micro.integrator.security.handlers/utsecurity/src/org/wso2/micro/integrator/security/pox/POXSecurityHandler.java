@@ -151,7 +151,12 @@ public class POXSecurityHandler implements Handler {
                     if (faultCodeObject instanceof SOAP11FaultCodeImpl) {
                         faultCode = ((SOAP11FaultCodeImpl) faultCodeObject).getTextContent();
                     } else if (faultCodeObject instanceof SOAP12FaultCodeImpl) {
-                        faultCode = ((SOAP12FaultSubCodeImpl) ((SOAP12FaultCodeImpl) faultCodeObject).getSubCode()).getTextContent();
+                        if (null != ((SOAP12FaultCodeImpl) faultCodeObject).getSubCode()) {
+                            faultCode = ((SOAP12FaultSubCodeImpl) ((SOAP12FaultCodeImpl) faultCodeObject)
+                                    .getSubCode()).getTextContent();
+                        } else {
+                            faultCode = ((SOAP12FaultCodeImpl)faultCodeObject).getTextContent();
+                        }
                     }
 
                     if (faultCode != null  && faultCode.contains("FailedAuthentication")) {  // this is standard error code according to the WS-Sec
