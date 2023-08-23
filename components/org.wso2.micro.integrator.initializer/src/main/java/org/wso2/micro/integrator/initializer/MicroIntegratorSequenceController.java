@@ -34,7 +34,7 @@ public class MicroIntegratorSequenceController implements SequenceFlowObserver {
 
     @Override
     public void start(MessageContext messageContext, String observedSeq) {
-        if (!"".equals(messageContext.getProperty(ServiceBusConstants.AUTOMATION_MODE_MAIN_SEQ_PROPERTY))) {
+        if (messageContext.getProperty(ServiceBusConstants.AUTOMATION_MODE_MAIN_SEQ_PROPERTY) != null) {
             seqName = (String) messageContext.getProperty(ServiceBusConstants.AUTOMATION_MODE_MAIN_SEQ_PROPERTY);
         }
     }
