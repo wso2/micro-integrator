@@ -255,14 +255,12 @@ public class ServiceBusInitializer {
             String injectCarName = System.getProperty(ServiceBusConstants.AUTOMATION_MODE_CAR_NAME_SYSTEM_PROPERTY);
             if (injectCarName != null && !injectCarName.isEmpty()) {
                 String sequenceName = getMainSequenceName(injectCarName);
-                if (sequenceName == null) {
-                    log.error("Invalid cApp name or main sequence name not found");
-                } else {
+                if (sequenceName != null) {
                     MessageContext synCtx = synapseEnvironment.createMessageContext();
                     SequenceMediator seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration().
                             getSequence(sequenceName);
                     synapseEnvironment.getSequenceObservers().add(new MicroIntegratorSequenceController());
-                    synCtx.setProperty(ServiceBusConstants.AUTOMATION_MODE_INITIALIZED_PROPERTY, "true");
+                    synCtx.setProperty(ServiceBusConstants.AUTOMATION_MODE_MAIN_SEQ_PROPERTY, sequenceName);
                     synCtx.getEnvironment().injectMessage(synCtx, seq);
                 }
             }
@@ -278,10 +276,16 @@ public class ServiceBusInitializer {
 
     private String getMainSequenceName(String cappName) {
         CarbonApplication capp = CappDeployer.getCarbonAppByName(cappName);
-        if (capp != null) {
-            return capp.getMainSequence();
+        if (capp == null) {
+            log.error("Invalid cApp name. cApp name: " + cappName + " not found");
+            return null;
         }
-        return null;
+        String mainSeq = capp.getMainSequence();
+        if (mainSeq == null) {
+            log.error("Invalid main sequence name. Main sequence: " + mainSeq + " not found");
+            return null;
+        }
+        return capp.getMainSequence();
     }
 
     @Deactivate

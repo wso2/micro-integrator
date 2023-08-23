@@ -136,7 +136,7 @@ public final class ServiceBusConstants {
 
     public static final String AUTOMATION_MODE_CAR_NAME_SYSTEM_PROPERTY = "automation.mode.seq.car.name";
 
-    public static final String AUTOMATION_MODE_INITIALIZED_PROPERTY = "AUTOMATION_MODE_INITIALIZED";
+    public static final String AUTOMATION_MODE_MAIN_SEQ_PROPERTY = "AUTOMATION_MODE_MAIN_SEQUENCE";
 
 }
 
