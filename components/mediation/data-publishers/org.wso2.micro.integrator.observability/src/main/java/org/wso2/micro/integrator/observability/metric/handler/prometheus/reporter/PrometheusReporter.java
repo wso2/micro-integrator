@@ -41,16 +41,13 @@ public class PrometheusReporter implements MetricReporter {
     private Counter TOTAL_REQUESTS_RECEIVED_PROXY_SERVICE;
     private Counter TOTAL_REQUESTS_RECEIVED_API;
     private Counter TOTAL_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
-    private Counter TOTAL_REQUESTS_RECEIVED_DATA_SERVICE;
     private Counter ERROR_REQUESTS_RECEIVED_PROXY_SERVICE;
     private Counter ERROR_REQUESTS_RECEIVED_API;
     private Counter ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT;
-    private Counter ERROR_REQUESTS_RECEIVED_DATA_SERVICE;
 
     private Histogram PROXY_LATENCY_HISTOGRAM;
     private Histogram API_LATENCY_HISTOGRAM;
     private Histogram INBOUND_ENDPOINT_LATENCY_HISTOGRAM;
-    private Histogram DATA_SERVICE_LATENCY_HISTOGRAM;
 
     private Gauge SERVER_UP;
     private Gauge SERVICE_UP;
@@ -61,7 +58,6 @@ public class PrometheusReporter implements MetricReporter {
     private double[] proxyLatencyBuckets;
     private double[] apiLatencyBuckets;
     private double[] inboundEndpointLatencyBuckets;
-    private double[] dataServiceLatencyBuckets;
 
     private Map<String, Object> metricMap = new HashMap();
 
@@ -74,7 +70,6 @@ public class PrometheusReporter implements MetricReporter {
         this.initializeProxyMetrics();
         this.initializeApiMetrics();
         this.initializeInboundEndpointMetrics();
-        this.initializeDataServiceMetrics();
     }
 
     @Override
@@ -84,7 +79,6 @@ public class PrometheusReporter implements MetricReporter {
         proxyLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
         apiLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
         inboundEndpointLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
-        dataServiceLatencyBuckets = new double[]{0.19, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 1, 5};
 
         Map<String, Object> configs = ConfigParser.getParsedConfigs();
         createBuckets(configs);
@@ -138,21 +132,6 @@ public class PrometheusReporter implements MetricReporter {
                         .register();
                 metricMap.put(metricName, INBOUND_ENDPOINT_LATENCY_HISTOGRAM);
             }
-        } else if (serviceType.equalsIgnoreCase(SERVICE.DATA_SERVICE.name())) {
-            if (type.equals(MetricConstants.COUNTER)) {
-                TOTAL_REQUESTS_RECEIVED_DATA_SERVICE = Counter.build
-                                (MetricConstants.DATA_SERVICE_REQUEST_COUNT_TOTAL, metricHelp).
-                        labelNames(labels).register();
-                metricMap.put(metricName, TOTAL_REQUESTS_RECEIVED_DATA_SERVICE);
-            } else if (type.equals(MetricConstants.HISTOGRAM)) {
-                DATA_SERVICE_LATENCY_HISTOGRAM = Histogram.build()
-                        .name(MetricConstants.DATA_SERVICE_LATENCY_SECONDS)
-                        .help(metricHelp)
-                        .labelNames(labels)
-                        .buckets(dataServiceLatencyBuckets)
-                        .register();
-                metricMap.put(metricName, DATA_SERVICE_LATENCY_HISTOGRAM);
-            }
         } else if (serviceType.equals(MetricConstants.SERVER)) {
             SERVER_UP = Gauge.build(MetricConstants.SERVER_UP, "Server status").
                     labelNames(labels).register();
@@ -188,12 +167,6 @@ public class PrometheusReporter implements MetricReporter {
                     build(MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_ERROR_TOTAL, metricHelp).labelNames(labels).
                     register();
             metricMap.put(metricName, ERROR_REQUESTS_RECEIVED_INBOUND_ENDPOINT);
-
-        } else if (serviceType.equals(SERVICE.DATA_SERVICE.name())) {
-            ERROR_REQUESTS_RECEIVED_DATA_SERVICE = Counter.
-                    build(MetricConstants.DATA_SERVICE_REQUEST_COUNT_ERROR_TOTAL, metricHelp).labelNames(labels).
-                    register();
-            metricMap.put(metricName, ERROR_REQUESTS_RECEIVED_DATA_SERVICE);
 
         }
     }
@@ -269,8 +242,7 @@ public class PrometheusReporter implements MetricReporter {
     enum SERVICE {
         PROXY,
         API,
-        INBOUND_ENDPOINT,
-        DATA_SERVICE
+        INBOUND_ENDPOINT
     }
 
     /**
@@ -287,8 +259,6 @@ public class PrometheusReporter implements MetricReporter {
                 MetricConstants.API_LATENCY_BUCKETS);
         Object inboundEndpointConfigBuckets = configs.get(MetricConstants.METRIC_HANDLER + "." +
                 MetricConstants.INBOUND_ENDPOINT_LATENCY_BUCKETS);
-        Object dataServiceConfigBuckets = configs.get(MetricConstants.METRIC_HANDLER + "." +
-                MetricConstants.DATA_SERVICE_LATENCY_BUCKETS);
 
         if (null != proxyConfigBuckets) {
             List<Object> list = Arrays.asList(proxyConfigBuckets);
@@ -312,14 +282,6 @@ public class PrometheusReporter implements MetricReporter {
             List<Object> bucketList =  (ArrayList) list.get(0);
             for (int i = 0; i < size; i++) {
                 inboundEndpointLatencyBuckets[i] = (double) bucketList.get(i);
-            }
-        }
-        if (null != dataServiceConfigBuckets) {
-            List<Object> list = Arrays.asList(dataServiceConfigBuckets);
-            int size = list.size();
-            List<Object> bucketList =  (ArrayList) list.get(0);
-            for (int i = 0; i < size; i++) {
-                dataServiceLatencyBuckets[i] = (double) bucketList.get(i);
             }
         }
     }
@@ -372,22 +334,6 @@ public class PrometheusReporter implements MetricReporter {
     }
 
     /**
-     * Create data services related metrics.
-     */
-    public void initializeDataServiceMetrics() {
-        String[] labels = {MetricConstants.SERVICE_NAME, MetricConstants.SERVICE_TYPE};
-
-        createMetrics("DATA_SERVICE", MetricConstants.COUNTER,
-                MetricConstants.DATA_SERVICE_REQUEST_COUNT_TOTAL,
-                "Total number of requests to a data service.", labels);
-        createMetrics("DATA_SERVICE", MetricConstants.HISTOGRAM,
-                MetricConstants.DATA_SERVICE_LATENCY_SECONDS,
-                "Latency of requests to a data service.", labels);
-
-        initializeDataServiceErrorMetrics();
-    }
-
-    /**
      * Create the metrics related to failed proxy services.
      */
     public void initializeProxyErrorMetrics() {
@@ -412,16 +358,6 @@ public class PrometheusReporter implements MetricReporter {
     public void initializeInboundEndpointErrorMetrics() {
         initErrorMetrics("INBOUND_ENDPOINT", MetricConstants.COUNTER,
                 MetricConstants.INBOUND_ENDPOINT_REQUEST_COUNT_ERROR_TOTAL, "Total number of error" +
-                        " requests when receiving the message by an inbound endpoint.",
-                new String[]{MetricConstants.SERVICE_NAME, MetricConstants.SERVICE_TYPE});
-    }
-
-    /**
-     * Create the metrics related to failed dataservices.
-     */
-    public void initializeDataServiceErrorMetrics() {
-        initErrorMetrics("DATA_SERVICE", MetricConstants.COUNTER,
-                MetricConstants.DATA_SERVICE_REQUEST_COUNT_ERROR_TOTAL, "Total number of error" +
                         " requests when receiving the message by an inbound endpoint.",
                 new String[]{MetricConstants.SERVICE_NAME, MetricConstants.SERVICE_TYPE});
     }

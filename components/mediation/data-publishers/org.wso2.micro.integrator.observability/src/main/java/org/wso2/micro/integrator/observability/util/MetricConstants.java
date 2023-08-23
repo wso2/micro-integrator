@@ -24,7 +24,6 @@ public class MetricConstants {
 
     // Constants for Synapse artifacts
     public static final String INBOUND_ENDPOINT = "inbound-endpoint";
-    public static final String DATA_SERVICE = "data-service";
 
     public static final String HTTP_PORT = "http.nio.port";
     public static final String JAVA_VERSION = "java.vm.specification.version";
@@ -53,13 +52,6 @@ public class MetricConstants {
     public static final String INBOUND_ENDPOINT_LATENCY_SECONDS =
             "wso2_integration_inbound_endpoint_latency_seconds";
 
-    public static final String DATA_SERVICE_REQUEST_COUNT_TOTAL =
-            "wso2_integration_data_service_request_count_total";
-    public static final String DATA_SERVICE_REQUEST_COUNT_ERROR_TOTAL =
-            "wso2_integration_data_service_request_count_error_total";
-    public static final String DATA_SERVICE_LATENCY_SECONDS =
-            "wso2_integration_data_service_latency_seconds";
-
     public static final String SERVER_UP = "wso2_integration_server_up";
     public static final String SERVICE_UP = "wso2_integration_service_up";
     public static final String SERVER_VERSION = "wso2_integration_server_version";
@@ -68,12 +60,10 @@ public class MetricConstants {
     public static final String PROXY_LATENCY_BUCKETS = "proxy_latency_buckets";
     public static final String API_LATENCY_BUCKETS = "api_latency_buckets";
     public static final String INBOUND_ENDPOINT_LATENCY_BUCKETS = "inbound_endpoint_latency_buckets";
-    public static final String DATA_SERVICE_LATENCY_BUCKETS = "data_service_latency_buckets";
 
     public static final String PROXY_LATENCY_TIMER = "PROXY_LATENCY_TIMER";
     public static final String API_LATENCY_TIMER = "API_LATENCY_TIMER";
     public static final String INBOUND_ENDPOINT_LATENCY_TIMER = "INBOUND_ENDPOINT_LATENCY_TIMER";
-    public static final String DATA_SERVICE_LATENCY_TIMER = "DATA_SERVICE_LATENCY_TIMER";
 
     public static final String SERVER = "Server";
     public static final String SERVICE = "Service";
@@ -93,9 +83,5 @@ public class MetricConstants {
     public static final String PORT = "port";
     public static final String VERSION_LABEL = "version";
     public static final String UPDATE_LEVEL_LABEL = "update_level";
-
-    public static final String MESSAGE_DIRECTION_IN = "in";
-
-    public static final String MESSAGE_DIRECTION_OUT = "out";
 
 }
