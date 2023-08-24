@@ -72,15 +72,15 @@ public class ErrorMessageVerifyTestCase extends DSSIntegrationTest {
             while ((line = reader.readLine()) != null) {
                 response.append(line);
             }
-            int currentParamsIndex = response.indexOf("<axis2ns1:current_params>");
-            int requestNameIndex = response.indexOf("<axis2ns1:current_request_name>");
-            int nestedExceptionIndex = response.indexOf("<axis2ns1:nested_exception");
-            int dataServiceIndex = response.indexOf("<axis2ns1:source_data_service>");
-            int locationIndex = response.indexOf("<axis2ns1:location>");
-            int namespaceIndex = response.indexOf("<axis2ns1:default_namespace>");
-            int descriptionIndex = response.indexOf("<axis2ns1:description>");
-            int serviceNameIndex = response.indexOf("<axis2ns1:data_service_name>");
-            int dsCodeIndex = response.indexOf("<axis2ns1:ds_code>");
+            int currentParamsIndex = response.indexOf(":current_params>");
+            int requestNameIndex = response.indexOf(":current_request_name>");
+            int nestedExceptionIndex = response.indexOf(":nested_exception>");
+            int dataServiceIndex = response.indexOf(":source_data_service>");
+            int locationIndex = response.indexOf(":location>");
+            int namespaceIndex = response.indexOf(":default_namespace>");
+            int descriptionIndex = response.indexOf(":description>");
+            int serviceNameIndex = response.indexOf(":data_service_name>");
+            int dsCodeIndex = response.indexOf(":ds_code>");
             assertTrue(currentParamsIndex < requestNameIndex,
                     "current_params should be before current_request_name");
             assertTrue(requestNameIndex < nestedExceptionIndex,
