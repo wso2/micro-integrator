@@ -74,7 +74,7 @@ public class ErrorMessageVerifyTestCase extends DSSIntegrationTest {
             }
             int currentParamsIndex = response.indexOf(":current_params>");
             int requestNameIndex = response.indexOf(":current_request_name>");
-            int nestedExceptionIndex = response.indexOf(":nested_exception>");
+            int nestedExceptionIndex = response.indexOf(":nested_exception");
             int dataServiceIndex = response.indexOf(":source_data_service>");
             int locationIndex = response.indexOf(":location>");
             int namespaceIndex = response.indexOf(":default_namespace>");
