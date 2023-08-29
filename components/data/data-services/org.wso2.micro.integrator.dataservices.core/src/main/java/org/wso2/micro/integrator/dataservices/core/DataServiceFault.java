@@ -181,11 +181,15 @@ public class DataServiceFault extends Exception {
         if (this.getDsFaultMessage() != null) {
             buff.append("DS Fault Message: " + this.getDsFaultMessage() + "\n");
         }
-        if (this.getCurrentParams() != null && !("true".equalsIgnoreCase(DBUtils.getCurrentParamsDisabledProperty()))) {
-            buff.append("Current Params: " + this.getCurrentParams() + "\n");
-            getPropertyMap().put(DBConstants.FaultParams.CURRENT_PARAMS, this.getCurrentParams().toString());
-        } else {
-            getPropertyMap().put(DBConstants.FaultParams.CURRENT_PARAMS, null);
+        // if skipCurrentParams is not set to true, we don't have current params in WSDL
+        // so no need to add a null value
+        if (!("true".equalsIgnoreCase(DBUtils.getCurrentParamsDisabledProperty()))) {
+            if (this.getCurrentParams() != null) {
+                buff.append("Current Params: " + this.getCurrentParams() + "\n");
+                getPropertyMap().put(DBConstants.FaultParams.CURRENT_PARAMS, this.getCurrentParams().toString());
+            } else {
+                getPropertyMap().put(DBConstants.FaultParams.CURRENT_PARAMS, null);
+            }
         }
         if (this.getCurrentRequestName() != null) {
             buff.append("Current Request Name: " + this.getCurrentRequestName() + "\n");
