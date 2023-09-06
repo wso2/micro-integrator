@@ -127,5 +127,11 @@ public final class ServiceBusConstants {
     public static final String SYNAPSE_CONNECTOR_PACKAGE = "org.wso2.carbon.connector";
     public static final String DISABLE_CONNECTOR_INIT_SYSTEM_PROPERTY = "esb.connector.startup.init.disable";
 
+    // Constants used to start MI in automation mode
+
+    public static final String AUTOMATION_MODE_CAR_NAME_SYSTEM_PROPERTY = "automation.mode.seq.car.name";
+
+    public static final String AUTOMATION_MODE_MAIN_SEQ_PROPERTY = "AUTOMATION_MODE_MAIN_SEQUENCE";
+
 }
 

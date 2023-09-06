@@ -51,6 +51,7 @@ public class ApplicationConfiguration {
 
     private String appName;
     private String appVersion;
+    private String mainSequence;
     private org.wso2.micro.application.deployer.config.Artifact applicationArtifact;
 
     /**
@@ -157,6 +158,7 @@ public class ApplicationConfiguration {
         }
         this.appName = appArtifact.getName();
         this.appVersion = appArtifact.getVersion();
+        this.setMainSequence(appArtifact.getMainSequence());
 
         String[] serverRoles = AppDeployerUtils.readServerRoles();
         List<org.wso2.micro.application.deployer.config.Artifact.Dependency> depsToRemove = new ArrayList<org.wso2.micro.application.deployer.config.Artifact.Dependency>();
@@ -194,4 +196,11 @@ public class ApplicationConfiguration {
         throw new CarbonException(msg, e);
     }
 
+    public String getMainSequence() {
+        return mainSequence;
+    }
+
+    public void setMainSequence(String mainSequence) {
+        this.mainSequence = mainSequence;
+    }
 }

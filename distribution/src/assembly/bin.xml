@@ -510,6 +510,14 @@
         </file>
 
         <file>
+            <source>src/conf/sequence-observers.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>sequence-observers.xml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
             <source>src/conf/security/cipher-text.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf/security</outputDirectory>
             <destName>cipher-text.properties</destName>
