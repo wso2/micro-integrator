@@ -104,7 +104,7 @@ public class RESTBasicAuthHandler implements Handler {
     public boolean processSecurity(String credentials) {
         String decodedCredentials = new String(new Base64().decode(credentials.getBytes()));
         String username = decodedCredentials.split(":")[0];
-        String password = decodedCredentials.split(":")[1];
+        String password = decodedCredentials.split(":",2)[1];
         UserStoreManager userStoreManager;
         try {
             userStoreManager = MicroIntegratorSecurityUtils.getUserStoreManager();

@@ -36,7 +36,6 @@ import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.core.util.StringUtils;
-import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
@@ -83,6 +82,15 @@ public class ServiceCatalogUtils {
     private static String resolvedUrl;
     private static String lineSeparator;
     private static Map<String, Object> parsedConfigs;
+    private static final String API_VERSION;
+
+    static {
+        String apiVersion = System.getProperty(SERVICE_CATALOG_API_VERSION_PROPERTY);
+        if (apiVersion == null) {
+            apiVersion = SERVICE_CATALOG_DEFAULT_API_VERSION;
+        }
+        API_VERSION = apiVersion;
+    }
 
     /**
      * Update the service url by injecting env variables.
@@ -241,11 +249,10 @@ public class ServiceCatalogUtils {
                         (apimConfigs.get(USER_NAME) + ":" + apimConfigs.get(PASSWORD)).getBytes());
 
         // create get all services url
-        if (APIMHost.endsWith("/")) {
-            APIMHost = APIMHost + SERVICE_CATALOG_GET_SERVICES_ENDPOINT;
-        } else {
-            APIMHost = APIMHost + "/" + SERVICE_CATALOG_GET_SERVICES_ENDPOINT;
+        if (!APIMHost.endsWith("/")) {
+            APIMHost = APIMHost + "/";
         }
+        APIMHost = APIMHost + SERVICE_CATALOG_ENDPOINT_PREFIX + API_VERSION + SERVICE_CATALOG_GET_SERVICES_ENDPOINT;
 
         try {
             HttpsURLConnection connection = (HttpsURLConnection) new URL(APIMHost).openConnection();
@@ -303,11 +310,10 @@ public class ServiceCatalogUtils {
             String APIMHost = apimConfigs.get(APIM_HOST);
 
             // create POST URL
-            if (APIMHost.endsWith("/")) {
-                APIMHost = APIMHost + SERVICE_CATALOG_PUBLISH_ENDPOINT;
-            } else {
-                APIMHost = APIMHost + "/" + SERVICE_CATALOG_PUBLISH_ENDPOINT;
+            if (!APIMHost.endsWith("/")) {
+                APIMHost = APIMHost + "/";
             }
+            APIMHost = APIMHost + SERVICE_CATALOG_ENDPOINT_PREFIX + API_VERSION + SERVICE_CATALOG_PUBLISH_ENDPOINT;
 
             String encodeBytes =
                     Base64.getEncoder().encodeToString(

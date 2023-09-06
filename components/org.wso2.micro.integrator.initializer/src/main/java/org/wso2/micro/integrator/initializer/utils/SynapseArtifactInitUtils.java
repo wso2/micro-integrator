@@ -114,7 +114,7 @@ public class SynapseArtifactInitUtils {
                 String packageName = retrievePackageName(connectorExtractedPath);
 
                 // Retrieve connector name
-                String connectorName = connectorZip.getName().substring(0, connectorZip.getName().indexOf('-'));
+                String connectorName = connectorZip.getName().substring(0, connectorZip.getName().lastIndexOf('-'));
                 QName qualifiedName = new QName(packageName, connectorName);
                 File importFile = new File(importsDir, qualifiedName.toString() + ".xml");
 

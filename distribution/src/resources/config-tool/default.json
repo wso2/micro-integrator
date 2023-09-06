@@ -680,6 +680,9 @@
     "cache_delay": "2"
   },
 
-  "user_store.base_dn": "dc=wso2,dc=org"
+  "user_store.base_dn": "dc=wso2,dc=org",
+
+  "transport.jms.sender_class": "org.apache.axis2.transport.jms.JMSSender",
+  "transport.jms.listener_class": "org.apache.axis2.transport.jms.JMSListener"
 
 }
