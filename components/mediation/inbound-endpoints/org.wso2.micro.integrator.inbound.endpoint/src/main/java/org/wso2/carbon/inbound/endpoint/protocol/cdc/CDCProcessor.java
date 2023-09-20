@@ -64,7 +64,7 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
     private static final String ENDPOINT_POSTFIX = "CDC" + COMMON_ENDPOINT_POSTFIX;
     private static final String FILE_OFFSET_STORAGE_CLASS = "org.apache.kafka.connect.storage.FileOffsetBackingStore";
     private static final String FILE_SCHEMA_HISTORY_STORAGE_CLASS = "io.debezium.storage.file.history.FileSchemaHistory";
-    private static final Log LOGGER = LogFactory.getLog(CDCProcessor.class);
+    private static final Log logger = LogFactory.getLog(CDCProcessor.class);
 
     private enum operations {create, update, delete, truncate};
     private enum opCodes {c, u, d, t};
@@ -93,7 +93,7 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
     }
 
     private void setProperties () {
-        LOGGER.info("Initializing the properties");
+        logger.info("Initializing the CDC properties");
         try {
             if (this.cdcProperties.getProperty(DEBEZIUM_OFFSET_STORAGE) == null) {
                 this.cdcProperties.setProperty(DEBEZIUM_OFFSET_STORAGE, FILE_OFFSET_STORAGE_CLASS);
@@ -153,8 +153,8 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
             }
 
         } catch (IOException e) {
-            String msg = "Error While creating the SCHEMAHISTORY or OFFSET storage file";
-            LOGGER.error(msg);
+            String msg = "Error while setting the CDC Properties";
+            logger.error(msg);
             throw new RuntimeException(msg, e);
         }
     }
@@ -172,7 +172,7 @@ public class CDCProcessor extends InboundRequestProcessorImpl implements TaskSta
      * This will be called at the time of synapse artifact deployment.
      */
     public void init() {
-        LOGGER.info("Inbound CDC listener " + name + " starting ...");
+        logger.info("Inbound CDC listener " + name + " starting ...");
         pollingConsumer = new CDCPollingConsumer(cdcProperties, name, synapseEnvironment, interval);
         pollingConsumer.registerHandler(new CDCInjectHandler(injectingSeq, onErrorSeq, sequential,
                 synapseEnvironment, cdcProperties));

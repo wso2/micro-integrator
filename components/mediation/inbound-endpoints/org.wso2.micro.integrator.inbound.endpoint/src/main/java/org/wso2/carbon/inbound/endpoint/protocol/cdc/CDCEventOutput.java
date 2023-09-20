@@ -60,21 +60,16 @@ public class CDCEventOutput {
     }
 
     public String getDatabase() {
-        if (getSource() != null) {
-            if (getSource().has(DB)) {
+        if (getSource() != null && getSource().has(DB)) {
                 return getSource().get(DB).getAsString();
-            }
-            return null;
         }
         return null;
     }
 
     public JsonElement getTable() {
         JsonElement tableObject = null;
-        if (getSource() != null) {
-            if (getSource().has(TABLE)) {
-                tableObject = getSource().get(TABLE);
-            }
+        if (getSource() != null && getSource().has(TABLE)) {
+            tableObject = getSource().get(TABLE);
         }
         return tableObject;
     }
