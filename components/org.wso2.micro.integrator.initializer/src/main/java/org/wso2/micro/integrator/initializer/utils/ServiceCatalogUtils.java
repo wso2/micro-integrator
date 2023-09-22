@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.commons.resolvers.ResolverException;
 import org.apache.synapse.commons.resolvers.SystemResolver;
 import org.apache.synapse.config.SynapseConfigUtils;
+import org.apache.synapse.core.axis2.ProxyService;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
@@ -818,6 +819,9 @@ public class ServiceCatalogUtils {
      * @return WSDL file creation result.
      */
     private static boolean readProxyServiceWSDL(File metadataYamlFile, File storeLocation) {
+        Collection proxyTable =
+                SynapseConfigUtils.getSynapseConfiguration(
+                        org.wso2.micro.core.Constants.SUPER_TENANT_DOMAIN_NAME).getProxyServices();
         BufferedReader bufferedReader = null;
         try {
             String proxyServiceUrl = getProxyServiceUrlFromMetadata(metadataYamlFile);
@@ -843,8 +847,17 @@ public class ServiceCatalogUtils {
                 return false;
             }
             if (storeLocation.exists()) {
+                String wsdlString = responseWSDL.toString();
+                boolean shouldSchemaLocationBeChanged = shouldSchemaLocationBeChanged(storeLocation, proxyTable);
+                if (shouldSchemaLocationBeChanged) {
+                    // Replace schemaLocation values ending with .xsd and change everything up to ? to xyz using regex
+                    String regexPattern = "(schemaLocation=\")[^\"?]*\\?(.*\\.xsd\")";
+                    String baseUrl = proxyServiceUrl.replace(WSDL_URL_PATH, "?");
+                    String replacement = "$1" + baseUrl + "$2";
+                    wsdlString = wsdlString.replaceAll(regexPattern, replacement);
+                }
                 Files.write(Paths.get(storeLocation.getAbsolutePath(), WSDL_FILE_NAME),
-                        responseWSDL.toString().getBytes());
+                        wsdlString.getBytes());
                 return true;
             }
         } catch (IOException e) {
@@ -859,6 +872,23 @@ public class ServiceCatalogUtils {
             }
         }
 
+        return false;
+    }
+
+    private static boolean shouldSchemaLocationBeChanged(File storeLocation, Collection proxyTable) {
+        String metaFileName = storeLocation.getName();
+        String proxyServiceName = metaFileName.substring(0,
+                metaFileName.indexOf(PROXY_SERVICE_SUFFIX + METADATA_FOLDER_STRING));
+        if (proxyTable != null && !proxyTable.isEmpty()) {
+            for (Object proxy : proxyTable) {
+                if (proxy instanceof ProxyService) {
+                    ProxyService proxyService = (ProxyService) proxy;
+                    if (proxyService.getName().equals(proxyServiceName) && proxyService.getResourceMap() != null) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
