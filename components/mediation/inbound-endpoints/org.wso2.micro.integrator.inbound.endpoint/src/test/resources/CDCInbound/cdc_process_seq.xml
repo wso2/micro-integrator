@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="cdc_process_seq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="full"/>
+    <log level="custom">
+        <property expression="get-property('cdc.database')" name="cdc.database" xmlns:ns="http://org.apache.synapse/xsd"/>
+    </log>
+    <log level="custom">
+        <property expression="get-property('cdc.tables')" name="cdc.tables" xmlns:ns="http://org.apache.synapse/xsd"/>
+    </log>
+    <log level="custom">
+        <property expression="get-property('cdc.operations')" name="cdc.operations" xmlns:ns="http://org.apache.synapse/xsd"/>
+    </log>
+    <log level="custom">
+        <property expression="get-property('cdc.ts_ms')" name="cdc.ts_ms" xmlns:ns="http://org.apache.synapse/xsd"/>
+    </log>
+</sequence>

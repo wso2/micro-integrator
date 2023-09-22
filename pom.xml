@@ -28,7 +28,7 @@
     <groupId>org.wso2.ei</groupId>
     <artifactId>wso2-micro-integrator-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.2.0-SNAPSHOT</version>
+    <version>4.3.0-SNAPSHOT</version>
     <name>WSO2 Micro Integrator</name>
     <url>http://wso2.com/products/enterprise-integrator/</url>
     <description>WSO2 Micro Integrator</description>
@@ -1262,7 +1262,7 @@
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.coordination</artifactId>
-                <version>4.2.0-SNAPSHOT</version>
+                <version>4.3.0-SNAPSHOT</version>
             </dependency>
             <!--SAP feature dependency-->
             <dependency>
@@ -1450,6 +1450,16 @@
                 <artifactId>opencensus</artifactId>
                 <version>${opencensus.orbit.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.debezium</groupId>
+                <artifactId>debezium</artifactId>
+                <version>${debezium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${version.com.google.code.gson}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1544,6 +1554,9 @@
         <version.jaxb.api>2.4.0-b180830.0359</version.jaxb.api>
         <com.sun.jaxb.version>2.3.0</com.sun.jaxb.version>
         <com.sun.jaxb.impl.version>2.3.1</com.sun.jaxb.impl.version>
+
+        <!-- Debezium Orbit version -->
+        <debezium.version>2.1.4.Final.wso2v1</debezium.version>
 
         <synapse.version>4.0.0-wso2v47</synapse.version>
         <imp.pkg.version.synapse>[4.0.0, 4.0.1)</imp.pkg.version.synapse>
