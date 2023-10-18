@@ -280,7 +280,7 @@ fi
 JAVA_VER_BASED_OPTS=""
 
 if [ $java_version_formatted -ge 1100 ]; then
-    JAVA_VER_BASED_OPTS="--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED"
+    JAVA_VER_BASED_OPTS="--add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED"
 fi
 
 while [ "$status" = "$START_EXIT_STATUS" ]

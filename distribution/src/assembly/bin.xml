@@ -655,6 +655,8 @@
                 -->
                 <include>javax.xml.bind:jaxb-api:jar</include>
                 <include>io.netty:netty-tcnative-boringssl-static</include>
+                <!-- need to add this to class path for poi -->
+                <include>org.codehaus.woodstox:stax2-api:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
