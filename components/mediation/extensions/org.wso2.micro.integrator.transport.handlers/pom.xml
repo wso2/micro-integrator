@@ -53,7 +53,7 @@
                             javax.servlet.http;version="${imp.pkg.version.javax.servlet}",
                             org.apache.commons.logging; version="${import.package.version.commons.logging}",
                             org.apache.axis2.*; version="${imp.pkg.version.axis2}",
-                            org.yaml.snakeyaml.*; version="${orbit.snakeyaml.import.version.range}",
+                            org.yaml.snakeyaml.*; version="${snakeyaml.import.version.range}",
                             org.wso2.micro.core.*;version="${project.version}",
                             *;resolution:=optional
                         </Import-Package>
@@ -75,7 +75,7 @@
             <artifactId>synapse-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.orbit.org.yaml</groupId>
+            <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
         </dependency>
         <dependency>
