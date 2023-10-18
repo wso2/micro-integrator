@@ -17,6 +17,18 @@
  */
 package org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.swagger.v3.core.util.Json;
+import io.swagger.v3.core.util.Yaml;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import org.apache.axiom.ext.io.StreamCopyException;
 import org.apache.axiom.util.blob.BlobOutputStream;
 import org.apache.axis2.AxisFault;
@@ -52,8 +64,14 @@ public class SwaggerGenerator {
      */
     protected void updateResponse(CarbonHttpResponse response, String responseString, String contentType) throws
             AxisFault {
+        String updatesResponseString = getOpenAPIJsonString(responseString, contentType);
         try {
-            byte[] responseStringBytes = responseString.getBytes(SwaggerConstants.DEFAULT_ENCODING);
+            if (updatesResponseString == null) {
+                // Parsing to OpenAPI model failed. Return the original response.
+                // This can happen when user save a custom swagger in registry.
+                updatesResponseString = responseString;
+            }
+            byte[] responseStringBytes = updatesResponseString.getBytes(SwaggerConstants.DEFAULT_ENCODING);
             ((BlobOutputStream) response.getOutputStream()).getBlob()
                     .readFrom(new ByteArrayInputStream(responseStringBytes), responseStringBytes.length);
         } catch (StreamCopyException streamCopyException) {
@@ -108,5 +126,41 @@ public class SwaggerGenerator {
     protected void handleException(String errorMsg) throws AxisFault {
         log.error(errorMsg);
         throw new AxisFault(errorMsg);
+    }
+
+    /**
+     * Ignore example:null from the response
+     *
+     * @param responseString String response to be updated in response
+     * @param contentType    Content type of the response to be updated in response headers
+     */
+    public static String getOpenAPIJsonString(String responseString, String contentType) {
+        if (contentType.contains(SwaggerConstants.CONTENT_TYPE_YAML)) {
+            try {
+                JsonNode yamlMapper = new ObjectMapper(new YAMLFactory()).readTree(responseString);
+                responseString = Json.mapper().writeValueAsString(yamlMapper);
+            } catch (JsonProcessingException e) {
+                log.error("Error while converting a yaml definition to a json " + e.getMessage());
+            }
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        // this is to ignore "example" and "exampleSetFlag" objects when generating the OpenAPI
+        mapper.addMixIn(Parameter.class, MediaTypeMixin.class);
+        mapper.addMixIn(MediaType.class, MediaTypeMixin.class);
+        mapper.addMixIn(Schema.class, MediaTypeMixin.class);
+        try {
+            OpenAPI openAPI = mapper.readValue(responseString, OpenAPI.class);
+            String updatedResponseString = mapper.writeValueAsString(openAPI);
+            if (contentType.contains(SwaggerConstants.CONTENT_TYPE_JSON)) {
+                return updatedResponseString;
+            }
+            JsonNode jsonNodeTree = new ObjectMapper().readTree(updatedResponseString);
+            return Yaml.mapper().writeValueAsString(jsonNodeTree);
+        } catch (JsonProcessingException e) {
+            log.error("Error while generating Swagger JSON from model", e);
+            return null;
+        }
     }
 }
