@@ -1558,7 +1558,7 @@
         <!-- Debezium Orbit version -->
         <debezium.version>2.1.4.Final.wso2v1</debezium.version>
 
-        <synapse.version>4.0.0-wso2v47</synapse.version>
+        <synapse.version>4.0.0-wso2v57</synapse.version>
         <imp.pkg.version.synapse>[4.0.0, 4.0.1)</imp.pkg.version.synapse>
         <carbon.mediation.version>4.7.175</carbon.mediation.version>
         <carbon.crypto.version>1.1.3</carbon.crypto.version>
