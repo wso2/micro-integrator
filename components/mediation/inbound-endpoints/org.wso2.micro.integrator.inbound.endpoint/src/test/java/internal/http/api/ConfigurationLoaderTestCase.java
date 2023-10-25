@@ -24,7 +24,6 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.ConfigurationLoader;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.Constants;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
-import org.wso2.carbon.inbound.endpoint.internal.http.api.UserInfo;
 
 import java.net.URL;
 import java.util.List;
@@ -76,51 +75,6 @@ public class ConfigurationLoaderTestCase {
         Assert.assertEquals("/resource1", handlerWithCustomResources.getResources().get(0));
         Assert.assertEquals("/resource2", handlerWithCustomResources.getResources().get(1));
 
-    }
-
-    /**
-     * Test loading of internal apis from the internal-apis.xml file.
-     */
-    @Test
-    public void testLoadUsers() {
-
-        // test configuration with users
-        URL url = getClass().getResource("internal-apis.xml");
-        Assert.assertNotNull("Configuration file not found", url);
-
-        ConfigurationLoader.loadInternalApis("internal/http/api/internal-apis.xml");
-        Map<String, UserInfo> userMap = ConfigurationLoader.getUserMap();
-
-        org.junit.Assert.assertEquals(3, userMap.size());
-        //Assert admin:admin
-        org.junit.Assert.assertNotNull(userMap.get("admin"));
-        org.junit.Assert.assertEquals("admin", String.valueOf(userMap.get("admin").getPassword()));
-        org.junit.Assert.assertTrue("isAdmin", userMap.get("admin").isAdmin());
-
-        //Assert user1:pwd1
-        org.junit.Assert.assertNotNull(userMap.get("user1"));
-        org.junit.Assert.assertEquals("pwd1", String.valueOf(userMap.get("user1").getPassword()));
-        org.junit.Assert.assertFalse("isAdmin", userMap.get("user1").isAdmin());
-
-        //Assert user2:pwd2
-        org.junit.Assert.assertNotNull(userMap.get("user2"));
-        org.junit.Assert.assertEquals("pwd2", String.valueOf(userMap.get("user2").getPassword()));
-        org.junit.Assert.assertFalse("isAdmin", userMap.get("user2").isAdmin());
-    }
-
-    /**
-     * Test loading of internal apis from the internal-apis.xml file.
-     */
-    @Test
-    public void testLoadInternalApisWithNoUserStore() {
-
-        // test configuration with users
-        URL url = getClass().getResource("internal-apis-without-user-store.xml");
-        Assert.assertNotNull("Configuration file not found", url);
-
-        ConfigurationLoader.loadInternalApis("internal/http/api/internal-apis-without-user-store.xml");
-        Assert.assertNull("User store is not defined in the file but it is not null",
-                          ConfigurationLoader.getUserMap());
     }
 
     private List<InternalAPI> getApis() {

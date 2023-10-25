@@ -23,9 +23,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
+import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.Constants;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
+import org.wso2.micro.integrator.security.user.core.file.FileBasedUserStoreManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
 
     protected static boolean useCarbonUserStore = false;
     private static boolean isInitialized = false;
+    private static String FILE_BASED_USER_STORE_AS_PRIMARY = "internal_apis.file_user_store.primary";
     /**
      * Resources defined in internal-apis.xml to be handled
      */
@@ -67,6 +70,10 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
             XMLStreamException {
         if (!isInitialized) {
             if (SecurityUtils.isFileBasedUserStoreEnabled()) {
+                Object fileUserStore = ConfigParser.getParsedConfigs().get(FILE_BASED_USER_STORE_AS_PRIMARY);
+                if (fileUserStore != null && Boolean.parseBoolean(fileUserStore.toString())) {
+                    useCarbonUserStore = true;
+                }
                 isInitialized = FileBasedUserStoreManager.getUserStoreManager().isInitialized();
             } else {
                 LOG.info("File based user store has been disabled. Carbon user store settings will be used.");

@@ -63,12 +63,6 @@ public class ConfigurationLoader {
     private static final QName PROTOCOL_Q = new QName("protocol");
     private static final QName HANDLERS_Q = new QName("handlers");
     private static final QName RESOURCES_Q = new QName("resources");
-    private static final QName USER_STORE_Q = new QName("userStore");
-    private static final QName USERS_Q = new QName("users");
-    private static final QName USER_Q = new QName("user");
-    private static final QName USERNAME_Q = new QName("username");
-    private static final QName PASSWORD_Q = new QName("password");
-    private static final QName IS_ADMIN_Q = new QName("isAdmin");
     private static final QName STORE_PASSWORD_Q = new QName("Password");
     private static final QName KEY_PASSWORD_Q = new QName("KeyPassword");
 
@@ -84,7 +78,6 @@ public class ConfigurationLoader {
 
     private static SSLConfiguration sslConfiguration;
     private static boolean sslConfiguredSuccessfully;
-    private static Map<String, UserInfo> userMap;
 
     private static List<InternalAPI> internalHttpApiList = new ArrayList<>();
     private static List<InternalAPI> internalHttpsApiList = new ArrayList<>();
@@ -107,7 +100,6 @@ public class ConfigurationLoader {
             }
 
             setSecretResolver(apiConfig);
-            populateUserStore(apiConfig);
 
             Iterator apiIterator = apiConfig.getChildrenWithLocalName(APIS);
 
@@ -185,54 +177,6 @@ public class ConfigurationLoader {
                 }
             }
         }
-    }
-
-    /**
-     * Populates the userList hashMap by userStore OM element
-     */
-    private static void populateUserStore(OMElement apiConfig) {
-        OMElement userStoreOM = apiConfig.getFirstChildWithName(USER_STORE_Q);
-        if (Objects.nonNull(userStoreOM)) {
-            userMap = populateUsers(userStoreOM.getFirstChildWithName(USERS_Q));
-        } else {
-            userMap = null;
-        }
-    }
-
-    /**
-     * Populates individual users.
-     *
-     * @param users the parent element of users
-     * @return map of users against UserInfo config
-     */
-    private static Map<String, UserInfo> populateUsers(OMElement users) {
-        HashMap<String, UserInfo> userMap = new HashMap<>();
-        if (users != null) {
-            @SuppressWarnings("unchecked")
-            Iterator<OMElement> usersIterator = users.getChildrenWithName(USER_Q);
-            if (usersIterator != null) {
-                while (usersIterator.hasNext()) {
-                    OMElement userElement = usersIterator.next();
-                    OMElement userNameElement = userElement.getFirstChildWithName(USERNAME_Q);
-                    OMElement passwordElement = userElement.getFirstChildWithName(PASSWORD_Q);
-                    OMElement isAdminElement = userElement.getFirstChildWithName(IS_ADMIN_Q);
-                    if (userNameElement != null && passwordElement != null) {
-                        String userName = userNameElement.getText();
-                        if (userMap.containsKey(userName)) {
-                            handleException("Error parsing the file based user store. User: " + userName + " defined "
-                                            + "more than once. ");
-                        }
-                        boolean isAdmin = false;
-                        if (isAdminElement != null) {
-                            isAdmin = Boolean.parseBoolean(isAdminElement.getText().trim());
-                        }
-                        userMap.put(userName, new UserInfo(userName,
-                                resolveSecret(passwordElement.getText()).toCharArray(), isAdmin));
-                    }
-                }
-            }
-        }
-        return userMap;
     }
 
     /**
@@ -335,10 +279,6 @@ public class ConfigurationLoader {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw new SynapseException("Error creating Internal InternalAPI for class name : " + classFQName, e);
         }
-    }
-
-    public static Map<String, UserInfo> getUserMap() {
-        return userMap;
     }
 
     public static int getInternalInboundHttpPort() {

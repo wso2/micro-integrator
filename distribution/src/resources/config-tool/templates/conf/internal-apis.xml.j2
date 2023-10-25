@@ -18,7 +18,7 @@
 <!--
     This is the configuration file for internal APIs
 -->
-<internalApis>
+<internalApis xmlns:svns="http://org.wso2.securevault/configuration">
     <apis>
         <api name="PrometheusApi" protocol="{{prometheus_api.protocols}}" class="org.wso2.micro.integrator.observability.metric.publisher.MetricAPI">
             {% if prometheus_api.basic_security_handler.enable == true
