@@ -67,6 +67,7 @@ public class UserCoreConstants {
     public static final String IS_USER_IN_ROLE_CACHE_IDENTIFIER = "@__isUserHasTheRole__@";
 
     public static final String DOMAIN_SEPARATOR;
+    public static final String FILE_BASED_USER_STORE_AS_PRIMARY = "internal_apis.file_user_store.primary";
 
     static {
         String userDomainSeparator = CarbonServerConfigurationService.getInstance().getFirstProperty("UserDomainSeparator");

@@ -22,6 +22,7 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
+import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
@@ -83,13 +84,16 @@ public class DefaultRealmService implements RealmService {
         } else {
             this.bootstrapRealmConfig = buildBootStrapRealmConfig();
         }
-//        this.tenantMgtConfiguration = buildTenantMgtConfig(bc,
-//                this.bootstrapRealmConfig.getUserStoreProperty(UserCoreConstants.TenantMgtConfig.LOCAL_NAME_TENANT_MANAGER));
-        this.dataSource = DatabaseUtil.getRealmDataSource(bootstrapRealmConfig);
-        // TODO We do not need to init DB for now
-        //initializeDatabase(dataSource);
-        properties.put(UserCoreConstants.DATA_SOURCE, dataSource);
-        properties.put(UserCoreConstants.FIRST_STARTUP_CHECK, isFirstInitialization);
+        Object fileUserStore = ConfigParser.getParsedConfigs().get(UserCoreConstants.FILE_BASED_USER_STORE_AS_PRIMARY);
+        if (!(fileUserStore != null && Boolean.parseBoolean(fileUserStore.toString()))) {
+            // this.tenantMgtConfiguration = buildTenantMgtConfig(bc,
+            // this.bootstrapRealmConfig.getUserStoreProperty(UserCoreConstants.TenantMgtConfig.LOCAL_NAME_TENANT_MANAGER));
+            this.dataSource = DatabaseUtil.getRealmDataSource(bootstrapRealmConfig);
+            // TODO We do not need to init DB for now
+            //initializeDatabase(dataSource);
+            properties.put(UserCoreConstants.DATA_SOURCE, dataSource);
+            properties.put(UserCoreConstants.FIRST_STARTUP_CHECK, isFirstInitialization);
+        }
 
         //this.tenantManager = this.initializeTenantManger(this.getTenantConfigurationElement(bc));
 //        this.tenantManager = this.initializeTenantManger(this.tenantMgtConfiguration);

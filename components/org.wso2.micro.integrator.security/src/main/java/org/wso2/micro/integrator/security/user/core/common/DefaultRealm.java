@@ -19,6 +19,8 @@ package org.wso2.micro.integrator.security.user.core.common;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.snmp4j.User;
+import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.core.AuthorizationManager;
 import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
@@ -61,6 +63,8 @@ public class DefaultRealm implements UserRealm {
     private UserStoreManager userStoreManager = null;
     private AuthorizationManager authzManager = null;
     private Map<String, Object> properties = null;
+
+    private boolean fileBasedUserStoreMode = false;
 
     /**
      * Usage of this method is found on tests.
@@ -115,16 +119,21 @@ public class DefaultRealm implements UserRealm {
 
         Map<String, ClaimMapping> claimMappings = new HashMap<String, ClaimMapping>();
         Map<String, ProfileConfiguration> profileConfigs = new HashMap<String, ProfileConfiguration>();
-
-        if (Boolean.parseBoolean(realmConfig.getRealmProperty(UserCoreClaimConstants.INITIALIZE_NEW_CLAIM_MANAGER))) {
-            if (UserStoreMgtDSComponent.getClaimManagerFactory() != null) {
-                claimMan = UserStoreMgtDSComponent.getClaimManagerFactory().createClaimManager(tenantId);
+        Object fileUserStore = ConfigParser.getParsedConfigs().get(UserCoreConstants.FILE_BASED_USER_STORE_AS_PRIMARY);
+        if (fileUserStore != null && Boolean.parseBoolean(fileUserStore.toString())) {
+            fileBasedUserStoreMode = true;
+        }
+        if (!fileBasedUserStoreMode) {
+            if (Boolean.parseBoolean(realmConfig.getRealmProperty(UserCoreClaimConstants.INITIALIZE_NEW_CLAIM_MANAGER))) {
+                if (UserStoreMgtDSComponent.getClaimManagerFactory() != null) {
+                    claimMan = UserStoreMgtDSComponent.getClaimManagerFactory().createClaimManager(tenantId);
+                } else {
+                    claimMan = new InMemoryClaimManager();
+                }
             } else {
-                claimMan = new InMemoryClaimManager();
+                populateProfileAndClaimMaps(claimMappings, profileConfigs);
+                claimMan = new DefaultClaimManager(claimMappings, dataSource, tenantId);
             }
-        } else {
-            populateProfileAndClaimMaps(claimMappings, profileConfigs);
-            claimMan = new DefaultClaimManager(claimMappings, dataSource, tenantId);
         }
         initializeObjects();
     }
@@ -310,8 +319,9 @@ public class DefaultRealm implements UserRealm {
                 log.error(message);
                 throw new UserStoreException(message);
             }
-            this.authzManager = (AuthorizationManager) createObjectWithOptions(value, realmConfig,
-                    properties);
+            if (!fileBasedUserStoreMode) {
+                this.authzManager = (AuthorizationManager) createObjectWithOptions(value, realmConfig, properties);
+            }
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);

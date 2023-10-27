@@ -40,6 +40,7 @@ import org.wso2.micro.integrator.security.user.core.constants.UserCoreClaimConst
 import org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants;
 import org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants.ErrorMessages;
 import org.wso2.micro.integrator.security.user.core.dto.RoleDTO;
+import org.wso2.micro.integrator.security.user.core.hybrid.FileBasedHybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.hybrid.HybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.hybrid.JdbcHybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.internal.UMListenerServiceComponent;
@@ -5790,9 +5791,13 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         return attributeList;
     }
 
-    protected void doInitialSetup() throws UserStoreException {
-        systemUserRoleManager = new SystemUserRoleManager(dataSource, tenantId);
-        hybridRoleManager = new JdbcHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
+    protected void doInitialSetup(boolean isFileBased) throws UserStoreException {
+        if (!isFileBased) {
+            systemUserRoleManager = new SystemUserRoleManager(dataSource, tenantId);
+            hybridRoleManager = new JdbcHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
+        } else {
+            hybridRoleManager = new FileBasedHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
+        }
     }
 
     /**

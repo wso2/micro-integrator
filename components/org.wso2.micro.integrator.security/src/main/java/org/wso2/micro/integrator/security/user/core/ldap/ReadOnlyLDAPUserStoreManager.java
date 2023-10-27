@@ -22,6 +22,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.integrator.security.UnsupportedSecretTypeException;
 import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
@@ -154,6 +155,8 @@ public class ReadOnlyLDAPUserStoreManager extends AbstractUserStoreManager {
      */
     protected boolean emptyRolesAllowed = false;
 
+    private boolean fileBasedUserStoreMode = false;
+
     static {
         setAdvancedProperties();
     }
@@ -202,17 +205,22 @@ public class ReadOnlyLDAPUserStoreManager extends AbstractUserStoreManager {
 
         // check if required configurations are in the user-mgt.xml
         checkRequiredUserStoreConfigurations();
-
-        dataSource = (DataSource) properties.get(UserCoreConstants.DATA_SOURCE);
-        if (dataSource == null) {
-            // avoid returning null
-            dataSource = DatabaseUtil.getRealmDataSource(realmConfig);
+        Object fileUserStore = ConfigParser.getParsedConfigs().get(UserCoreConstants.FILE_BASED_USER_STORE_AS_PRIMARY);
+        if (fileUserStore != null && Boolean.parseBoolean(fileUserStore.toString())) {
+            fileBasedUserStoreMode = true;
         }
-        if (dataSource == null) {
-            throw new UserStoreException("Data Source is null");
-        }
-        properties.put(UserCoreConstants.DATA_SOURCE, dataSource);
+        if(!fileBasedUserStoreMode) {
+            dataSource = (DataSource) properties.get(UserCoreConstants.DATA_SOURCE);
+            if (dataSource == null) {
+                // avoid returning null
+                dataSource = DatabaseUtil.getRealmDataSource(realmConfig);
+            }
+            if (dataSource == null) {
+                throw new UserStoreException("Data Source is null");
+            }
+            properties.put(UserCoreConstants.DATA_SOURCE, dataSource);
 
+        }
 		/*
          * obtain the ldap connection source that was created in
 		 * DefaultRealmService.
@@ -234,8 +242,11 @@ public class ReadOnlyLDAPUserStoreManager extends AbstractUserStoreManager {
             JNDIUtil.closeContext(dirContext);
         }
         this.userRealm = realm;
-        this.persistDomain();
-        doInitialSetup();
+
+        if (!fileBasedUserStoreMode) {
+            this.persistDomain();
+        }
+        doInitialSetup(fileBasedUserStoreMode);
         if (realmConfig.isPrimary()) {
             addInitialAdminData(Boolean.parseBoolean(realmConfig.getAddAdmin()),
                     !isInitSetupDone());
