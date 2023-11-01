@@ -35,8 +35,11 @@
         <module>tests-rabbitmq</module>
         <module>tests-coordination</module>
         <module>tests-userstore</module>
-        <module>tests-transaction</module>
-<!--        <module>tests-wso2mb</module>-->
+
+        <!-- This implementation of transaction counter is deprecated -->
+        <!--<module>tests-transaction</module>-->
+
+        <!--<module>tests-wso2mb</module>-->
         <!--<module>tests-sap</module>-->
     </modules>
 

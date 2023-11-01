@@ -101,8 +101,10 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGOUT, new LogoutResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_SERVER_DATA, new MetaDataResource()));
         resourcesList.add(new LogFilesResource(PREFIX_LOG_FILES));
-        resourcesList.add(new ApiResourceAdapter(PREFIX_TRANSACTION + PATH_PARAM_TRANSACTION,
-                                                 new RequestCountResource()));
+
+        // Disabling this API as this version of transaction counter is deprecated.
+        // resourcesList.add(new ApiResourceAdapter(PREFIX_TRANSACTION + PATH_PARAM_TRANSACTION, new RequestCountResource()));
+
         resourcesList.add(new ExternalVaultResource(PREFIX_EXTERNAL_VAULTS
                 + PATH_PARAM_EXTERNAL_VAULT_NAME));
         resourcesList.add(new ApiResourceAdapter(PREFIX_DATA_SOURCES, new DataSourceResource()));

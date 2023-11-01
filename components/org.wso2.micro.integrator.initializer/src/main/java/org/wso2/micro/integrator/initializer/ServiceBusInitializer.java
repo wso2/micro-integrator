@@ -58,8 +58,6 @@ import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
-import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandler;
-import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandlerComponent;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationService;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationServiceImpl;
@@ -80,10 +78,7 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -111,9 +106,9 @@ public class ServiceBusInitializer {
 
     private DataSourceService dataSourceService;
 
-    private TransactionCountHandlerComponent transactionCountHandlerComponent;
-
-    private ExecutorService transactionCountExecutor;
+    // This implementation of transaction counter is deprecated
+    // private TransactionCountHandlerComponent transactionCountHandlerComponent;
+    // private ExecutorService transactionCountExecutor;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
@@ -198,14 +193,14 @@ public class ServiceBusInitializer {
                 synapseEnvironment.registerSynapseHandler(new SynapseExternalPropertyConfigurator());
                 synapseEnvironment.registerSynapseHandler(new ProxyLogHandler());
 
-                // Register internal transaction synapse handler
-                boolean transactionPropertyEnabled = TransactionCountHandlerComponent.isTransactionPropertyEnabled();
-                if (transactionPropertyEnabled) {
-                    transactionCountHandlerComponent = new TransactionCountHandlerComponent();
-                    transactionCountHandlerComponent.start(dataSourceService);
-                    transactionCountExecutor = Executors.newFixedThreadPool(100);
-                    synapseEnvironment.registerSynapseHandler(new TransactionCountHandler(transactionCountExecutor));
-                }
+                // This implementation of transaction counter is deprecated
+                // boolean transactionPropertyEnabled = TransactionCountHandlerComponent.isTransactionPropertyEnabled();
+                // if (transactionPropertyEnabled) {
+                //     transactionCountHandlerComponent = new TransactionCountHandlerComponent();
+                //    transactionCountHandlerComponent.start(dataSourceService);
+                //    transactionCountExecutor = Executors.newFixedThreadPool(100);
+                //    synapseEnvironment.registerSynapseHandler(new TransactionCountHandler(transactionCountExecutor));
+                // }
                 if (log.isDebugEnabled()) {
                     log.debug("SynapseEnvironmentService Registered");
                 }
@@ -260,12 +255,15 @@ public class ServiceBusInitializer {
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
-        if (Objects.nonNull(transactionCountHandlerComponent)) {
-            transactionCountHandlerComponent.cleanup();
-        }
-        if (Objects.nonNull(transactionCountExecutor)) {
-            transactionCountExecutor.shutdownNow();
-        }
+
+        // This implementation of transaction counter is deprecated
+        // if (Objects.nonNull(transactionCountHandlerComponent)) {
+        //     transactionCountHandlerComponent.cleanup();
+        // }
+        // if (Objects.nonNull(transactionCountExecutor)) {
+        //     transactionCountExecutor.shutdownNow();
+        // }
+
         List handlers = serverManager.getServerContextInformation().getSynapseEnvironment().getSynapseHandlers();
         Iterator<SynapseHandler> iterator = handlers.iterator();
         while (iterator.hasNext()) {
