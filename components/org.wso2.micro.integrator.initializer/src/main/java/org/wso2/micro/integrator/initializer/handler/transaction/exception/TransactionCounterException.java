@@ -18,6 +18,10 @@ Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
 package org.wso2.micro.integrator.initializer.handler.transaction.exception;
 
+/**
+ * This feature is deprecated and will be removed in a future release.
+ * @deprecated
+ */
 public class TransactionCounterException extends Exception {
 
     public TransactionCounterException(String msg, Exception e) {

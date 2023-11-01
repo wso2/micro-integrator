@@ -30,6 +30,10 @@ import org.wso2.micro.integrator.initializer.handler.transaction.store.Transacti
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionException;
 
+/**
+ * This feature is deprecated and will be removed in a future release.
+ * @deprecated
+ */
 public class TransactionCountHandler extends AbstractSynapseHandler {
 
     private static final Log LOG = LogFactory.getLog(TransactionCountHandler.class);
