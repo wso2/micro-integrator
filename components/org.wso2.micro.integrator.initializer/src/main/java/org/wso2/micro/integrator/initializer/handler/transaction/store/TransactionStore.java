@@ -28,6 +28,9 @@ import javax.crypto.Cipher;
 import javax.sql.DataSource;
 
 /**
+ * This feature is deprecated and will be removed in a future release.
+ * @deprecated
+ *
  * The layer which connects to the transaction data.
  */
 public class TransactionStore {

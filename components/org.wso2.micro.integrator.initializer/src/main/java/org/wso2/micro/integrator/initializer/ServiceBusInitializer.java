@@ -106,10 +106,6 @@ public class ServiceBusInitializer {
 
     private DataSourceService dataSourceService;
 
-    // This implementation of transaction counter is deprecated
-    // private TransactionCountHandlerComponent transactionCountHandlerComponent;
-    // private ExecutorService transactionCountExecutor;
-
     @Activate
     protected void activate(ComponentContext ctxt) {
 
@@ -193,14 +189,6 @@ public class ServiceBusInitializer {
                 synapseEnvironment.registerSynapseHandler(new SynapseExternalPropertyConfigurator());
                 synapseEnvironment.registerSynapseHandler(new ProxyLogHandler());
 
-                // This implementation of transaction counter is deprecated
-                // boolean transactionPropertyEnabled = TransactionCountHandlerComponent.isTransactionPropertyEnabled();
-                // if (transactionPropertyEnabled) {
-                //     transactionCountHandlerComponent = new TransactionCountHandlerComponent();
-                //    transactionCountHandlerComponent.start(dataSourceService);
-                //    transactionCountExecutor = Executors.newFixedThreadPool(100);
-                //    synapseEnvironment.registerSynapseHandler(new TransactionCountHandler(transactionCountExecutor));
-                // }
                 if (log.isDebugEnabled()) {
                     log.debug("SynapseEnvironmentService Registered");
                 }
@@ -255,15 +243,6 @@ public class ServiceBusInitializer {
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
-
-        // This implementation of transaction counter is deprecated
-        // if (Objects.nonNull(transactionCountHandlerComponent)) {
-        //     transactionCountHandlerComponent.cleanup();
-        // }
-        // if (Objects.nonNull(transactionCountExecutor)) {
-        //     transactionCountExecutor.shutdownNow();
-        // }
-
         List handlers = serverManager.getServerContextInformation().getSynapseEnvironment().getSynapseHandlers();
         Iterator<SynapseHandler> iterator = handlers.iterator();
         while (iterator.hasNext()) {

@@ -22,6 +22,10 @@ import org.wso2.carbon.utils.ServerConstants;
 
 import java.io.File;
 
+/**
+ * This feature is deprecated and will be removed in a future release.
+ * @deprecated
+ */
 public class TransactionConstants {
 
     public static final String PUBLIC_KEY = System.getProperty(ServerConstants.CARBON_HOME) + File.separator

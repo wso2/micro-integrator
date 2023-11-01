@@ -50,6 +50,9 @@ import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVE
 
 
 /**
+ * This feature is deprecated and will be removed in a future release.
+ * @deprecated
+ *
  * Resource for a retrieving aggregated transaction count.
  * <p>
  * Handles resources in the form "management/transactions/{param}"
