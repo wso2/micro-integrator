@@ -66,6 +66,8 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
     private String outputFolderName = "out";
     private static final String USERNAME = "SFTPUser";
     private static final String PASSWORD = "SFTP321";
+    private static final String SH_FILE_NAME = "micro-integrator.sh";
+    private static final String BAT_FILE_NAME = "micro-integrator.bat";
 
     @BeforeClass(alwaysRun = true)
     public void runFTPServer() throws Exception {
@@ -116,9 +118,20 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
 
         // replace the axis2.xml enabled vfs transfer and restart the ESB server gracefully.
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyMIConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getClass().getResource("/artifacts/ESB/synapseconfig/" + "vfsTransport/ESBJAVA4770/deployment.toml")
                         .getPath()));
+        File newShFile = new File(
+                getESBResourceLocation() + File.separator + "vfs" + File.separator + SH_FILE_NAME);
+        File oldShFile =
+                new File(CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + SH_FILE_NAME);
+        serverConfigurationManager.applyConfigurationWithoutRestart(newShFile, oldShFile, true);
+        File newBatFile = new File(
+                getESBResourceLocation() + File.separator + "vfs" + File.separator + BAT_FILE_NAME);
+        File oldBatFile =
+                new File(CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + BAT_FILE_NAME);
+        serverConfigurationManager.applyConfigurationWithoutRestart(newBatFile, oldBatFile, true);
+        serverConfigurationManager.restartGracefully();
         super.init();
     }
 
