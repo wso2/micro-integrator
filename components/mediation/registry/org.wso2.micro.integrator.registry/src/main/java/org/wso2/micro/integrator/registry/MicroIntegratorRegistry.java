@@ -299,8 +299,8 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         if ("file".equals(url.getProtocol())) {
             try {
                 if (new File(url.toURI()).exists()) {
-                    try {
-                        url.openStream();
+                    try (InputStream is = url.openStream()){
+                        ;
                     } catch (IOException e) {
                         log.error("Error occurred while accessing registry resource: " + key, e);
                         return true;
