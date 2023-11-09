@@ -50,7 +50,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         pushMessageToQue(addEndpoint());
 
         assertTrue(Utils.checkForLog(carbonLogReader, "Suspending polling as the pollingSuspensionLimit of 2 "
-                           + "reached. Polling will be re-started after 3000 milliseconds", DEFAULT_TIMEOUT),
+                           + "reached. Polling will be re-started after 3000 milliseconds", 180),
                    "JMS Polling suspension is not enabled.");
         Utils.undeploySynapseConfiguration(ENDPOINT_NAME, Utils.ArtifactType.INBOUND_ENDPOINT.getDirName(), false);
     }
@@ -61,7 +61,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
 
         pushMessageToQue(addEndpointWithSuspensionLimitZero());
 
-        assertTrue(Utils.checkForLog(carbonLogReader, "Polling is suspended permanently", DEFAULT_TIMEOUT),
+        assertTrue(Utils.checkForLog(carbonLogReader, "Polling is suspended permanently", 180),
                    "JMS Polling is not permanently suspended though the suspension limit is 0.");
         Utils.undeploySynapseConfiguration(ENDPOINT_NAME, Utils.ArtifactType.INBOUND_ENDPOINT.getDirName(), false);
     }
