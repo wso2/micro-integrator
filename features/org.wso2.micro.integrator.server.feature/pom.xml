@@ -276,9 +276,6 @@
                                 <bundleDef>commons-configuration:commons-configuration:${commons.configuration.version}</bundleDef>
                                 <!-- bundles needed to swagger for DSS feature -->
                                 <bundleDef>org.wso2.orbit.io.swagger.v3:swagger-parser:${swagger.parser.orbit.version}</bundleDef>
-                                <bundleDef>io.swagger:swagger-core:${swagger.core.v2.version}</bundleDef>
-                                <bundleDef>io.swagger:swagger-models:${swagger.core.v2.version}</bundleDef>
-                                <bundleDef>io.swagger:swagger-annotations:${swagger.core.v2.version}</bundleDef>
                                 <bundleDef>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${fasterxml.jackson.version}</bundleDef>
                                 <bundleDef>javax.validation:validation-api:${javax.validation.version}</bundleDef>
                                 <bundleDef>org.yaml:snakeyaml:${snakeyaml.version}</bundleDef>
