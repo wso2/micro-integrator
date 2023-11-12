@@ -1831,7 +1831,7 @@
         <mysql.connector.version>8.0.19</mysql.connector.version>
         <derby.orbit.version>10.3.2.1wso2v1</derby.orbit.version>
 
-        <jdbc-pool.orbit.version>9.0.82.wso2v1</jdbc-pool.orbit.version>
+        <jdbc-pool.orbit.version>9.0.58.wso2v1</jdbc-pool.orbit.version>
         <jdbc-pool.orbit.imp.pkg.version>[1.7.0,2.0.0)</jdbc-pool.orbit.imp.pkg.version>
 
         <antlr4.runtime.version>4.5.1.wso2v1</antlr4.runtime.version>
