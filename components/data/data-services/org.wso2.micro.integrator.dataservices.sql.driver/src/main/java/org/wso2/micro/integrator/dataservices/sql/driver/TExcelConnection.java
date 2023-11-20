@@ -32,7 +32,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.wso2.micro.integrator.dataservices.sql.driver.parser.Constants;
@@ -85,7 +84,7 @@ public class TExcelConnection extends TConnection {
         } catch (FileNotFoundException e) {
             throw new SQLException("Could not locate the EXCEL datasource in the provided " +
                     "location", e);
-        } catch (IOException | InvalidFormatException e) {
+        } catch (IOException e) {
             throw new SQLException("Error occurred while initializing the EXCEL datasource", e);
         } catch (InterruptedException e) {
             throw new SQLException("Error Acquiring the lock for the workbook path - " + filePath, e);
