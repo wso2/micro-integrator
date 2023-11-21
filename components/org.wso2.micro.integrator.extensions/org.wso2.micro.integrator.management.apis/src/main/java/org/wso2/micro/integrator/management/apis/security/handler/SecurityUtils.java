@@ -27,6 +27,7 @@ import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.management.apis.Constants;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
+import org.wso2.micro.integrator.security.user.core.file.FileBasedUserStoreManager;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecureVaultException;
 

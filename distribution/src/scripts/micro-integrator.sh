@@ -136,10 +136,17 @@ do
           CMD="version"
     elif [ "$c" = "--restart" ] || [ "$c" = "-restart" ] || [ "$c" = "restart" ]; then
           CMD="restart"
+    elif [ "$c" = "--car" ] || [ "$c" = "-car" ] || [ "$c" = "car" ]; then
+          ARGUMENT="car"
+          OPTARG="$2"
     else
         args="$args $c"
     fi
 done
+
+if [ "$ARGUMENT" = "car" ]; then
+  CAR_NAME="$OPTARG"
+fi
 
 if [ "$CMD" = "--debug" ]; then
   if [ "$PORT" = "" ]; then
@@ -273,7 +280,7 @@ fi
 JAVA_VER_BASED_OPTS=""
 
 if [ $java_version_formatted -ge 1100 ]; then
-    JAVA_VER_BASED_OPTS="--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED"
+    JAVA_VER_BASED_OPTS="--add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED"
 fi
 
 while [ "$status" = "$START_EXIT_STATUS" ]
@@ -331,6 +338,7 @@ do
     -DenableLivenessProbe=true \
     -DenableManagementApi=true \
     -DskipStartupExtensions=false \
+    -Dautomation.mode.seq.car.name="$CAR_NAME" \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
     -Dorg.ops4j.pax.logging.logReaderEnabled=false \
     -Dorg.ops4j.pax.logging.eventAdminEnabled=false \

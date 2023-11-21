@@ -38,6 +38,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.base.CarbonBaseUtils;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -79,6 +80,8 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
     private File SFTPFolder;
     private String carbonHome;
     private ServerConfigurationManager serverConfigurationManager;
+    private static final String SH_FILE_NAME = "micro-integrator.sh";
+    private static final String BAT_FILE_NAME = "micro-integrator.bat";
 
     public static KeyPairProvider createTestHostKeyProvider(Path path) {
         SimpleGeneratorHostKeyProvider keyProvider = new SimpleGeneratorHostKeyProvider();
@@ -97,6 +100,18 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         setupSftpFolders(carbonHome);
         setupSftpServer(carbonHome);
         Thread.sleep(15000);
+        File newShFile = new File(
+                getESBResourceLocation() + File.separator + "vfs" + File.separator + SH_FILE_NAME);
+        File oldShFile =
+                new File(CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + SH_FILE_NAME);
+        serverConfigurationManager.applyConfigurationWithoutRestart(newShFile, oldShFile, true);
+        File newBatFile = new File(
+                getESBResourceLocation() + File.separator + "vfs" + File.separator + BAT_FILE_NAME);
+        File oldBatFile =
+                new File(CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + BAT_FILE_NAME);
+        serverConfigurationManager.applyConfigurationWithoutRestart(newBatFile, oldBatFile, true);
+        serverConfigurationManager.restartGracefully();
+        super.init();
     }
 
     @Test(groups = "wso2.esb", description = "VFS absolute path test for sftp")
@@ -154,6 +169,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         //sshd.stop();
         log.info("SFTP Server stopped successfully");
         super.cleanup();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 
     /**

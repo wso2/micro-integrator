@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>mediation-integration</artifactId>
-        <version>4.2.0-SNAPSHOT</version>
+        <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -35,8 +35,8 @@
         <module>tests-rabbitmq</module>
         <module>tests-coordination</module>
         <module>tests-userstore</module>
-        <module>tests-transaction</module>
-<!--        <module>tests-wso2mb</module>-->
+
+        <!--<module>tests-wso2mb</module>-->
         <!--<module>tests-sap</module>-->
     </modules>
 

@@ -39,7 +39,8 @@ import javax.crypto.Cipher;
 import javax.sql.DataSource;
 
 /**
- * This class represents the internal transaction count handler component.
+ * This feature is deprecated and will be removed in a future release.
+ * @deprecated
  */
 public class TransactionCountHandlerComponent {
 

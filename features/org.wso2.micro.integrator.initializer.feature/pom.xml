@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>micro-integrator-features</artifactId>
-        <version>4.2.0-SNAPSHOT</version>
+        <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -55,7 +55,7 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.orbit.org.yaml</groupId>
+            <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
         </dependency>
     </dependencies>
@@ -96,7 +96,7 @@
                                 <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.registry:${project.version}
                                 </bundleDef>
-                                <bundleDef>org.wso2.orbit.org.yaml:snakeyaml:${orbit.version.snakeyaml}</bundleDef>
+                                <bundleDef>org.yaml:snakeyaml:${snakeyaml.version}</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.apache.synapse.wso2:${synapse.version}</importFeatureDef>

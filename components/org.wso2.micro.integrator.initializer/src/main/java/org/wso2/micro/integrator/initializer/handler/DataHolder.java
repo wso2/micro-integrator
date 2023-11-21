@@ -21,7 +21,9 @@ package org.wso2.micro.integrator.initializer.handler;
 import org.wso2.micro.integrator.initializer.handler.transaction.store.TransactionStore;
 
 /**
- * DataHolder class for transaction count component.
+ * This feature is deprecated and will be removed in a future release.
+ *
+ * @deprecated
  */
 public class DataHolder {
 

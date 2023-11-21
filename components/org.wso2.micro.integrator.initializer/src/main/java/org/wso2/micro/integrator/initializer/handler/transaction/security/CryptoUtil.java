@@ -42,6 +42,9 @@ import javax.crypto.NoSuchPaddingException;
 import javax.xml.bind.DatatypeConverter;
 
 /**
+ * This feature is deprecated and will be removed in a future release.
+ * @deprecated
+ *
  * This class will provide the required methods to encrypt a given value.
  */
 public class CryptoUtil {

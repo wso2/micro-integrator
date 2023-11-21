@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.security.user.core.ldap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
 import org.wso2.micro.integrator.security.user.api.Properties;
@@ -30,6 +31,7 @@ import org.wso2.micro.integrator.security.user.core.UserStoreConfigConstants;
 import org.wso2.micro.integrator.security.user.core.UserStoreException;
 import org.wso2.micro.integrator.security.user.core.claim.ClaimManager;
 import org.wso2.micro.integrator.security.user.core.common.RoleContext;
+import org.wso2.micro.integrator.security.user.core.hybrid.FileBasedHybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.hybrid.HybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.hybrid.JdbcHybridRoleManager;
 import org.wso2.micro.integrator.security.user.core.profile.ProfileConfigurationManager;
@@ -102,6 +104,7 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
     protected Random random = new Random();
 
     protected boolean kdcEnabled = false;
+    private boolean fileBasedUserStoreMode = false;
 
     static {
         setAdvancedProperties();
@@ -130,22 +133,31 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
         this.kdcEnabled = UserCoreUtil.isKdcEnabled(realmConfig);
 
         checkRequiredUserStoreConfigurations();
+        Object fileUserStore = ConfigParser.getParsedConfigs().get(UserCoreConstants.FILE_BASED_USER_STORE_AS_PRIMARY);
+        if (fileUserStore != null && Boolean.parseBoolean(fileUserStore.toString())) {
+            fileBasedUserStoreMode = true;
+            hybridRoleManager = new FileBasedHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
+        }
+        if (!fileBasedUserStoreMode) {
+            dataSource = (DataSource) properties.get(UserCoreConstants.DATA_SOURCE);
+            if (dataSource == null) {
+                // avoid returning null
+                dataSource = DatabaseUtil.getRealmDataSource(realmConfig);
+            }
+            if (dataSource == null) {
+                throw new UserStoreException("Data Source is null");
+            }
+            properties.put(UserCoreConstants.DATA_SOURCE, dataSource);
 
-        dataSource = (DataSource) properties.get(UserCoreConstants.DATA_SOURCE);
-        if (dataSource == null) {
-            // avoid returning null
-            dataSource = DatabaseUtil.getRealmDataSource(realmConfig);
+            // hybrid role manager used if only users needs to be read-written.
+            hybridRoleManager = new JdbcHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
+        } else {
+            hybridRoleManager = new FileBasedHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
         }
-        if (dataSource == null) {
-            throw new UserStoreException("Data Source is null");
-        }
-        properties.put(UserCoreConstants.DATA_SOURCE, dataSource);
 
         ReadWriteLDAPUserStoreManager.isFirstStartup = (Boolean) properties
                 .get(UserCoreConstants.FIRST_STARTUP_CHECK);
 
-        // hybrid role manager used if only users needs to be read-written.
-        hybridRoleManager = new JdbcHybridRoleManager(dataSource, tenantId, realmConfig, userRealm);
 
         // obtain the ldap connection source that was created in
         // DefaultRealmService.
@@ -169,9 +181,11 @@ public class ReadWriteLDAPUserStoreManager extends ReadOnlyLDAPUserStoreManager 
             JNDIUtil.closeContext(dirContext);
         }
         this.userRealm = realm;
-        //persist domain
-        this.persistDomain();
-        doInitialSetup();
+        if (!fileBasedUserStoreMode) {
+            //persist domain
+            this.persistDomain();
+        }
+        doInitialSetup(fileBasedUserStoreMode);
         if (realmConfig.isPrimary()) {
             addInitialAdminData(Boolean.parseBoolean(realmConfig.getAddAdmin()),
                     !isInitSetupDone());

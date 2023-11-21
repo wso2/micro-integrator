@@ -14,6 +14,7 @@
   "server.disable_rest": false,
   "server.sandesha2_storage_manager": "inmemory",
   "server.service_path": "services",
+  "server.strict_service_path_validation": false,
   "server.services_directory": "axis2services",
   "server.modules_directory": "axis2modules",
   "server.send_stacktrace_details_with_faults": false,
