@@ -1436,6 +1436,10 @@
                 <version>${opencensus.orbit.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.observability</artifactId>
+                <version>${project.version}</version>
+            <dependency>
                 <groupId>org.wso2.orbit.debezium</groupId>
                 <artifactId>debezium</artifactId>
                 <version>${debezium.version}</version>
