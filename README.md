@@ -73,6 +73,14 @@ mvn clean install -Ddocker.skip=false
 
 WSO2 Micro Integrator is licensed under the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
 
+## Survey On Open Source Community Communication
+
+WSO2 wants to learn more about our open source software (OSS) community and your communication preferences to serve you better.
+
+In addition, we may reach out to a small number of respondents to ask additional questions and offer a small gift.
+
+Link to survey: https://forms.gle/h5q4M3K7vyXba3bK6
+
 ## Copyright
 
 (c) 2020, [WSO2 Inc.](http://www.wso2.org) All Rights Reserved.
