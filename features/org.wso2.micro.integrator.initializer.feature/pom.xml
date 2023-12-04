@@ -87,6 +87,9 @@
                                 <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.transport.handlers:${project.version}
                                 </bundleDef>
+                                <bundleDef>
+                                    org.wso2.integration.transaction.counter:transaction-count-handler:${counter.org.wso2.integration.transaction.version}
+                                </bundleDef>
                                 <!--
                                 Removed since not used for task deployment, this is mainly for admin service
                                 <bundleDef>
