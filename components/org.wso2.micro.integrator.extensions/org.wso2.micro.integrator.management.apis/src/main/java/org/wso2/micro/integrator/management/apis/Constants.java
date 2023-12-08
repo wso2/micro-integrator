@@ -237,5 +237,6 @@ public class Constants {
 
     // Searching constants
     public static final String SEARCH_KEY = "searchKey";
+    public static final Character BASIC_AUTH_SEPARATOR_CHAR = ':';
 
 }

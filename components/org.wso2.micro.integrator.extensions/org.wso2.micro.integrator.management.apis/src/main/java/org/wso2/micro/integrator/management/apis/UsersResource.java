@@ -48,6 +48,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.PATTERN;
 import static org.wso2.micro.integrator.management.apis.Constants.ROLE;
 import static org.wso2.micro.integrator.management.apis.Constants.SEARCH_KEY;
 import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
+import static org.wso2.micro.integrator.management.apis.Constants.BASIC_AUTH_SEPARATOR_CHAR;
 /**
  * Resource for a retrieving and adding users.
  * <p>
@@ -187,13 +188,17 @@ public class UsersResource extends UserResource {
         JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
         boolean isAdmin = false;
         if (payload.has(USER_ID) && payload.has(PASSWORD)) {
+            String user = payload.get(USER_ID).getAsString();
+            // validate username
+            if (user == null || user.isEmpty() || user.indexOf(BASIC_AUTH_SEPARATOR_CHAR) != -1) {
+                throw new IOException("Invalid username");
+            }
             String[] roleList = null;
             if (payload.has(IS_ADMIN) && payload.get(IS_ADMIN).getAsBoolean()) {
                 String adminRole = Utils.getRealmConfiguration().getAdminRoleName();
                 roleList = new String[]{adminRole};
                 isAdmin = payload.get(IS_ADMIN).getAsBoolean();
             }
-            String user = payload.get(USER_ID).getAsString();
             String domain = null;
             if (payload.has(DOMAIN) ) {
                 domain = payload.get(DOMAIN).getAsString();
