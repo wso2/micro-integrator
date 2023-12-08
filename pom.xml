@@ -1684,7 +1684,7 @@
         <org.wso2.orbit.javax.xml.bind.version>2.3.1.wso2v2</org.wso2.orbit.javax.xml.bind.version>
 
         <!-- Transaction Counter -->
-        <counter.org.wso2.integration.transaction.version>1.0.0</counter.org.wso2.integration.transaction.version>
+        <counter.org.wso2.integration.transaction.version>1.1.0</counter.org.wso2.integration.transaction.version>
 
         <config.mapper.version>1.0.20</config.mapper.version>
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
