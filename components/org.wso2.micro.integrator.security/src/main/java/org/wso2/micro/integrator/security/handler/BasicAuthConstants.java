@@ -29,6 +29,6 @@ public class BasicAuthConstants {
     public static final String RESPONSE = "RESPONSE";
     public static final String TRUE = "true";
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
-    public static final String WWW_AUTHENTICATE = "WWW_Authenticate";
+    public static final String WWW_AUTHENTICATE = "WWW-Authenticate";
     public static final String WWW_AUTH_METHOD = "Basic realm=\"WSO2 EI\"";
 }
