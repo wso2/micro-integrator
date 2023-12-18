@@ -120,7 +120,7 @@ public class CappDeployer extends AbstractDeployer {
         if (ServiceCatalogUtils.isServiceCatalogEnabled()) {
             serviceCatalogConfiguration = ServiceCatalogUtils.readConfiguration(secretCallbackHandlerService);
             serviceCatalogExecutor = Executors.newFixedThreadPool(
-                    ServiceCatalogUtils.getExecutorThreadCount(serviceCatalogConfiguration, 10));
+                    ServiceCatalogUtils.getExecutorThreadCount(serviceCatalogConfiguration, 1));
         }
     }
 
