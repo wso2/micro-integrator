@@ -66,4 +66,8 @@ public class ActiveMQServerExtension extends ExecutionListenerExtension {
         activeMqBroker.stop();
 
     }
+
+    public static boolean isMQServerStarted() {
+        return activeMqBroker.isBrokerStarted();
+    }
 }
