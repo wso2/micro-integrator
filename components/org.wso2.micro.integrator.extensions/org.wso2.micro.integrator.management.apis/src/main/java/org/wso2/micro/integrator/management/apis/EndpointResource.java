@@ -133,12 +133,17 @@ public class EndpointResource implements MiApiResource {
             SynapseConfiguration configuration = msgCtx.getConfiguration();
             Endpoint endpoint = configuration.getEndpoint(endpointName);
             if (endpoint != null) {
-                AspectConfiguration aspectConfiguration = ((AbstractEndpoint) endpoint).getDefinition().getAspectConfiguration();
-                JSONObject info = new JSONObject();
-                info.put(ENDPOINT_NAME, endpointName);
-                response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_ENDPOINT_TRACE,
-                                               Constants.ENDPOINTS, info, aspectConfiguration, endpointName,
-                                               axisMsgCtx);
+                if (((AbstractEndpoint) endpoint).getDefinition() != null) {
+                    AspectConfiguration aspectConfiguration = ((AbstractEndpoint) endpoint).getDefinition()
+                            .getAspectConfiguration();
+                    JSONObject info = new JSONObject();
+                    info.put(ENDPOINT_NAME, endpointName);
+                    response = Utils.handleTracing(performedBy, Constants.AUDIT_LOG_TYPE_ENDPOINT_TRACE,
+                            Constants.ENDPOINTS, info, aspectConfiguration, endpointName, axisMsgCtx);
+                } else {
+                    response = Utils.createJsonError("Tracing is not supported for this endpoint", axisMsgCtx,
+                            Constants.BAD_REQUEST);
+                }
             } else {
                 response = Utils.createJsonError("Specified endpoint ('" + endpointName + "') not found", axisMsgCtx,
                         Constants.BAD_REQUEST);
@@ -223,9 +228,13 @@ public class EndpointResource implements MiApiResource {
         OMElement synapseConfiguration = EndpointSerializer.getElementFromEndpoint(endpoint);
         endpointObject.put(Constants.SYNAPSE_CONFIGURATION, synapseConfiguration);
         endpointObject.put(IS_ACTIVE, isEndpointActive(endpoint));
-        String tracingState = ((AbstractEndpoint) endpoint).getDefinition().getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
-        endpointObject.put(TRACING, tracingState);
-
+        if (((AbstractEndpoint) endpoint).getDefinition() != null) {
+            String tracingState = ((AbstractEndpoint) endpoint).getDefinition().getAspectConfiguration()
+                    .isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
+            endpointObject.put(TRACING, tracingState);
+        } else {
+            endpointObject.put(TRACING, Constants.DISABLED);
+        }
         return endpointObject;
     }
 
