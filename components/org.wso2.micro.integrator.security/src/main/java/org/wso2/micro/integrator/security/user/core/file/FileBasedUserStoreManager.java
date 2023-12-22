@@ -399,7 +399,6 @@ public class FileBasedUserStoreManager extends AbstractUserStoreManager {
         this(realmConfig, tenantId);
         this.claimManager = claimManager;
         this.userRealm = realm;
-        doInitialSetup(true);
     }
 
     public FileBasedUserStoreManager(RealmConfiguration realmConfig, int tenantId)
@@ -442,7 +441,7 @@ public class FileBasedUserStoreManager extends AbstractUserStoreManager {
         if (writeGroupsEnabled) {
             readGroupsEnabled = true;
         }
-
+        doInitialSetup(true);
     }
 
     /**
