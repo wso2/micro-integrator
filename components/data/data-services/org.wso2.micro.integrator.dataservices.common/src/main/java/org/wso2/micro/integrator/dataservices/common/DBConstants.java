@@ -174,6 +174,7 @@ public final class DBConstants {
         public static final String VARINT = "VARINT";
         public static final String UUID = "UUID";
         public static final String INETADDRESS = "INETADDRESS";
+        public static final String SQLXML = "SQLXML";
     }
 
     /**

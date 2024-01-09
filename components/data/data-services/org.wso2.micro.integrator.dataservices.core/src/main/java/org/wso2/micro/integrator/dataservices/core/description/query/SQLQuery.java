@@ -19,6 +19,7 @@ package org.wso2.micro.integrator.dataservices.core.description.query;
 
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -68,6 +69,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Struct;
 import java.sql.Time;
@@ -1508,13 +1510,13 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
                         for (ParamValue arrayElement : value.getArrayValue()) {
                             this.setParamInPreparedStatement(
                                     stmt, param, arrayElement == null ? null : arrayElement.toString(),
-                                    queryType, currentOrdinal);
+                                    queryType, currentOrdinal, conn);
                             currentOrdinal++;
                         }
                     } else { /* scalar value */
                         this.setParamInPreparedStatement(stmt, param,
                                 value != null ? value.getScalarValue() : null, queryType,
-                                currentOrdinal);
+                                currentOrdinal, conn);
                         currentOrdinal++;
                     }
                 }
@@ -1618,7 +1620,7 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
     }
 
     private void setParamInPreparedStatement(PreparedStatement stmt, InternalParam param,
-            String value, int queryType, int index) throws SQLException, DataServiceFault {
+            String value, int queryType, int index, Connection connection) throws SQLException, DataServiceFault {
         String paramName = param.getName();
         String sqlType = param.getSqlType();
         String paramType = param.getType();
@@ -1666,6 +1668,8 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
             setUserDefinedType(stmt, index, paramType, structType);
         } else if (DBConstants.DataTypes.ARRAY.equals(sqlType)) {
             setArrayValue(stmt, index, paramType, structType);
+        } else if (DBConstants.DataTypes.SQLXML.equals(sqlType)) {
+            setSQLXMLValue(queryType, value, paramType, stmt, index, connection);
         } else {
             throw new DataServiceFault("[" + this.getDataService().getName()
                     + "]  Found Unsupported data type : " + sqlType + " as input parameter.");
@@ -1778,6 +1782,40 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
             ((CallableStatement) sqlQuery).registerOutParameter(i + 1, Types.BINARY);
         } else {
             ((CallableStatement) sqlQuery).registerOutParameter(i + 1, Types.BINARY);
+        }
+    }
+
+    private void setSQLXMLValue(int queryType, String value, String paramType,
+                                PreparedStatement sqlQuery, int i, Connection connection) throws SQLException {
+        if (QueryTypes.IN.equals(paramType)) {
+            if (queryType == SQLQuery.DS_QUERY_TYPE_NORMAL) {
+                if (value == null) {
+                    sqlQuery.setNull(i + 1, Types.SQLXML);
+                } else {
+                    SQLXML xmlVal = connection.createSQLXML();
+                    xmlVal.setString(StringEscapeUtils.unescapeXml(value));
+                    sqlQuery.setSQLXML(i + 1, xmlVal);
+                }
+            } else {
+                if (value == null) {
+                    ((CallableStatement) sqlQuery).setNull(i + 1, Types.SQLXML);
+                } else {
+                    SQLXML xmlVal = connection.createSQLXML();
+                    xmlVal.setString(StringEscapeUtils.unescapeXml(value));
+                    ((CallableStatement) sqlQuery).setSQLXML(i + 1, xmlVal);
+                }
+            }
+        } else if (QueryTypes.INOUT.equals(paramType)) {
+            if (value == null) {
+                ((CallableStatement) sqlQuery).setNull(i + 1, Types.SQLXML);
+            } else {
+                SQLXML xmlVal = connection.createSQLXML();
+                xmlVal.setString(StringEscapeUtils.unescapeXml(value));
+                ((CallableStatement) sqlQuery).setSQLXML(i + 1, xmlVal);
+            }
+            ((CallableStatement) sqlQuery).registerOutParameter(i + 1, Types.SQLXML);
+        } else {
+            ((CallableStatement) sqlQuery).registerOutParameter(i + 1, Types.SQLXML);
         }
     }
 
@@ -2260,6 +2298,10 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
                 elementValue = cs.getClob(ordinal);
                 return new ParamValue(elementValue == null ? null :
                        deriveValueFromClob((Clob) elementValue));
+            } else if (type.equals(DBConstants.DataTypes.SQLXML)) {
+                elementValue = cs.getSQLXML(ordinal).getString();
+                return new ParamValue(elementValue == null ? null
+                        : elementValue.toString());
             } else if (type.equals(DBConstants.DataTypes.STRUCT)) {
                 elementValue = cs.getObject(ordinal);
                 return new ParamValue(elementValue == null ? null : (Struct) elementValue);
