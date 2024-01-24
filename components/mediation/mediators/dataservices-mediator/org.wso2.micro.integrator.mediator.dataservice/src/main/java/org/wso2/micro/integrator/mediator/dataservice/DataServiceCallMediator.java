@@ -312,7 +312,6 @@ public class DataServiceCallMediator extends AbstractMediator {
                     !isJson(paramValue.trim(), param.getParamExpression())) {
                 paramValue = escapeXMLEnvelope(msgCtx, paramValue);
             }
-            paramValue = Matcher.quoteReplacement(paramValue);
         }
         omElement.setText(paramValue);
         payload.addChild(omElement);
