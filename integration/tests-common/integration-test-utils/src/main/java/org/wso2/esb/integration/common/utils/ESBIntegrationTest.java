@@ -1179,6 +1179,7 @@ public abstract class ESBIntegrationTest {
      * @param logLevel - The log-level of synapse-transport-http-wire logger
      */
     public void configureHTTPWireLogs(String logLevel) {
+        String loggerName = "synapse-transport-http-wire";
         if (!isManagementApiAvailable) {
             Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
                     until(isManagementApiAvailable());
@@ -1192,12 +1193,37 @@ public abstract class ESBIntegrationTest {
                     + "logging";
 
             JSONObject payload = new JSONObject();
-            payload.put("loggerName", "synapse-transport-http-wire");
+            payload.put("loggerName", loggerName);
             payload.put("loggingLevel", logLevel);
 
             client.doPatch(endpoint, headers, payload.toString(), "application/json");
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).
+                    atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).until(isLogsConfigured(endpoint, loggerName, logLevel));
         } catch (IOException e) {
             throw new SynapseException("Error updating the log-level of synapse-transport-http-wire logger", e);
+        }
+    }
+
+    private Callable<Boolean> isLogsConfigured(String endpoint, String loggerName, String logLevel) {
+        return () -> isLogConfigured(endpoint + "?loggerName=" + loggerName, logLevel);
+    }
+
+    private boolean isLogConfigured(String endpoint, String logLevel) {
+        try {
+            SimpleHttpClient client = new SimpleHttpClient();
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Accept", "application/json");
+
+            HttpResponse response = client.doGet(endpoint, headers);
+            String responsePayload = client.getResponsePayload(response);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                return false;
+            }
+            JSONObject jsonResponse = new JSONObject(responsePayload);
+            return jsonResponse.get("level").toString().equals(logLevel);
+        } catch (IOException e) {
+            log.error("Error occurred while checking the log level", e);
+            return false;
         }
     }
 
