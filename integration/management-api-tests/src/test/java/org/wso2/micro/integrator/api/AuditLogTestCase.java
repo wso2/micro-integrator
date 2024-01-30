@@ -245,7 +245,7 @@ public class AuditLogTestCase extends ESBIntegrationTest {
         Assert.assertTrue(carbonLogReader.checkForLog("{\"performedBy\":\"admin\",\"action\":\"updated\",\"type\":\"log_level\",\"info\":\"{\\\"loggerName\\\":\\\"com-atomikos\\\",\\\"loggingLevel\\\":\\\"DEBUG\\\"}\"}", 120));
     }
 
-    @Test(groups = {"wso2.esb" }, priority = 3,
+    @Test(groups = {"wso2.esb" }, priority = 4,
           description = "Test upload CAPP")
     public void testCAppUpload() throws IOException, InterruptedException, AutomationFrameworkException {
         if (!isManagementApiAvailable) {
@@ -258,7 +258,7 @@ public class AuditLogTestCase extends ESBIntegrationTest {
         Assert.assertTrue(carbonLogReader.checkForLog("{\"performedBy\":\"admin\",\"action\":\"created\",\"type\":\"carbon_application\",\"info\":\"{\\\"cAppFileName\\\":\\\"esb-artifacts-car_1.0.0.car\\\"}\"}", 120));
     }
 
-    @Test(groups = {"wso2.esb" }, priority = 3, dependsOnMethods = "testCAppUpload",
+    @Test(groups = {"wso2.esb" }, priority = 4, dependsOnMethods = "testCAppUpload",
           description = "Test remove CAPP")
     public void testCAppRemove() throws IOException, InterruptedException, AutomationFrameworkException {
         if (!isManagementApiAvailable) {

@@ -658,12 +658,23 @@ public class RegistryResourcesTestCase extends ESBIntegrationTest {
         JSONArray filesArray = jsonResponse.getJSONArray("files");
         Assert.assertEquals(filesArray.length(), 4, "Assert Failed due to the mismatch of " +
                 "actual vs expected resource count");
+        boolean isTestJson = false;
+        boolean isTestText = false;
+
         for (int i = 0; i < filesArray.length(); i++) {
-            log.info("printing fileArray element " + i + ": " + filesArray.getJSONObject(i).get("name").toString());
+            if(filesArray.getJSONObject(i).get("name").toString().contains("test-json.json")) {
+                isTestJson = true;
+            }
+
+            if(filesArray.getJSONObject(i).get("name").toString().contains("test-text.txt")) {
+                isTestText = true;
+            }
         }
         log.info("filesArray.getJSONObject(0).get(\"name\")::: " + filesArray.getJSONObject(0).get("name"));
-        Assert.assertTrue(filesArray.getJSONObject(0).get("name").toString().contains("test-json.json"));
-        Assert.assertTrue(filesArray.getJSONObject(1).get("name").toString().contains("test-text.txt"));
+        Assert.assertTrue(isTestJson,
+                "Assert Failed due to the mismatch of actual vs expected test-json file presence");
+        Assert.assertTrue(isTestText,
+                "Assert Failed due to the mismatch of actual vs expected test-text file presence");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test error - deleting non existing registry")
