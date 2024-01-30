@@ -1,4 +1,4 @@
-name: Cluster tests (OpenJDK11 & MySQL)
+name: Cluster tests (JDK17 & MySQL)
 
 on: [push, pull_request]
 
@@ -13,9 +13,14 @@ jobs:
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
-          distribution: 'adopt'
-          java-version: 11
+          distribution: 'temurin'
+          java-version: '11.0.12+7'
       - name: Build in JDK 11
         run: mvn -B clean install -DskipTests --file pom.xml
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17.0.6'
       - name: Cluster Tests
         run: mvn -B clean install --file integration/pom.xml -P cluster-tests
