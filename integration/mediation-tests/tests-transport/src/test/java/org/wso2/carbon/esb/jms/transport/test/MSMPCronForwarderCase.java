@@ -56,7 +56,13 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         // START THE ESB
         super.init();
         if (!ActiveMQServerExtension.isMQServerStarted()) {
+            log.info("ActiveMQ Server is not started. Hence starting the MQServer");
             ActiveMQServerExtension.startMQServer();
+            Thread.sleep(60000);
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(300,
+                    TimeUnit.SECONDS).until(isServerStarted());
+        } else {
+            log.info("ActiveMQ Server has already started.");
         }
         carbonLogReader.start();
     }
@@ -84,8 +90,9 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         assertEquals(response4.getResponseCode(), 202, "ESB failed to send 202 even after setting FORCE_SC_ACCEPTED");
 
         // WAIT FOR THE MESSAGE PROCESSOR TO TRIGGER
-        Thread.sleep(60000);
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isLogWritten());
+//        Thread.sleep(60000);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(300,
+                TimeUnit.SECONDS).until(isLogWritten());
         assertTrue(carbonLogReader.checkForLog("Jack", 60, NUMBER_OF_MESSAGES));
     }
 
@@ -98,6 +105,15 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         return new Callable<Boolean>() {
             @Override public Boolean call() throws Exception {
                 return carbonLogReader.checkForLog("Jack", DEFAULT_TIMEOUT, NUMBER_OF_MESSAGES);
+            }
+        };
+    }
+
+    private Callable<Boolean> isServerStarted() {
+        return new Callable<Boolean>() {
+            @Override public Boolean call() throws Exception {
+                log.info("isMQServerStarted: " + ActiveMQServerExtension.isMQServerStarted());
+                return ActiveMQServerExtension.isMQServerStarted();
             }
         };
     }
