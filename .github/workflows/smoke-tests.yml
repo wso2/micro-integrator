@@ -1,6 +1,6 @@
 name: Smoke Tests (JDK11)
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   others:

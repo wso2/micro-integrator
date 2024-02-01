@@ -834,7 +834,7 @@
         <httpcore.version>4.4.16</httpcore.version>
         <httpcore.nio.version>4.4.16</httpcore.nio.version>
         <rampart.apache.version>1.7.0-wso2v1</rampart.apache.version>
-        <httpclient.version>4.3.2</httpclient.version>
+        <httpclient.version>4.5.14</httpclient.version>
         <httpcore.wso2.version>4.4.16.wso2v1</httpcore.wso2.version>
         <automation.framework.version>4.4.4</automation.framework.version>
         <automation.framework.utils.version>4.5.0</automation.framework.utils.version>
@@ -863,6 +863,43 @@
                 <module>automation-extensions</module>
                 <module>tests-common</module>
                 <module>mediation-tests</module>
+                <module>dataservice-hosting-tests</module>
+                <module>management-api-tests</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>group1</id>
+            <modules>
+                <module>samples/product</module>
+                <module>automation-extensions</module>
+                <module>tests-common</module>
+                <module>mediation-tests</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>group2</id>
+            <modules>
+                <module>samples/product</module>
+                <module>automation-extensions</module>
+                <module>tests-common</module>
+                <module>mediation-tests</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>group3</id>
+            <modules>
+                <module>samples/product</module>
+                <module>automation-extensions</module>
+                <module>tests-common</module>
+                <module>mediation-tests</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>group4</id>
+            <modules>
+                <module>samples/product</module>
+                <module>automation-extensions</module>
+                <module>tests-common</module>
                 <module>dataservice-hosting-tests</module>
                 <module>management-api-tests</module>
             </modules>

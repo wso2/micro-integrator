@@ -1,6 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="ESBTestSuite" parallel="false" configfailurepolicy="continue">
+    <parameter name="group" value="group1"/>
+
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
@@ -10,18 +12,21 @@
     </listeners>
 
     <test name="POST-Request-Without-Body-without-chunking" preserve-order="true" verbose="2">
+        <parameter name="group" value="group3"/>
         <classes>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4402MessageWithoutPayloadTestCase"/>
         </classes>
     </test>
 
     <test name="axis2-transport-test" preserve-order="true" verbose="2">
+        <parameter name="group" value="group2"/>
         <classes>
             <class name="org.wso2.carbon.esb.axis2.transport.test.MultipartFormDataFormatTestCase"/>
         </classes>
     </test>
 
     <test name="ViewPopRedirectTests" preserve-order="true" verbose="2">
+        <parameter name="group" value="group1"/>
         <classes>
             <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.RedirectTest">
                 <methods>
@@ -37,6 +42,7 @@
     </test>
 
     <test name="passthru-Transport-Test" preserve-order="true" verbose="2">
+        <parameter name="group" value="group4"/>
         <classes>
             <class name="org.wso2.carbon.esb.passthru.transport.test.CheckAuthHeaderOrderTestCase"/>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ContentTypeCharsetTestCase"/>

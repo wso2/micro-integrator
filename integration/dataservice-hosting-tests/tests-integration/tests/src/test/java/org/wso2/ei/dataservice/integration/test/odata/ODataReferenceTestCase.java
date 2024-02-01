@@ -111,21 +111,21 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
 
     @Test(groups = "wso2.dss", description = "testing the delete operation of the entity navigation property", dependsOnMethods = "validateUpdateReferenceTestCase")
     public void validateDeleteReferenceTestCase() throws Exception {
-        String endpoint =
+        String endpoint1 =
                 webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES('WSO2DSS')/FILERECORDS/$ref" + "?$id="
                         + webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(5)";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
-        int responseCode = sendDELETE(endpoint, headers);
-        Assert.assertEquals(responseCode, ODataTestUtils.NO_CONTENT);
-        endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(5)/FILES/$ref";
-        Object[] response = sendGET(endpoint, headers);
-        Assert.assertEquals(response[0], ODataTestUtils.NO_CONTENT);
-        endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(1)/FILES/$ref";
-        responseCode = sendDELETE(endpoint, headers);
-        Assert.assertEquals(responseCode, ODataTestUtils.NO_CONTENT);
-        response = sendGET(endpoint, headers);
-        Assert.assertEquals(response[0], ODataTestUtils.NO_CONTENT);
+        int responseCode1 = sendDELETE(endpoint1, headers);
+        Assert.assertEquals(responseCode1, ODataTestUtils.NO_CONTENT);
+        String endpoint2 = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(5)/FILES/$ref";
+        Object[] response1 = sendGET(endpoint2, headers);
+        Assert.assertEquals(response1[0], ODataTestUtils.NO_CONTENT);
+        String endpoint3 = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(1)/FILES/$ref";
+        int responseCode2 = sendDELETE(endpoint3, headers);
+        Assert.assertEquals(responseCode2, ODataTestUtils.NO_CONTENT);
+        Object[] response2 = sendGET(endpoint3, headers);
+        Assert.assertEquals(response2[0], ODataTestUtils.NO_CONTENT);
     }
 
     @Test(groups = { "wso2.dss" }, description = "testing the add entity with navigation bindings ")

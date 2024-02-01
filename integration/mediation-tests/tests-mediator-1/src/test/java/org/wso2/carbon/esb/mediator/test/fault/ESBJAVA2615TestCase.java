@@ -14,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static org.testng.Assert.assertTrue;
+
 public class ESBJAVA2615TestCase extends ESBIntegrationTest {
 
     private static String faultMessage = "<faultcode xmlns:soap11Env=\"http://schemas.xmlsoap.org/soap/envelope/\">soap11Env:Server</faultcode><faultstring>Test Only to see if there are two envelopes.</faultstring></soapenv:Fault></soapenv:Body></soapenv:Envelope>";
@@ -31,11 +33,11 @@ public class ESBJAVA2615TestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Creating Protocol Violation test", enabled = true)
     public void testSOAP11FaultActor() throws AxisFault {
         String messageBody = createRequest();
-        String reposnce = httpClient(getProxyServiceURLHttp("HelloProxy"), messageBody);
+        String proxyUrl = getProxyServiceURLHttp("HelloProxy");
+        String reposnce = httpClient(proxyUrl, messageBody);
         if (reposnce.contains(messageBody) && reposnce.contains(faultMessage)) {
             Assert.fail("client received two SOAP envelops");
         }
-
     }
 
     private String createRequest() {

@@ -1,6 +1,6 @@
 name: Cluster tests (JDK17 & MySQL)
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   ubuntu:

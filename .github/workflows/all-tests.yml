@@ -1,4 +1,4 @@
-name: All Tests ( openjdk8 )
+name: All Tests ( jdk11 )
 
 on: [push]
 

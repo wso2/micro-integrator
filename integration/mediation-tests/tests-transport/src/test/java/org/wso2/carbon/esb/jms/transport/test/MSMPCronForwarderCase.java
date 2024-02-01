@@ -90,7 +90,7 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         assertEquals(response4.getResponseCode(), 202, "ESB failed to send 202 even after setting FORCE_SC_ACCEPTED");
 
         // WAIT FOR THE MESSAGE PROCESSOR TO TRIGGER
-//        Thread.sleep(60000);
+        Thread.sleep(60000);
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(300,
                 TimeUnit.SECONDS).until(isLogWritten());
         assertTrue(carbonLogReader.checkForLog("Jack", 60, NUMBER_OF_MESSAGES));
