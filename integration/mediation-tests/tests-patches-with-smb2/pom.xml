@@ -434,6 +434,6 @@
         </dependency>
     </dependencies>
     <properties>
-        <sshd.version>2.2.0</sshd.version>
+        <sshd.version>2.7.0</sshd.version>
     </properties>
 </project>
