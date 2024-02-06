@@ -161,7 +161,8 @@ public class DBUtils {
         conversionTypes.put(DBConstants.DataTypes.TIMESTAMP, "java.sql.Timestamp");
         conversionTypes.put(DBConstants.DataTypes.ANYURI, "java.net.URI");
         conversionTypes.put(DBConstants.DataTypes.STRUCT, "java.sql.Struct");
-        
+        conversionTypes.put(DBConstants.DataTypes.SQLXML, "java.sql.SQLXML");
+
         conversionTypes.put(DBConstants.DataTypes.VARINT, "java.math.BigInteger");
         conversionTypes.put(DBConstants.DataTypes.UUID, "java.lang.String");
         conversionTypes.put(DBConstants.DataTypes.INETADDRESS, "java.lang.String");
