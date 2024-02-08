@@ -299,8 +299,8 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         if ("file".equals(url.getProtocol())) {
             try {
                 if (new File(url.toURI()).exists()) {
-                    try {
-                        url.openStream();
+                    try (InputStream inputStream = url.openStream()) {
+                        // This try-with-resources block is used to check whether the resource is accessible
                     } catch (IOException e) {
                         log.error("Error occurred while accessing registry resource: " + key, e);
                         return true;
@@ -415,8 +415,8 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         try {
             URL url = new URL(resolveRegistryURI(key));
             if ("file".equals(url.getProtocol())) {
-                try {
-                    url.openStream();
+                try (InputStream inputStream = url.openStream()) {
+                    // This try-with-resources block is used to check whether the resource is accessible
                 } catch (IOException e) {
                     log.error("Error occurred while accessing registry resource: " + key, e);
                     return null;
@@ -1133,8 +1133,8 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                         registryType = MicroIntegratorRegistryConstants.LOCAL_HOST_REGISTRY;
 
                         //Check existence of the target location
-                        try {
-                            rootPathUrl.openStream();
+                        try (InputStream inputStream = rootPathUrl.openStream()) {
+                            // This try-with-resources block is used to check whether the resource is accessible
                         } catch (IOException e) {
                             // If the registry is filesystem based, user may have provided the URI relative to the CARBON_HOME
                             if (log.isDebugEnabled()) {
@@ -1147,8 +1147,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                             }
                             pathFromCarbonHome = rootPathUrl.getProtocol() + ":" + pathFromCarbonHome + value;
                             rootPathUrl = new URL(pathFromCarbonHome);
-                            try {
-                                rootPathUrl.openStream();
+                            try (InputStream inputStream = rootPathUrl.openStream()) {
                                 value = pathFromCarbonHome;
                             } catch (IOException e1) {
                                 //Unable to open input stream to target location
