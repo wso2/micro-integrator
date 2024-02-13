@@ -449,12 +449,14 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
 
     private long getLastModifiedTimestamp(String filePath, URLConnection urlc) {
         Long lastModifiedFromMap = getResourceLastModifiedEntry(filePath);
+        Long urlLastModified = urlc.getLastModified(); // Get the last modified timestamp from urlc
         Long timestamp;
-        if (lastModifiedFromMap != null) {
+        if (lastModifiedFromMap != null && lastModifiedFromMap > urlLastModified) {
             timestamp = lastModifiedFromMap;
         } else {
-            timestamp = urlc.getLastModified();
+            timestamp = urlLastModified;
         }
+
         Long lastModifiedPropertiesFromMap = getResourceLastModifiedEntry(filePath + ".properties");
         if (lastModifiedPropertiesFromMap != null && lastModifiedPropertiesFromMap > timestamp) {
             timestamp = lastModifiedPropertiesFromMap;
