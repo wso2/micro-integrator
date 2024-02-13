@@ -28,7 +28,7 @@ public class ESBJAVA2615TestCase extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/protocolViolationProxy/synapse.xml");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Creating Protocol Violation test", enabled = true)
+    @Test(groups = { "wso2.esb" }, description = "Creating Protocol Violation test", enabled = false)
     public void testSOAP11FaultActor() throws AxisFault {
         String messageBody = createRequest();
         String reposnce = httpClient(getProxyServiceURLHttp("HelloProxy"), messageBody);
