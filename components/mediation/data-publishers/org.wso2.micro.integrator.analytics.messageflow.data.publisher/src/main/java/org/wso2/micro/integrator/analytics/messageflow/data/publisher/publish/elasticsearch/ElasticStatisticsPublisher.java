@@ -180,15 +180,16 @@ public class ElasticStatisticsPublisher implements StatisticsPublisher {
             return;
         }
 
-        Endpoint endpoint = event.getElasticMetadata().getEndpoint(event.getComponentName());
+        String placeholderName = "$name";
+        String componentName = event.getComponentName();
 
-        if (endpoint == null) {
+        if (SynapseConstants.ANONYMOUS_ENDPOINT.equals(componentName) || placeholderName.equals(componentName)) {
             return;
         }
 
         ElasticDataSchemaElement analyticsPayload = generateAnalyticsObject(event, Endpoint.class);
         ElasticDataSchemaElement endpointDetails = new ElasticDataSchemaElement();
-        endpointDetails.setAttribute(ElasticConstants.EnvelopDef.ENDPOINT_NAME, endpoint.getName());
+        endpointDetails.setAttribute(ElasticConstants.EnvelopDef.ENDPOINT_NAME, componentName);
         analyticsPayload.setAttribute(ElasticConstants.EnvelopDef.ENDPOINT_DETAILS, endpointDetails);
 
         publishAnalytic(analyticsPayload);
