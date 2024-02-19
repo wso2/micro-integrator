@@ -103,7 +103,7 @@
 
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.user.core:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
-                                <bundleDef>org.wso2.orbit.org.bouncycastle:bcprov-jdk15on:${bouncycastle.orbit.version}
+                                <bundleDef>org.wso2.orbit.org.bouncycastle:bcprov-jdk18on:${bouncycastle.orbit.version}
                                 </bundleDef>
 <!--                                <bundleDef>org.wso2.orbit.org.apache.poi:poi-ooxml:${orbit.version.poi.ooxml}-->
 <!--                                </bundleDef>-->
