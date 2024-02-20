@@ -63,6 +63,8 @@ public class DataSourceUtils {
 	private static final String PWD_MASKED_VALUE = "*****";
 	private static final String PWD_ELEMENT = "password";
 	private static final String URL_ELEMENT = "url";
+	private static final String DATASOURCE_PROPS_ELEMENT = "dataSourceProps";
+	private static final String ATTRIBUTE_NAME = "name";
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile(":(?:[^/]+)@");
 	private static final String XML_DECLARATION = "xml-declaration";
 	private static final int ENTITY_EXPANSION_LIMIT = 0;
@@ -169,6 +171,19 @@ public class DataSourceUtils {
 			}
 			if (child instanceof Element && URL_ELEMENT.equals(child.getNodeName())) {
 				child.getFirstChild().setNodeValue(maskURLPassword(child.getFirstChild().getNodeValue()));
+			}
+			if (child instanceof Element && DATASOURCE_PROPS_ELEMENT.equals(child.getNodeName())) {
+				for (Node dataSourceProp = child.getFirstChild(); dataSourceProp != null;
+					 dataSourceProp = dataSourceProp.getNextSibling()) {
+					if (dataSourceProp instanceof Element && PWD_ELEMENT.equals(dataSourceProp.getAttributes()
+							.getNamedItem(ATTRIBUTE_NAME).getNodeValue()) && dataSourceProp.getFirstChild() != null) {
+						dataSourceProp.getFirstChild().setNodeValue(PWD_MASKED_VALUE);
+					}
+					if (dataSourceProp instanceof Element && URL_ELEMENT.equals(dataSourceProp.getAttributes()
+							.getNamedItem(ATTRIBUTE_NAME).getNodeValue()) && dataSourceProp.getFirstChild() != null) {
+						dataSourceProp.getFirstChild().setNodeValue(maskURLPassword(dataSourceProp.getFirstChild().getNodeValue()));
+					}
+				}
 			}
 		}
 		return elementToString(updatedElement);
