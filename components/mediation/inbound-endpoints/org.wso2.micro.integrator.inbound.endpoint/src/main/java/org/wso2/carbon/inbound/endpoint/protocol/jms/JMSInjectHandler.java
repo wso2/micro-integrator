@@ -275,6 +275,7 @@ public class JMSInjectHandler {
                 }
             } else {
                 log.error("Sequence: " + injectingSeq + " not found");
+                return false;
             }
 
             if (isRollback(msgCtx) || isToRecover(msgCtx)) {
