@@ -112,8 +112,7 @@ public class UserResource implements MiApiResource {
                 }
             }
         } catch (UserStoreException e) {
-            response = Utils.createJsonError("Error initializing the user store. Please try again later", e,
-                                             axis2MessageContext, INTERNAL_SERVER_ERROR);
+            response = Utils.createJsonError("Please try again. ", e, axis2MessageContext, INTERNAL_SERVER_ERROR);
         } catch (IOException e) {
             response = Utils.createJsonError("Error processing the request. ", e, axis2MessageContext, BAD_REQUEST);
         } catch (ResourceNotFoundException e) {
@@ -206,38 +205,41 @@ public class UserResource implements MiApiResource {
             String oldPassword = payload.get(OLD_PASSWORD).getAsString();
             if (newPassword.equals(confirmPassword)) {
                 UserStoreManager userStoreManager = Utils.getUserStore(domain);
-                String[] roles = userStoreManager.getRoleListOfUser(user);
                 try {
                     synchronized (this) {
+                        String[] userRoles = userStoreManager.getRoleListOfUser(user);
+                        String[] performerRoles = userStoreManager.getRoleListOfUser(performedBy);
                         if (user.equals(performedBy)) {
                             if (oldPassword == null) {
-                                throw new NullPointerException("The old password cannot be null");
+                                throw new UserStoreException("The current user password cannot be null.");
                             }
                             userStoreManager.updateCredential(user, newPassword, oldPassword);
                         } else if (ADMIN.equals(performedBy)) {
                             userStoreManager.updateCredentialByAdmin(user, newPassword);
-                        } else if (!Arrays.asList(roles).contains(ADMIN)) {
+                        } else if (Arrays.asList(performerRoles).contains(ADMIN) &&
+                                !Arrays.asList(userRoles).contains(ADMIN)) {
                             userStoreManager.updateCredentialByAdmin(user, newPassword);
-                        } else {
+                        } else if (Arrays.asList(performerRoles).contains(ADMIN) &&
+                                Arrays.asList(userRoles).contains(ADMIN)) {
                             throw new UserStoreException(
-                                    "Only super admin user can update the credentials of other admins");
+                                    "Only a super admin user can update the credentials of another admin.");
+                        } else {
+                            throw new UserStoreException("Only your own credentials can be updated by a user.");
                         }
                     }
                 } catch (UserStoreException e) {
-                    throw new UserStoreException("Error occurred while updating the credentials of the user : " + user,
-                            e);
+                    throw new UserStoreException("Failed to update user password. Please check the current " +
+                            "password entered and retry.", e);
                 }
             } else {
-                throw new IOException(NEW_PASSWORD + " and " + CONFIRM_PASSWORD + " does not matches " + "payload.");
+                throw new UserStoreException("New password and re-typed password does not match.");
             }
         } else {
-            throw new IOException(
-                    "Missing one or more of the fields, '" + NEW_PASSWORD + "', '" + CONFIRM_PASSWORD + "' in the "
-                            + "payload.");
+            throw new UserStoreException("New password or re-typed password is missing in the payload.");
         }
         JSONObject jsonBody = new JSONObject();
         jsonBody.put(USER_ID, user);
-        jsonBody.put(STATUS, "Password updated");
+        jsonBody.put(STATUS, "User password updated successfully.");
         JSONObject info = new JSONObject();
         info.put(USER_ID, user);
         AuditLogger.logAuditMessage(performedBy, Constants.AUDIT_LOG_TYPE_USER, Constants.AUDIT_LOG_ACTION_UPDATED,
