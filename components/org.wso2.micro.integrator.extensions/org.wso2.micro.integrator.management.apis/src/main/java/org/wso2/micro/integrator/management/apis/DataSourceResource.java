@@ -33,6 +33,9 @@ import org.wso2.micro.integrator.ndatasource.core.DataSourceManager;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceRepository;
 import org.wso2.micro.integrator.ndatasource.core.utils.DataSourceUtils;
+import org.wso2.micro.integrator.ndatasource.rdbms.RDBMSConfiguration;
+import org.wso2.micro.integrator.ndatasource.rdbms.RDBMSConfiguration.DataSourceProperty;
+import org.wso2.micro.integrator.ndatasource.rdbms.RDBMSDataSourceReader;
 
 
 import java.util.Set;
@@ -65,6 +68,9 @@ public class DataSourceResource implements MiApiResource {
     private static final String MAX_IDLE = "maxIdle";
     private static final String MAX_AGE = "maxAge";
     private static final String VALIDATION_TIMEOUT = "validationQueryTimeout";
+    private static final String DATA_SOURCE_CLASS_NAME = "dataSourceClassName";
+    private static final String DATA_SOURCE_PROPS = "dataSourceProps";
+    private static final String PASSWORD = "password";
 
     public DataSourceResource() {
 
@@ -184,16 +190,23 @@ public class DataSourceResource implements MiApiResource {
             datasourceInformation.put(Constants.NAME, dataSourceMetaInfo.getName());
             datasourceInformation.put(DESCRIPTION, dataSourceMetaInfo.getDescription());
             datasourceInformation.put(TYPE, dataSourceMetaInfo.getDefinition().getType());
-            datasourceInformation.put(Constants.SYNAPSE_CONFIGURATION, DataSourceUtils.
+            String dataSourceDefinition = DataSourceUtils.
                     elementToStringWithMaskedPasswords(
-                            (Element) dataSource.getDSMInfo().getDefinition().getDsXMLConfiguration()));
+                            (Element) dataSource.getDSMInfo().getDefinition().getDsXMLConfiguration());
+            datasourceInformation.put(Constants.SYNAPSE_CONFIGURATION, dataSourceDefinition);
 
             if (dataSource.getDSObject() instanceof DataSource) {
                 DataSource dataSourceObject = (DataSource) dataSource.getDSObject();
                 PoolConfiguration pool = dataSourceObject.getPoolProperties();
-                datasourceInformation.put(DRIVER, pool.getDriverClassName());
-                datasourceInformation.put(URL, DataSourceUtils.maskURLPassword(pool.getUrl()));
-                datasourceInformation.put(USER_NAME, pool.getUsername());
+
+                // Check if the datasource is an external datasource
+                if (pool.getDataSource() != null) {
+                    populateExternalDataSourceInfo(dataSourceDefinition, datasourceInformation);
+                } else {
+                    datasourceInformation.put(DRIVER, pool.getDriverClassName());
+                    datasourceInformation.put(URL, DataSourceUtils.maskURLPassword(pool.getUrl()));
+                    datasourceInformation.put(USER_NAME, pool.getUsername());
+                }
                 // set configuration parameters
                 JSONObject configParameters = new JSONObject();
                 datasourceInformation.put(CONFIGURATION_PARAMETERS, configParameters);
@@ -212,5 +225,18 @@ public class DataSourceResource implements MiApiResource {
                     axis2MessageContext, Constants.NOT_FOUND);
         }
         return datasourceInformation;
+    }
+
+    private void populateExternalDataSourceInfo(String dataSourceDefinition, JSONObject datasourceInformation) throws DataSourceException {
+
+        RDBMSConfiguration rdbmsConfiguration = RDBMSDataSourceReader.loadConfig(dataSourceDefinition);
+        JSONObject dataSourceProps = new JSONObject();
+        datasourceInformation.put(DATA_SOURCE_PROPS, dataSourceProps);
+        dataSourceProps.put(DATA_SOURCE_CLASS_NAME, rdbmsConfiguration.getDataSourceClassName());
+        for (DataSourceProperty dataSourceProp : rdbmsConfiguration.getDataSourceProps()) {
+            if (!PASSWORD.equals(dataSourceProp.getName())) {
+                dataSourceProps.put(dataSourceProp.getName(), dataSourceProp.getValue());
+            }
+        }
     }
 }
