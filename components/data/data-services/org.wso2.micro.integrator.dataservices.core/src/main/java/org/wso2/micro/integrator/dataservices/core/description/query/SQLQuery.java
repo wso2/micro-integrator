@@ -151,7 +151,7 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
 
     private boolean timeConvertEnabled = true;
 
-    private static QueryType sqlQueryType;
+    private QueryType sqlQueryType;
 
     /**
      * thread local variable to keep the ordinal of the ref cursor if there is any
@@ -2571,7 +2571,7 @@ public class SQLQuery extends ExpressionQuery implements BatchRequestParticipant
         return sqlQueryType = sqlQueryType(query);
     }
 
-    public static QueryType sqlQueryType(String sqlQuery) {
+    public QueryType sqlQueryType(String sqlQuery) {
 
         String query;
         try {
