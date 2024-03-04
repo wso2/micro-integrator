@@ -1715,7 +1715,7 @@
         <jsch.version>0.2.16</jsch.version>
 
         <config.mapper.version>1.0.20</config.mapper.version>
-        <diagnostics.tool.version>1.0.0-SNAPSHOT</diagnostics.tool.version>
+        <diagnostics.tool.version>1.0.3</diagnostics.tool.version>
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <import.package.version.commons.logging>[1.2.0,2.0.0)</import.package.version.commons.logging>

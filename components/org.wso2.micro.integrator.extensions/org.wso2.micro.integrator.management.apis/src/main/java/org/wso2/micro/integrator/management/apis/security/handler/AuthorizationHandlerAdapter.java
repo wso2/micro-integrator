@@ -18,10 +18,13 @@
 
 package org.wso2.micro.integrator.management.apis.security.handler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.management.apis.Constants;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.micro.integrator.management.apis.Utils;
 
@@ -46,6 +49,16 @@ public abstract class AuthorizationHandlerAdapter extends SecurityHandlerAdapter
     @Override
     public Boolean handle(MessageContext messageContext) {
         String userName = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
+
+        String resourcePath = messageContext.getTo().getAddress();
+        String resourceHttpMethod = String.valueOf(((Axis2MessageContext) messageContext).getAxis2MessageContext()
+                .getProperty(Constants.HTTP_METHOD_PROPERTY));
+        // PATCH type requests are being skipped for the /users resource to allow users to update their passwords.
+        if (resourcePath.startsWith(context.concat(Constants.PREFIX_USERS)) &&
+                StringUtils.isNotBlank(resourceHttpMethod) && resourceHttpMethod.equals(Constants.HTTP_METHOD_PATCH)) {
+            return true;
+        }
+
         if (Objects.nonNull(userName)) {
             if (authorize(userName)) {
                 return true;
