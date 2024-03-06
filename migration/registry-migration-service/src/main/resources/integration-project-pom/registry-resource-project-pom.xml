@@ -93,7 +93,7 @@
             <plugin>
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>wso2-general-project-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>5.2.42</version>
                 <extensions>true</extensions>
                 <executions>
                     <execution>
