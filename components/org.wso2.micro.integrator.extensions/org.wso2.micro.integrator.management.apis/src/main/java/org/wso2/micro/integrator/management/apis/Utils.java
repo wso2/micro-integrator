@@ -64,6 +64,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
+import static org.wso2.micro.integrator.management.apis.Constants.COLLECTIONS_PROPERTY_EXTENSIONS;
 import static org.wso2.micro.integrator.management.apis.Constants.CONFIGURATION_REGISTRY_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.CONFIGURATION_REGISTRY_PREFIX;
 import static org.wso2.micro.integrator.management.apis.Constants.FILE;
@@ -73,6 +74,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.GOVERNANCE_REG
 import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
 import static org.wso2.micro.integrator.management.apis.Constants.LOCAL_REGISTRY_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.LOCAL_REGISTRY_PREFIX;
+import static org.wso2.micro.integrator.management.apis.Constants.PROPERTY_EXTENSION;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_ROOT_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 import static org.wso2.micro.integrator.registry.MicroIntegratorRegistryConstants.URL_SEPARATOR;
@@ -546,6 +548,36 @@ public class Utils {
         try {
             File file = new File(resolvedPath);
             return file.exists();
+        } catch (Exception e) {
+            LOG.error("Error occurred while checking the existence of the registry", e);
+            return false;
+        }
+    }
+
+    /**
+     * This method checks whether a registry resource property exists or not.
+     *
+     * @param registryPath    Registry path
+     * @param messageContext  Message context
+     * @return                Boolean output indicating the existence of the registry resource property
+     */
+    public static boolean isRegistryResourcePropertyExist(String registryPath,
+                                                          MessageContext messageContext) {
+        MicroIntegratorRegistry microIntegratorRegistry =
+                (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry();
+        String regRoot = microIntegratorRegistry.getRegRoot();
+        String resolvedPath = formatPath(regRoot + File.separator + registryPath);
+        try {
+            File file = new File(resolvedPath);
+            if (file.exists()) {
+                if (file.isDirectory()) {
+                    return isRegistryExist(registryPath + COLLECTIONS_PROPERTY_EXTENSIONS, messageContext);
+                } else {
+                    return isRegistryExist(registryPath + PROPERTY_EXTENSION, messageContext);
+                }
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             LOG.error("Error occurred while checking the existence of the registry", e);
             return false;

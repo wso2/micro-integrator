@@ -52,7 +52,6 @@ import static org.wso2.micro.integrator.management.apis.Constants.HTTP_POST;
 import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
 import static org.wso2.micro.integrator.management.apis.Constants.LIST;
 import static org.wso2.micro.integrator.management.apis.Constants.NAME;
-import static org.wso2.micro.integrator.management.apis.Constants.PROPERTY_EXTENSION;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_PATH;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_PROPERTY_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.REGISTRY_RESOURCE_NAME;
@@ -61,6 +60,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.VALUE_KEY;
 import static org.wso2.micro.integrator.management.apis.Utils.getRegistryPathPrefix;
 import static org.wso2.micro.integrator.management.apis.Utils.getResourceName;
 import static org.wso2.micro.integrator.management.apis.Utils.isRegistryExist;
+import static org.wso2.micro.integrator.management.apis.Utils.isRegistryResourcePropertyExist;
 import static org.wso2.micro.integrator.management.apis.Utils.validatePath;
 
 /**
@@ -241,7 +241,7 @@ public class RegistryPropertiesResource implements MiApiResource {
         String pathWithPrefix = getRegistryPathPrefix(validatedPath);
         if (Objects.nonNull(pathWithPrefix)) {
             if (isRegistryExist(validatedPath, messageContext) &&
-                    isRegistryExist(validatedPath + PROPERTY_EXTENSION, messageContext)) {
+                    isRegistryResourcePropertyExist(validatedPath, messageContext)) {
                 jsonBody = postRegistryProperties(messageContext, axis2MessageContext, pathWithPrefix);
             } else if (isRegistryExist(validatedPath, messageContext)) {
                 jsonBody = postNewRegistryProperties(messageContext, axis2MessageContext, pathWithPrefix);
@@ -463,7 +463,7 @@ public class RegistryPropertiesResource implements MiApiResource {
         if (Objects.nonNull(propertyName)) {
             String pathWithPrefix = getRegistryPathPrefix(validatedPath);
             if (Objects.nonNull(pathWithPrefix)) {
-                if (isRegistryExist(validatedPath + PROPERTY_EXTENSION, messageContext)) {
+                if (isRegistryResourcePropertyExist(validatedPath, messageContext)) {
                     jsonBody = deleteRegistryProperty(messageContext, axis2MessageContext, pathWithPrefix,
                             propertyName);
                 } else {

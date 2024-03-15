@@ -57,6 +57,7 @@ public class MicroIntegratorRegistryConstants {
     public static final char URL_SEPARATOR_CHAR = '/';
     public static final String URL_SEPARATOR = "/";
     public static final String PROPERTY_EXTENTION = ".properties";
+    public static final String COLLECTION_PROPERTY_EXTENTION = ".collections" + PROPERTY_EXTENTION;
 
     public static final String DEFAULT_MEDIA_TYPE = "text/plain";
 
