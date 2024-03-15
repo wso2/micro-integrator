@@ -146,9 +146,6 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
 
     @Override
     public boolean delete(String taskName) {
-        if (!isInitialized()) {
-            return false;
-        }
         if (taskName == null) {
             return false;
         }
@@ -172,6 +169,10 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
         try {
             boolean deleted;
             synchronized (lock) {
+                if (!isInitialized()) {
+                    checkAndDeleteTaskFromQueue(name, group, taskName);
+                    return false;
+                }
                 if (taskManager == null) {
                     logger.warn("#delete Could not delete task [" + taskName + "]. Task manager is not available.");
                     return false;
@@ -714,5 +715,18 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
         }).start();
     }
 
-}
+    private void checkAndDeleteTaskFromQueue(String name, String group, String taskName) {
+        synchronized (taskQueueLock) {
+            Iterator<TaskDescription> iterator = taskQueue.iterator();
+            while (iterator.hasNext()) {
+                TaskDescription taskDescription = iterator.next();
+                if (taskDescription.getName().equals(name) && taskDescription.getTaskGroup().equals(group)) {
+                    iterator.remove();
+                    NTaskAdapter.removeProperty(taskName);
+                    logger.info("Deleted queued task [" + name + "::" + group + "].");
+                }
+            }
+        }
+    }
 
+}
