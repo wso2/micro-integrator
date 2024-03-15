@@ -124,6 +124,46 @@ public class TestMicroIntegratorRegistry {
     }
 
     @Test
+    public void testRegistryPropertiesDeploymentAndLookup() throws IOException {
+
+        String filePath = "gov:/custom/payload/template.json";
+        String content = "{\"Hello\":\"World\"}";
+        Properties properties = new Properties();
+        properties.setProperty("token", "12345");
+        properties.setProperty("owner", "John");
+        microIntegratorRegistry.addNewNonEmptyResource(filePath, false, "application/json", content, properties);
+
+        File resourceFile = Paths.get(governanceRegistry.toString(), "custom", "payload", "template.json").toFile();
+        File propertiesFile = Paths.get(governanceRegistry.toString(), "custom", "payload", "template.json.properties").toFile();
+        Assert.assertTrue("template.json file should be created", resourceFile.exists());
+        Assert.assertTrue("template.json.properties file should be created", propertiesFile.exists());
+
+        Properties readProperties = microIntegratorRegistry.getResourceProperties(filePath);
+        Assert.assertEquals("Properties should be as expected", "12345", readProperties.getProperty("token"));
+        Assert.assertEquals("Properties should be as expected", "John", readProperties.getProperty("owner"));
+
+    }
+
+    @Test
+    public void testRegistryCollectionPropertiesDeploymentAndLookup() throws IOException {
+
+        String filePath = "gov:/custom/folder";
+        Properties properties = new Properties();
+        properties.setProperty("token", "12345");
+        properties.setProperty("owner", "John");
+        microIntegratorRegistry.addNewNonEmptyResource(filePath, true, "application/json", "", properties);
+
+        File propertiesFile = Paths.get(governanceRegistry.toString(), "custom", "folder.collections.properties").toFile();
+        Assert.assertTrue("folder.collection.properties file should be created", propertiesFile.exists());
+
+        Properties readProperties = microIntegratorRegistry.getResourceProperties(filePath);
+        Assert.assertEquals("Properties should be as expected", "12345", readProperties.getProperty("token"));
+        Assert.assertEquals("Properties should be as expected", "John", readProperties.getProperty("owner"));
+
+        microIntegratorRegistry.delete(filePath);
+    }
+
+    @Test
     public void testRegistryResourceReadWithEmptyMediaType() {
         OMNode omNode = microIntegratorRegistry.lookup("conf:/custom/QueueName");
         Assert.assertEquals("File content should be as expected","ordersQueue", ((OMTextImpl) omNode).getText().trim());
