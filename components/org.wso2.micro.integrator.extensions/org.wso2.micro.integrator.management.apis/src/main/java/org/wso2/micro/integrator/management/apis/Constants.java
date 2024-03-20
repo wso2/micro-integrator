@@ -229,6 +229,7 @@ public class Constants {
     public static final String DEFAULT_MEDIA_TYPE = "text/plain";
     public static final String MEDIA_TYPE_KEY = "mediaType";
     public static final String PROPERTY_EXTENSION = ".properties";
+    public static final String COLLECTIONS_PROPERTY_EXTENSIONS = ".collections.properties";
     public static final String VALUE_KEY = "value";
     public static final String REGISTRY_RESOURCE_NAME = "registryResourceName";
     public static final String REGISTRY_PROPERTY_NAME = "propertyName";

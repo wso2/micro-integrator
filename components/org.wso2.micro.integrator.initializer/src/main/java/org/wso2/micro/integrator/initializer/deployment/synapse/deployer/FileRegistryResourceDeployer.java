@@ -262,6 +262,21 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
                                                                        resource.getFileName());
             lightweightRegistry.delete(resourcePath);
         }
+
+        // get collections
+        List<RegistryConfig.Collection> collections = registryConfig.getCollections();
+        for (RegistryConfig.Collection collection : collections) {
+            String directoryPath = registryConfig.getExtractedPath() + File.separator + AppDeployerConstants.RESOURCES_DIR
+                    + File.separator + collection.getDirectory();
+            // check whether the file exists
+            File file = new File(directoryPath);
+            if (!file.exists()) {
+                // the file is already deleted.
+                continue;
+            }
+            String directoryRegistryPath = createRegistryPath(collection.getPath());
+            lightweightRegistry.delete(directoryRegistryPath);
+        }
     }
 
     /**
