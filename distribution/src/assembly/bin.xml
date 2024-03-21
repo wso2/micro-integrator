@@ -191,6 +191,25 @@
         </fileSet>
 
         <fileSet>
+            <directory>target/diagnostics-tool</directory>
+            <outputDirectory>wso2mi-${pom.version}/diagnostics-tool</outputDirectory>
+            <excludes>
+                <exclude>bin/diagnostics</exclude>
+                <exclude>lib/**</exclude>
+            </excludes>
+        </fileSet>
+
+        <fileSet>
+            <directory>src/scripts/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/diagnostics-tool/bin
+            </outputDirectory>
+            <includes>
+                <include>**/diagnostics.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+        <fileSet>
             <directory>src/conf</directory>
             <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
             <includes>
@@ -601,6 +620,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>src/resources/config-tool/templates/diagnostics-tool/conf/config.toml.j2</source>
+            <outputDirectory>wso2mi-${pom.version}/repository/resources/conf/templates/diagnostics-tool/conf</outputDirectory>
+            <destName>config.toml.j2</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>src/conf/sec.policy</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>sec.policy</destName>
@@ -644,6 +670,10 @@
                 <include>org.apache.logging.log4j:log4j-jcl:jar</include>
                 <include>org.slf4j:slf4j-simple:jar</include>
                 <include>com.lmax:disruptor:jar</include>
+                <include>org.apache.commons:commons-math3:jar</include>
+                <include>commons-net:commons-net</include>
+                <include>com.github.mwiede:jsch</include>
+                <include>org.wso2.runtime.diagnostics:runtime-diagnostics-tool:jar</include>
                 <!--
                 javax jms-api need to be in class path for axis2
                 ( needs javax.jms.JMSException )
