@@ -108,6 +108,22 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mwiede</groupId>
+            <artifactId>jsch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.runtime.diagnostics</groupId>
+            <artifactId>runtime-diagnostics-tool</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -131,6 +147,15 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.runtime.diagnostics</groupId>
+                                    <artifactId>runtime-diagnostics-tool</artifactId>
+                                    <version>${diagnostics.tool.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target</outputDirectory>
+                                    <destFileName>diagnostics-tool</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

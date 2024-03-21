@@ -283,6 +283,16 @@ if [ $java_version_formatted -ge 1100 ]; then
     JAVA_VER_BASED_OPTS="--add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED"
 fi
 
+# start diagnostic tool in background in diagnostic-tool/bin/diagnostic
+"$CARBON_HOME"/diagnostics-tool/bin/diagnostics.sh &
+diagnostic_tool_pid=$!
+
+# trap signals so we can shutdown the diagnostic tool
+cleanup() {
+    kill "$diagnostic_tool_pid"
+}
+trap 'cleanup' EXIT INT
+
 while [ "$status" = "$START_EXIT_STATUS" ]
 do
     $JAVACMD \
