@@ -111,11 +111,10 @@ public class SynapseArtifactInitUtils {
                     log.error("Error while extracting Connector zip : " + connectorZip.getAbsolutePath(), e);
                     continue;
                 }
-                String packageName = retrievePackageName(connectorExtractedPath);
-
-                // Retrieve connector name
-                String connectorName = connectorZip.getName().substring(0, connectorZip.getName().lastIndexOf('-'));
-                QName qualifiedName = new QName(packageName, connectorName);
+                QName qualifiedName = retrieveQualifiedConnectorName(connectorExtractedPath);
+                if (qualifiedName == null) {
+                    continue;
+                }
                 File importFile = new File(importsDir, qualifiedName.toString() + ".xml");
 
                 if (!importFile.exists()) {
@@ -155,8 +154,7 @@ public class SynapseArtifactInitUtils {
     }
 
 
-    private static String retrievePackageName(String extractedPath) {
-        String packageName = null;
+    private static QName retrieveQualifiedConnectorName(String extractedPath) {
         File connectorXml = new File(extractedPath + CONNECTOR_XML);
         if (!connectorXml.exists()) {
             log.error("connector.xml file not found at : " + extractedPath);
@@ -165,8 +163,11 @@ public class SynapseArtifactInitUtils {
         try (InputStream xmlInputStream =  new FileInputStream(connectorXml)) {
             OMElement connectorDef = new StAXOMBuilder(xmlInputStream).getDocumentElement();
             OMAttribute packageAttr = connectorDef.getFirstElement().getAttribute(new QName("package"));
-            if (packageAttr != null) {
-                packageName = packageAttr.getAttributeValue();
+            OMAttribute nameAttr = connectorDef.getFirstElement().getAttribute(new QName("name"));
+            if (nameAttr != null && packageAttr != null) {
+                String connectorName = nameAttr.getAttributeValue();
+                String packageName = packageAttr.getAttributeValue();
+                return new QName(packageName, connectorName);
             }
         } catch (XMLStreamException e) {
             log.error("Error while parsing the connector.xml file ", e);
@@ -175,7 +176,7 @@ public class SynapseArtifactInitUtils {
         } catch (IOException e) {
             log.error("Error occurred while reading: " + connectorXml.getPath());
         }
-        return packageName;
+        return null;
     }
 
 
