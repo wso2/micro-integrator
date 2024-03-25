@@ -178,7 +178,7 @@ public class MessageFlowReporterThread extends Thread {
                 break;
             case FAULT_EVENT:
                 BasicStatisticDataUnit basicDataUnit = event.getDataUnit();
-                addFaultsToParents(messageFlowLogs, basicDataUnit.getCurrentIndex());
+                addFaultsToParents(messageFlowLogs, basicDataUnit, basicDataUnit.getCurrentIndex());
                 break;
             case PARENT_REOPEN_EVENT:
                 BasicStatisticDataUnit parentReopenDataUnit = event.getDataUnit();
@@ -262,11 +262,15 @@ public class MessageFlowReporterThread extends Thread {
         }
     }
 
-    void addFaultsToParents(List<StatisticsLog> messageFlowLogs, int index) {
+    void addFaultsToParents(List<StatisticsLog> messageFlowLogs, BasicStatisticDataUnit dataUnit, int index) {
         while (index > -1) {
             StatisticsLog updatingLog = messageFlowLogs.get(index);
             updatingLog.incrementNoOfFaults();
             index = updatingLog.getParentIndex();
+
+            if (dataUnit.getElasticMetadata() != null) {
+                updatingLog.setElasticMetadata(dataUnit.getElasticMetadata());
+            }
         }
 
     }
