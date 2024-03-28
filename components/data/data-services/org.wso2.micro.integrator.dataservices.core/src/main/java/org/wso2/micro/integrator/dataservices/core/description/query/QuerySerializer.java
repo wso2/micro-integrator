@@ -194,7 +194,10 @@ public class QuerySerializer {
 			resEl.addAttribute(DBSFields.OUTPUT_TYPE, DBSFields.RDF, null);
 			resEl.addAttribute(DBSFields.RDF_BASE_URI, result.getRDFBaseURI(), null);
 		} else {
-			resEl.addAttribute(DBSFields.ELEMENT, result.getElementName(), null);
+			String elementName = result.getElementName();
+			if (elementName != null) {
+				resEl.addAttribute(DBSFields.ELEMENT, elementName, null);
+			}
 			String rowName = result.getRowName();
 			if (rowName != null) {
 				resEl.addAttribute(DBSFields.ROW_NAME, rowName, null);
