@@ -42,7 +42,6 @@ import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.core.util.FileManipulator;
-import org.wso2.micro.integrator.initializer.dashboard.ArtifactDeploymentListener;
 import org.wso2.micro.integrator.initializer.serviceCatalog.ServiceCatalogDeployer;
 import org.wso2.micro.integrator.initializer.utils.DeployerUtil;
 import org.wso2.micro.integrator.initializer.utils.ServiceCatalogUtils;
@@ -203,14 +202,6 @@ public class CappDeployer extends AbstractDeployer {
                 this.addCarbonApp(currentApp);
                 log.info("Successfully Deployed Carbon Application : " + currentApp.getAppNameWithVersion() +
                                  AppDeployerUtils.getTenantIdLogString(AppDeployerUtils.getTenantId()));
-                for (Artifact.Dependency dependency : currentApp.getAppConfig().getApplicationArtifact().getDependencies()) {
-                    if (dependency.getServerRole().equals("DataServicesServer")) {
-                        JsonObject deployedDataService = createUpdatedDataServiceInfoObject(dependency);
-                        ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedDataService);
-                    }
-                }
-                JsonObject deployedCarbonApp = createUpdatedCappInfoObject(currentApp);
-                ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedCarbonApp);
             }
         } catch (DeploymentException e) {
             log.error("Error occurred while deploying the Carbon application: " + cAppName
@@ -622,33 +613,9 @@ public class CappDeployer extends AbstractDeployer {
             FileManipulator.deleteDir(carbonApp.getExtractedPath());
             log.info("Successfully undeployed Carbon Application : " + carbonApp.getAppNameWithVersion()
                              + AppDeployerUtils.getTenantIdLogString(AppDeployerUtils.getTenantId()));
-            for (Artifact.Dependency dependency : carbonApp.getAppConfig().getApplicationArtifact().getDependencies()) {
-                if (dependency.getServerRole().equals("DataServicesServer")) {
-                    JsonObject undeployedDataService = createUpdatedDataServiceInfoObject(dependency);
-                    ArtifactDeploymentListener.addToUndeployedArtifactsQueue(undeployedDataService);
-                }
-            }
-            JsonObject undeployedCarbonApp = createUpdatedCappInfoObject(carbonApp);
-            ArtifactDeploymentListener.addToUndeployedArtifactsQueue(undeployedCarbonApp);
         } catch (Exception e) {
             log.error("Error occurred while trying to unDeploy  : " + carbonApp.getAppNameWithVersion(), e);
         }
-    }
-
-    private JsonObject createUpdatedCappInfoObject(CarbonApplication capp) {
-        JsonObject cappInfo = new JsonObject();
-        cappInfo.addProperty("type", "applications");
-        cappInfo.addProperty("name", capp.getAppName());
-        cappInfo.addProperty("version", capp.getAppVersion());
-        return cappInfo;
-    }
-
-    private JsonObject createUpdatedDataServiceInfoObject(Artifact.Dependency dataService) {
-        JsonObject dataServiceInfo = new JsonObject();
-        dataServiceInfo.addProperty("type", "data-services");
-        dataServiceInfo.addProperty("name", dataService.getName());
-        dataServiceInfo.addProperty("version", dataService.getVersion());
-        return dataServiceInfo;
     }
 
     /**

@@ -37,7 +37,6 @@ import org.ops4j.pax.logging.PaxLoggingConstants;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.wso2.micro.core.util.AuditLogger;
-import org.wso2.micro.integrator.initializer.dashboard.ArtifactUpdateListener;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
@@ -168,13 +167,11 @@ public class Utils {
                 msg = "Enabled tracing for ('" + artifactName + "')";
                 response.put(Constants.MESSAGE, msg);
                 AuditLogger.logAuditMessage(performedBy, type, Constants.AUDIT_LOG_ACTION_ENABLE, info);
-                ArtifactUpdateListener.addToUpdatedArtifactsQueue(artifactType, artifactName);
             } else if (Constants.DISABLE.equalsIgnoreCase(traceState)) {
                 config.disableTracing();
                 msg = "Disabled tracing for ('" + artifactName + "')";
                 response.put(Constants.MESSAGE, msg);
                 AuditLogger.logAuditMessage(performedBy, type, Constants.AUDIT_LOG_ACTION_DISABLED, info);
-                ArtifactUpdateListener.addToUpdatedArtifactsQueue(artifactType, artifactName);
             } else {
                 msg = "Invalid value for state " + Constants.TRACE;
                 response = createJsonError(msg, axisMsgCtx, Constants.BAD_REQUEST);

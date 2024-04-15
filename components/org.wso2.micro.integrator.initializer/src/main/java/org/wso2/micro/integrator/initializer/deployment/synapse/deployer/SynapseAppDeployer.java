@@ -78,7 +78,6 @@ import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusUtils;
-import org.wso2.micro.integrator.initializer.dashboard.ArtifactDeploymentListener;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.DeployerUtil;
@@ -326,9 +325,6 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                     log.error("Error occured while trying to un deploy : "+ artifactName);
                 }
             }
-
-            JsonObject undeployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath, false);
-            ArtifactDeploymentListener.addToUndeployedArtifactsQueue(undeployedArtifact);
         }
     }
 
@@ -1145,10 +1141,6 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                     }
                 }
             }
-
-            JsonObject deployedArtifact = createUpdatedArtifactInfoObject(artifact, artifactPath, true);
-            ArtifactDeploymentListener.addToDeployedArtifactsQueue(deployedArtifact);
-
         }
     }
 
@@ -1301,25 +1293,6 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
             }
             deploymentEngine.addDeployer(deployer, artifactDir, ServiceBusConstants.ARTIFACT_EXTENSION);
         }
-    }
-
-    private JsonObject createUpdatedArtifactInfoObject(Artifact artifact, String artifactPath, boolean isDeploy) {
-        JsonObject artifactInfo = new JsonObject();
-        String type = getArtifactDirName(artifact.getType());
-        String name = artifact.getName();
-        if ("api".equals(type)) {
-            type = "apis";
-        } else if ("synapse-libs".equals(type)) {
-            type = "connectors";
-            name = getConnectorName(name);
-        }
-        if (isDeploy && "templates".equals(type)) {
-            name = getTemplateName(artifactPath, name);
-        }
-        artifactInfo.addProperty("type", type);
-        artifactInfo.addProperty("name", name);
-        artifactInfo.addProperty("version", artifact.getVersion());
-        return artifactInfo;
     }
 
     private String getConnectorName(String artifactName) {
