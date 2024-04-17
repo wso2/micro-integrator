@@ -1237,7 +1237,7 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - Server Information
+        - Server Management
     patch:
       summary: Manage server
       description: |
