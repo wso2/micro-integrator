@@ -48,10 +48,13 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
     private RealmConfiguration realmConfig;
     private List<String> allowedRoles = null;
 
+    private boolean caseInsensitiveRoleNameCheckEnabled = false;
+
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         try {
             boolean isAuthenticated = false;
+            caseInsensitiveRoleNameCheckEnabled = MicroIntegratorSecurityUtils.isCaseInsensitiveRoleNameCheckEnabled();
             if (realmConfig == null) {
                 try {
                     realmConfig = MicroIntegratorSecurityUtils.getRealmConfiguration();
@@ -217,9 +220,19 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
     private boolean hasAllowedRole(String authenticatedUser) throws UserStoreException {
         if (allowedRoles != null) {
             String[] existingRoles = userStoreManager.getRoleListOfUser(authenticatedUser);
-            for (String existingRole : existingRoles) {
-                if (allowedRoles.contains(existingRole)) {
-                    return true;
+            if (caseInsensitiveRoleNameCheckEnabled) {
+                for (String existingRole : existingRoles) {
+                    for (String allowedRole : allowedRoles) {
+                        if (existingRole.equalsIgnoreCase(allowedRole)) {
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                for (String existingRole : existingRoles) {
+                    if (allowedRoles.contains(existingRole)) {
+                        return true;
+                    }
                 }
             }
             return false;

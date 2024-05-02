@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.integrator.security.internal.DataHolder;
 import org.wso2.micro.integrator.security.internal.ServiceComponent;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
@@ -30,6 +31,7 @@ import org.wso2.micro.integrator.security.user.core.claim.ClaimManager;
 import org.wso2.micro.integrator.security.user.core.profile.ProfileConfigurationManager;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
@@ -201,5 +203,28 @@ public class MicroIntegratorSecurityUtils {
      */
     public static boolean containsAdminRole(String[] rolesList) throws UserStoreException {
         return Arrays.asList(rolesList).contains(getRealmConfiguration().getAdminRoleName());
+    }
+
+    /**
+     * Checks whether Case Insensitive Role Name Check is Enabled.
+     *
+     * @return whether Case Insensitive Role Name Check is Enabled.
+     */
+    public static boolean isCaseInsensitiveRoleNameCheckEnabled() {
+        Map<String, Object> catalogProperties;
+        if (ConfigParser.getParsedConfigs().get(SecurityConstants.WS_SECURITY_CONFIG) != null) {
+            catalogProperties =
+                    (Map<String, Object>) ((ArrayList) ConfigParser.getParsedConfigs().get(
+                            SecurityConstants.WS_SECURITY_CONFIG)).get(0);
+            if (catalogProperties != null
+                    && catalogProperties.containsKey(SecurityConstants.CASE_INSENSITIVE_ROLE_NAME_CHECK)) {
+                Object caseInsensitiveRoleNameCheckValue
+                        = catalogProperties.get(SecurityConstants.CASE_INSENSITIVE_ROLE_NAME_CHECK);
+                if (caseInsensitiveRoleNameCheckValue instanceof Boolean) {
+                    return (boolean) caseInsensitiveRoleNameCheckValue;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -34,4 +34,8 @@ public class SecurityConstants {
             "org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreManager";
     public static final String DEFAULT_JDBC_USERSTORE_MANAGER =
             "org.wso2.micro.integrator.security.user.core.jdbc.JDBCUserStoreManager";
+
+    public static final String CASE_INSENSITIVE_ROLE_NAME_CHECK = "case_insensitive_role_name_check";
+
+    public static final String WS_SECURITY_CONFIG = "ws_security";
 }
