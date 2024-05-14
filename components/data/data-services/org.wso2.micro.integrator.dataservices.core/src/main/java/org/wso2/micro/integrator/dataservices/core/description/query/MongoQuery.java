@@ -210,7 +210,7 @@ public class MongoQuery extends Query {
     }
 
     private Object[] decodeQuery(String query) throws DataServiceFault {
-        int i1 = query.indexOf('.');
+        int i1 = query.lastIndexOf('.');
         if (i1 == -1) {
             throw new DataServiceFault("The MongoDB Collection not specified in the query '" + query + "'");
         }
