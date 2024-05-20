@@ -69,7 +69,6 @@ public class DataServiceCallMediator extends AbstractMediator {
     private String targetPropertyName;
     private OMFactory fac;
     private OMNamespace omNamespace;
-    private SynapseLog synLog;
     /**
      * The DynamicNameValue of the property if it is dynamic.
      */
@@ -78,7 +77,7 @@ public class DataServiceCallMediator extends AbstractMediator {
 
     public boolean mediate(MessageContext messageContext) {
 
-        synLog = getLog(messageContext);
+        SynapseLog synLog = getLog(messageContext);
         String serviceName = getDsName();
 
         if (synLog.isTraceOrDebugEnabled()) {
@@ -109,7 +108,7 @@ public class DataServiceCallMediator extends AbstractMediator {
                 } else {
                     axis2MessageContext = handleSourceTypeBody(messageContext, axis2MessageContext);
                 }
-                dispatchToService(axis2MessageContext, messageContext);
+                dispatchToService(axis2MessageContext, messageContext, synLog);
             } else {
                 handleException("The data service,  named '" + serviceName + "' does not exist. ", messageContext);
             }
@@ -213,7 +212,7 @@ public class DataServiceCallMediator extends AbstractMediator {
     }
 
     private void dispatchToService(org.apache.axis2.context.MessageContext axis2MessageContext,
-                                   MessageContext messageContext) {
+                                   MessageContext messageContext, SynapseLog synLog) {
 
         try {
             OMElement omElement = DataServiceProcessor.dispatch(axis2MessageContext);
