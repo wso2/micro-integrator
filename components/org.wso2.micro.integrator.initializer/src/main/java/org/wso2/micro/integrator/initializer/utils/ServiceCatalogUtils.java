@@ -78,6 +78,7 @@ public class ServiceCatalogUtils {
     private static List<ServiceMetaDataHolder> md5List = new ArrayList<>();
     private static Boolean alreadyUploaded = false;
     private static String resolvedHostName;
+    private static String resolvedGroupId;
     private static String httpListenerPort;
     private static String httpsListenerPort;
     private static String resolvedUrl;
@@ -162,6 +163,39 @@ public class ServiceCatalogUtils {
     }
 
     /**
+     * Dynamically resolve the {MI_GROUP_ID} placeholder in the metadata file using env variables.
+     * @param yaml metadata file.
+     */
+    private static void replaceGroupIdPlaceholder(Map<String, Object> yaml) {
+        SystemResolver resolver = new SystemResolver();
+        if (resolvedGroupId == null) {
+            try {
+                resolver.setVariable(MI_GROUP_ID);
+                resolvedGroupId = resolver.resolve();
+            } catch (ResolverException e) {
+                // if the env variable is not set, use the existing value
+                return;
+            }
+        }
+        String key = (String) yaml.get(METADATA_KEY);
+        if (key.contains(GROUP_ID)) {
+            yaml.put(METADATA_KEY, key.replace(GROUP_ID, resolvedGroupId));
+        }
+        String name = (String) yaml.get(METADATA_NAME);
+        if (name.contains(GROUP_ID)) {
+            yaml.put(METADATA_NAME, name.replace(GROUP_ID, resolvedGroupId));
+        }
+        String displayName = (String) yaml.get(METADATA_DISPLAY_NAME);
+        if (displayName.contains(GROUP_ID)) {
+            yaml.put(METADATA_DISPLAY_NAME, displayName.replace(GROUP_ID, resolvedGroupId));
+        }
+        String description = (String) yaml.get(METADATA_DESCRIPTION);
+        if (description.contains(GROUP_ID)) {
+            yaml.put(METADATA_DESCRIPTION, description.replaceAll(GROUP_ID_REGEX, resolvedGroupId));
+        }
+    }
+
+    /**
      * Update the serviceUrl of the given metadata file (if required) and return its key value.
      *
      * @param yamlFile metadata yaml file.
@@ -175,6 +209,7 @@ public class ServiceCatalogUtils {
         Map<String, Object> obj = (Map<String, Object>) yaml.load(yamlStream);
         String currentServiceUrl = (String) obj.get(SERVICE_URL);
         obj.put(SERVICE_URL, updateServiceUrl(currentServiceUrl));
+        replaceGroupIdPlaceholder(obj);
 
         // Additional configurations
         DumperOptions options = new DumperOptions();
