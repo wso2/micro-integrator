@@ -17,7 +17,6 @@
  */
 package org.wso2.micro.integrator.initializer.dashboard;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
@@ -40,9 +39,6 @@ import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.util.StringUtils;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -74,10 +70,6 @@ public class HeartBeatComponent {
     private static final Log log = LogFactory.getLog(HeartBeatComponent.class);
     private static final Map<String, Object> configs = ConfigParser.getParsedConfigs();
 
-    private static final String CHANGE_NOTIFICATION = "changeNotification";
-    private static final String DEPLOYED_ARTIFACTS = "deployedArtifacts";
-    private static final String UNDEPLOYED_ARTIFACTS = "undeployedArtifacts";
-    private static final String STATE_CHANGED_ARTIFACTS = "stateChangedArtifacts";
     public static void invokeHeartbeatExecutorService() {
 
         String heartbeatApiUrl = configs.get(DASHBOARD_CONFIG_URL)  + "/heartbeat";
@@ -100,8 +92,6 @@ public class HeartBeatComponent {
 
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         Runnable runnableTask = () -> {
-            JsonObject changeNotification = createChangeNotification();
-            heartbeatPayload.add(CHANGE_NOTIFICATION, changeNotification);
 
             try (CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(
                     new SSLConnectionSocketFactory(
@@ -113,15 +103,9 @@ public class HeartBeatComponent {
                 CloseableHttpResponse response = client.execute(httpPost);
                 JsonObject jsonResponse = getJsonResponse(response);
                 if (jsonResponse != null && jsonResponse.get("status").getAsString().equals("success")) {
-                    int deployedArtifactsCount = heartbeatPayload.get(CHANGE_NOTIFICATION).getAsJsonObject()
-                                                                    .get(DEPLOYED_ARTIFACTS).getAsJsonArray().size();
-                    int undeployedArtifactsCount = heartbeatPayload.get(CHANGE_NOTIFICATION).getAsJsonObject()
-                                                                    .get(UNDEPLOYED_ARTIFACTS).getAsJsonArray().size();
-                    int updatedArtifactsCount = heartbeatPayload.get(CHANGE_NOTIFICATION).getAsJsonObject()
-                                                                .get(STATE_CHANGED_ARTIFACTS).getAsJsonArray().size();
-                    ArtifactDeploymentListener.removeFromUndeployedArtifactsQueue(undeployedArtifactsCount);
-                    ArtifactDeploymentListener.removeFromDeployedArtifactsQueue(deployedArtifactsCount);
-                    ArtifactUpdateListener.removeFromUpdatedArtifactQueue(updatedArtifactsCount);
+                    log.debug("Heartbeat sent successfully.");
+                } else {
+                    log.debug("Error occurred while sending the heartbeat.");
                 }
             } catch (Exception e) {
                 log.debug("Error occurred while processing the heartbeat.", e);
@@ -187,17 +171,6 @@ public class HeartBeatComponent {
 
     private static String generateRandomId() {
         return UUID.randomUUID().toString();
-    }
-
-    private static JsonObject createChangeNotification() {
-        JsonObject changeNotification = new JsonObject();
-        JsonArray deployedArtifacts = ArtifactDeploymentListener.getDeployedArtifacts();
-        JsonArray undeployedArtifacts = ArtifactDeploymentListener.getUndeployedArtifacts();
-        JsonArray stateChangedArtifacts = ArtifactUpdateListener.getStateChangedArtifacts();
-        changeNotification.add(DEPLOYED_ARTIFACTS, deployedArtifacts);
-        changeNotification.add(UNDEPLOYED_ARTIFACTS, undeployedArtifacts);
-        changeNotification.add(STATE_CHANGED_ARTIFACTS, stateChangedArtifacts);
-        return changeNotification;
     }
 
     public static boolean isDashboardConfigured() {
