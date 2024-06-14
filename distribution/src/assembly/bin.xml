@@ -674,6 +674,7 @@
                 <include>commons-net:commons-net</include>
                 <include>com.github.mwiede:jsch</include>
                 <include>org.wso2.runtime.diagnostics:runtime-diagnostics-tool:jar</include>
+                <include>org.wso2.carbon.mediation:org.wso2.carbon.mediation.diagnostics:jar</include>
                 <!--
                 javax jms-api need to be in class path for axis2
                 ( needs javax.jms.JMSException )
