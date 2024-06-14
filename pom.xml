@@ -1482,6 +1482,36 @@
                 <artifactId>transaction-count-handler</artifactId>
                 <version>${counter.org.wso2.integration.transaction.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.graalvm.sdk</groupId>
+                <artifactId>graal-sdk</artifactId>
+                <version>${graalvm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.js</groupId>
+                <artifactId>js-scriptengine</artifactId>
+                <version>${graalvm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.js</groupId>
+                <artifactId>js</artifactId>
+                <version>${graalvm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.truffle</groupId>
+                <artifactId>truffle-api</artifactId>
+                <version>${graalvm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.regex</groupId>
+                <artifactId>regex</artifactId>
+                <version>${graalvm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ibm.icu</groupId>
+                <artifactId>icu4j</artifactId>
+                <version>${icu.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1913,6 +1943,8 @@
         <jsoup.version>1.15.3</jsoup.version>
         <grpc-context.orbit.version>1.59.0.wso2v1</grpc-context.orbit.version>
         <opencensus.orbit.version>0.31.1.wso2v3</opencensus.orbit.version>
+        <graalvm.version>22.3.4</graalvm.version>
+        <icu.version>71.1</icu.version>
     </properties>
 
     <repositories>
