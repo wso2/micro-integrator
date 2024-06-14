@@ -92,6 +92,9 @@
                                     org.wso2.ei:org.wso2.micro.integrator.mediator.intelligent:${project.version}
                                 </bundleDef>
                                 <bundleDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.mediator.visionAI:${project.version}
+                                </bundleDef>
+                                <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediator.oauth:${project.version}
                                 </bundleDef>
                                 <bundleDef>
