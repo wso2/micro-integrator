@@ -47,12 +47,12 @@ public class ESBJAVA5021MultiplePrefixesAndDashSupport extends DataMapperIntegra
                 + "xmlns:test1=\"http://test.com/schema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
                 + "xsi:type=\"xsd2:string\" test1:nameType=\"productID\">car</test1:name2><test2:price2 "
                 + "xmlns:test2=\"http://test.com/schema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                + "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xsi:type=\"xsd:float\">100</test2:price2>"
+                + "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xsi:type=\"xsd:float\">100.0</test2:price2>"
                 + "<DiscountedPrice2 xmlns:test1=\"http://test.com/schema\" "
                 + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" test1:discountReason=\"bulk\" "
-                + "xsi:type=\"xsd2:float\">100</DiscountedPrice2><Discounted_Price2 "
+                + "xsi:type=\"xsd2:float\">100.0</DiscountedPrice2><Discounted_Price2 "
                 + "xmlns:test1=\"http://test.com/schema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                + "test1:discountReason=\"bulk\" xsi:type=\"xsd2:float\">100</Discounted_Price2></item2></data2>");
+                + "test1:discountReason=\"bulk\" xsi:type=\"xsd2:float\">100.0</Discounted_Price2></item2></data2>");
 
     }
 
