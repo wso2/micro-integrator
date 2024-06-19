@@ -42,6 +42,10 @@
             <artifactId>org.wso2.carbon.mediator.cache</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.mediator.documentProcess</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
         </dependency>
@@ -92,7 +96,7 @@
                                     org.wso2.ei:org.wso2.micro.integrator.mediator.intelligent:${project.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.mediator.visionAI:${project.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.mediator.documentProcess:${project.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediator.oauth:${project.version}

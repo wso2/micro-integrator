@@ -23,9 +23,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.micro.integrator.mediator.visionAI</artifactId>
+    <artifactId>org.wso2.micro.integrator.mediator.documentProcess</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - vision AI Mediator</name>
+    <name>WSO2 Carbon - Document Process Mediator</name>
     <url>http://wso2.org</url>
 
     <dependencies>
@@ -55,12 +55,6 @@
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.registry</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.ws.wso2</groupId>
-            <artifactId>spring.framework</artifactId>
-            <version>3.2.9.wso2v1</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -75,7 +69,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.micro.integrator.mediator.visionAI.*
+                            org.wso2.micro.integrator.mediator.documentProcess.*
                         </Export-Package>
                         <Import-Package>
                         </Import-Package>

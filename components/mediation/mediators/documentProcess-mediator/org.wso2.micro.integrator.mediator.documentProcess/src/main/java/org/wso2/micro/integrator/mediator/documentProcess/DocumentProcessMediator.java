@@ -1,18 +1,19 @@
-package org.wso2.micro.integrator.mediator.visionAI;
+package org.wso2.micro.integrator.mediator.documentProcess;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.pdfbox.io.IOUtils;
+import org.apache.synapse.commons.json.JsonUtil;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.apache.synapse.MessageContext;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.springframework.web.multipart.MultipartFile;
 import org.wso2.micro.integrator.registry.Resource;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry ;
 
 import javax.imageio.ImageIO;
+import javax.xml.namespace.QName;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -20,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-public class VisionAIMediator extends AbstractMediator {
+public class DocumentProcessMediator extends AbstractMediator {
 
     /**
      * This the secret key for chatgpt vision
@@ -32,90 +33,105 @@ public class VisionAIMediator extends AbstractMediator {
      */
     private String jsonFilePath = "";
 
-    MicroIntegratorRegistry registry = new MicroIntegratorRegistry();
+    /**
+     * This is the maximum tokens for GPT API request
+     */
+    private int maxTokens ;
 
-    private Resource resource = null;
+    /**
+     * This is gpt model name that is using
+     */
+    private String gptModel;
 
     private InputStream jsonStream = null;
 
-    private MultipartFile multipartFile = null;
-
     public boolean mediate(MessageContext synCtx) {
 
+        org.apache.axis2.context.MessageContext msgContext = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
+        String filename = msgContext.getEnvelope().getBody().getFirstElement().getFirstElement().getAttributeValue(QName.valueOf("filename"));
+        String fileContent = msgContext.getEnvelope().getBody().getFirstElement().getFirstElement().getText();
+        this.jsonStream = getJsonSchemaFromRegistry(jsonFilePath);
 
-
-        this.resource = registry.getResource(jsonFilePath);
-
-        try {
-            this.jsonStream = resource.getContentStream();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
+        //Contain converted pdf pages into images in Base 64
         List<String> base64_images = new ArrayList<>();
 
-        List<String> requests = new ArrayList<>();
-        StringBuilder res = new StringBuilder();
+        //Contain list of gpt messages of image url type for each image of the pdf
+        List<String> imageRequestList = new ArrayList<>();
+
+        //Hold total image url messages as a String
+        StringBuilder imageRequestPayload;
 
         // Reading the schema file
-        String schemaJson = null;
+        String schemaJson;
         try {
             schemaJson = readSchema(this.jsonStream).replace(" ","").replace("\"","").replace("\t","").replace("\n","");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            schemaJson = "";
         }
+
+        //Prompt Message when json schema not provided
+        final String noSchemaPromptMessage = "Retrieve all form fields and values as JSON (get XML containing fields also not xml tags whole one as one field with actual field name in front it), return as JSON object {fieldName:FieldValue} including all fields . The key names should match the field names exactly and should be case sensitive. Scan the whole document and retrieve all fields.";
+
+        //Prompt Message when json schema not provided
+        final String withSchemaPromptMessage = "Retrieve all form fields and  values as json (get xml values inside fields as a form field), return as provided schema (Only values related to schema) ," +schemaJson +" as json object {fieldName:FieldValue} only fields in schema, only return this object is enough, these are should be keys of the json under content, key names should be same as provided, case sensitive (scan whole document and check, get all fields there could be some lengthy fields,xml fields like value).";
         System.out.println(schemaJson.replace(" ",""));
 
         // Getting the base64 string
-        if(multipartFile.getContentType().equals("pdf")){
+        if(filename.endsWith("pdf")){
             try {
-                base64_images = pdfToImage(multipartFile.getInputStream());
+                base64_images = pdfToImage(fileContent);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(e + "Error in the content, not a valid pdf");
             }
-            System.out.println(base64_images.size());
+
             for(int i = 0; i < Objects.requireNonNull(base64_images).size(); i++){
-                String request = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," + base64_images.get(i) + "\"}}";
-                requests.add(request);
+                String imageRequest = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," + base64_images.get(i) + "\"}}";
+                imageRequestList.add(imageRequest);
             }
-            res = new StringBuilder(requests.get(0));
+            imageRequestPayload = new StringBuilder(imageRequestList.get(0));
 
-            for(int i = 1; i < requests.size(); i++){
-                res.append(",").append(requests.get(i));
+            for(int i = 1; i < imageRequestList.size(); i++){
+                imageRequestPayload.append(",").append(imageRequestList.get(i));
             }
-            System.out.println(res);
 
-            //System.out.println(requests.get(0));
         } else {
             try {
-                base64_images.add(encodeImage(multipartFile.getInputStream()));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                base64_images.add(encodeImage(fileContent));
             }
-            String request = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," + base64_images.get(0) + "\"}}";
-            res = new StringBuilder(request);
+            catch (IOException e) {
+                throw new RuntimeException(e + "Error in the content, not a valid image");
+            }
+            String imageRequest = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," + base64_images.get(0) + "\"}}";
+            imageRequestPayload = new StringBuilder(imageRequest);
         }
 
         // API endpoint
         String endpoint = "https://api.openai.com/v1/chat/completions";
 
         // Constructing the JSON payload
-        String payload = "{\"model\": \"gpt-4-turbo\", \"messages\": [{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"What’s in this image? Retrieve all form fields and  values as json(get xml values inside fields as a form field), return as provided schema ," +schemaJson +" as json object {fieldName:FieldValue} only fields in schema, only return this object is enough, these are should be keys of the json under content, key names should be same as provided, case sensitive.\"},"+res+"]}], \"response_format\": {\"type\": \"json_object\"}, \"max_tokens\": 300}";
-        //System.out.println(payload);
-        // Setting up the HTTP connection
-        URL url = null;
+        String payload;
+        if(schemaJson.isEmpty()){
+            payload = "{\"model\": \""+gptModel+"\", \"messages\": [{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \" "+noSchemaPromptMessage+"\"},"+imageRequestPayload+"]}], \"response_format\": {\"type\": \"json_object\"}, \"max_tokens\":"+maxTokens+"}";
+        }
+        else {
+            payload = "{\"model\": \""+gptModel+"\", \"messages\": [{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \" "+withSchemaPromptMessage+"\"},"+imageRequestPayload+"]}], \"response_format\": {\"type\": \"json_object\"}, \"max_tokens\":"+maxTokens+"}";
+        }
+
+        //URL instance for connection
+        URL url;
         try {
             url = new URL(endpoint);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-        HttpURLConnection connection = null;
+
+        //Constructing HttpURLConnection
+        HttpURLConnection connection;
         try {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e + "Connection to the url unsuccessful");
         }
 
         connection.setRequestProperty("Content-Type", "application/json");
@@ -147,7 +163,9 @@ public class VisionAIMediator extends AbstractMediator {
 
             // Get the content string
             String contentString = jsonObject.getAsJsonArray("choices").get(0).getAsJsonObject().getAsJsonObject("message").get("content").getAsString();
-            System.out.println(contentString);
+            //System.out.println(contentString);
+
+            JsonUtil.getNewJsonPayload(msgContext,contentString,true,true);
 
             // Parse the content string into a JsonObject
             JsonObject contentObject = JsonParser.parseString(contentString).getAsJsonObject();
@@ -178,10 +196,41 @@ public class VisionAIMediator extends AbstractMediator {
         this.jsonFilePath = jsonFilePath;
     }
 
+    /**
+     *
+     * @param maxTokens String value to be set as maxTokens
+     */
+    public void setMaxTokens(int maxTokens) {
+        this.maxTokens = maxTokens;
+    }
 
-    private static String encodeImage(InputStream inputStream) throws IOException {
-            byte[] bytes = IOUtils.toByteArray(inputStream);
-            return Base64.getEncoder().encodeToString(bytes);
+    /**
+     *
+     * @param gptModel String value to be set as gptModel
+     */
+    public void setGptModel(String gptModel){
+        this.gptModel = gptModel;
+    }
+
+
+    private static String encodeImage(String base64Image) throws IOException {
+            return base64Image;
+    }
+
+    private static  InputStream getJsonSchemaFromRegistry(String jsonFilePath){
+        MicroIntegratorRegistry registry = new MicroIntegratorRegistry();
+        Resource resource;
+        InputStream jsonStream;
+        if(!jsonFilePath.isEmpty()) {
+            resource = registry.getResource(jsonFilePath);
+            try {
+                jsonStream = resource.getContentStream();
+                return jsonStream;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
     }
 
     private static String readSchema(InputStream jsonStream) throws IOException {
@@ -192,11 +241,15 @@ public class VisionAIMediator extends AbstractMediator {
                 schemaJson.append(line);
             }
         }
+        catch (Exception e){
+            return "";
+        }
         return schemaJson.toString();
     }
 
-    private static List<String> pdfToImage(InputStream pdfInputStream) throws IOException {
-        try {
+    private static List<String> pdfToImage(String base64Pdf) throws IOException {
+        byte[] decodedBytes = Base64.getDecoder().decode(base64Pdf);
+        try (InputStream pdfInputStream = new ByteArrayInputStream(decodedBytes)) {
             PDDocument document = PDDocument.load(pdfInputStream);
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             List<BufferedImage> images = new ArrayList<>();
@@ -205,7 +258,7 @@ public class VisionAIMediator extends AbstractMediator {
             int numberOfPages = document.getNumberOfPages();
             System.out.println("Total files to be converting -> " + numberOfPages);
 
-            int dpi = 300; // use less dpi to save more space in hard disk. For professional usage, you can use more than 300dpi
+            int dpi = 300; // Use less dpi to save more space on the hard disk. For professional usage, you can use more than 300dpi
 
             for (int i = 0; i < numberOfPages; ++i) {
                 BufferedImage bImage = pdfRenderer.renderImageWithDPI(i, dpi, ImageType.RGB);
