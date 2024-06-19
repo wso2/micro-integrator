@@ -575,7 +575,7 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>src/LICENSE.txt</source>
+            <source>./../LICENSE.txt</source>
             <outputDirectory>wso2mi-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
