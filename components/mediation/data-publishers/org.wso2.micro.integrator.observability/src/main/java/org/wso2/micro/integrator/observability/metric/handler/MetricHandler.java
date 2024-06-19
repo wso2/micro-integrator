@@ -311,7 +311,11 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
     private String getApiName(String contextPath, MessageContext synCtx) {
         String apiName = null;
         for (API api : synCtx.getEnvironment().getSynapseConfiguration().getAPIs()) {
-            if (RESTUtils.matchApiPath(contextPath, api.getContext())) {
+            String apiContextPath = api.getContext();
+            if (api.getVersionStrategy().getVersion() != null) {
+                apiContextPath = apiContextPath + "/" + api.getVersionStrategy().getVersion();
+            }
+            if (RESTUtils.matchApiPath(contextPath, apiContextPath)) {
                 apiName = api.getName();
                 synCtx.setProperty(RESTConstants.PROCESSED_API, api);
                 // if we match to a versioned API, search should stop.
