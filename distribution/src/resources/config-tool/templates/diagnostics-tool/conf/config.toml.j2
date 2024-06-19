@@ -26,6 +26,7 @@
 
 # Server Configurations
 [server_configuration]
+diagnostic_tool_enabled = "{{server_configuration.diagnostic_tool_enabled}}"
 deployment_toml_path = "{{server_configuration.deployment_toml_path}}"
 logs_directory = "{{server_configuration.logs_directory}}"
 updates_config_path = "{{server_configuration.updates_config_path}}"
@@ -64,6 +65,9 @@ executor = "ServerInfo"
 [[action_executor_configuration]]
 executor = "MetricsSnapshot"
 
+[[action_executor_configuration]]
+executor = "org.wso2.carbon.diagnostics.action.executor.MetricsSnapshot"
+
 {%for action in action_executor_configuration %}
 [[action_executor_configuration]]
 executor = "{{action.executor}}"
@@ -73,20 +77,23 @@ executor = "{{action.executor}}"
 [cpu_watcher]
 enabled = "{{cpu_watcher.enabled}}"
 threshold = "{{cpu_watcher.threshold}}"
-retry_count = "{{cpu_watcher.retry_count}}"
+attempts = "{{cpu_watcher.attempts}}"
 interval = "{{cpu_watcher.interval}}"
 action_executors = "{{cpu_watcher.action_executors}}"
 
 [memory_watcher]
 enabled = "{{memory_watcher.enabled}}"
 threshold = "{{memory_watcher.threshold}}"
-retry_count = "{{memory_watcher.retry_count}}"
+attempts = "{{memory_watcher.attempts}}"
 interval = "{{memory_watcher.interval}}"
 action_executors = "{{memory_watcher.action_executors}}"
 
 [log_watcher]
 enabled = "{{log_watcher.enabled}}"
 interval = {{log_watcher.interval}}
+
+[[custom_watchers]]
+class = "org.wso2.carbon.diagnostics.trafficanalyzer.TrafficAnalyzer"
 
 # Traffic Analyzer Configurations
 [traffic_analyzer]
@@ -103,6 +110,11 @@ last_minutes_requests_window_size = "{{traffic_analyzer.last_minutes_requests_wi
 last_minutes_requests_delay = "{{traffic_analyzer.last_minutes_requests_delay}}"
 last_minutes_requests_interval = "{{traffic_analyzer.last_minutes_requests_interval}}"
 notify_interval = "{{traffic_analyzer.notify_interval}}"
+
+{%for watcher in custom_watchers %}
+[[custom_watchers]]
+class = "{{watcher.class}}"
+{% endfor %}
 
 # Output data zip configurations
 [zip_file_configuration]
