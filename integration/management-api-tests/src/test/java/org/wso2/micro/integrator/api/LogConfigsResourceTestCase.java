@@ -31,7 +31,7 @@ public class LogConfigsResourceTestCase extends ManagementAPITest {
     @Test(groups = {"wso2.esb"}, description = "Test get Log Configs resource")
     public void retrieveLogConfigs() throws IOException {
         JSONObject jsonResponse = sendHttpRequestAndGetPayload(resourcePath);
-        verifyResourceCount(jsonResponse, 80);
+        verifyResourceCount(jsonResponse, 81);
         verifyResourceInfo(jsonResponse, new String[]{"axis2Deployment", "Axis2SynapseController"});
     }
 
