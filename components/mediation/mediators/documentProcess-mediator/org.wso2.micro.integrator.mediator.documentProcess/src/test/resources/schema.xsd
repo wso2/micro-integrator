@@ -1,0 +1,4 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:attribute default="string" name="Local Entry Name" type="xs:string"/>
+    <xs:attribute default="string" name="Value" type="xs:string"/>
+</xs:schema>

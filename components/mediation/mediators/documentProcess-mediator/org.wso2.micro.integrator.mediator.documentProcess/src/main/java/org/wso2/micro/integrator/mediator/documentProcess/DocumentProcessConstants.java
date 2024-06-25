@@ -8,13 +8,13 @@ public class DocumentProcessConstants {
     /**
      * QName of the cache mediator which will be used by the module.
      */
-    public static final QName VISIONAI_Q = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE,
-            DocumentProcessConstants.VISIONAI_LOCAL_NAME);
+    public static final QName DOCUMENTPROCESS_Q = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE,
+            DocumentProcessConstants.DOCUMENTPROCESS_LOCAL_NAME);
 
     /**
      * Local name of the visionAI mediator which will be used by the module.
      */
-    public static final String VISIONAI_LOCAL_NAME = "vision";
+    public static final String DOCUMENTPROCESS_LOCAL_NAME = "documentProcess";
 
     /**
      * This holds the default amount of GPT Tokens  .
@@ -30,8 +30,9 @@ public class DocumentProcessConstants {
      * Following names represent the local names used in QNames in MediatorFactory, Serializer and the UI
      * DocumentProcessMediator.
      */
-    public static final String API_KEY_STRING = "api";
-    public static final String JSON_FILE_PATH_STRING = "json";
-    public static final String MAX_TOKENS_STRING = "tokens";
-    public static final String GPT_MODEL_STRING = "model";
+    public static final String API_KEY_STRING = "api-key";
+    public static final String SCHEMA_STRING = "schema";
+    public static final String SCHEMA_KEY_STRING = "key";
+    public static final String MAX_TOKENS_STRING = "max-tokens";
+    public static final String GPT_MODEL_STRING = "gpt-model";
 }
