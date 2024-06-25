@@ -266,8 +266,9 @@ public class ElasticStatisticsTest extends TestCase {
         event.setComponentType(StatisticsConstants.getComponentTypeToString(componentType));
         event.setFlowId(TEST_FLOW_ID);
         event.setComponentName(componentName);
-        event.setStartTime(Instant.now().toEpochMilli() - STATIC_LATENCY);
-        event.setEndTime(Instant.now().toEpochMilli());
+        long currentTime = Instant.now().toEpochMilli();
+        event.setStartTime(currentTime - STATIC_LATENCY);
+        event.setEndTime(currentTime);
         event.setDuration(event.getEndTime() - event.getStartTime());
         event.setEntryPoint("EP");
         event.setFaultCount(0);
