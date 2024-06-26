@@ -1,7 +1,25 @@
+/*
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.micro.integrator.mediator.documentProcess;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.axiom.om.OMElement;
 import org.apache.commons.io.IOUtils;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
@@ -11,18 +29,31 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.wso2.micro.integrator.registry.Resource;
-import org.wso2.micro.integrator.registry.MicroIntegratorRegistry ;
+import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 
 import javax.imageio.ImageIO;
 import javax.xml.namespace.QName;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Objects;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 
+/**
+ * If a request comes to this class it create request to the gpt and respond with the result. Otherwise it will pass on
+ * the request to the next mediator.
+ */
 public class DocumentProcessMediator extends AbstractMediator {
 
     /**
@@ -38,7 +69,7 @@ public class DocumentProcessMediator extends AbstractMediator {
     /**
      * This is the maximum tokens for GPT API request
      */
-    private int maxTokens ;
+    private int maxTokens;
 
     /**
      * This is gpt model name that is using
@@ -47,31 +78,39 @@ public class DocumentProcessMediator extends AbstractMediator {
 
     private InputStream jsonStream = null;
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean mediate(MessageContext synCtx) {
 
         org.apache.axis2.context.MessageContext msgContext = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
-        String filename = msgContext.getEnvelope().getBody().getFirstElement().getFirstElement().getAttributeValue(QName.valueOf("filename"));
-        String fileContent = msgContext.getEnvelope().getBody().getFirstElement().getFirstElement().getText();
-        this.jsonStream = getSchemaFromRegistry(this.SchemaPath);
+        String filename = getNameFromMessageContext(msgContext);
+        String fileContent = getContentFromMessageContext(msgContext);
+        if (filename.isEmpty()) {
+            handleException("Cannot find the filename in the payload", synCtx);
+        } else if (fileContent.isEmpty()) {
+            handleException("Cannot find the content in the payload", synCtx);
+        }
+
+        this.jsonStream = getSchemaFromRegistry(synCtx, this.SchemaPath);
 
         // Constructing the JSON payload
         String payload = null;
-        payload = generateGptRequestMessage(jsonStream,filename,fileContent,gptModel,maxTokens);
+        payload = generateGptRequestMessage(synCtx, jsonStream, filename, fileContent, gptModel, maxTokens);
 
-        // API endpoint
-        String endpoint = "https://api.openai.com/v1/chat/completions";
 
         //URL instance for connection
-        URL url;
+        URL url = null;
         try {
-            url = new URL(endpoint);
+            url = new URL(DocumentProcessConstants.GPT_API_ENDPOINT_STRING);
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e + "GPT endpoint url is not valid url");
+            handleException("GPT endpoint url is not valid url", e, synCtx);
         }
 
         //Constructing HttpURLConnection
         HttpURLConnection connection;
         try {
+            assert url != null;
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
         } catch (IOException e) {
@@ -87,7 +126,7 @@ public class DocumentProcessMediator extends AbstractMediator {
             byte[] input = payload.getBytes("utf-8");
             os.write(input, 0, input.length);
         } catch (IOException e) {
-            throw new RuntimeException(e + "Request time out");
+            handleException("Request time out", e, synCtx);
         }
 
         // Reading the response
@@ -104,23 +143,22 @@ public class DocumentProcessMediator extends AbstractMediator {
             JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
 
             // Get the content string
-            String contentString = jsonObject.getAsJsonArray("choices").get(0).getAsJsonObject().getAsJsonObject("message").get("content").getAsString();
+            String contentString = jsonObject.getAsJsonArray("choices").get(0).getAsJsonObject().
+                    getAsJsonObject("message").get("content").getAsString();
 
             // Parse the content string into a JsonObject
             JsonObject contentObject = JsonParser.parseString(contentString).getAsJsonObject();
 
-            JsonUtil.getNewJsonPayload(msgContext, String.valueOf(contentObject),true,true);
+            JsonUtil.getNewJsonPayload(msgContext, String.valueOf(contentObject), true, true);
             msgContext.setProperty("messageType", "application/json");
             msgContext.setProperty("ContentType", "application/json");
 
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            handleException("Error reading the response from API", e, synCtx);
         }
 
         // Disconnecting the connection
         connection.disconnect();
-        System.out.println("visionAI Mediator");
         return true;
     }
 
@@ -132,7 +170,6 @@ public class DocumentProcessMediator extends AbstractMediator {
     }
 
     /**
-     *
      * @param schemaPath String value to be set as SchemaPath
      */
     public void setSchemaPath(String schemaPath) {
@@ -140,7 +177,6 @@ public class DocumentProcessMediator extends AbstractMediator {
     }
 
     /**
-     *
      * @param maxTokens String value to be set as maxTokens
      */
     public void setMaxTokens(int maxTokens) {
@@ -148,10 +184,9 @@ public class DocumentProcessMediator extends AbstractMediator {
     }
 
     /**
-     *
      * @param gptModel String value to be set as gptModel
      */
-    public void setGptModel(String gptModel){
+    public void setGptModel(String gptModel) {
         this.gptModel = gptModel;
     }
 
@@ -165,7 +200,6 @@ public class DocumentProcessMediator extends AbstractMediator {
     }
 
     /**
-     *
      * @return registry path of the json schema file
      */
     public String getSchemaPath() {
@@ -173,7 +207,6 @@ public class DocumentProcessMediator extends AbstractMediator {
     }
 
     /**
-     *
      * @return name of the gpt model
      */
     public String getGptModel() {
@@ -181,14 +214,25 @@ public class DocumentProcessMediator extends AbstractMediator {
     }
 
     /**
-     *
      * @return preferred amount of gpt tokens
      */
     public int getMaxTokens() {
-        return  maxTokens;
+        return maxTokens;
     }
 
-    public static String generateGptRequestMessage(InputStream schemaStream, String filename, String fileContent, String gptModel , int maxTokens) {
+    /**
+     * Generate total prompt message with images that need for payload to send to ChatGPT
+     *
+     * @param messageContext Message Context
+     * @param schemaStream   Schema file as a stream from registry
+     * @param filename       Content Name
+     * @param fileContent    Content received from request
+     * @param gptModel       Model using for task
+     * @param maxTokens      Maxium tokens preferred to use for the prompt
+     * @return payload as String
+     */
+    public String generateGptRequestMessage(MessageContext messageContext, InputStream schemaStream, String filename,
+                                            String fileContent, String gptModel, int maxTokens) {
         //Contain converted pdf pages into images in Base 64
         List<String> base64_images = new ArrayList<>();
 
@@ -198,87 +242,93 @@ public class DocumentProcessMediator extends AbstractMediator {
         StringBuilder imageRequestPayload;
 
         // Reading the schema file
-        String schemaJson;
-        try {
-            schemaJson = IOUtils.toString(schemaStream, StandardCharsets.UTF_8).replace("\"","").replace("\t","").replace("\n","");
-        } catch (Exception e){
-            schemaJson = "";
+        String schema = "";
+        if (schemaStream != null) {
+            try {
+                schema = IOUtils.toString(schemaStream, StandardCharsets.UTF_8).replace("\"", "").
+                        replace("\t", "").replace("\n", "");
+            } catch (IOException e) {
+                handleException("Error with the schema content reading", e, messageContext);
+            }
+        } else {
+            schema = "";
         }
 
-        System.out.println(schemaJson);
-
-        //Prompt Message when json schema not provided
-        final String noSchemaPromptMessage = "Retrieve all form fields and values as JSON (get XML containing fields also not xml tags whole one as one field with actual field name in front it), return as JSON object {fieldName:FieldValue} including all fields . The key names should match the field names exactly and should be case sensitive. Scan the whole document and retrieve all fields.";
-
-        //Prompt Message when json schema not provided
-        final String withSchemaPromptMessage = "Retrieve all form fields and  values as json (get XML containing fields also not xml tags whole one as one field with actual field name in front it), return as provided schema (Only values related to schema) ," +schemaJson +" as json object {fieldName:FieldValue} only fields in schema, only return this object is enough, these are should be keys of the json under content, key names should be same as provided, case sensitive (scan whole document and check, get all fields there could be some lengthy fields,xml fields like value).";
-
         // Getting the base64 string
-        if(filename.endsWith("pdf")){
-            try {
-                base64_images = pdfToImage(fileContent);
-            } catch (IOException e) {
-                throw new RuntimeException(e + "Error in the content, not a valid pdf in BASE64");
-            }
+        if (filename.endsWith("pdf")) {
+            base64_images = pdfToImage(messageContext, fileContent);
 
-            for(int i = 0; i < Objects.requireNonNull(base64_images).size(); i++){
-                String imageRequest = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," + base64_images.get(i) + "\"}}";
+            for (int i = 0; i < Objects.requireNonNull(base64_images).size(); i++) {
+                String imageRequest = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," +
+                        base64_images.get(i) + "\"}}";
                 imageRequestList.add(imageRequest);
             }
-            imageRequestPayload = new StringBuilder(imageRequestList.get(0));
-
-            for(int i = 1; i < imageRequestList.size(); i++){
-                imageRequestPayload.append(",").append(imageRequestList.get(i));
-            }
+            imageRequestPayload = new StringBuilder(String.join(",", imageRequestList));
 
         } else {
             base64_images.add(fileContent);
-            String imageRequest = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," + base64_images.get(0) + "\"}}";
+            String imageRequest = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," +
+                    base64_images.get(0) + "\"}}";
             imageRequestPayload = new StringBuilder(imageRequest);
         }
 
         // Constructing the JSON payload
         String payload;
-        if(schemaJson.isEmpty()){
-            payload = "{\"model\": \""+gptModel+"\", \"messages\": [{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \" "+noSchemaPromptMessage+"\"},"+imageRequestPayload+"]}], \"response_format\": {\"type\": \"json_object\"}, \"max_tokens\":"+maxTokens+"}";
-        }
-        else {
-            payload = "{\"model\": \""+gptModel+"\", \"messages\": [{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \" "+withSchemaPromptMessage+"\"},"+imageRequestPayload+"]}], \"response_format\": {\"type\": \"json_object\"}, \"max_tokens\":"+maxTokens+"}";
+        if (schema.isEmpty()) {
+            payload = "{\"model\": \"" + gptModel + "\", \"messages\": [{\"role\": \"user\", \"content\": " +
+                    "[{\"type\": \"text\", \"text\": \" " + DocumentProcessConstants.NO_SCHEMA_PROMPT_STRING + "\"}," +
+                    imageRequestPayload + "]}], \"response_format\": {\"type\": \"json_object\"}, \"max_tokens\":" +
+                    maxTokens + "}";
+        } else {
+            payload = "{\"model\": \"" + gptModel + "\", \"messages\": [{\"role\": \"user\", \"content\": " +
+                    "[{\"type\": \"text\", \"text\": \" " + DocumentProcessConstants.SCHEMA_PROMPT_STRING_1 +
+                    schema + DocumentProcessConstants.SCHEMA_PROMPT_STRING_2 + "\"}," + imageRequestPayload +
+                    "]}], \"response_format\": {\"type\": \"json_object\"}, \"max_tokens\":" + maxTokens + "}";
         }
         return payload;
     }
 
-    private static  InputStream getSchemaFromRegistry(String schemaPath){
+    /**
+     * Reading the schema from the registry
+     *
+     * @param messageContext Message Context
+     * @param schemaPath     Registry Path of the Schema
+     * @return
+     */
+    private InputStream getSchemaFromRegistry(MessageContext messageContext, String schemaPath) {
         MicroIntegratorRegistry registry = new MicroIntegratorRegistry();
         Resource resource;
         InputStream jsonStream;
-        if(!schemaPath.isEmpty()) {
+        if (!schemaPath.isEmpty()) {
             resource = registry.getResource(schemaPath);
             try {
                 jsonStream = resource.getContentStream();
                 return jsonStream;
             } catch (IOException e) {
-                throw new RuntimeException(e + "Cannot read resources in registry path");
+                handleException("Error while reading schema from registry", e, messageContext);
             }
         }
         return null;
     }
 
-    public static List<String> pdfToImage(String base64Pdf) throws IOException {
-        byte[] decodedBytes = Base64.getDecoder().decode(base64Pdf);
-        try (InputStream pdfInputStream = new ByteArrayInputStream(decodedBytes)) {
+    /**
+     * Convert PDF to Images and return as Base64 String List
+     *
+     * @param messageContext Message Context
+     * @param base64Pdf      Content of the pdf in Base64
+     * @return
+     */
+    public List<String> pdfToImage(MessageContext messageContext, String base64Pdf) {
+        try (InputStream pdfInputStream = new ByteArrayInputStream(Base64.getDecoder().decode(base64Pdf))) {
             PDDocument document = PDDocument.load(pdfInputStream);
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             List<BufferedImage> images = new ArrayList<>();
             List<String> encodedImages = new ArrayList<>();
 
             int numberOfPages = document.getNumberOfPages();
-            System.out.println("Total files to be converting -> " + numberOfPages);
-
-            int dpi = 300; // Use less dpi to save more space on the hard disk. For professional usage, you can use more than 300dpi
 
             for (int i = 0; i < numberOfPages; ++i) {
-                BufferedImage bImage = pdfRenderer.renderImageWithDPI(i, dpi, ImageType.RGB);
+                BufferedImage bImage = pdfRenderer.renderImageWithDPI(i, DocumentProcessConstants.dpi, ImageType.RGB);
                 images.add(bImage);
             }
 
@@ -290,15 +340,57 @@ public class DocumentProcessMediator extends AbstractMediator {
             }
             return encodedImages;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e + "Error in reading content");
+            handleException("Error while converting pdf to image , incorrect Base64", e, messageContext);
+            return null;
         }
     }
 
+    /**
+     * Receive converted pdf pages as Buffered Images and return In Base64
+     *
+     * @param image Buffered Image
+     * @return Images as Base64
+     * @throws IOException
+     */
     private static String encodeConvertedImage(BufferedImage image) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", byteArrayOutputStream);
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    /**
+     * Check whether elements are null or not and, extract Content and return
+     *
+     * @param messageContext Message Context
+     * @return
+     */
+    private String getContentFromMessageContext(org.apache.axis2.context.MessageContext messageContext) {
+        OMElement firstElement = messageContext.getEnvelope().getBody().getFirstElement();
+        if (firstElement.getFirstElement() != null) {
+            return firstElement.getFirstElement().getText();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Check whether elements are null or not and, extract Name of the content and return
+     *
+     * @param messageContext Message Context
+     * @return
+     */
+    private String getNameFromMessageContext(org.apache.axis2.context.MessageContext messageContext) {
+        OMElement firstElement = messageContext.getEnvelope().getBody().getFirstElement();
+        if (firstElement.getFirstElement() != null) {
+            OMElement secondElement = firstElement.getFirstElement();
+            if (secondElement.getAttributeValue(QName.valueOf("filename")) != null) {
+                return secondElement.getAttributeValue(QName.valueOf("filename"));
+            } else {
+                return "";
+            }
+        } else {
+            return "";
+        }
     }
 }

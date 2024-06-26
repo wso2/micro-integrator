@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.micro.integrator.mediator.documentProcess;
 
 import org.apache.axiom.om.OMAttribute;
@@ -19,7 +36,8 @@ public class DocumentProcessMediatorFactory extends AbstractMediatorFactory {
     /**
      * QName of the schema child
      */
-    private static final QName SCHEMA = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE,DocumentProcessConstants.SCHEMA_STRING);
+    private static final QName SCHEMA = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, DocumentProcessConstants.
+            SCHEMA_STRING);
 
     /**
      * QName of the max-tokens
@@ -40,7 +58,8 @@ public class DocumentProcessMediatorFactory extends AbstractMediatorFactory {
     protected Mediator createSpecificMediator(OMElement omElement, Properties properties) {
         if (!DocumentProcessConstants.DOCUMENTPROCESS_Q.equals(omElement.getQName())) {
             handleException(
-                    "Unable to create the Document Process mediator. Unexpected element as the Document Process mediator configuration");
+                    "Unable to create the Document Process mediator. Unexpected element as the Document Process " +
+                            "mediator configuration");
         }
         DocumentProcessMediator documentProcessMediator = new DocumentProcessMediator();
 
@@ -52,26 +71,36 @@ public class DocumentProcessMediatorFactory extends AbstractMediatorFactory {
         }
 
         OMAttribute maxTokens = omElement.getAttribute(MAX_TOKENS);
-        if(maxTokens != null && maxTokens.getAttributeValue() != null){
-            documentProcessMediator.setMaxTokens(Integer.parseInt(maxTokens.getAttributeValue().trim()));
-        }
-        else {
+        if (maxTokens != null && maxTokens.getAttributeValue() != null) {
+            int maxTokensValue = Integer.parseInt(maxTokens.getAttributeValue().trim());
+            if (maxTokensValue > 0) {
+                documentProcessMediator.setMaxTokens(maxTokensValue);
+            } else {
+                handleException("Invalid number of tokens " + MAX_TOKENS.getLocalPart());
+            }
+        } else {
             documentProcessMediator.setMaxTokens(DocumentProcessConstants.DEFAULT_TOKENS);
         }
 
         OMAttribute gptModel = omElement.getAttribute(GPT_MODEL);
-        if(gptModel != null && gptModel.getAttributeValue() != null){
+        if (gptModel != null && gptModel.getAttributeValue() != null) {
             documentProcessMediator.setGptModel(gptModel.getAttributeValue());
-        }
-        else {
+        } else {
             documentProcessMediator.setGptModel(DocumentProcessConstants.DEFAULT_GPT_MODEL);
         }
 
         OMElement schema = omElement.getFirstChildWithName(SCHEMA);
-        if(schema != null){
+        if (schema != null) {
             OMAttribute schemaRegistryKey = schema.getAttribute(SCHEMA_KEY);
-            if(schemaRegistryKey != null && schemaRegistryKey.getAttributeValue() != null){
-                documentProcessMediator.setSchemaPath(schemaRegistryKey.getAttributeValue());
+            if (schemaRegistryKey != null && schemaRegistryKey.getAttributeValue() != null) {
+                if (schemaRegistryKey.getAttributeValue().trim().endsWith(".xsd") || schemaRegistryKey.
+                        getAttributeValue().trim().endsWith(".json") || schemaRegistryKey.getAttributeValue().
+                        isEmpty()) {
+                    documentProcessMediator.setSchemaPath(schemaRegistryKey.getAttributeValue());
+                } else {
+                    handleException("Invalid file type, type should be xsd or json" + schemaRegistryKey.
+                            getAttributeValue());
+                }
             } else {
                 documentProcessMediator.setSchemaPath("");
             }
