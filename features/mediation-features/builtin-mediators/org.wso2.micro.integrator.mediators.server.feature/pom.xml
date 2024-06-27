@@ -35,7 +35,7 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.micro.integrator.mediator.sampleAI</artifactId>
+            <artifactId>org.wso2.micro.integrator.mediator.intelligent</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
@@ -89,7 +89,7 @@
                                     org.wso2.ei:org.wso2.carbon.mediator.cache:${project.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.mediator.sampleAI:${project.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.mediator.intelligent:${project.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediator.oauth:${project.version}

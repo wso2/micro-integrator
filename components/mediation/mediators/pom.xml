@@ -34,6 +34,6 @@
         <module>oauth-mediator/org.wso2.micro.integrator.mediator.oauth</module>
         <module>entitlement-mediator/org.wso2.micro.integrator.identity.entitlement.mediator</module>
         <module>dataservices-mediator/org.wso2.micro.integrator.mediator.dataservice</module>
-        <module>sampleAI-mediator/org.wso2.micro.integrator.mediator.sampleAI</module>
+        <module>intelligent-mediator/org.wso2.micro.integrator.mediator.intelligent</module>
     </modules>
 </project>
