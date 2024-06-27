@@ -1,3 +1,21 @@
+/*
+ *  Copyright (c) 2024, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 LLC. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied. See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 package org.wso2.micro.integrator.mediator.documentProcess;
 
 import org.apache.synapse.config.xml.XMLConfigConstants;
@@ -32,7 +50,6 @@ public class DocumentProcessConstants {
      */
     public static final String API_KEY_STRING = "api-key";
     public static final String SCHEMA_STRING = "schema";
-    public static final String SCHEMA_KEY_STRING = "key";
     public static final String MAX_TOKENS_STRING = "max-tokens";
     public static final String GPT_MODEL_STRING = "gpt-model";
 
@@ -58,7 +75,7 @@ public class DocumentProcessConstants {
     public static final String SCHEMA_PROMPT_STRING_2 = " as json object {fieldName:FieldValue} only fields in " +
             "schema, only return this object is enough, these are should be keys of the json under content, key " +
             "names should be same as provided, case sensitive (scan whole document and check, get all fields there " +
-            "could be some lengthy fields,xml fields like value).";
+            "could be some lengthy fields,xml fields like value),Please return null if there is no matching attribute , schema to image.";
 
     /**
      * Quality of image , converted from pdf

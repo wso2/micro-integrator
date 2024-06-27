@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2024, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License.
- * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  WSO2 LLC. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied. See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
  */
 
 package org.wso2.micro.integrator.mediator.documentProcess;
@@ -76,7 +77,7 @@ public class DocumentProcessMediator extends AbstractMediator {
      */
     private String gptModel;
 
-    private InputStream jsonStream = null;
+    private InputStream schemaStream = null;
 
     /**
      * {@inheritDoc}
@@ -84,19 +85,19 @@ public class DocumentProcessMediator extends AbstractMediator {
     public boolean mediate(MessageContext synCtx) {
 
         org.apache.axis2.context.MessageContext msgContext = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
-        String filename = getNameFromMessageContext(msgContext);
-        String fileContent = getContentFromMessageContext(msgContext);
+        final String filename = getNameFromMessageContext(msgContext);
+        final String fileContent = getContentFromMessageContext(msgContext);
         if (filename.isEmpty()) {
             handleException("Cannot find the filename in the payload", synCtx);
         } else if (fileContent.isEmpty()) {
             handleException("Cannot find the content in the payload", synCtx);
         }
 
-        this.jsonStream = getSchemaFromRegistry(synCtx, this.SchemaPath);
+        this.schemaStream = getSchemaFromRegistry(synCtx, this.SchemaPath);
 
         // Constructing the JSON payload
         String payload = null;
-        payload = generateGptRequestMessage(synCtx, jsonStream, filename, fileContent, gptModel, maxTokens);
+        payload = generateGptRequestMessage(synCtx, schemaStream, filename, fileContent, gptModel, maxTokens);
 
 
         //URL instance for connection
@@ -191,7 +192,7 @@ public class DocumentProcessMediator extends AbstractMediator {
     }
 
     /**
-     * This method gives apiKey of the chat gpt.
+     * This method gives apiKey of the ChatGPT.
      *
      * @return gpt key
      */
@@ -253,7 +254,7 @@ public class DocumentProcessMediator extends AbstractMediator {
         } else {
             schema = "";
         }
-
+        //TODO : check whether document is other than image or pdf
         // Getting the base64 string
         if (filename.endsWith("pdf")) {
             base64_images = pdfToImage(messageContext, fileContent);
@@ -298,12 +299,12 @@ public class DocumentProcessMediator extends AbstractMediator {
     private InputStream getSchemaFromRegistry(MessageContext messageContext, String schemaPath) {
         MicroIntegratorRegistry registry = new MicroIntegratorRegistry();
         Resource resource;
-        InputStream jsonStream;
+        InputStream schemaStream;
         if (!schemaPath.isEmpty()) {
             resource = registry.getResource(schemaPath);
             try {
-                jsonStream = resource.getContentStream();
-                return jsonStream;
+                schemaStream = resource.getContentStream();
+                return schemaStream;
             } catch (IOException e) {
                 handleException("Error while reading schema from registry", e, messageContext);
             }
