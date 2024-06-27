@@ -23,7 +23,7 @@
 
     <groupId>migration</groupId>
     <artifactId>data-mapper-config-migration-service</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <build>
         <plugins>
             <plugin>

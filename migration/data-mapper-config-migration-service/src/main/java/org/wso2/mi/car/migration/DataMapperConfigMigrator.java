@@ -300,10 +300,12 @@ public class DataMapperConfigMigrator {
      */
     private static void addFolderToZip(String source, String folderName, ZipOutputStream zipOut) {
         try {
-            zipOut.putNextEntry(new ZipEntry(folderName + File.separator));
+            // ZIP file format uses forward slashes ("/") as directory separators regardless of the operating system
+            zipOut.putNextEntry(new ZipEntry(folderName + "/"));
             File folder = new File(source + File.separator + folderName);
             for (String fileName : Objects.requireNonNull(folder.list())) {
-                zipFile(source, folderName + File.separator + fileName, zipOut);
+                // ZIP file format uses forward slashes ("/") as directory separators regardless of the operating system
+                zipFile(source, folderName + "/" + fileName, zipOut);
             }
         } catch (IOException e) {
             exitWithError("An error occurred while adding folder " + folderName + " to car file. " + e.getMessage());
