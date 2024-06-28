@@ -81,8 +81,12 @@ public class DocumentProcessConstants {
      * Quality of image , converted from pdf
      * Use less dpi to save more space on the hard disk. For professional usage, you can use more than 300dpi
      */
-    public static final int dpi = 300 ;
+    public static final int dpi = 300;
 
+    /**
+     * Regex to check file is image or not
+     */
+    public static final String IMAGE_TYPES_REGEX = "([^\\\\s]+\\.(gif|jpe?g|tiff?|png|webp|bmp)$)";
 
 
 }

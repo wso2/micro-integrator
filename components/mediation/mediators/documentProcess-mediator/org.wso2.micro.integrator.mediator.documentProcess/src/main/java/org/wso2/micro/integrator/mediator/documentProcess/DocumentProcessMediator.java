@@ -50,6 +50,8 @@ import java.util.List;
 import java.util.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * If a request comes to this class it create request to the gpt and respond with the result. Otherwise it will pass on
@@ -78,6 +80,11 @@ public class DocumentProcessMediator extends AbstractMediator {
     private String gptModel;
 
     private InputStream schemaStream = null;
+
+    /**
+     * Compile the regex
+     */
+    Pattern regexPattern = Pattern.compile(DocumentProcessConstants.IMAGE_TYPES_REGEX);
 
     /**
      * {@inheritDoc}
@@ -239,6 +246,7 @@ public class DocumentProcessMediator extends AbstractMediator {
 
         //Contain list of gpt messages of image url type for each image of the pdf
         List<String> imageRequestList = new ArrayList<>();
+
         //Hold total image url messages as a String
         StringBuilder imageRequestPayload;
 
@@ -254,9 +262,8 @@ public class DocumentProcessMediator extends AbstractMediator {
         } else {
             schema = "";
         }
-        //TODO : check whether document is other than image or pdf
-        // Getting the base64 string
-        if (filename.endsWith("pdf")) {
+
+        if (filename.toLowerCase().endsWith("pdf")) {
             base64_images = pdfToImage(messageContext, fileContent);
 
             for (int i = 0; i < Objects.requireNonNull(base64_images).size(); i++) {
@@ -267,10 +274,16 @@ public class DocumentProcessMediator extends AbstractMediator {
             imageRequestPayload = new StringBuilder(String.join(",", imageRequestList));
 
         } else {
-            base64_images.add(fileContent);
-            String imageRequest = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," +
-                    base64_images.get(0) + "\"}}";
-            imageRequestPayload = new StringBuilder(imageRequest);
+            Matcher matcher = regexPattern.matcher(filename.toLowerCase());
+            if (matcher.matches()) {
+                base64_images.add(fileContent);
+                String imageRequest = "{\"type\": \"image_url\", \"image_url\": {\"url\": \"data:image/jpeg;base64," +
+                        base64_images.get(0) + "\"}}";
+                imageRequestPayload = new StringBuilder(imageRequest);
+            } else {
+                handleException("Invalid file format with the payload", messageContext);
+                imageRequestPayload = new StringBuilder();
+            }
         }
 
         // Constructing the JSON payload
