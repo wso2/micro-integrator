@@ -178,6 +178,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.mediator.documentProcess</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.mediator.intelligent</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -581,6 +586,18 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${google.guava.version}</version>
+            </dependency>
+
+            <!--For DocumentProcess Mediator-->
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>fontbox</artifactId>
+                <version>${pdfbox.version}</version>
             </dependency>
 
             <!--Inbound Endpoint Depedencies-->
@@ -1950,6 +1967,7 @@
         <opencensus.orbit.version>0.31.1.wso2v3</opencensus.orbit.version>
         <graalvm.version>22.3.4</graalvm.version>
         <icu.version>71.1</icu.version>
+        <pdfbox.version>2.0.31</pdfbox.version>
     </properties>
 
     <repositories>

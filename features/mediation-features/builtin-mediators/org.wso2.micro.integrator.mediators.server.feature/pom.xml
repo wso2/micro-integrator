@@ -42,6 +42,10 @@
             <artifactId>org.wso2.carbon.mediator.cache</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.mediator.documentProcess</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
         </dependency>
@@ -60,6 +64,14 @@
         <dependency>
             <groupId>org.wso2.orbit.javax.activation</groupId>
             <artifactId>activation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>fontbox</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -92,11 +104,17 @@
                                     org.wso2.ei:org.wso2.micro.integrator.mediator.intelligent:${project.version}
                                 </bundleDef>
                                 <bundleDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.mediator.documentProcess:${project.version}
+                                </bundleDef>
+                                <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediator.oauth:${project.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.identity.inbound.auth.oauth2:org.wso2.carbon.identity.oauth.stub:${carbon.identity.oauth.version}
                                 </bundleDef>
+                                <bundleDef>org.apache.pdfbox:pdfbox</bundleDef>
+                                <bundleDef>org.apache.pdfbox:fontbox</bundleDef>
+
                                 <bundleDef>org.wso2.carbon.mediation:org.wso2.carbon.mediator.fastXSLT</bundleDef>
                                 <bundleDef>org.wso2.carbon.mediation:org.wso2.carbon.connector.core</bundleDef>
                             </bundles>
