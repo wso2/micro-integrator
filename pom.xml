@@ -592,7 +592,12 @@
             <dependency>
                 <groupId>org.apache.pdfbox</groupId>
                 <artifactId>pdfbox</artifactId>
-                <version>2.0.9</version>
+                <version>${pdfbox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>fontbox</artifactId>
+                <version>${pdfbox.version}</version>
             </dependency>
 
             <!--Inbound Endpoint Depedencies-->
@@ -1962,6 +1967,7 @@
         <opencensus.orbit.version>0.31.1.wso2v3</opencensus.orbit.version>
         <graalvm.version>22.3.4</graalvm.version>
         <icu.version>71.1</icu.version>
+        <pdfbox.version>2.0.31</pdfbox.version>
     </properties>
 
     <repositories>

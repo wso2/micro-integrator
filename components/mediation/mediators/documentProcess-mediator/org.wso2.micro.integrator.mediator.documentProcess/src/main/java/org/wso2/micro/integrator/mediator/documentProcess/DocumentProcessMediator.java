@@ -70,7 +70,7 @@ public class DocumentProcessMediator extends AbstractMediator {
     /**
      * This is the maximum tokens for GPT API request
      */
-    private int maxTokens;
+    private int maximumChatGptTokens;
 
     /**
      * This is gpt model name that is using
@@ -97,7 +97,7 @@ public class DocumentProcessMediator extends AbstractMediator {
 
         // Constructing the JSON payload
         String payload = null;
-        payload = generateGptRequestMessage(synCtx, schemaStream, filename, fileContent, gptModel, maxTokens);
+        payload = generateGptRequestMessage(synCtx, schemaStream, filename, fileContent, gptModel, maximumChatGptTokens);
 
 
         //URL instance for connection
@@ -178,10 +178,10 @@ public class DocumentProcessMediator extends AbstractMediator {
     }
 
     /**
-     * @param maxTokens String value to be set as maxTokens
+     * @param maximumChatGptTokens String value to be set as maximumChatGptTokens
      */
-    public void setMaxTokens(int maxTokens) {
-        this.maxTokens = maxTokens;
+    public void setMaximumChatGptTokens(int maximumChatGptTokens) {
+        this.maximumChatGptTokens = maximumChatGptTokens;
     }
 
     /**
@@ -217,8 +217,8 @@ public class DocumentProcessMediator extends AbstractMediator {
     /**
      * @return preferred amount of gpt tokens
      */
-    public int getMaxTokens() {
-        return maxTokens;
+    public int getMaximumChatGptTokens() {
+        return maximumChatGptTokens;
     }
 
     /**

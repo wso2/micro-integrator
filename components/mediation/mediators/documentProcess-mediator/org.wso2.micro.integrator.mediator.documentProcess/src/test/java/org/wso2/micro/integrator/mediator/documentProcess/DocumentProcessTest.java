@@ -63,7 +63,7 @@ public class DocumentProcessTest extends TestCase {
         assertEquals("Incorrect value for the model name", mediator.getGptModel(), "gpt-4-turbo");
         assertEquals("Incorrect value for the registry file path", mediator.getSchemaPath(),
                 "gov:schema.json");
-        assertEquals("Incorrect value for the number of tokens prefer", mediator.getMaxTokens(), 1000);
+        assertEquals("Incorrect value for the number of tokens prefer", mediator.getMaximumChatGptTokens(), 1000);
     }
 
     /**
@@ -71,9 +71,7 @@ public class DocumentProcessTest extends TestCase {
      * @throws IOException
      */
     public void testPdfToImageConversion() throws IOException {
-        String sampleBase64Path = "/Users/yasasm/Documents/internProject/micro-integrator/components/mediation/" +
-                "mediators/documentProcess-mediator/org.wso2.micro.integrator.mediator.documentProcess/src/test/" +
-                "resources/sampleBase64Pdf.txt";
+        String sampleBase64Path = "src/test/resources/sampleBase64Pdf.txt";
         String sampleBase64 = new String(Files.readAllBytes(Paths.get(sampleBase64Path)));
         DocumentProcessMediator mediator = new DocumentProcessMediator();
         List<String> base64_images = mediator.pdfToImage(null, sampleBase64);
@@ -85,9 +83,7 @@ public class DocumentProcessTest extends TestCase {
      * @throws IOException
      */
     public void testPdfToImageConversionFaultSituation() throws IOException {
-        String sampleBase64Path = "/Users/yasasm/Documents/internProject/micro-integrator/components/mediation/" +
-                "mediators/documentProcess-mediator/org.wso2.micro.integrator.mediator.documentProcess/src/test/" +
-                "resources/falseBase64Example.txt";
+        String sampleBase64Path = "src/test/resources/falseBase64Example.txt";
         String sampleBase64 = new String(Files.readAllBytes(Paths.get(sampleBase64Path)));
         MessageContext messageContext = createMessageContext();
         DocumentProcessMediator mediator = new DocumentProcessMediator();
@@ -107,27 +103,19 @@ public class DocumentProcessTest extends TestCase {
         String payloadMessagePath;
         String payloadMessage;
         String gptModel = "gpt-4-turbo";
-        InputStream schema = Files.newInputStream(Paths.get("/Users/yasasm/Documents/internProject/" +
-                "micro-integrator/components/mediation/mediators/documentProcess-mediator/" +
-                "org.wso2.micro.integrator.mediator.documentProcess/src/test/resources/schema.xsd"));
+        InputStream schema = Files.newInputStream(Paths.get("src/test/resources/schema.xsd"));
         DocumentProcessMediator mediator = new DocumentProcessMediator();
-        String sampleBase64Path = "/Users/yasasm/Documents/internProject/micro-integrator/components/mediation/" +
-                "mediators/documentProcess-mediator/org.wso2.micro.integrator.mediator.documentProcess/src/test/" +
-                "resources/sampleBase64Pdf.txt";
+        String sampleBase64Path = "src/test/resources/sampleBase64Pdf.txt";
         String sampleBase64 = new String(Files.readAllBytes(Paths.get(sampleBase64Path)));
         String fileName = "testing.pdf";
         String payload;
 
-        payloadMessagePath = "/Users/yasasm/Documents/internProject/micro-integrator/components/mediation/" +
-                "mediators/documentProcess-mediator/org.wso2.micro.integrator.mediator.documentProcess/src/test/" +
-                "resources/payloadMessageSamplePdfWithSchema.txt";
+        payloadMessagePath = "src/test/resources/payloadMessageSamplePdfWithSchema.txt";
         payloadMessage = new String(Files.readAllBytes(Paths.get(payloadMessagePath)));
         payload = mediator.generateGptRequestMessage(null, schema, fileName, sampleBase64, gptModel,
                 1000);
         assertEquals("Incorrect Payload generated for pdf when schema has provided", payload, payloadMessage);
-        payloadMessagePath = "/Users/yasasm/Documents/internProject/micro-integrator/components/mediation/mediators/" +
-                "documentProcess-mediator/org.wso2.micro.integrator.mediator.documentProcess/src/test/resources/" +
-                "payloadMessageSamplePdfWithoutSchema.txt";
+        payloadMessagePath = "src/test/resources/payloadMessageSamplePdfWithoutSchema.txt";
         payloadMessage = new String(Files.readAllBytes(Paths.get(payloadMessagePath)));
         payload = mediator.generateGptRequestMessage(null, null, fileName, sampleBase64,
                 gptModel, 1000);
@@ -144,28 +132,20 @@ public class DocumentProcessTest extends TestCase {
         String payloadMessagePath;
         String payloadMessage;
         String gptModel = "gpt-4-turbo";
-        InputStream schema = Files.newInputStream(Paths.get("/Users/yasasm/Documents/internProject/" +
-                "micro-integrator/components/mediation/mediators/documentProcess-mediator/" +
-                "org.wso2.micro.integrator.mediator.documentProcess/src/test/resources/schema.xsd"));
+        InputStream schema = Files.newInputStream(Paths.get("src/test/resources/schema.xsd"));
         DocumentProcessMediator mediator = new DocumentProcessMediator();
-        String sampleBase64Path = "/Users/yasasm/Documents/internProject/micro-integrator/components/mediation/" +
-                "mediators/documentProcess-mediator/org.wso2.micro.integrator.mediator.documentProcess/src/test/" +
-                "resources/sampleBase64Image.txt";
+        String sampleBase64Path = "src/test/resources/sampleBase64Image.txt";
         String sampleBase64 = new String(Files.readAllBytes(Paths.get(sampleBase64Path)));
         String fileName = "lc.png";
         String payload;
 
-        payloadMessagePath = "/Users/yasasm/Documents/internProject/micro-integrator/components/mediation/mediators/" +
-                "documentProcess-mediator/org.wso2.micro.integrator.mediator.documentProcess/src/test/resources/" +
-                "payloadMessageSampleImageWithSchema.txt";
+        payloadMessagePath = "src/test/resources/payloadMessageSampleImageWithSchema.txt";
         payloadMessage = new String(Files.readAllBytes(Paths.get(payloadMessagePath)));
         payload = mediator.generateGptRequestMessage(null, schema, fileName, sampleBase64, gptModel,
                 1000);
         assertEquals("Incorrect Payload generated for Image when schema has provided", payload,
                 payloadMessage);
-        payloadMessagePath = "/Users/yasasm/Documents/internProject/micro-integrator/components/mediation/mediators/" +
-                "documentProcess-mediator/org.wso2.micro.integrator.mediator.documentProcess/src/test/resources/" +
-                "payloadMessageSampleImageWithoutSchema.txt";
+        payloadMessagePath = "src/test/resources/payloadMessageSampleImageWithoutSchema.txt";
         payloadMessage = new String(Files.readAllBytes(Paths.get(payloadMessagePath)));
         payload = mediator.generateGptRequestMessage(null, null, fileName, sampleBase64,
                 gptModel, 1000);

@@ -22,7 +22,6 @@ import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.synapse.Mediator;
 import org.apache.synapse.config.xml.AbstractMediatorFactory;
-import org.apache.synapse.config.xml.XMLConfigConstants;
 
 import javax.xml.namespace.QName;
 import java.util.Properties;
@@ -70,12 +69,12 @@ public class DocumentProcessMediatorFactory extends AbstractMediatorFactory {
         if (maxTokens != null && maxTokens.getAttributeValue() != null) {
             int maxTokensValue = Integer.parseInt(maxTokens.getAttributeValue().trim());
             if (maxTokensValue > 0) {
-                documentProcessMediator.setMaxTokens(maxTokensValue);
+                documentProcessMediator.setMaximumChatGptTokens(maxTokensValue);
             } else {
                 handleException("Invalid number of tokens " + MAX_TOKENS.getLocalPart());
             }
         } else {
-            documentProcessMediator.setMaxTokens(DocumentProcessConstants.DEFAULT_TOKENS);
+            documentProcessMediator.setMaximumChatGptTokens(DocumentProcessConstants.DEFAULT_TOKENS);
         }
 
         OMAttribute gptModel = omElement.getAttribute(GPT_MODEL);
