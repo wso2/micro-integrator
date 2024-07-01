@@ -43,7 +43,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.wso2.micro.integrator.dataservices.sql.driver.processor.reader.DataCell;
 import org.wso2.micro.integrator.dataservices.sql.driver.processor.reader.DataRow;
 import org.wso2.micro.integrator.dataservices.sql.driver.processor.reader.DataTable;
@@ -227,7 +227,7 @@ public class TResultSet implements ResultSet {
         if (cell == null) {
             throw new SQLException("Error occurred while extracting the value");
         }
-        if (cell.getCellType() != Cell.CELL_TYPE_NUMERIC) {
+        if (cell.getCellType() != CellType.NUMERIC.getCode()) {
             throw new SQLException("Value cannot be cast to a string");
         }
         return BigDecimal.valueOf(Long.parseLong(cell.getCellValue().toString()));
