@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <localEntry key="KAFKA_CONNECTION_1" xmlns="http://ws.apache.org/ns/synapse">
+        <kafkaTransport.init>
+  <connectionType>kafka</connectionType>
+  <name>KAFKA_CONNECTION_1</name>
+  <bootstrapServers>localhost:9092</bootstrapServers>
+  <keySerializerClass>org.apache.kafka.common.serialization.StringSerializer</keySerializerClass>
+  <valueSerializerClass>org.apache.kafka.common.serialization.StringSerializer</valueSerializerClass>
+  <acks>all</acks>
+  <requestTimeout>10000</requestTimeout>
+  <timeout>8000</timeout>
+  <maxPoolSize>50</maxPoolSize>
+  <metadataFetchTimeout>5000</metadataFetchTimeout>
+  <poolingEnabled>false</poolingEnabled>
+</kafkaTransport.init>
+    </localEntry>

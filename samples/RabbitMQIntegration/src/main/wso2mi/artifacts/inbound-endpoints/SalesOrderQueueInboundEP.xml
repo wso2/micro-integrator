@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inboundEndpoint name="SalesOrderQueueInboundEP" onError="SalesOrderQueueErrorSeq" sequence="SalesOrderQueueProcessSeq" protocol="rabbitmq" suspend="false" xmlns="http://ws.apache.org/ns/synapse">
+    <parameters>
+        <parameter name="rabbitmq.message.requeue.delay">5000</parameter>
+        <parameter name="rabbitmq.message.max.dead.lettered.count">0</parameter>
+        <parameter name="rabbitmq.message.content.type">application/xml</parameter>
+        <parameter name="rabbitmq.connection.factory.network.recovery.interval">10000</parameter>
+        <parameter name="rabbitmq.server.retry.interval">30000</parameter>
+        <parameter name="rabbitmq.connection.retry.interval">30000</parameter>
+        <parameter name="rabbitmq.connection.retry.count">3</parameter>
+        <parameter name="rabbitmq.factory.connection.timeout">30000</parameter>
+        <parameter name="rabbitmq.factory.heartbeat">20</parameter>
+        <parameter name="rabbitmq.exchange.name">amq.direct</parameter>
+        <parameter name="rabbitmq.queue.name">SalesOrderQueue</parameter>
+        <parameter name="rabbitmq.server.password">guest</parameter>
+        <parameter name="rabbitmq.server.user.name">guest</parameter>
+        <parameter name="rabbitmq.server.port">5672</parameter>
+        <parameter name="rabbitmq.server.host.name">localhost</parameter>
+        <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
+        <parameter name="coordination">true</parameter>
+        <parameter name="sequential">true</parameter>
+        <parameter name="transport.jms.CacheLevel">3</parameter>
+        <parameter name="rabbitmq.queue.autodeclare">true</parameter>
+        <parameter name="rabbitmq.exchange.autodeclare">true</parameter>
+    </parameters>
+</inboundEndpoint>

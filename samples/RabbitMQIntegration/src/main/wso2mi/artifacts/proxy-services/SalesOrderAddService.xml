@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="SalesOrderAddService" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+	<target>
+		<inSequence>
+			<log category="INFO" level="full" separator="," description="Log request payload"/>
+			<property name="OUT_ONLY" scope="default" type="STRING" description="Initiate asynchronous mediation flow" value="true"/>
+			<property name="FORCE_SC_ACCEPTED" scope="axis2" type="STRING" description="Generate 202 response from mediation flow" value="true"/>
+			<send description="Publish request payload to AMQP endpoint">
+				<endpoint key="SalesOrderQueueEP"/>
+			</send>
+		</inSequence>
+		<faultSequence/>
+	</target>
+</proxy>
