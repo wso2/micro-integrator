@@ -2,7 +2,7 @@
        startOnLoad="true" trace="disable">
     <target>
         <inSequence>
-            <script language="js" key="conf:/script_js/test54.js" function="transformReq">
+            <script language="rhinoJs" key="conf:/script_js/test54.js" function="transformReq">
                 <include key="conf:/script_js/stockquoteTransform.js"/>
             </script>
             <send>
@@ -12,7 +12,7 @@
             </send>
         </inSequence>
         <outSequence>
-            <script language="js" key="conf:/script_js/test54.js" function="transformRes">
+            <script language="rhinoJs" key="conf:/script_js/test54.js" function="transformRes">
                 <include key="conf:/script_js/stockquoteTransform.js"/>
             </script>
             <send/>

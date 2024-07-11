@@ -1,7 +1,7 @@
 <proxy xmlns="http://ws.apache.org/ns/synapse" name="scriptMediatorJSInlineTestProxy" transports="http">
     <target>
         <inSequence>
-            <script language="js">var symbol = mc.getPayloadXML()..*::Code.toString();
+            <script language="rhinoJs">var symbol = mc.getPayloadXML()..*::Code.toString();
                 mc.setPayloadXML(
                 &lt;m:getQuote xmlns:m="http://services.samples"&gt;
                 &lt;m:request&gt;
@@ -15,7 +15,7 @@
             </send>
         </inSequence>
         <outSequence>
-            <script language="js" key="stockQuoteJsScript" function="transformResponse"/>
+            <script language="rhinoJs" key="stockQuoteJsScript" function="transformResponse"/>
             <send/>
         </outSequence>
     </target>
