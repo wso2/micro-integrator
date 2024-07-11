@@ -3,7 +3,7 @@
     <target>
         <inSequence>
             <log level="full"/>
-            <script language="js"><![CDATA[
+            <script language="rhinoJs"><![CDATA[
             var symbol = mc.getPayloadXML()..*::Code.toString();
              mc.setProperty("axis2Property", "AXIS2_PROPERTY","axis2");
              mc.setProperty("transportProperty", "TRANSPORT_PROPERTY","transport");

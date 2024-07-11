@@ -2,7 +2,7 @@
        startOnLoad="true" trace="disable">
     <target>
         <inSequence>
-            <script language="js">var symbol = mc.getPayloadXML()..*::Code.toString();
+            <script language="rhinoJs">var symbol = mc.getPayloadXML()..*::Code.toString();
                 mc.setPayloadXML(
                 &lt;m:getQuote xmlns:m="http://services.samples"&gt;
                 &lt;m:request&gt;
@@ -17,7 +17,7 @@
             </send>
         </inSequence>
         <outSequence>
-            <script language="js">var symbol = mc.getPayloadXML()..*::symbol.toString();
+            <script language="rhinoJs">var symbol = mc.getPayloadXML()..*::symbol.toString();
                 var price = mc.getPayloadXML()..*::last.toString();
                 mc.setPayloadXML(
                 &lt;m:CheckPriceResponse xmlns:m="http://services.samples/xsd"&gt;
