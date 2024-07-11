@@ -5,7 +5,6 @@
         <inSequence>
             <script language="js">
                 <![CDATA[
-                    importClass(Packages.java.util.UUID);
                     var uuid = java.util.UUID.randomUUID().toString().replace('-','');
                     var request = mc.getPayloadJSON();
                     var response = new Object();

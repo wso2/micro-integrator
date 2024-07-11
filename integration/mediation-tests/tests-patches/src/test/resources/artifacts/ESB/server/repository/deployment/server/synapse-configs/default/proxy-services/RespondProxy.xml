@@ -8,7 +8,7 @@
                 </log>
                 <!-- Insert sleep here -->
                 <property name="milliseconds" value="1000"/>
-                <script language="js"><![CDATA[var ms = mc.getProperty("milliseconds");java.lang.Thread.sleep(ms);]]></script>
+                <script language="js"><![CDATA[var ms = Number(mc.getProperty("milliseconds"));java.lang.Thread.sleep(ms);]]></script>
                 <respond/>
             </inSequence>
         </target>
