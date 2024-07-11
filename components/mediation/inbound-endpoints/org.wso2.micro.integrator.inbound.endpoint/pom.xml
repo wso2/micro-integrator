@@ -171,10 +171,6 @@
             <artifactId>axis2-transport-rabbitmq-amqp</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.orbit.debezium</groupId>
-            <artifactId>debezium</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <scope>test</scope>
@@ -183,14 +179,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.securevault</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -224,8 +212,7 @@
                         </Private-Package>
                         <Import-Package>
                             org.wso2.carbon.inbound.endpoint.persistence,
-                            org.wso2.carbon.inbound.endpoint.osgi.service,
-                            *;resolution:=optional
+                            org.wso2.carbon.inbound.endpoint.osgi.service;
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Fragment-Host>

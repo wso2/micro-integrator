@@ -1468,16 +1468,6 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.debezium</groupId>
-                <artifactId>debezium</artifactId>
-                <version>${debezium.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${version.com.google.code.gson}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.integration.transaction.counter</groupId>
                 <artifactId>transaction-count-handler</artifactId>
                 <version>${counter.org.wso2.integration.transaction.version}</version>
@@ -1606,9 +1596,6 @@
         <version.jaxb.api>2.4.0-b180830.0359</version.jaxb.api>
         <com.sun.jaxb.version>2.3.0</com.sun.jaxb.version>
         <com.sun.jaxb.impl.version>2.3.1</com.sun.jaxb.impl.version>
-
-        <!-- Debezium Orbit version -->
-        <debezium.version>2.1.4.Final.wso2v1</debezium.version>
 
         <synapse.version>4.0.0-wso2v113</synapse.version>
         <imp.pkg.version.synapse>[4.0.0, 4.0.1)</imp.pkg.version.synapse>
