@@ -76,6 +76,7 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -506,8 +507,11 @@ public class MicroIntegratorBaseUtils {
             Source xmlSource = new DOMSource(doc);
             Result result = new StreamResult(outputStream);
             TransformerFactory factory = getSecuredTransformerFactory();
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             factory.newTransformer().transform(xmlSource, result);
             in = new ByteArrayInputStream(outputStream.toByteArray());
+        } catch (TransformerConfigurationException e) {
+            throw new CarbonException("Failed to set secure processing feature.", e);
         } catch (TransformerException e) {
             throw new CarbonException("Error in transforming DOM to InputStream", e);
         }
