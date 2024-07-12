@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="WeatherDataPublishService" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+	<target>
+		<inSequence>
+			<kafkaTransport.publishMessages configKey="KAFKA_CONNECTION_1">
+				<topic>weatherdatatopic</topic>
+				<partitionNo>1</partitionNo>
+				<keySchemaSoftDeleted>false</keySchemaSoftDeleted>
+				<valueSchemaSoftDeleted>false</valueSchemaSoftDeleted>
+			</kafkaTransport.publishMessages>
+			<payloadFactory media-type="json" template-type="default">
+				<format> {"topic":"$1", "partition":"$2", "offset":"$3"}</format>
+				<args>
+					<arg expression="$ctx:topic" evaluator="xml"/>
+					<arg expression="$ctx:partition" evaluator="xml"/>
+					<arg expression="$ctx:offset" evaluator="xml"/>
+				</args>
+			</payloadFactory>
+			<property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+			<respond/>
+		</inSequence>
+		<outSequence>
+		</outSequence>
+		<faultSequence/>
+	</target>
+</proxy>

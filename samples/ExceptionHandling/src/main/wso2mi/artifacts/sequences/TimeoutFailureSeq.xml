@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="TimeoutFailureSeq"  trace="disable"  xmlns="http://ws.apache.org/ns/synapse">
+	<log category="INFO" level="full" separator="," description="Log error details in case of failure">
+		<property name="MESSAGE" value="An unexpected error occurred."/>
+		<property name="REST_API" expression="$ctx:SYNAPSE_REST_API"/>
+		<property name="ERROR_CODE" value="$ctx:ERROR_CODE"/>
+		<property name="ERROR_MESSAGE" expression="$ctx:ERROR_MESSAGE"/>
+		<property name="ERROR_DETAIL" expression="$ctx:ERROR_DETAIL"/>
+		<property name="ERROR_EXCEPTION" expression="$ctx:ERROR_EXCEPTION"/>
+	</log>
+	<payloadFactory description="Respond back to client with custom error payload" media-type="json" template-type="default">
+		<format>{
+			"MESSAGE": "An unexpected error occurred.",
+			"REST_API": "$1",
+			"ERROR_CODE": $2,
+			"ERROR_MESSAGE": $3,
+			"ERROR_DETAIL": $4,
+			"ERROR_EXCEPTION": $5
+			}</format>
+		<args>
+			<arg expression="$ctx:SYNAPSE_REST_API" evaluator="xml"/>
+			<arg expression="$ctx:ERROR_CODE" evaluator="xml"/>
+			<arg expression="$ctx:ERROR_MESSAGE" evaluator="xml"/>
+			<arg expression="$ctx:ERROR_DETAIL" evaluator="xml"/>
+			<arg expression="$ctx:ERROR_EXCEPTION" evaluator="xml"/>
+		</args>
+	</payloadFactory>
+	<respond description="Respond back to client with custom error payload"/>
+</sequence>
