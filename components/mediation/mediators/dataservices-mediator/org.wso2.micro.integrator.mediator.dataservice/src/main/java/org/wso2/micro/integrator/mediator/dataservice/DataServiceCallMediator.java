@@ -30,7 +30,6 @@ import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.synapse.MessageContext;
@@ -49,14 +48,12 @@ import org.wso2.micro.integrator.dataservices.core.DataServiceProcessor;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
-import java.util.regex.Matcher;
 
 import static org.wso2.micro.integrator.dataservices.core.dispatch.DataServiceRequest.AXIS_OPERATION_NAME;
 
@@ -153,9 +150,7 @@ public class DataServiceCallMediator extends AbstractMediator {
             if (rootOperation.equals(DataServiceCallMediatorConstants.JSON_OBJECT)) {
                 return handleJsonObject(operationElement, axis2MessageContext);
             } else {
-                AxisOperation axisOperation = axis2MessageContext.getAxisOperation();
-                QName rootOpQName = new QName(rootOperation);
-                axisOperation.setName(rootOpQName);
+                axis2MessageContext.setProperty(AXIS_OPERATION_NAME, rootOperation);
             }
 
         } else {
@@ -172,10 +167,8 @@ public class DataServiceCallMediator extends AbstractMediator {
      * @return axis2MessageContext with jsonObject omitted payload
      */
     private org.apache.axis2.context.MessageContext handleJsonObject(OMElement jsonElement, org.apache.axis2.context.MessageContext axis2MessageContext) {
-        AxisOperation axisOperation = axis2MessageContext.getAxisOperation();
         OMElement operationElement = jsonElement.getFirstElement();
-        QName rootOpQName = new QName(operationElement.getLocalName());
-        axisOperation.setName(rootOpQName);
+        axis2MessageContext.setProperty(AXIS_OPERATION_NAME, operationElement.getLocalName());
         axis2MessageContext.getEnvelope().getBody().setFirstChild(operationElement);
 
         return axis2MessageContext;
@@ -202,10 +195,8 @@ public class DataServiceCallMediator extends AbstractMediator {
                 break;
             }
         }
-        QName rootOpQName = new QName(rootOpName);
-        axis2MessageContext.getAxisOperation().setName(rootOpQName);
         // Setting axis2 operation name as a property since its getting changes before invocation under high load.
-        axis2MessageContext.setProperty(AXIS_OPERATION_NAME, rootOpQName.getLocalPart());
+        axis2MessageContext.setProperty(AXIS_OPERATION_NAME, rootOpName);
         OMElement payload = fac.createOMElement(rootOpName, omNamespace);
         addOperations(rootOperations, payload, messageContext, rootOperations.getType());
         return payload;
