@@ -351,6 +351,7 @@ do
     -DenableManagementApi=true \
     -DskipStartupExtensions=false \
     -Dautomation.mode.seq.car.name="$CAR_NAME" \
+    -Dpolyglot.engine.WarnInterpreterOnly=false \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
     -Dorg.ops4j.pax.logging.logReaderEnabled=false \
     -Dorg.ops4j.pax.logging.eventAdminEnabled=false \
