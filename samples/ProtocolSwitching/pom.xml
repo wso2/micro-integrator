@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>wso2.sampleHelloWorld</groupId>
-  <artifactId>HelloWorldService</artifactId>
+  <groupId>wso2.sampleProtocolSwitchingTemplate</groupId>
+  <artifactId>ProtocolSwitching</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
-  <name>HelloWorldService</name>
-  <description>HelloWorldService</description>
+  <name>ProtocolSwitching</name>
+  <description>ProtocolSwitching</description>
   <repositories>
     <repository>
       <id>wso2-nexus</id>
@@ -103,7 +103,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>vscode-car-plugin</artifactId>
-            <version>5.2.60</version>
+            <version>5.2.58</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -147,7 +147,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>synapse-unit-test-maven-plugin</artifactId>
-            <version>5.2.60</version>
+            <version>5.2.58</version>
             <executions>
               <execution>
                 <id>synapse-unit-test</id>
@@ -210,7 +210,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>vscode-car-plugin</artifactId>
-            <version>5.2.60</version>
+            <version>5.2.58</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -246,7 +246,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>mi-container-config-mapper</artifactId>
-            <version>5.2.60</version>
+            <version>5.2.58</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -315,7 +315,7 @@
                 <configuration>
                   <images>
                     <image>
-                      <name>helloWorldservice:${project.version}</name>
+                      <name>protocolswitching:${project.version}</name>
                       <build>
                         <from>${dockerfile.base.image}</from>
                         <dockerFile>${basedir}/target/tmp_docker/Dockerfile</dockerFile>
@@ -339,9 +339,51 @@
       </build>
     </profile>
   </profiles>
+  <dependencies>
+    <dependency>
+      <groupId>javax.jms</groupId>
+      <artifactId>javax.jms-api</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-broker</artifactId>
+      <version>5.18.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+      <version>5.18.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-kahadb-store</artifactId>
+      <version>5.18.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jta_1.1_spec</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activeio-core</artifactId>
+      <version>3.1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.fusesource.hawtbuf</groupId>
+      <artifactId>hawtbuf</artifactId>
+      <version>1.11</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>2.0.12</version>
+    </dependency>
+  </dependencies>
   <properties>
     <projectType>integration-project</projectType>
-    <uuid>bd826712-5d3a-4c4a-8ba8-3343bd5d0cf3</uuid>
+    <uuid>2558dcd5-77fe-475e-bdc7-35cb1b56d8e3</uuid>
     <!-- <archiveLocation>configure a custom target directory for CAPP</archiveLocation> -->
     <keystore.type>JKS</keystore.type>
     <keystore.name>wso2carbon.jks</keystore.name>

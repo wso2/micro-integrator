@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>wso2.sampleHelloWorld</groupId>
-  <artifactId>HelloWorldService</artifactId>
+  <groupId>wso2.sampleScatterGatherTemplate</groupId>
+  <artifactId>ScatterGatherIntegrationPattern</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
-  <name>HelloWorldService</name>
-  <description>HelloWorldService</description>
+  <name>ScatterGatherIntegrationPattern</name>
+  <description>ScatterGatherIntegrationPattern</description>
   <repositories>
     <repository>
       <id>wso2-nexus</id>
@@ -315,7 +315,7 @@
                 <configuration>
                   <images>
                     <image>
-                      <name>helloWorldservice:${project.version}</name>
+                      <name>scattergatherintegrationpattern:${project.version}</name>
                       <build>
                         <from>${dockerfile.base.image}</from>
                         <dockerFile>${basedir}/target/tmp_docker/Dockerfile</dockerFile>
@@ -341,7 +341,7 @@
   </profiles>
   <properties>
     <projectType>integration-project</projectType>
-    <uuid>bd826712-5d3a-4c4a-8ba8-3343bd5d0cf3</uuid>
+    <uuid>66378f37-00d5-430f-b27c-3e9621d5fd82</uuid>
     <!-- <archiveLocation>configure a custom target directory for CAPP</archiveLocation> -->
     <keystore.type>JKS</keystore.type>
     <keystore.name>wso2carbon.jks</keystore.name>
