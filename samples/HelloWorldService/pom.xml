@@ -315,7 +315,7 @@
                 <configuration>
                   <images>
                     <image>
-                      <name>helloWorldservice:${project.version}</name>
+                      <name>helloworldservice:${project.version}</name>
                       <build>
                         <from>${dockerfile.base.image}</from>
                         <dockerFile>${basedir}/target/tmp_docker/Dockerfile</dockerFile>
