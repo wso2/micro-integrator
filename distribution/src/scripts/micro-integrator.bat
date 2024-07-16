@@ -65,9 +65,10 @@ rem ----- update classpath -----------------------------------------------------
 
 setlocal EnableDelayedExpansion
 cd %CARBON_HOME%
-set CARBON_CLASSPATH="%CARBON_HOME%\bin\*"
+set CARBON_CLASSPATH=
+FOR %%C in ("%CARBON_HOME%\bin\*.jar") DO set CARBON_CLASSPATH=!CARBON_CLASSPATH!;".\bin\%%~nC%%~xC"
 set CARBON_CLASSPATH="%JAVA_HOME%\lib\tools.jar";%CARBON_CLASSPATH%
-set CARBON_CLASSPATH=%CARBON_CLASSPATH%;"%CARBON_HOME%\wso2\lib\*"
+set CARBON_CLASSPATH=%CARBON_CLASSPATH%;".\wso2\lib\*"
 
 rem ----- Process the input command -------------------------------------------
 
