@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>wso2.sampleMessageFilteringTemplate</groupId>
-  <artifactId>MessageFiltering</artifactId>
+  <groupId>wso2.sampleProxyingRestAPITemplate</groupId>
+  <artifactId>ProxyingaRESTService</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
-  <name>MessageFiltering</name>
-  <description>MessageFiltering</description>
+  <name>ProxyingaRESTService</name>
+  <description>ProxyingaRESTService</description>
   <repositories>
     <repository>
       <id>wso2-nexus</id>
@@ -315,7 +315,7 @@
                 <configuration>
                   <images>
                     <image>
-                      <name>messagefiltering:${project.version}</name>
+                      <name>proxyingarestservice:${project.version}</name>
                       <build>
                         <from>${dockerfile.base.image}</from>
                         <dockerFile>${basedir}/target/tmp_docker/Dockerfile</dockerFile>
@@ -341,7 +341,7 @@
   </profiles>
   <properties>
     <projectType>integration-project</projectType>
-    <uuid>9e44256b-3899-48ef-85fc-9f13e6967eb4</uuid>
+    <uuid>6b8e18b0-7ecf-4132-af6d-41cfcd34f5de</uuid>
     <!-- <archiveLocation>configure a custom target directory for CAPP</archiveLocation> -->
     <keystore.type>JKS</keystore.type>
     <keystore.name>wso2carbon.jks</keystore.name>

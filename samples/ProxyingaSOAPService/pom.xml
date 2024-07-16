@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>wso2.sampleMessageFilteringTemplate</groupId>
-  <artifactId>MessageFiltering</artifactId>
+  <groupId>wso2.sampleProxyingSoapServiceTemplate</groupId>
+  <artifactId>ProxyingaSOAPService</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
-  <name>MessageFiltering</name>
-  <description>MessageFiltering</description>
+  <name>ProxyingaSOAPService</name>
+  <description>ProxyingaSOAPService</description>
   <repositories>
     <repository>
       <id>wso2-nexus</id>
@@ -103,7 +103,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>vscode-car-plugin</artifactId>
-            <version>5.2.58</version>
+            <version>5.2.60</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -147,7 +147,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>synapse-unit-test-maven-plugin</artifactId>
-            <version>5.2.58</version>
+            <version>5.2.60</version>
             <executions>
               <execution>
                 <id>synapse-unit-test</id>
@@ -210,7 +210,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>vscode-car-plugin</artifactId>
-            <version>5.2.58</version>
+            <version>5.2.60</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -246,7 +246,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>mi-container-config-mapper</artifactId>
-            <version>5.2.58</version>
+            <version>5.2.60</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -315,7 +315,7 @@
                 <configuration>
                   <images>
                     <image>
-                      <name>messagefiltering:${project.version}</name>
+                      <name>proxyingasoapservice:${project.version}</name>
                       <build>
                         <from>${dockerfile.base.image}</from>
                         <dockerFile>${basedir}/target/tmp_docker/Dockerfile</dockerFile>
@@ -341,7 +341,7 @@
   </profiles>
   <properties>
     <projectType>integration-project</projectType>
-    <uuid>9e44256b-3899-48ef-85fc-9f13e6967eb4</uuid>
+    <uuid>260b1842-3ef6-4888-a644-617e5bf8e746</uuid>
     <!-- <archiveLocation>configure a custom target directory for CAPP</archiveLocation> -->
     <keystore.type>JKS</keystore.type>
     <keystore.name>wso2carbon.jks</keystore.name>
