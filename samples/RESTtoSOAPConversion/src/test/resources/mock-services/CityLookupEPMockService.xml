@@ -1,0 +1,18 @@
+<mock-service>
+    <service-name>CityLookupEP</service-name>
+    <port>9090</port>
+    <context>/city-lookup</context>
+    <resources>
+        <resource>
+            <sub-context>/</sub-context>
+            <method>POST</method>
+            <response>
+                <status-code>200</status-code>
+                <payload><![CDATA[<?xml version="1.0" encoding="UTF-8" ?><SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:s='http://www.w3.org/2001/XMLSchema'><SOAP-ENV:Body><LookupCityResponse xmlns="http://tempuri.org"><LookupCityResult><City>Chicago</City><State>IL</State><Zip>60601</Zip></LookupCityResult></LookupCityResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>]]></payload>
+                <headers>
+                    <header name="Content-Type" value="text/xml"/>
+                </headers>
+            </response>
+        </resource>
+    </resources>
+</mock-service>

@@ -1,0 +1,31 @@
+<unit-test>
+  <artifacts>
+    <test-artifact>
+      <artifact>src/main/wso2mi/artifacts/apis/ScienceLabAPI.xml</artifact>
+    </test-artifact>
+    <supportive-artifacts>
+      <artifact>src/main/wso2mi/artifacts/endpoints/ScienceLabEP.xml</artifact>
+    </supportive-artifacts>
+    <registry-resources></registry-resources>
+    <connector-resources></connector-resources>
+  </artifacts>
+  <test-cases>
+    <test-case name="XmlToJson">
+      <input>
+        <request-path>/users</request-path>
+        <request-method>POST</request-method>
+        <payload>&lt;user&gt;&lt;name&gt;Sam&lt;/name&gt;&lt;job&gt;Scientist&lt;/job&gt;&lt;/user&gt;</payload>
+      </input>
+      <assertions>
+        <assertEquals>
+          <actual>$body</actual>
+          <expected>&lt;response&gt;&lt;status&gt;successful&lt;/status&gt;&lt;id&gt;454&lt;/id&gt;&lt;name&gt;Sam&lt;/name&gt;&lt;job&gt;Scientist&lt;/job&gt;&lt;createdAt&gt;2019-09-26T18:45:30.501Z&lt;/createdAt&gt;&lt;/response&gt;</expected>
+          <message>Xml to json test case failed.</message>
+        </assertEquals>
+      </assertions>
+    </test-case>
+  </test-cases>
+  <mock-services>
+    <mock-service>src/test/resources/mock-services/XmlToJsonMockService.xml</mock-service>
+  </mock-services>
+</unit-test>

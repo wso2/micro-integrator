@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sequence name="StudentDataFileErrorSeq"  trace="disable"  xmlns="http://ws.apache.org/ns/synapse">
-	<log category="INFO" level="full" separator="," description="Log error details in case of failure">
-		<property name="MESSAGE" value="An unexpected error occurred."/>
-		<property name="REST_API" value="$ctx:SYNAPSE_REST_API"/>
-		<property name="ERROR_CODE" value="$ctx:ERROR_CODE"/>
-		<property name="ERROR_MESSAGE" value="$ctx:ERROR_MESSAGE"/>
-		<property name="ERROR_DETAIL" value="$ctx:ERROR_DETAIL"/>
-		<property name="ERROR_EXCEPTION" value="$ctx:ERROR_EXCEPTION"/>
-	</log>
+<sequence name="StudentDataFileErrorSeq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log description="Log error details in case of failure" level="full">
+        <property name="MESSAGE" value="An unexpected error occurred."/>
+        <property expression="$ctx:SYNAPSE_REST_API" name="REST_API"/>
+        <property expression="$ctx:ERROR_CODE" name="ERROR_CODE"/>
+        <property expression="$ctx:ERROR_MESSAGE" name="ERROR_MESSAGE"/>
+        <property expression="$ctx:ERROR_DETAIL" name="ERROR_DETAIL"/>
+        <property expression="$ctx:ERROR_EXCEPTION" name="ERROR_EXCEPTION"/>
+    </log>
 </sequence>

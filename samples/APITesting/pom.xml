@@ -2,7 +2,7 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.microintegrator.projects</groupId>
+  <groupId>wso2.sampleAPITest</groupId>
   <artifactId>APITesting</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
@@ -104,7 +104,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>vscode-car-plugin</artifactId>
-            <version>5.2.54</version>
+            <version>5.2.60</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -148,7 +148,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>synapse-unit-test-maven-plugin</artifactId>
-            <version>5.2.54</version>
+            <version>5.2.60</version>
             <executions>
               <execution>
                 <id>synapse-unit-test</id>
@@ -211,7 +211,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>vscode-car-plugin</artifactId>
-            <version>5.2.54</version>
+            <version>5.2.60</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -247,7 +247,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>mi-container-config-mapper</artifactId>
-            <version>5.2.54</version>
+            <version>5.2.60</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -316,7 +316,7 @@
                 <configuration>
                   <images>
                     <image>
-                      <name>${project.artifactId}:${project.version}</name>
+                      <name>api-testing:${project.version}</name>
                       <build>
                         <from>${dockerfile.base.image}</from>
                         <dockerFile>${basedir}/target/tmp_docker/Dockerfile</dockerFile>
@@ -342,7 +342,7 @@
   </profiles>    
   <properties>
     <projectType>integration-project</projectType>
-    <uuid>c5229856-1781-4fda-ac89-b26d852f2352</uuid>
+    <uuid>88b2d690-62bb-41c2-80ed-c6849319c55f</uuid>
     <!-- <archiveLocation>configure a custom target directory for CAPP</archiveLocation> -->
     <keystore.type>JKS</keystore.type>
     <keystore.name>wso2carbon.jks</keystore.name>
