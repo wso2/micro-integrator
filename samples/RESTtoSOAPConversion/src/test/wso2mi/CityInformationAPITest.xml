@@ -24,7 +24,5 @@
       </assertions>
     </test-case>
   </test-cases>
-  <mock-services>
-    <mock-service>src/test/resources/mock-services/CityLookupEPMockService.xml</mock-service>
-  </mock-services>
+  <mock-services></mock-services>
 </unit-test>
