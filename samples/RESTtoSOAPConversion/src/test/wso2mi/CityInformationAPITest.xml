@@ -18,7 +18,7 @@
       <assertions>
         <assertEquals>
           <actual>$body</actual>
-          <expected>{&quot;LookupCityResult&quot;:{&quot;City&quot;:&quot;Chicago&quot;,&quot;State&quot;:&quot;IL&quot;,&quot;Zip&quot;:60601}}</expected>
+          <expected><![CDATA[{"LookupCityResult":{"City":"Chicago","State":"IL","Zip":60601}}]]></expected>
           <message>REST to SOAP test failed.</message>
         </assertEquals>
       </assertions>

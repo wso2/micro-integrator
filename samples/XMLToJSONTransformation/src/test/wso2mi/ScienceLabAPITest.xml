@@ -14,12 +14,12 @@
       <input>
         <request-path>/users</request-path>
         <request-method>POST</request-method>
-        <payload>&lt;user&gt;&lt;name&gt;Sam&lt;/name&gt;&lt;job&gt;Scientist&lt;/job&gt;&lt;/user&gt;</payload>
+        <payload><![CDATA[<user><name>Sam</name><job>Scientist</job></user>]]></payload>
       </input>
       <assertions>
         <assertEquals>
           <actual>$body</actual>
-          <expected>&lt;response&gt;&lt;status&gt;successful&lt;/status&gt;&lt;id&gt;454&lt;/id&gt;&lt;name&gt;Sam&lt;/name&gt;&lt;job&gt;Scientist&lt;/job&gt;&lt;createdAt&gt;2019-09-26T18:45:30.501Z&lt;/createdAt&gt;&lt;/response&gt;</expected>
+          <expected><![CDATA[<response><status>successful</status><id>454</id><name>Sam</name><job>Scientist</job><createdAt>2019-09-26T18:45:30.501Z</createdAt></response>]]></expected>
           <message>Xml to json test case failed.</message>
         </assertEquals>
       </assertions>

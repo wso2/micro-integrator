@@ -19,9 +19,9 @@
       <assertions>
         <assertEquals>
           <actual>$body</actual>
-          <expected>{&quot;MESSAGE&quot;: &quot;An unexpected error occurred.&quot;,&quot;REST_API&quot;: &quot;TimeoutAPI&quot;,&quot;ERROR_CODE&quot;: 101504,&quot;ERROR_MESSAGE&quot;: Send timeout,
-   &quot;ERROR_DETAIL&quot;: ,&quot;ERROR_EXCEPTION&quot;: 
-}</expected>
+          <expected><![CDATA[{"MESSAGE": "An unexpected error occurred.","REST_API": "TimeoutAPI","ERROR_CODE": 101504,"ERROR_MESSAGE": Send timeout,
+   "ERROR_DETAIL": ,"ERROR_EXCEPTION":
+}]]></expected>
           <message>Invalid payload in TimoutAPI test case.</message>
         </assertEquals>
       </assertions>
