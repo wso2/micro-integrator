@@ -1,45 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.microintegrator.projects</groupId>
-  <artifactId>KafkaConsumerAndProducer</artifactId>
-  <version>1.0.0</version>
+  <groupId>wso2.sampleKafkaTemplate</groupId>
+  <artifactId>KafkaConsumerandProducer</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>KafkaConsumerAndProducer</name>
-  <description>KafkaConsumerAndProducer</description>
+  <name>KafkaConsumerandProducer</name>
+  <description>KafkaConsumerandProducer</description>
   <repositories>
     <repository>
-        <id>wso2-nexus</id>
-        <name>WSO2 internal Repository</name>
-        <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-        <releases>
-          <enabled>true</enabled>
-          <updatePolicy>daily</updatePolicy>
-          <checksumPolicy>ignore</checksumPolicy>
-        </releases>
-    </repository>
-    <repository>
-        <id>wso2.releases</id>
-        <name>WSO2 internal Repository</name>
-        <url>https://maven.wso2.org/nexus/content/repositories/releases/</url>
-        <releases>
-          <enabled>true</enabled>
-          <updatePolicy>daily</updatePolicy>
-          <checksumPolicy>ignore</checksumPolicy>
-        </releases>
-    </repository>
-    <repository>
-        <id>wso2.snapshots</id>
-        <name>Apache Snapshot Repository</name>
-        <url>https://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-        <snapshots>
-          <enabled>true</enabled>
-          <updatePolicy>daily</updatePolicy>
-        </snapshots>
-        <releases>
-          <enabled>false</enabled>
-        </releases>
+      <id>confluent</id>
+      <name>Confluent Repository</name>
+      <url>https://packages.confluent.io/maven/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
     </repository>
   </repositories>
   <pluginRepositories>
@@ -104,7 +81,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>vscode-car-plugin</artifactId>
-            <version>5.2.54</version>
+            <version>5.2.60</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -148,7 +125,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>synapse-unit-test-maven-plugin</artifactId>
-            <version>5.2.54</version>
+            <version>5.2.60</version>
             <executions>
               <execution>
                 <id>synapse-unit-test</id>
@@ -176,8 +153,8 @@
       <id>docker</id>
       <build>
         <plugins>
-            <!-- Compile and build the class mediator jars -->
-            <plugin>
+          <!-- Compile and build the class mediator jars -->
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <executions>
@@ -211,7 +188,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>vscode-car-plugin</artifactId>
-            <version>5.2.54</version>
+            <version>5.2.60</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -247,7 +224,7 @@
           <plugin>
             <groupId>org.wso2.maven</groupId>
             <artifactId>mi-container-config-mapper</artifactId>
-            <version>5.2.54</version>
+            <version>5.2.60</version>
             <extensions>true</extensions>
             <executions>
               <execution>
@@ -339,10 +316,52 @@
         </plugins>
       </build>
     </profile>
-  </profiles>    
+  </profiles>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka_2.13</artifactId>
+      <version>3.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>3.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+      <version>4.1.12.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.13.12</version>
+    </dependency>
+    <dependency>
+      <groupId>com.101tec</groupId>
+      <artifactId>zkclient</artifactId>
+      <version>0.11</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>3.8.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>1.11.3</version>
+    </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-schema-registry-client</artifactId>
+      <version>7.6.1</version>
+    </dependency>
+  </dependencies>
   <properties>
     <projectType>integration-project</projectType>
-    <uuid>02a22288-4362-461b-8d01-fc903529313f</uuid>
+    <uuid>dbc580c4-1ffa-465f-82f4-68de0f3a1aa6</uuid>
     <!-- <archiveLocation>configure a custom target directory for CAPP</archiveLocation> -->
     <keystore.type>JKS</keystore.type>
     <keystore.name>wso2carbon.jks</keystore.name>
