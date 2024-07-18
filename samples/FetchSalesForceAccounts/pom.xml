@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>wso2.sampleReadSalesforceAccountsTemplate</groupId>
   <artifactId>FetchSalesForceAccounts</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>FetchSalesForceAccounts</name>
   <description>FetchSalesForceAccounts</description>
