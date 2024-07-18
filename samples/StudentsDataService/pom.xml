@@ -339,7 +339,14 @@
         </plugins>
       </build>
     </profile>
-  </profiles>    
+  </profiles>
+  <dependencies>
+    <dependency>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <version>8.0.32</version>
+    </dependency>
+  </dependencies>
   <properties>
     <projectType>integration-project</projectType>
     <uuid>76d737f3-2512-43ae-85b0-70bc9030d02b</uuid>
