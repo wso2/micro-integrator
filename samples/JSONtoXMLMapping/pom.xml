@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>wso2.sampleJsonToXmlMappingTemplate</groupId>
   <artifactId>JSONtoXMLMapping</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>JSONtoXMLMapping</name>
   <description>JSONtoXMLMapping</description>
@@ -316,7 +316,7 @@
                 <configuration>
                   <images>
                     <image>
-                      <name>${project.artifactId}:${project.version}</name>
+                      <name>json-to-xml-mapping:${project.version}</name>
                       <build>
                         <from>${dockerfile.base.image}</from>
                         <dockerFile>${basedir}/target/tmp_docker/Dockerfile</dockerFile>
