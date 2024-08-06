@@ -3,12 +3,10 @@ name: All Tests ( openjdk8 )
 on: [push]
 
 jobs:
-  others:
+  Ubuntu:
 
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -18,6 +16,21 @@ jobs:
           java-version: 11
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml -fae
+
+  MacOS:
+
+    runs-on: macOS-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: joschi/setup-jdk@v2
+        with:
+          distribution: 'adopt'
+          java-version: 11
+      - name: Build with Maven
+        run: mvn -B clean install --file pom.xml -fae
+
   windows:
 
     runs-on: windows-latest
