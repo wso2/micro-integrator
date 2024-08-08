@@ -14,8 +14,12 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 11
+      - name: Set JAVA_TOOL_OPTIONS
+        run: echo "JAVA_TOOL_OPTIONS='${JAVA_TOOL_OPTIONS:-} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED'" >> $GITHUB_ENV
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml -fae
+        env:
+          JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}
 
   MacOS:
 
@@ -28,8 +32,13 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 11
+      - name: Set JAVA_TOOL_OPTIONS
+        run: echo "JAVA_TOOL_OPTIONS='${JAVA_TOOL_OPTIONS:-} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED'" >> $GITHUB_ENV
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml -fae
+        env:
+          JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}
+
 
   windows:
 
@@ -44,5 +53,9 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 11
+      - name: Set JAVA_TOOL_OPTIONS
+        run: echo "JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED" >> $GITHUB_ENV
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml -fae
+        env:
+          JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}
