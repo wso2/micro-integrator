@@ -61,7 +61,7 @@ jobs:
           java-version: 11
       - name: Set JAVA_TOOL_OPTIONS
         run: |
-          NEW_JAVA_TOOL_OPTIONS="${{ env.JAVA_TOOL_OPTIONS }} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED"
+          $NEW_JAVA_TOOL_OPTIONS="${{ env.JAVA_TOOL_OPTIONS }} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED"
           echo "JAVA_TOOL_OPTIONS=$NEW_JAVA_TOOL_OPTIONS" >> $env:GITHUB_ENV
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml -fae
