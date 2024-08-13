@@ -15,9 +15,14 @@ jobs:
           distribution: 'adopt'
           java-version: 11
       - name: Set JAVA_TOOL_OPTIONS
-        run: echo "JAVA_TOOL_OPTIONS='${JAVA_TOOL_OPTIONS:-} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED'" >> $GITHUB_ENV
+        run: |
+          echo "old JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}" 
+          NEW_JAVA_TOOL_OPTIONS="${{ env.JAVA_TOOL_OPTIONS }} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED"
+          echo "JAVA_TOOL_OPTIONS=$NEW_JAVA_TOOL_OPTIONS" >> $GITHUB_ENV
       - name: Build with Maven
-        run: mvn -B clean install --file pom.xml -fae
+        run: |
+          echo "old JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}"
+          mvn -B clean install --file pom.xml -fae
         env:
           JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}
 
@@ -33,9 +38,14 @@ jobs:
           distribution: 'adopt'
           java-version: 11
       - name: Set JAVA_TOOL_OPTIONS
-        run: echo "JAVA_TOOL_OPTIONS='${JAVA_TOOL_OPTIONS:-} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED'" >> $GITHUB_ENV
+        run: |
+          echo "old JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}" 
+          NEW_JAVA_TOOL_OPTIONS="${{ env.JAVA_TOOL_OPTIONS }} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED"
+          echo "JAVA_TOOL_OPTIONS=$NEW_JAVA_TOOL_OPTIONS" >> $GITHUB_ENV
       - name: Build with Maven
-        run: mvn -B clean install --file pom.xml -fae
+        run: |
+          echo "old JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}"
+          mvn -B clean install --file pom.xml -fae
         env:
           JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}
 
@@ -54,7 +64,7 @@ jobs:
           distribution: 'adopt'
           java-version: 11
       - name: Set JAVA_TOOL_OPTIONS
-        run: echo "JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED" >> $GITHUB_ENV
+        run: echo "JAVA_TOOL_OPTIONS=%JAVA_TOOL_OPTIONS% -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED" >> $env:GITHUB_ENV
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml -fae
         env:
