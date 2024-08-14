@@ -20,7 +20,7 @@ jobs:
           echo "JAVA_TOOL_OPTIONS=$NEW_JAVA_TOOL_OPTIONS" >> $GITHUB_ENV
       - name: Build with Maven
         run: |
-          mvn -B clean install --file pom.xml -fae '-Dtest=!ODataETagTestCase#validateETagConcurrentHandlingTestCaseForDeleteMethod+validateETagConcurrentHandlingTestCaseForUpdatePropertyWithPutMethod+validateETagConcurrentHandlingTestCaseForUpdatePropertyWithPatchMethod'
+          mvn -B clean install --file pom.xml -fae '-Dtest=!validateETagConcurrentHandlingTestCaseForDeleteMethod'
         env:
           JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}
 
