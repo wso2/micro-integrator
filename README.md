@@ -2,7 +2,9 @@
 
 [![Build Status](https://wso2.org/jenkins/buildStatus/icon?job=products/micro-integrator)](https://wso2.org/jenkins/job/products/job/micro-integrator/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[<img src="https://img.shields.io/badge/Slack-@wso2--ei/microintegrator-blue">](https://wso2-ei.slack.com/messages/microintegrator/)
+[![Stackoverflow](https://img.shields.io/badge/Ask%20for%20help%20on-Stackoverflow-orange)](https://stackoverflow.com/questions/tagged/wso2-micro-integrator)
+[![Discord](https://img.shields.io/badge/Join%20us%20on-Discord-%23e01563.svg)](https://discord.gg/wso2)
+[![Twitter](https://img.shields.io/twitter/follow/wso2.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=wso2)
 
 WSO2 Micro Integrator is the integration runtime of [WSO2 Enterprise Integrator
 (EI)](https://wso2.com/enterprise-integrator/), which is an open-source, hybrid integration platform. Please refer to the [official documentation](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/introduction/) for further information. 
