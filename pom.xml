@@ -1542,10 +1542,10 @@
         <profile>
             <id>full</id>
             <modules>
-                <module>components</module>
-                <module>features</module>
-                <module>p2-profile</module>
-                <module>distribution</module>
+<!--                <module>components</module>-->
+<!--                <module>features</module>-->
+<!--                <module>p2-profile</module>-->
+<!--                <module>distribution</module>-->
                 <module>integration</module>
             </modules>
         </profile>
