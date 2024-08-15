@@ -56,7 +56,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
                 <configuration>
                     <argLine>-Xms512m -Xmx1024m </argLine>
                     <disableXmlReport>false</disableXmlReport>
