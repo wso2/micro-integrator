@@ -32,8 +32,8 @@
     <packaging>pom</packaging>
 
     <modules>
-<!--        <module>samples</module>-->
-<!--        <module>tests-common</module>-->
+        <module>samples</module>
+        <module>tests-common</module>
         <module>tests-integration</module>
     </modules>
 
