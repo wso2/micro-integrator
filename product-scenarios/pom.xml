@@ -69,7 +69,7 @@
         <org.wso2.json.version>3.0.0.wso2v1</org.wso2.json.version>
         <awaitility.version>3.1.2</awaitility.version>
         <commons.lang.version>2.6.0.wso2v1</commons.lang.version>
-        <maven.surefire.version>2.22.2</maven.surefire.version>
+        <maven.surefire.version>2.12.4</maven.surefire.version>
         <jacoco.version>0.8.8</jacoco.version>
         <activemq.client.version>5.15.8</activemq.client.version>
         <pax.logging.api.version>2.1.0-wso2v3</pax.logging.api.version>
