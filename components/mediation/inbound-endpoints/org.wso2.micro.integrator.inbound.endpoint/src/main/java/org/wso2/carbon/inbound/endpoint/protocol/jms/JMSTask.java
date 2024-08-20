@@ -43,7 +43,11 @@ public class JMSTask extends InboundTask implements LocalTaskActionListener {
 
     protected void taskExecute() {
         logger.debug("Executing JMS Task Execution.");
-        jmsPollingConsumer.execute();
+        if (jmsPollingConsumer != null) {
+            jmsPollingConsumer.execute();
+        } else {
+            logger.error("JMS Polling Consumer is closed. Cannot execute the task.");
+        }
     }
 
     @Override
@@ -58,6 +62,8 @@ public class JMSTask extends InboundTask implements LocalTaskActionListener {
     public void destroy() {
         logger.debug("Destroying JMS Task.");
         jmsPollingConsumer.destroy();
+        // removing the consumer reference to avoid dangling consumers in broker side.
+        jmsPollingConsumer = null;
     }
 
     /**
