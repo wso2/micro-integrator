@@ -50,7 +50,7 @@ public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
 
     @Test(groups = {"wso2.esb"}, description = "Test ForEach mediator with JSON payload")
     public void testForEachMediatorWithJSONPayload() throws Exception {
-        if (System.getenv("SKIP").equals("true")) {
+        if (System.getenv("CI_BUILD_SKIP").equals("true")) {
             String request = "{\"getQuote\":{\"request\":[{\"symbol\":\"IBM\"},{\"symbol\":\"WSO2\"},{\"symbol\":\"MSFT\"}]}}";
 
             simpleHttpClient = new SimpleHttpClient();

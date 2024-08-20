@@ -23,7 +23,7 @@ jobs:
           mvn -B clean install --file pom.xml -fae
         env:
           JAVA_TOOL_OPTIONS: ${{ env.JAVA_TOOL_OPTIONS }}
-          SKIP: true
+          CI_BUILD_SKIP: true
 
 #  MacOS:
 #

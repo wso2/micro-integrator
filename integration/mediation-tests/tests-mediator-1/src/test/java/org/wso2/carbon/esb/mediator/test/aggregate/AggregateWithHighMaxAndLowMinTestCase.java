@@ -158,7 +158,7 @@ public class AggregateWithHighMaxAndLowMinTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "less number of messages than maximum count")
     public void testLessNumberThanMaximum() throws IOException, XMLStreamException {
-        if (System.getenv("SKIP").equals("true")) {
+        if (System.getenv("CI_BUILD_SKIP").equals("true")) {
             int responseCount = 0;
 
             no_of_requests = 60;

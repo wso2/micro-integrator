@@ -53,7 +53,7 @@ public class ESBJAVA1832MessageInjectorTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
     public void testMessageInjection() throws Exception {
-        if (System.getenv("SKIP").equals("true")) {
+        if (System.getenv("CI_BUILD_SKIP").equals("true")) {
             String queueName = "jmsQueue";
             int numberOfMsgToExpect = 10;
             TimeUnit.SECONDS.sleep(15);
