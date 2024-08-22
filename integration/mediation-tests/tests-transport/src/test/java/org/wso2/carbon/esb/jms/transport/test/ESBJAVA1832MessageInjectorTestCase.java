@@ -56,9 +56,9 @@ public class ESBJAVA1832MessageInjectorTestCase extends ESBIntegrationTest {
         System.out.println(
                 Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))
                         ? "This test is temporarily skipped for this workflow"
-                        : ""
+                        : "Test not skipped"
         );
-        if (Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
+        if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             String queueName = "jmsQueue";
             int numberOfMsgToExpect = 10;
             TimeUnit.SECONDS.sleep(15);

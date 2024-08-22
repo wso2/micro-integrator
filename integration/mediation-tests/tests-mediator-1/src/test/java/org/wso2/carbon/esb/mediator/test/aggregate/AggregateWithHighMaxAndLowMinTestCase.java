@@ -161,9 +161,9 @@ public class AggregateWithHighMaxAndLowMinTestCase extends ESBIntegrationTest {
         System.out.println(
                 Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))
                         ? "This test is temporarily skipped for this workflow"
-                        : ""
+                        : "Test not skipped"
         );
-        if (Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
+        if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             int responseCount = 0;
 
             no_of_requests = 60;

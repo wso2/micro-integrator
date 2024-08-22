@@ -228,9 +228,9 @@ public class ODataETagTestCase extends DSSIntegrationTest {
         System.out.println(
                 Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))
                         ? "This test is temporarily skipped for this workflow"
-                        : ""
+                        : "Test not skipped"
         );
-        if (Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
+        if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             System.out.println("This test is temporarily skipped for this workflow");
             String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES";
             String content = "{\"FILENAME\": \"WSO2PROD\" ,\"TYPE\" : \"dss\"}";
@@ -286,10 +286,9 @@ public class ODataETagTestCase extends DSSIntegrationTest {
         System.out.println(
                 Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))
                         ? "This test is temporarily skipped for this workflow"
-                        : ""
+                        : "Test not skipped"
         );
-        if (Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
-            System.out.println("This test is temporarily skipped for this workflow");
+        if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES";
             String content = "{\"FILENAME\": \"WSO2PROD\" ,\"TYPE\" : \"dss\"}";
             Map<String, String> headers = new HashMap<>();
@@ -346,9 +345,9 @@ public class ODataETagTestCase extends DSSIntegrationTest {
         System.out.println(
                 Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))
                         ? "This test is temporarily skipped for this workflow"
-                        : ""
+                        : "Test not skipped"
         );
-        if (Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
+        if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             System.out.println("This test is temporarily skipped for this workflow");
             String entityEndpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES(\'WSO2PROD\')";
             String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES(\'WSO2PROD\')/TYPE";
