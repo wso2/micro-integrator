@@ -53,11 +53,6 @@ public class ESBJAVA1832MessageInjectorTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
     public void testMessageInjection() throws Exception {
-        System.out.println(
-                Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))
-                        ? "This test is temporarily skipped for this workflow"
-                        : "Test not skipped"
-        );
         if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             String queueName = "jmsQueue";
             int numberOfMsgToExpect = 10;

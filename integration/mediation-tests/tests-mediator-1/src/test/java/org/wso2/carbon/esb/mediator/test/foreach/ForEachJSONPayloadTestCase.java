@@ -50,11 +50,6 @@ public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
 
     @Test(groups = {"wso2.esb"}, description = "Test ForEach mediator with JSON payload")
     public void testForEachMediatorWithJSONPayload() throws Exception {
-        System.out.println(
-                Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))
-                        ? "This test is temporarily skipped for this workflow"
-                        : "Test not skipped"
-        );
         if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             String request = "{\"getQuote\":{\"request\":[{\"symbol\":\"IBM\"},{\"symbol\":\"WSO2\"},{\"symbol\":\"MSFT\"}]}}";
 

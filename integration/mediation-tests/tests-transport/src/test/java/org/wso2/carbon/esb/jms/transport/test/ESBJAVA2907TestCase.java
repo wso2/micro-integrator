@@ -23,11 +23,6 @@ public class ESBJAVA2907TestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Test adding OMElements as properties when saving messages to the MessageStore")
     public void testAddingOMElementPropertyToMessageStore() throws Exception {
-        System.out.println(
-                Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))
-                        ? "This test is temporarily skipped for this workflow"
-                        : "Test not skipped"
-        );
         if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             AxisServiceClient client = new AxisServiceClient();
             client.sendRobust(Utils.getStockQuoteRequest("IBM"), getProxyServiceURLHttp("testPS"), "getQuote");

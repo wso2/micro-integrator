@@ -158,11 +158,6 @@ public class AggregateWithHighMaxAndLowMinTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "less number of messages than maximum count")
     public void testLessNumberThanMaximum() throws IOException, XMLStreamException {
-        System.out.println(
-                Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))
-                        ? "This test is temporarily skipped for this workflow"
-                        : "Test not skipped"
-        );
         if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             int responseCount = 0;
 
