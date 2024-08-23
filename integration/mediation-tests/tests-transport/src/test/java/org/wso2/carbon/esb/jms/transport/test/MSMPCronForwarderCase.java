@@ -69,7 +69,7 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test Cron Forwarding of message processor")
     public void testMessageProcessorCronForwader() throws Exception {
-        if (System.getenv("CI_BUILD_SKIP").equals("true")) {
+        if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             // SEND THE REQUEST
             String addUrl = getProxyServiceURLHttp("MSMPRetrytest");
             String payload = "{\"name\":\"Jack\"}";

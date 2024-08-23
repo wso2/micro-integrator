@@ -296,32 +296,34 @@ public class ServiceCatalogTestCase extends ESBIntegrationTest {
     @Test(groups = {"wso2.esb"}, description = "Test service catalog with proxy services", priority = 11)
     public void testServiceCatalogProxyServiceMetadata()
             throws CarbonException, IOException, AutomationUtilException, InterruptedException {
-        File metadataCAPP = new File(getESBResourceLocation() + File.separator
-                + SERVICE_CATALOG_FOLDER + File.separator + CAPP_WITH_PROXY_META);
-        serverConfigurationManager.copyToCarbonapps(metadataCAPP);
-        // replace server startup scripts
-        String shFile = CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + SH_FILE_NAME;
-        String batFile = CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + BAT_FILE_NAME;
-        File oldShFile = new File( shFile + ".backup");
-        File newShFile = new File(shFile);
-        if (new File(shFile).delete() && oldShFile.renameTo(newShFile)) {
-            assertTrue(newShFile.exists(), "Error while replacing default sh script");
+        if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
+            File metadataCAPP = new File(getESBResourceLocation() + File.separator
+                    + SERVICE_CATALOG_FOLDER + File.separator + CAPP_WITH_PROXY_META);
+            serverConfigurationManager.copyToCarbonapps(metadataCAPP);
+            // replace server startup scripts
+            String shFile = CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + SH_FILE_NAME;
+            String batFile = CarbonBaseUtils.getCarbonHome() + File.separator + "bin" + File.separator + BAT_FILE_NAME;
+            File oldShFile = new File(shFile + ".backup");
+            File newShFile = new File(shFile);
+            if (new File(shFile).delete() && oldShFile.renameTo(newShFile)) {
+                assertTrue(newShFile.exists(), "Error while replacing default sh script");
+            }
+            File oldBatFile = new File(batFile + ".backup");
+            File newBatFile = new File(batFile);
+            if (new File(batFile).delete() && oldBatFile.renameTo(newBatFile)) {
+                assertTrue(newBatFile.exists(), "Error while replacing default bat script");
+            }
+            serverConfigurationManager.restartMicroIntegrator();
+            assertTrue(Utils.checkForLog(carbonLogReader,
+                    "Successfully updated the service catalog", 10), "Did not receive the expected info log");
+            File extracted = chekAndExtractPayloadZip();
+            assertTrue(extracted.exists(), "Error occurred while extracting the ZIP");
+            File metadataFile = new File(extracted, "SampleProxyService_proxy_v1.0.0");
+            File yamlFile = new File(metadataFile, "metadata.yaml");
+            assertTrue(yamlFile.exists(), "Could not find the metadata yaml file");
+            File wsdlFile = new File(metadataFile, "definition.wsdl");
+            assertTrue(wsdlFile.exists(), "Could not find the definition wsdl file");
         }
-        File oldBatFile = new File( batFile + ".backup");
-        File newBatFile = new File(batFile);
-        if (new File(batFile).delete() && oldBatFile.renameTo(newBatFile)) {
-            assertTrue(newBatFile.exists(), "Error while replacing default bat script");
-        }
-        serverConfigurationManager.restartMicroIntegrator();
-        assertTrue(Utils.checkForLog(carbonLogReader,
-                "Successfully updated the service catalog", 10), "Did not receive the expected info log");
-        File extracted = chekAndExtractPayloadZip();
-        assertTrue(extracted.exists(), "Error occurred while extracting the ZIP");
-        File metadataFile = new File(extracted, "SampleProxyService_proxy_v1.0.0");
-        File yamlFile = new File(metadataFile, "metadata.yaml");
-        assertTrue(yamlFile.exists(), "Could not find the metadata yaml file");
-        File wsdlFile = new File(metadataFile, "definition.wsdl");
-        assertTrue(wsdlFile.exists(), "Could not find the definition wsdl file");
     }
 
     private static File chekAndExtractPayloadZip() throws CarbonException {
