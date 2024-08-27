@@ -775,7 +775,7 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
             roleName = UserCoreUtil.addDomainToName(roleName, UserCoreConstants.INTERNAL_DOMAIN);
         }
         // also need to clear role authorization
-        userRealm.getAuthorizationManager().clearRoleAuthorization(roleName);
+        // userRealm.getAuthorizationManager().clearRoleAuthorization(roleName);
     }
 
     /**
