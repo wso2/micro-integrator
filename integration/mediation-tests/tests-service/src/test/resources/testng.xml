@@ -121,4 +121,10 @@
             <class name="org.wso2.carbon.esb.proxyservice.test.secureProxy.SecureProxyUsingPolicyFileInLocalEntryTestCase"/>
         </classes>
     </test>
+
+    <test name="Logging-Test" preserve-order="true" verbose="2" parallel="false">
+        <classes>
+            <class name="org.wso2.carbon.esb.logging.test.ContainerNameLoggingTestCase"/>
+        </classes>
+    </test>
 </suite>
