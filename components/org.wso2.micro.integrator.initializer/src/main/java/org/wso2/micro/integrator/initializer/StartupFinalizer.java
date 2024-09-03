@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.micro.core.ServerStatus;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 
@@ -77,6 +78,9 @@ public class StartupFinalizer {
 
         // Init and start axis2 transports
         listenerManager.startSystem(configCtx);
+
+        // Start Inbound Endpoint Listeners
+        EndpointListenerLoader.loadListeners();
 
         /*listerManagerServiceRegistration =
                 bundleContext.registerService(ListenerManager.class.getName(), listenerManager, null);*/
