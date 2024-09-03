@@ -48,7 +48,6 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.application.deployer.CarbonApplication;
@@ -241,8 +240,6 @@ public class ServiceBusInitializer {
             bndCtx.registerService(SynapseRegistrationsService.class.getName(), synRegistrationsSvc, null);
             /*configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
                     configurationManager);*/
-            // Start Inbound Endpoint Listeners
-            EndpointListenerLoader.loadListeners();
             String injectCarName = System.getProperty(ServiceBusConstants.AUTOMATION_MODE_CAR_NAME_SYSTEM_PROPERTY);
             if (injectCarName != null && !injectCarName.isEmpty()) {
                 String sequenceName = getMainSequenceName(injectCarName);
