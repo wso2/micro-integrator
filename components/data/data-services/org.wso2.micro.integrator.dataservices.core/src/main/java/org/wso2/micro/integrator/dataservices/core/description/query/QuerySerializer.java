@@ -121,7 +121,7 @@ public class QuerySerializer {
 
 	private static void serializeSQLQueryProps(SQLQuery sqlQuery, OMElement queryEl, OMFactory fac) {
 		OMElement sqlEl = fac.createOMElement(new QName(DBSFields.SQL));
-		sqlEl.setText(sqlQuery.getQuery());
+		sqlEl.setText(sqlQuery.getOriginalQuery());
 		queryEl.addChild(sqlEl);
 		if (sqlQuery.isReturnGeneratedKeys()) {
 			queryEl.addAttribute(DBSFields.RETURN_GENERATED_KEYS, Boolean.TRUE.toString(), null);
@@ -310,7 +310,7 @@ public class QuerySerializer {
 			}
 			defaultValue = queryParam.getDefaultValue();
 			if (defaultValue != null && defaultValue.getScalarValue() != null) {
-				queryParamEl.addAttribute(DBSFields.ORDINAL, defaultValue.getScalarValue(), null);
+				queryParamEl.addAttribute(DBSFields.DEFAULT_VALUE, defaultValue.getScalarValue(), null);
 			}
 			/* add validators */
 			serializeValidators(queryParam.getValidators(), queryParamEl, fac);

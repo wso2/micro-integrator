@@ -44,6 +44,8 @@ public abstract class ExpressionQuery extends Query {
 
     private String query;
 
+    private String originalQuery;
+
     private List<String> namedParamNames;
 
     private int paramCount;
@@ -57,10 +59,15 @@ public abstract class ExpressionQuery extends Query {
         super(dataService, queryId, queryParams, result, configId, inputEventTrigger, outputEventTrigger,
               advancedProperties, inputNamespace);
         this.query = query;
+        this.originalQuery = query;
     }
 
     public String getQuery() {
         return query;
+    }
+
+    public String getOriginalQuery() {
+        return originalQuery;
     }
 
     public int getParamCount() {
