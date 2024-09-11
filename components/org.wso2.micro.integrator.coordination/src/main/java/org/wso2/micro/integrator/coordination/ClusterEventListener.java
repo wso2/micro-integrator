@@ -62,7 +62,7 @@ public class ClusterEventListener extends MemberEventListener {
     }
 
     @Override
-    public void reJoined(String nodeId) {
+    public void reJoined(String nodeId, RDBMSMemberEventCallBack callBack) {
         LOG.info("Re-joined the cluster successfully.");
     }
 }

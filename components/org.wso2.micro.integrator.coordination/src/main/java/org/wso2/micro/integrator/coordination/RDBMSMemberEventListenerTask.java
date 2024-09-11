@@ -33,6 +33,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * The task that runs periodically to detect membership change events.
@@ -63,23 +65,25 @@ public class RDBMSMemberEventListenerTask implements Runnable {
      */
     private List<MemberEventListener> listeners;
 
-    /**
-     * Using heart beat warning margin to make sure other nodes in the cluster
-     * are not starting tasks until this node completes stops the tasks
-     */
-    private int heartbeatWarningMargin;
+    ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private boolean wasMemberUnresponsive = false;
 
-    ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Lock lock = new ReentrantLock();
+
+    private long maxDBReadTime;
+
+    private int heartbeatWarningMargin;
+
 
     public RDBMSMemberEventListenerTask(String nodeId, String localGroupId,
                                         RDBMSCommunicationBusContextImpl communicationBusContext, 
-                                        int heartbeatWarningMargin) {
+                                        int heartbeatWarningMargin, long maxDBReadTime) {
         this.nodeID = nodeId;
         this.localGroupId = localGroupId;
         this.listeners = new ArrayList<>();
         this.communicationBusContext = communicationBusContext;
+        this.maxDBReadTime = maxDBReadTime;
         this.heartbeatWarningMargin = heartbeatWarningMargin;
     }
 
@@ -112,23 +116,46 @@ public class RDBMSMemberEventListenerTask implements Runnable {
                     log.debug("No membership events to sync");
                 }
             }
-            if (wasMemberUnresponsive) {
-                notifyRejoin(nodeID, localGroupId);
+        } catch (Throwable e) {
+            //sleep for a while to avoid spinning
+            try {
+                Thread.sleep(this.heartbeatWarningMargin);
+            } catch (InterruptedException e1) {
+                log.error("Error while sleeping the thread", e1);
+            }
+        }
+    }
+
+    public boolean isMemberUnresponsive() {
+        lock.lock();
+        try {
+            return wasMemberUnresponsive;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setMemberUnresponsiveIfNeeded(String nodeID, String localGroupId, boolean setUnresponsive) {
+        lock.lock();
+        try {
+            if (setUnresponsive) {
+                if (!wasMemberUnresponsive) {
+                    log.warn("Node [" + nodeID + "] in group [" + localGroupId + "] has become unresponsive.");
+                    notifyUnresponsiveness(nodeID, localGroupId);
+                    wasMemberUnresponsive = true;
+                }
+            } else {
                 wasMemberUnresponsive = false;
             }
-        } catch (Throwable e) {
-            log.error("Error occurred while reading membership events. ", e);
-            if (!wasMemberUnresponsive) {
-                notifyUnresponsiveness(nodeID, localGroupId);
-                wasMemberUnresponsive = true;
-            }
+        } finally {
+            lock.unlock();
         }
     }
 
     private List<MemberEvent> getMembershipEvents() throws ClusterCoordinationException  {
         try {
             Future<List<MemberEvent>> listFuture = executor.submit(this::readMembershipEvents);
-            return listFuture.get(heartbeatWarningMargin, TimeUnit.MILLISECONDS);
+            return listFuture.get(maxDBReadTime, TimeUnit.MILLISECONDS);
         } catch (TimeoutException | InterruptedException | ExecutionException e) {
             throw new ClusterCoordinationException("Reading membership events took more time than max timeout retry interval", e);
         }
@@ -187,11 +214,16 @@ public class RDBMSMemberEventListenerTask implements Runnable {
      *
      * @param member The node ID of the event occurred
      */
-    private void notifyRejoin(String member, String groupId) {
+    public void notifyRejoin(String member, String groupId) {
 
         listeners.forEach(listener -> {
             if (listener.getGroupId().equals(groupId)) {
-                listener.reJoined(member);
+                listener.reJoined(member, (nodeId, e) -> {
+                    if (nodeId.equals(RDBMSMemberEventListenerTask.this.nodeID)) {
+                        log.warn("Node [" + nodeId + "] became unresponsive due to an exception.", e);
+                        setMemberUnresponsiveIfNeeded(nodeId, localGroupId, true);
+                    }
+                });
             }
         });
     }

@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
 import org.wso2.micro.integrator.coordination.MemberEventListener;
+import org.wso2.micro.integrator.coordination.RDBMSMemberEventCallBack;
 import org.wso2.micro.integrator.coordination.node.NodeDetail;
 import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
@@ -79,13 +80,7 @@ public class TaskEventListener extends MemberEventListener {
             // This node became unresponsive and rejoined the cluster hence removing all tasks assigned to this node
             // then start the scheduler again after cleaning the locally running tasks.
             becameUnresponsive(nodeDetail.getNodeId());
-            try {
-                //Remove from database
-                taskStore.deleteTasks(nodeDetail.getNodeId());
-            } catch (TaskCoordinationException e) {
-                LOG.error("Error while removing the tasks of this node.", e);
-            }
-            reJoined(nodeDetail.getNodeId());
+            reJoined(nodeDetail.getNodeId(), null);
         }
     }
 
@@ -117,7 +112,7 @@ public class TaskEventListener extends MemberEventListener {
         ScheduledExecutorService taskScheduler = dataHolder.getTaskScheduler();
         if (taskScheduler != null) {
             LOG.info("Shutting down coordinated task scheduler scheduler since the node became unresponsive.");
-            taskScheduler.shutdown();
+            taskScheduler.shutdownNow();
             dataHolder.setTaskScheduler(null);
         }
         List<String> tasks = taskManager.getLocallyRunningCoordinatedTasks();
@@ -129,6 +124,13 @@ public class TaskEventListener extends MemberEventListener {
                 LOG.error("Unable to pause the task " + task, e);
             }
         });
+
+        try {
+            // Unassigns tasks from the specified node and updates their state in the task store.
+            taskStore.unAssignAndUpdateState(nodeId);
+        } catch (TaskCoordinationException e) {
+            LOG.error("Error while removing the tasks of this node.", e);
+        }
     }
 
     /**
@@ -142,7 +144,7 @@ public class TaskEventListener extends MemberEventListener {
 
 
     @Override
-    public void reJoined(String nodeId) {
+    public void reJoined(String nodeId, RDBMSMemberEventCallBack callBack) {
 
         LOG.debug("This node re-joined the cluster successfully.");
         try {
@@ -150,14 +152,16 @@ public class TaskEventListener extends MemberEventListener {
             // hasn't happened already or the task hasn't been captured by task cleaning event.
             // this will ensure that the task duplication doesn't occur.
             taskStore.unAssignAndUpdateState(nodeId);
+            // start the scheduler again since the node joined cluster successfully.
+            CoordinatedTaskScheduleManager scheduleManager = new CoordinatedTaskScheduleManager(taskManager, taskStore,
+                    clusterCoordinator, locationResolver);
+            scheduleManager.startTaskScheduler(" upon rejoining the cluster");
         } catch (Throwable e) { // catching throwable so that we don't miss starting the scheduler
-            LOG.error("Error occurred while cleaning the tasks of node " + nodeId, e);
+            LOG.error("Error occurred while cleaning the tasks while rejoining of node " + nodeId, e);
+            if (callBack != null) {
+                callBack.onExceptionThrown(nodeId, e);
+            }
         }
-        // start the scheduler again since the node joined cluster successfully.
-        CoordinatedTaskScheduleManager scheduleManager = new CoordinatedTaskScheduleManager(taskManager, taskStore,
-                                                                                            clusterCoordinator,
-                                                                                            locationResolver);
-        scheduleManager.startTaskScheduler(" upon rejoining the cluster");
     }
 
 }
