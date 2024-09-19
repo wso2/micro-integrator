@@ -17,9 +17,11 @@
  */
 package org.wso2.micro.integrator.initializer.dashboard;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.management.OperatingSystemMXBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -29,6 +31,7 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -39,8 +42,10 @@ import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.util.StringUtils;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -56,7 +61,6 @@ import static org.wso2.micro.integrator.initializer.dashboard.Constants.HEADER_V
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.HTTPS_PREFIX;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.MANAGEMENT;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.NODE_ID_SYSTEM_PROPERTY;
-import static org.wso2.micro.integrator.initializer.dashboard.Constants.PRODUCT_MI;
 
 /**
  * Manages heartbeats from micro integrator to dashboard.
@@ -69,6 +73,7 @@ public class HeartBeatComponent {
 
     private static final Log log = LogFactory.getLog(HeartBeatComponent.class);
     private static final Map<String, Object> configs = ConfigParser.getParsedConfigs();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void invokeHeartbeatExecutorService() {
 
@@ -80,29 +85,31 @@ public class HeartBeatComponent {
 
         final HttpPost httpPost = new HttpPost(heartbeatApiUrl);
 
-        JsonObject heartbeatPayload = new JsonObject();
-        heartbeatPayload.addProperty("product", PRODUCT_MI);
-        heartbeatPayload.addProperty("groupId", groupId);
-        heartbeatPayload.addProperty("nodeId", nodeId);
-        heartbeatPayload.addProperty("interval", interval);
-        heartbeatPayload.addProperty("mgtApiUrl", mgtApiUrl);
-
         httpPost.setHeader("Accept", HEADER_VALUE_APPLICATION_JSON);
         httpPost.setHeader("Content-type", HEADER_VALUE_APPLICATION_JSON);
 
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         Runnable runnableTask = () -> {
+            HeartbeatData heartbeatData = new HeartbeatData(groupId, nodeId, interval, mgtApiUrl,
+                    getJMXMemoryMetrics(), getLiveThreadCount(), getCPULoadStats());
+            String heartbeatPayload = null;
+            try {
+                heartbeatPayload = objectMapper.writeValueAsString(heartbeatData);
+            } catch (JsonProcessingException e) {
+                log.debug("Error serializing heartbeat payload: " + e.getMessage());
+            }
 
             try (CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(
                     new SSLConnectionSocketFactory(
                             SSLContexts.custom().loadTrustMaterial(null,
                                     (TrustStrategy) new TrustSelfSignedStrategy()).build(),
                             NoopHostnameVerifier.INSTANCE)).build()) {
-                final StringEntity entity = new StringEntity(heartbeatPayload.toString());
+                assert heartbeatPayload != null;
+                final StringEntity entity = new StringEntity(heartbeatPayload, ContentType.APPLICATION_JSON);
                 httpPost.setEntity(entity);
                 CloseableHttpResponse response = client.execute(httpPost);
-                JsonObject jsonResponse = getJsonResponse(response);
-                if (jsonResponse != null && jsonResponse.get("status").getAsString().equals("success")) {
+                ObjectNode jsonResponse = getJsonResponse(response);
+                if (jsonResponse != null && jsonResponse.get("status").asText().equals("success")) {
                     log.debug("Heartbeat sent successfully.");
                 } else {
                     log.debug("Error occurred while sending the heartbeat.");
@@ -173,16 +180,44 @@ public class HeartBeatComponent {
         return UUID.randomUUID().toString();
     }
 
+    private static long[] getJMXMemoryMetrics() {
+        // Array format: [heapTotal, heapUsed, heapCommitted, heapMax]
+        long[] jmxStats = new long[4];
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+        MemoryUsage heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
+        jmxStats[0] = heapMemoryUsage.getInit();
+        jmxStats[1] = heapMemoryUsage.getUsed();
+        jmxStats[2] = heapMemoryUsage.getCommitted();
+        jmxStats[3] = heapMemoryUsage.getMax();
+        return jmxStats;
+    }
+
+    private static int getLiveThreadCount() {
+        return ManagementFactory.getThreadMXBean().getThreadCount();
+    }
+
+    private static double[] getCPULoadStats() {
+        // Array format: [systemCpuLoad, processCpuLoad]
+        double[] cpuUsage = new double[2];
+        OperatingSystemMXBean osMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        cpuUsage[0] = osMXBean.getCpuLoad();
+        cpuUsage[1] = osMXBean.getProcessCpuLoad();
+        return cpuUsage;
+    }
+
     public static boolean isDashboardConfigured() {
         return configs.get(DASHBOARD_CONFIG_URL) != null;
     }
 
-    public static JsonObject getJsonResponse(CloseableHttpResponse response) {
+    public static ObjectNode getJsonResponse(CloseableHttpResponse response) {
         String stringResponse = getStringResponse(response);
-        JsonObject responseObject = null;
+        ObjectNode responseObject = null;
         try {
-            responseObject = new JsonParser().parse(stringResponse).getAsJsonObject();
-        } catch (JsonParseException e) {
+            JsonNode jsonNode = objectMapper.readTree(stringResponse);
+            if (jsonNode.isObject()) {
+                responseObject = (ObjectNode) jsonNode;
+            }
+        } catch (IOException e) {
             log.debug("Error occurred while parsing the heartbeat response.", e);
         }
         return responseObject;
