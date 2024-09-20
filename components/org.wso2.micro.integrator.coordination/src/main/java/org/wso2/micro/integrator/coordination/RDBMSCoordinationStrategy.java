@@ -131,7 +131,8 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         }
         this.heartbeatMaxRetryInterval = heartBeatInterval * heartbeatMaxRetry;
         this.heartbeatWarningMargin = heartbeatMaxRetryInterval * 0.75;
-        this.maxDBReadTime = (long) (heartbeatWarningMargin / 30);
+        // maxDBReadTime is set to 1/10th of the heartbeatWarningMargin as for the max possible number of db calls
+        this.maxDBReadTime = (long) (heartbeatWarningMargin / 10);
         this.inactiveIntervalAfterUnresponsive = heartbeatMaxRetryInterval * 2L;
 
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setPriority(7)

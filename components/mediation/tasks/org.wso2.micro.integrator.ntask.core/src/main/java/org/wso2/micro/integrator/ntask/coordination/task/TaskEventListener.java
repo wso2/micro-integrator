@@ -112,6 +112,7 @@ public class TaskEventListener extends MemberEventListener {
         ScheduledExecutorService taskScheduler = dataHolder.getTaskScheduler();
         if (taskScheduler != null) {
             LOG.info("Shutting down coordinated task scheduler scheduler since the node became unresponsive.");
+            // Shutdown the task scheduler forcefully since node became unresponsive and need to avoid task duplication.
             taskScheduler.shutdownNow();
             dataHolder.setTaskScheduler(null);
         }

@@ -97,11 +97,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
                 storeMembershipEventPreparedStatement.addBatch();
             }
             storeMembershipEventPreparedStatement.executeBatch();
-            // Before committing, check if the thread was interrupted
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Thread was interrupted, avoiding commit.");
-            }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
             isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(StringUtil.removeCRLFCharacters(task) + " executed successfully");
@@ -218,11 +214,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setString(2, nodeId);
             preparedStatement.setLong(3, System.currentTimeMillis());
             int updateCount = preparedStatement.executeUpdate();
-            // Before committing, check if the thread was interrupted
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Thread was interrupted, avoiding commit.");
-            }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
             isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_ADD_MESSAGE_ID + " " + nodeId + " executed successfully");
@@ -288,11 +280,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatementForCoordinatorUpdate.setString(2, nodeId);
             preparedStatementForCoordinatorUpdate.setString(3, groupId);
             int updateCount = preparedStatementForCoordinatorUpdate.executeUpdate();
-            // Before committing, check if the thread was interrupted
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Thread was interrupted, avoiding commit.");
-            }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
             isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT + "node id " + nodeId
@@ -368,11 +356,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setString(1, groupId);
             preparedStatement.setLong(2, thresholdTimeLimit);
             preparedStatement.executeUpdate();
-            // Before committing, check if the thread was interrupted
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Thread was interrupted, avoiding commit.");
-            }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
             isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_REMOVE_COORDINATOR + " of group " + groupId + " executed successfully");
@@ -409,11 +393,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatementForNodeUpdate.setString(2, nodeId);
             preparedStatementForNodeUpdate.setString(3, groupId);
             int updateCount = preparedStatementForNodeUpdate.executeUpdate();
-            // Before committing, check if the thread was interrupted
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Thread was interrupted, avoiding commit.");
-            }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
             isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT + " of node " + nodeId + " executed successfully");
@@ -436,6 +416,21 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
         }
     }
 
+    /**
+     * Method to commit the transaction.
+     *
+     * @param connection Connection object
+     *
+     */
+    private void commitTransactionIfNotInterrupted(Connection connection) throws InterruptedException, SQLException {
+        // Check if the thread has been interrupted before committing
+        if (Thread.currentThread().isInterrupted()) {
+            throw new InterruptedException("Thread was interrupted, avoiding commit.");
+        }
+        // Commit the transaction
+        connection.commit();
+    }
+
     @Override
     public void createNodeHeartbeatEntry(String nodeId, String groupId) throws ClusterCoordinationException {
         Connection connection = null;
@@ -450,11 +445,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setLong(2, System.currentTimeMillis());
             preparedStatement.setString(3, groupId);
             preparedStatement.executeUpdate();
-            // Before committing, check if the thread was interrupted
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Thread was interrupted, avoiding commit.");
-            }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
             isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT + " of node " + nodeId + " executed successfully");
@@ -614,11 +605,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setString(1, nodeId);
             preparedStatement.setString(2, groupId);
             preparedStatement.executeUpdate();
-            // Before committing, check if the thread was interrupted
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Thread was interrupted, avoiding commit.");
-            }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
             isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT + " of node "
@@ -660,11 +647,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
                 storeRemovedMembersPreparedStatement.addBatch();
             }
             storeRemovedMembersPreparedStatement.executeBatch();
-            // Before committing, check if the thread was interrupted
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Thread was interrupted, avoiding commit.");
-            }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
             isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(StringUtil.removeCRLFCharacters(task) + " executed successfully");
@@ -700,11 +683,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             if (updateCount == 0) {
                 log.warn("No record was updated while marking node as not new");
             }
-            // Before committing, check if the thread was interrupted
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException("Thread was interrupted, avoiding commit.");
-            }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
             isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW + " of node "
