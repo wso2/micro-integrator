@@ -80,9 +80,11 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     public void storeMembershipEvent(String changedMember, String groupId, List<String> clusterNodes,
                                      int membershipEventType) throws ClusterCoordinationException {
         Connection connection = null;
+        boolean isRolledBack = false; // Flag to track if rollback has occurred
+        boolean isTransactionSuccessful = false;
         PreparedStatement storeMembershipEventPreparedStatement = null;
         String task = "Storing membership event: " + membershipEventType + " for member: " + changedMember
-                      + " in group " + groupId;
+                + " in group " + groupId;
         try {
             connection = getConnection();
             storeMembershipEventPreparedStatement = connection
@@ -95,15 +97,23 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
                 storeMembershipEventPreparedStatement.addBatch();
             }
             storeMembershipEventPreparedStatement.executeBatch();
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
+            isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(StringUtil.removeCRLFCharacters(task) + " executed successfully");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             rollback(connection, task);
+            isRolledBack = true; // Mark as rolled back
+            log.warn("Transaction rolled back for task: " + task);
+
             throw new ClusterCoordinationException("Error storing membership change: " + membershipEventType +
-                                                   " for member: " + changedMember + " in group " + groupId, e);
+                    " for member: " + changedMember + " in group " + groupId, e);
         } finally {
+            if (!isTransactionSuccessful && !isRolledBack && Thread.currentThread().isInterrupted()) {
+                rollback(connection, task);
+                log.warn("Transaction rolled back for task: " + task);
+            }
             close(storeMembershipEventPreparedStatement, task);
             close(connection, task);
         }
@@ -193,6 +203,8 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     @Override
     public boolean createCoordinatorEntry(String nodeId, String groupId) throws ClusterCoordinationException {
         Connection connection = null;
+        boolean isRolledBack = false; // Flag to track if rollback has occurred
+        boolean isTransactionSuccessful = false;
         PreparedStatement preparedStatement = null;
         try {
             connection = getConnection();
@@ -202,15 +214,22 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setString(2, nodeId);
             preparedStatement.setLong(3, System.currentTimeMillis());
             int updateCount = preparedStatement.executeUpdate();
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
+            isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_ADD_MESSAGE_ID + " " + nodeId + " executed successfully");
             }
             return updateCount != 0;
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             rollback(connection, RDBMSConstantUtils.TASK_ADD_MESSAGE_ID);
+            isRolledBack = true; // Mark as rolled back
+            log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_ADD_MESSAGE_ID);
             return false;
         } finally {
+            if (!isTransactionSuccessful && !isRolledBack && Thread.currentThread().isInterrupted()) {
+                rollback(connection, RDBMSConstantUtils.TASK_ADD_MESSAGE_ID);
+                log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_ADD_MESSAGE_ID);
+            }
             close(preparedStatement, RDBMSConstantUtils.TASK_ADD_MESSAGE_ID);
             close(connection, RDBMSConstantUtils.TASK_ADD_MESSAGE_ID);
         }
@@ -250,6 +269,8 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     public boolean updateCoordinatorHeartbeat(String nodeId, String groupId, long currentHeartbeatTime)
             throws ClusterCoordinationException {
         Connection connection = null;
+        boolean isRolledBack = false; // Flag to track if rollback has occurred
+        boolean isTransactionSuccessful = false;
         PreparedStatement preparedStatementForCoordinatorUpdate = null;
         try {
             connection = getConnection();
@@ -259,18 +280,25 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatementForCoordinatorUpdate.setString(2, nodeId);
             preparedStatementForCoordinatorUpdate.setString(3, groupId);
             int updateCount = preparedStatementForCoordinatorUpdate.executeUpdate();
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
+            isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT + "node id " + nodeId
-                          + " executed successfully");
+                        + " executed successfully");
             }
             return updateCount != 0;
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             rollback(connection, RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT);
+            isRolledBack = true; // Mark as rolled back
+            log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT);
             throw new ClusterCoordinationException("Error occurred while "
                                                    + RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT
                                                    + ". instance ID: " + nodeId + " group ID: " + groupId, e);
         } finally {
+            if (!isTransactionSuccessful && !isRolledBack && Thread.currentThread().isInterrupted()) {
+                rollback(connection, RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT);
+                log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT);
+            }
             close(preparedStatementForCoordinatorUpdate, RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT);
             close(connection, RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT);
         }
@@ -318,6 +346,8 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     public void removeCoordinator(String groupId, int heartbeatMaxAge, long currentHeartbeatTime)
             throws ClusterCoordinationException {
         Connection connection = null;
+        boolean isRolledBack = false; // Flag to track if rollback has occurred
+        boolean isTransactionSuccessful = false;
         PreparedStatement preparedStatement = null;
         try {
             connection = getConnection();
@@ -326,14 +356,22 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setString(1, groupId);
             preparedStatement.setLong(2, thresholdTimeLimit);
             preparedStatement.executeUpdate();
+            commitTransactionIfNotInterrupted(connection);
+            isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_REMOVE_COORDINATOR + " of group " + groupId + " executed successfully");
             }
-            connection.commit();
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             rollback(connection, RDBMSConstantUtils.TASK_REMOVE_COORDINATOR);
-            throw new ClusterCoordinationException("Error occurred while " + RDBMSConstantUtils.TASK_REMOVE_COORDINATOR, e);
+            isRolledBack = true; // Mark as rolled back
+            log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_REMOVE_COORDINATOR);
+            throw new ClusterCoordinationException("Error occurred while "
+                    + RDBMSConstantUtils.TASK_REMOVE_COORDINATOR, e);
         } finally {
+            if (!isTransactionSuccessful && !isRolledBack && Thread.currentThread().isInterrupted()) {
+                rollback(connection, RDBMSConstantUtils.TASK_REMOVE_COORDINATOR);
+                log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_REMOVE_COORDINATOR);
+            }
             close(preparedStatement, RDBMSConstantUtils.TASK_REMOVE_COORDINATOR);
             close(connection, RDBMSConstantUtils.TASK_REMOVE_COORDINATOR);
         }
@@ -343,6 +381,8 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     public boolean updateNodeHeartbeat(String nodeId, String groupId, long currentHeartbeatTime)
             throws ClusterCoordinationException {
         Connection connection = null;
+        boolean isRolledBack = false; // Flag to track if rollback has occurred
+        boolean isTransactionSuccessful = false;
         PreparedStatement preparedStatementForNodeUpdate = null;
 
         try {
@@ -353,24 +393,49 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatementForNodeUpdate.setString(2, nodeId);
             preparedStatementForNodeUpdate.setString(3, groupId);
             int updateCount = preparedStatementForNodeUpdate.executeUpdate();
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
+            isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT + " of node " + nodeId + " executed successfully");
             }
             return updateCount != 0;
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             rollback(connection, RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT);
-            throw new ClusterCoordinationException("Error occurred while " + RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT
-                                                   + ". Node ID: " + nodeId + "and Group ID : " + groupId, e);
+            isRolledBack = true; // Mark as rolled back
+            log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT);
+            throw new ClusterCoordinationException("Error occurred while "
+                    + RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT + ". Node ID: " + nodeId + "and Group ID : "
+                    + groupId, e);
         } finally {
+            if (!isTransactionSuccessful && !isRolledBack && Thread.currentThread().isInterrupted()) {
+                rollback(connection, RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT);
+                log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT);
+            }
             close(preparedStatementForNodeUpdate, RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT);
             close(connection, RDBMSConstantUtils.TASK_UPDATE_NODE_HEARTBEAT);
         }
     }
 
+    /**
+     * Method to commit the transaction.
+     *
+     * @param connection Connection object
+     *
+     */
+    private void commitTransactionIfNotInterrupted(Connection connection) throws InterruptedException, SQLException {
+        // Check if the thread has been interrupted before committing
+        if (Thread.currentThread().isInterrupted()) {
+            throw new InterruptedException("Thread was interrupted, avoiding commit.");
+        }
+        // Commit the transaction
+        connection.commit();
+    }
+
     @Override
     public void createNodeHeartbeatEntry(String nodeId, String groupId) throws ClusterCoordinationException {
         Connection connection = null;
+        boolean isRolledBack = false; // Flag to track if rollback has occurred
+        boolean isTransactionSuccessful = false;
         PreparedStatement preparedStatement = null;
         try {
             connection = getConnection();
@@ -380,15 +445,23 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setLong(2, System.currentTimeMillis());
             preparedStatement.setString(3, groupId);
             preparedStatement.executeUpdate();
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
+            isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT + " of node " + nodeId + " executed successfully");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             rollback(connection, RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT);
-            throw new ClusterCoordinationException("Error occurred while " + RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT
-                                                   + ". Node ID: " + nodeId + " group ID " + groupId, e);
+            isRolledBack = true; // Mark as rolled back
+            log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT);
+            throw new ClusterCoordinationException("Error occurred while "
+                    + RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT
+                    + ". Node ID: " + nodeId + " group ID " + groupId, e);
         } finally {
+            if (!isTransactionSuccessful && !isRolledBack && Thread.currentThread().isInterrupted()) {
+                rollback(connection, RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT);
+                log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT);
+            }
             close(preparedStatement, RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT);
             close(connection, RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT);
         }
@@ -522,6 +595,8 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     @Override
     public void removeNode(String nodeId, String groupId) throws ClusterCoordinationException {
         Connection connection = null;
+        boolean isRolledBack = false; // Flag to track if rollback has occurred
+        boolean isTransactionSuccessful = false;
         PreparedStatement preparedStatement = null;
         try {
             connection = getConnection();
@@ -530,16 +605,23 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setString(1, nodeId);
             preparedStatement.setString(2, groupId);
             preparedStatement.executeUpdate();
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
+            isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT + " of node "
-                          + StringUtil.removeCRLFCharacters(nodeId) + " executed successfully");
+                        + StringUtil.removeCRLFCharacters(nodeId) + " executed successfully");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             rollback(connection, RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT);
+            isRolledBack = true; // Mark as rolled back
+            log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT);
             throw new ClusterCoordinationException("error occurred while "
-                                                   + RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT, e);
+                    + RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT, e);
         } finally {
+            if (!isTransactionSuccessful && !isRolledBack && Thread.currentThread().isInterrupted()) {
+                rollback(connection, RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT);
+                log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT);
+            }
             close(preparedStatement, RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT);
             close(connection, RDBMSConstantUtils.TASK_REMOVE_NODE_HEARTBEAT);
         }
@@ -549,6 +631,8 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     public void insertRemovedNodeDetails(String removedMember, String groupId, List<String> clusterNodes)
             throws ClusterCoordinationException {
         Connection connection = null;
+        boolean isRolledBack = false; // Flag to track if rollback has occurred
+        boolean isTransactionSuccessful = false;
         PreparedStatement storeRemovedMembersPreparedStatement = null;
         String task = "Storing removed member: " + removedMember + " in group " + groupId;
         try {
@@ -563,15 +647,22 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
                 storeRemovedMembersPreparedStatement.addBatch();
             }
             storeRemovedMembersPreparedStatement.executeBatch();
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
+            isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(StringUtil.removeCRLFCharacters(task) + " executed successfully");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             rollback(connection, task);
+            isRolledBack = true; // Mark as rolled back
+            log.warn("Transaction rolled back for task: " + task);
             throw new ClusterCoordinationException(
                     "Error storing removed member: " + removedMember + " in group " + groupId, e);
         } finally {
+            if (!isTransactionSuccessful && !isRolledBack && Thread.currentThread().isInterrupted()) {
+                rollback(connection, task);
+                log.warn("Transaction rolled back for task: " + task);
+            }
             close(storeRemovedMembersPreparedStatement, task);
             close(connection, task);
         }
@@ -580,6 +671,8 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     @Override
     public void markNodeAsNotNew(String nodeId, String groupId) throws ClusterCoordinationException {
         Connection connection = null;
+        boolean isRolledBack = false; // Flag to track if rollback has occurred
+        boolean isTransactionSuccessful = false;
         PreparedStatement preparedStatement = null;
         try {
             connection = getConnection();
@@ -590,15 +683,23 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             if (updateCount == 0) {
                 log.warn("No record was updated while marking node as not new");
             }
-            connection.commit();
+            commitTransactionIfNotInterrupted(connection);
+            isTransactionSuccessful = true;
             if (log.isDebugEnabled()) {
                 log.debug(RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW + " of node "
-                          + StringUtil.removeCRLFCharacters(nodeId) + " executed successfully");
+                        + StringUtil.removeCRLFCharacters(nodeId) + " executed successfully");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             rollback(connection, RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW);
-            throw new ClusterCoordinationException("Error occurred while " + RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW, e);
+            isRolledBack = true; // Mark as rolled back
+            log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW);
+            throw new ClusterCoordinationException("Error occurred while "
+                    + RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW, e);
         } finally {
+            if (!isTransactionSuccessful && !isRolledBack && Thread.currentThread().isInterrupted()) {
+                rollback(connection, RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW);
+                log.warn("Transaction rolled back for task: " + RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW);
+            }
             close(preparedStatement, RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW);
             close(connection, RDBMSConstantUtils.TASK_MARK_NODE_NOT_NEW);
         }
@@ -725,7 +826,9 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     private void rollback(Connection connection, String task) {
         if (connection != null) {
             try {
-                connection.rollback();
+                if (!connection.isClosed()) {
+                    connection.rollback();
+                }
             } catch (SQLException e) {
                 log.warn("Rollback failed on " + StringUtil.removeCRLFCharacters(task), e);
             }

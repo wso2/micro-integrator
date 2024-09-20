@@ -57,8 +57,9 @@ public abstract class MemberEventListener {
      * Invoked when the node is back to active state after being inactive.
      *
      * @param nodeId - The Id of this node
+     * @param callBack - The callback to be called when an exception is thrown
      */
-    public abstract void reJoined(String nodeId);
+    public abstract void reJoined(String nodeId, RDBMSMemberEventCallBack callBack);
 
     public String getGroupId() {
         return this.groupId;

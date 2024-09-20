@@ -85,6 +85,7 @@ public class CoordinatedTaskScheduler implements Runnable {
         try {
             pauseDeactivatedTasks();
             scheduleAssignedTasks(CoordinatedTask.States.ACTIVATED);
+            checkInterrupted();
             if (clusterCoordinator.isLeader()) {
                 // cleaning will run for each n times resolving frequency . ( n = 0,1,2 ... ).
                 if (resolveCount % resolvingFrequency == 0) {
@@ -101,8 +102,34 @@ public class CoordinatedTaskScheduler implements Runnable {
             }
             // schedule all tasks assigned to this node and in state none
             scheduleAssignedTasks(CoordinatedTask.States.NONE);
+            checkInterrupted();
         } catch (Throwable throwable) { // catching throwable to prohibit permanent stopping of the executor service.
             LOG.fatal("Unexpected error occurred while trying to schedule tasks.", throwable);
+        }
+    }
+
+    /**
+     * Check if the task is interrupted.
+     *
+     * @throws TaskCoordinationException when something goes wrong connecting to the store
+     */
+    private void checkInterrupted() throws InterruptedException {
+
+        if (Thread.currentThread().isInterrupted()) {
+            try {
+                List<String> tasks = taskManager.getLocallyRunningCoordinatedTasks();
+                // stop all running coordinated tasks.
+                tasks.forEach(task -> {
+                    try {
+                        taskManager.stopExecution(task);
+                    } catch (TaskException e) {
+                        LOG.error("Unable to pause the task " + task, e);
+                    }
+                });
+            } finally {
+                Thread.currentThread().interrupt();
+                throw new InterruptedException("Task was interrupted.");
+            }
         }
     }
 
@@ -166,7 +193,8 @@ public class CoordinatedTaskScheduler implements Runnable {
      * @param state - The state of the tasks which need to be scheduled.
      * @throws TaskCoordinationException - When something goes wrong while retrieving all the assigned tasks.
      */
-    private void scheduleAssignedTasks(CoordinatedTask.States state) throws TaskCoordinationException {
+    private void scheduleAssignedTasks(CoordinatedTask.States state) throws TaskCoordinationException
+            , InterruptedException {
 
         LOG.debug("Retrieving tasks assigned to this node and to be scheduled.");
         List<String> tasksOfThisNode = taskStore.retrieveTaskNames(localNodeId, state);
@@ -184,6 +212,7 @@ public class CoordinatedTaskScheduler implements Runnable {
                     LOG.debug("Submitting retrieved task [" + taskName + "] to the task manager.");
                 }
                 try {
+                    checkInterrupted();
                     taskManager.scheduleCoordinatedTask(taskName);
                 } catch (TaskException ex) {
                     if (!TaskException.Code.DATABASE_ERROR.equals(ex.getCode())) {

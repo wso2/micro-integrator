@@ -56,12 +56,12 @@ public class RDBMSMemberEventProcessor {
     private RDBMSCommunicationBusContextImpl communicationBusContext;
 
     public RDBMSMemberEventProcessor(String localNodeId, String localGroupId, int heartbeatMaxRetry,
-                                     RDBMSCommunicationBusContextImpl communicationBusContext) {
+                                     RDBMSCommunicationBusContextImpl communicationBusContext, long maxDBReadTime) {
         this.communicationBusContext = communicationBusContext;
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("ClusterEventReaderTask-%d").build();
         this.clusterMembershipReaderTaskScheduler = Executors.newSingleThreadScheduledExecutor(namedThreadFactory);
-        addNewListenerTask(localNodeId, localGroupId, heartbeatMaxRetry);
+        addNewListenerTask(localNodeId, localGroupId, heartbeatMaxRetry, maxDBReadTime);
     }
 
     /**
@@ -69,7 +69,7 @@ public class RDBMSMemberEventProcessor {
      *
      * @param nodeId the node ID of the node which starts the listening
      */
-    private void addNewListenerTask(String nodeId, String localGroupId, int heartbeatMaxRetry) {
+    private void addNewListenerTask(String nodeId, String localGroupId, int heartbeatMaxRetry, long maxDBReadTime) {
         int scheduledPeriod;
         String scheduledPeriodStr = System.getProperty(RDBMSConstantUtils.SCHEDULED_PERIOD);
         if (scheduledPeriodStr == null) {
@@ -84,7 +84,8 @@ public class RDBMSMemberEventProcessor {
                 scheduledPeriod = RDBMSConstantUtils.DEFAULT_SCHEDULED_PERIOD_INTERVAL;
             }
         }
-        membershipListenerTask = new RDBMSMemberEventListenerTask(nodeId, localGroupId, communicationBusContext, heartbeatMaxRetry);
+        membershipListenerTask = new RDBMSMemberEventListenerTask(nodeId, localGroupId, communicationBusContext,
+                heartbeatMaxRetry, maxDBReadTime);
         this.clusterMembershipReaderTaskScheduler.scheduleWithFixedDelay(membershipListenerTask,
                                                                          scheduledPeriod, scheduledPeriod, TimeUnit.MILLISECONDS);
         if (log.isDebugEnabled()) {
@@ -120,6 +121,36 @@ public class RDBMSMemberEventProcessor {
      */
     public void addEventListener(MemberEventListener membershipListener) {
         membershipListenerTask.addEventListener(membershipListener);
+    }
+
+    /**
+     * Set the unresponsiveness of a member if needed.
+     *
+     * @param nodeID          the node ID of the member
+     * @param localGroupId    the local group ID
+     * @param setUnresponsive flag to set unresponsiveness
+     */
+    public void setMemberUnresponsiveIfNeeded(String nodeID, String localGroupId, boolean setUnresponsive) {
+        membershipListenerTask.setMemberUnresponsiveIfNeeded(nodeID, localGroupId, setUnresponsive);
+    }
+
+    /**
+     * Check whether the member has rejoined after being unresponsive.
+     *
+     * @return true if the member has rejoined after being unresponsive, false otherwise
+     */
+    public boolean isMemberUnresponsive() {
+        return membershipListenerTask.isMemberUnresponsive();
+    }
+
+    /**
+     * Set the rejoin status of a member.
+     *
+     * @param nodeID       the node ID of the member
+     * @param localGroupId the local group ID
+     */
+    public void setMemberRejoined(String nodeID, String localGroupId) {
+        membershipListenerTask.notifyRejoin(nodeID, localGroupId);
     }
 
     /**

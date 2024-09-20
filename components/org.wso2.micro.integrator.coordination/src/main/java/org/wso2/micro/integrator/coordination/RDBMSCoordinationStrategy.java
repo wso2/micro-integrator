@@ -33,9 +33,14 @@ import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.sql.DataSource;
 
 import static org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils.CLUSTER_CONFIG;
@@ -64,10 +69,21 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
      * This is used to give the user a warning when the heartbeat interval exceeds the limit.
      */
     private double heartbeatWarningMargin;
+
+    /**
+     * Maximum time taken to read from the database.
+     */
+    private long maxDBReadTime;
+
     /**
      * Heartbeat retry interval.
      */
     private int heartbeatMaxRetry;
+
+    /**
+     * Interval after which a node is considered inactive after being unresponsive.
+     */
+    private long inactiveIntervalAfterUnresponsive;
 
     /**
      * Thread executor used to run the coordination algorithm.
@@ -115,6 +131,9 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         }
         this.heartbeatMaxRetryInterval = heartBeatInterval * heartbeatMaxRetry;
         this.heartbeatWarningMargin = heartbeatMaxRetryInterval * 0.75;
+        // maxDBReadTime is set to 1/10th of the heartbeatWarningMargin as for the max possible number of db calls
+        this.maxDBReadTime = (long) (heartbeatWarningMargin / 10);
+        this.inactiveIntervalAfterUnresponsive = heartbeatMaxRetryInterval * 2L;
 
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setPriority(7)
                                                                      .setNameFormat("RDBMSCoordinationStrategy-%d").build();
@@ -123,7 +142,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         this.localNodeId = getNodeId();
         this.communicationBusContext = communicationBusContext;
         this.rdbmsMemberEventProcessor = new RDBMSMemberEventProcessor(localNodeId, localGroupId,
-                (int) heartbeatWarningMargin, communicationBusContext);
+                (int) heartbeatWarningMargin, communicationBusContext, maxDBReadTime);
     }
 
     /**
@@ -266,6 +285,16 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         rdbmsMemberEventProcessor.addEventListener(memberEventListener);
     }
 
+    /**
+     * Marks the specified node as unresponsive.
+     *
+     * @param nodeId  the ID of the node to be marked as unresponsive
+     * @param groupId the ID of the group to which the node belongs
+     */
+    public void setUnresponsiveness(String nodeId, String groupId) {
+        rdbmsMemberEventProcessor.setMemberUnresponsiveIfNeeded(nodeId, groupId, true);
+    }
+
     private String getNodeId() {
 
         String nodeId = System.getProperty(NODE_ID);
@@ -364,6 +393,11 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         private String localGroupId;
 
         /**
+         * Executor service used to communicate with the database.
+         */
+        private ExecutorService dbCommunicatorExecutor = Executors.newSingleThreadExecutor();
+
+        /**
          * Constructor.
          *
          * @param nodeId           - node ID of the current node
@@ -399,6 +433,12 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                         performCoordinatorTask(currentHeartbeatTime, timeTakenForCoordinatorTasks);
                         break;
                 }
+                if (rdbmsMemberEventProcessor.isMemberUnresponsive()) {
+                    log.info("Initiating unresponsive member recovery process for node " + localNodeId);
+                    rdbmsMemberEventProcessor.setMemberUnresponsiveIfNeeded(localNodeId, localGroupId
+                            , false);
+                    rdbmsMemberEventProcessor.setMemberRejoined(localNodeId, localGroupId);
+                }
                 long clusterTaskEndingTime = System.currentTimeMillis();
                 if (log.isDebugEnabled() && clusterTaskEndingTime - currentHeartbeatTime > 1000) {
                     log.debug("Cluster task took " +
@@ -430,9 +470,38 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                 }
                 // We are catching throwable to avoid subsequent executions getting suppressed
             } catch (Throwable e) {
-                log.error("Error detected while running coordination algorithm. Node became a "
-                          + NodeState.MEMBER + " node in group " + localGroupId, e);
                 currentNodeState = NodeState.MEMBER;
+                try {
+                    // Sleep for the duration of the inactiveIntervalAfterUnresponsive to allow time for the database to
+                    // recover and give other nodes to take over the coordinator role and/or remove the node from the
+                    // group.
+                    Thread.sleep(inactiveIntervalAfterUnresponsive);
+                } catch (InterruptedException ex) {
+                    // ignore
+                }
+            }
+        }
+
+        /**
+         * Perform DB operations with a timeout.
+         *
+         * @param task the callable task to be performed
+         * @param <T>  the return type of the task
+         * @return the result of the task
+         * @throws ClusterCoordinationException if the task execution takes more time than the max DB timeout interval
+         */
+        public <T> T performDBOperationsWithTimeout(Callable<T> task) throws ClusterCoordinationException {
+            Future<T> future = dbCommunicatorExecutor.submit(task);
+            try {
+                return future.get(maxDBReadTime, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                try {
+                    future.cancel(true); // Cancel the task if it exceeds the max DB timeout interval
+                } catch (Exception ex) {
+                    //ignore
+                }
+                throw new ClusterCoordinationException("Database connection turned unresponsive. "
+                        + "Please increase the heartbeat interval or verify the database connection.", e);
             }
         }
 
@@ -446,18 +515,43 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                 throws ClusterCoordinationException, InterruptedException {
             long taskStartTime = System.currentTimeMillis();
             long taskEndTime;
-            updateNodeHeartBeat(currentHeartbeatTime);
+            try {
+                performDBOperationsWithTimeout(() -> {
+                    updateNodeHeartBeat(currentHeartbeatTime);
+                    return null;
+                });
+            } catch (ClusterCoordinationException e) {
+                handleDatabaseDelay(localNodeId, localGroupId, e, "Error updating node heartbeat.");
+                throw e;
+            }
             taskEndTime = System.currentTimeMillis();
             timeTakenForMemberTasks[0] = taskEndTime - taskStartTime;
             taskStartTime = taskEndTime;
-            boolean coordinatorValid = communicationBusContext.checkIfCoordinatorValid(localGroupId, localNodeId,
-                                                                                       heartbeatMaxRetryInterval, currentHeartbeatTime);
+            boolean coordinatorValid;
+            try {
+                coordinatorValid = performDBOperationsWithTimeout(() ->
+                        communicationBusContext.checkIfCoordinatorValid
+                                (localGroupId, localNodeId, heartbeatMaxRetryInterval, currentHeartbeatTime)
+                );
+            } catch (ClusterCoordinationException e) {
+                handleDatabaseDelay(localNodeId, localGroupId, e, "Error checking if coordinator is valid.");
+                throw e;
+            }
             taskEndTime = System.currentTimeMillis();
             timeTakenForMemberTasks[1] = taskEndTime - taskStartTime;
             if (!coordinatorValid) {
                 taskStartTime = taskEndTime;
-                communicationBusContext.removeCoordinator(localGroupId, heartbeatMaxRetryInterval,
-                                                          currentHeartbeatTime);
+                try {
+                    performDBOperationsWithTimeout(() -> {
+                        communicationBusContext.removeCoordinator(localGroupId, heartbeatMaxRetryInterval
+                                , currentHeartbeatTime);
+                        return null;
+                    });
+                } catch (ClusterCoordinationException e) {
+                    handleDatabaseDelay(localNodeId, localGroupId, e, "Error removing coordinator for group "
+                            + localGroupId);
+                    throw e;
+                }
                 taskEndTime = System.currentTimeMillis();
                 timeTakenForMemberTasks[2] = taskEndTime - taskStartTime;
                 taskStartTime = taskEndTime;
@@ -492,17 +586,49 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
             // Try to update the coordinator heartbeat
             long taskStartTime = System.currentTimeMillis();
             long taskEndTime;
-            boolean stillCoordinator = communicationBusContext.
-                                                                      updateCoordinatorHeartbeat(localNodeId, localGroupId, currentHeartbeatTime);
+            boolean stillCoordinator;
+            try {
+                stillCoordinator = performDBOperationsWithTimeout(() ->
+                        communicationBusContext.updateCoordinatorHeartbeat
+                                (localNodeId, localGroupId, currentHeartbeatTime));
+            } catch (ClusterCoordinationException e) {
+                handleDatabaseDelay(localNodeId, localGroupId, e,
+                        "Error updating coordinator heartbeat in LEADER_STATUS_TABLE due to database delay."
+                                + " Stopping coordinated tasks for this node. Please increase the heartbeat interval or"
+                                + " verify the database connection.");
+                throw e;
+            }
             taskEndTime = System.currentTimeMillis();
             timeTakenForCoordinatorTasks[0] = taskEndTime - taskStartTime;
             taskStartTime = taskEndTime;
             if (stillCoordinator) {
-                updateNodeHeartBeat(currentHeartbeatTime);
+                try {
+                    performDBOperationsWithTimeout(() -> {
+                        updateNodeHeartBeat(currentHeartbeatTime);
+                        return null;
+                    });
+                } catch (ClusterCoordinationException e) {
+                   handleDatabaseDelay(localNodeId, localGroupId, e,
+                           "Error updating node heartbeat in CLUSTER_NODE_STATUS_TABLE due to database delay."
+                                   + " Stopping coordinated tasks for this node. Please increase the heartbeat interval"
+                                   + " or verify the database connection.");
+                    throw e;
+                }
                 taskEndTime = System.currentTimeMillis();
                 timeTakenForCoordinatorTasks[1] = taskEndTime - taskStartTime;
                 taskStartTime = taskEndTime;
-                List<NodeDetail> allNodeInformation = communicationBusContext.getAllNodeData(localGroupId);
+
+                List<NodeDetail> allNodeInformation;
+                try {
+                    allNodeInformation = performDBOperationsWithTimeout(() ->
+                            communicationBusContext.getAllNodeData(localGroupId));
+                } catch (ClusterCoordinationException e) {
+                    handleDatabaseDelay(localNodeId, localGroupId, e, "Error retrieving all node data from"
+                            + " LEADER_STATUS_TABLE and CLUSTER_NODE_STATUS_TABLE due to database delay."
+                            + " Stopping coordinated tasks for this node. Please increase the heartbeat interval or"
+                            + " verify the database connection.");
+                   throw e;
+                }
                 taskEndTime = System.currentTimeMillis();
                 timeTakenForCoordinatorTasks[2] = taskEndTime - taskStartTime;
                 taskStartTime = taskEndTime;
@@ -537,14 +663,47 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                     removedNodes.add(nodeId);
                     allActiveNodeIds.remove(nodeId);
                     removedNodeDetails.add(nodeDetail);
-                    communicationBusContext.removeNode(nodeId, localGroupId);
+                    try {
+                        performDBOperationsWithTimeout(() -> {
+                            communicationBusContext.removeNode(nodeId, localGroupId);
+                            return null;
+                        });
+                    } catch (ClusterCoordinationException e) {
+                        handleDatabaseDelay(nodeId, localGroupId, e, "Error removing node " + nodeId
+                                + " from group " + localGroupId + " due to database delay.");
+                        throw e;
+                    }
                 } else if (nodeDetail.isNewNode()) {
                     newNodes.add(nodeId);
-                    communicationBusContext.markNodeAsNotNew(nodeId, localGroupId);
+                    try {
+                        performDBOperationsWithTimeout(() -> {
+                            communicationBusContext.markNodeAsNotNew(nodeId, localGroupId);
+                            return null;
+                        });
+                    } catch (ClusterCoordinationException e) {
+                        handleDatabaseDelay(nodeId, localGroupId, e, "Error marking node as not"
+                                + " new for nodeId: " + nodeId + " in group: " + localGroupId);
+                        throw e;
+
+                    }
                 }
             }
+
             notifyAddedMembers(newNodes, allActiveNodeIds);
             notifyRemovedMembers(removedNodes, allActiveNodeIds, removedNodeDetails);
+        }
+
+        /**
+         * Handles the database delay.
+         *
+         * @param nodeId      node ID of the current node
+         * @param groupId group ID of the current group
+         * @param e           exception occurred
+         * @param logMessage  log message
+         */
+        private void handleDatabaseDelay(String nodeId, String groupId, Exception e, String logMessage) {
+            log.warn(logMessage + " Make task Sleep for the duration of : " + inactiveIntervalAfterUnresponsive , e);
+            setUnresponsiveness(nodeId, groupId);
         }
 
         /**
@@ -559,8 +718,17 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                     log.debug("Member added " + StringUtil.removeCRLFCharacters(newNode) + "to group " +
                               StringUtil.removeCRLFCharacters(localGroupId));
                 }
-                rdbmsMemberEventProcessor.notifyMembershipEvent(newNode, localGroupId, allActiveNodeIds,
-                                                                MemberEventType.MEMBER_ADDED);
+                try {
+                    performDBOperationsWithTimeout(() -> {
+                        rdbmsMemberEventProcessor.notifyMembershipEvent(newNode, localGroupId, allActiveNodeIds,
+                                MemberEventType.MEMBER_ADDED);
+                        return null;
+                    });
+                } catch (ClusterCoordinationException e) {
+                    handleDatabaseDelay(newNode, localGroupId, e
+                            , "Error notifying membership event for new node " + newNode);
+                    throw e;
+                }
             }
         }
 
@@ -572,8 +740,17 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
          */
         private void storeRemovedMemberDetails(List<String> allActiveNodeIds, List<NodeDetail> removedNodeDetails) {
             for (NodeDetail nodeDetail : removedNodeDetails) {
-                communicationBusContext.insertRemovedNodeDetails(nodeDetail.getNodeId(), nodeDetail.getGroupId(),
-                                                                 allActiveNodeIds);
+                try {
+                    performDBOperationsWithTimeout(() -> {
+                        communicationBusContext.insertRemovedNodeDetails(nodeDetail.getNodeId()
+                                , nodeDetail.getGroupId(), allActiveNodeIds);
+                        return null;
+                    });
+                } catch (ClusterCoordinationException e) {
+                    handleDatabaseDelay(nodeDetail.getNodeId(), nodeDetail.getGroupId(), e
+                            , "Error inserting removed node details for node " + nodeDetail.getNodeId());
+                    throw e;
+                }
             }
         }
 
@@ -591,8 +768,17 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                     log.debug("Member removed " + StringUtil.removeCRLFCharacters(removedNode) + "from group "
                               + StringUtil.removeCRLFCharacters(localGroupId));
                 }
-                rdbmsMemberEventProcessor.notifyMembershipEvent(removedNode, localGroupId, allActiveNodeIds,
-                                                                MemberEventType.MEMBER_REMOVED);
+                try {
+                    performDBOperationsWithTimeout(() -> {
+                        rdbmsMemberEventProcessor.notifyMembershipEvent(removedNode, localGroupId, allActiveNodeIds,
+                                MemberEventType.MEMBER_REMOVED);
+                        return null;
+                    });
+                } catch (ClusterCoordinationException e) {
+                    handleDatabaseDelay(removedNode, localGroupId, e
+                            , "Error notifying membership event for removed node " + removedNode);
+                    throw e;
+                }
             }
         }
 
@@ -605,9 +791,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
             try {
                 this.currentNodeState = tryToElectSelfAsCoordinator(currentHeartbeatTime);
             } catch (ClusterCoordinationException e) {
-                log.error("Error occurred. Current node became a " + NodeState.MEMBER + " node in group " +
-                          localGroupId + ". " + e.getMessage(), e);
-                this.currentNodeState = NodeState.MEMBER;
+                throw e;
             }
         }
 
@@ -620,11 +804,27 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         private NodeState tryToElectSelfAsCoordinator(long currentHeartbeatTime)
                 throws ClusterCoordinationException {
             NodeState nodeState;
-            boolean electedAsCoordinator = communicationBusContext.createCoordinatorEntry(localNodeId, localGroupId);
+            boolean electedAsCoordinator;
+            try {
+                electedAsCoordinator = performDBOperationsWithTimeout(()
+                        -> communicationBusContext.createCoordinatorEntry(localNodeId, localGroupId));
+            } catch (ClusterCoordinationException e) {
+                handleDatabaseDelay(localNodeId, localGroupId, e,
+                        "Error occurred while trying to elect self as coordinator for group " + localGroupId);
+                throw e;
+            }
             if (electedAsCoordinator) {
                 log.info("Elected current node (nodeID: " + localNodeId + ") as the coordinator for the group " +
                          localGroupId);
-                List<NodeDetail> allNodeInformation = communicationBusContext.getAllNodeData(localGroupId);
+                List<NodeDetail> allNodeInformation;
+                try {
+                    allNodeInformation = performDBOperationsWithTimeout(()
+                            -> communicationBusContext.getAllNodeData(localGroupId));
+                } catch (ClusterCoordinationException e) {
+                    handleDatabaseDelay(localNodeId, localGroupId, e
+                            , "Error retrieving all node data from the database.");
+                    throw e;
+                }
                 findAddedRemovedMembers(allNodeInformation, currentHeartbeatTime);
                 nodeState = NodeState.COORDINATOR;
                 // notify nodes about coordinator change
@@ -632,8 +832,17 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                 for (NodeDetail nodeDetail : allNodeInformation) {
                     nodeIdentifiers.add(nodeDetail.getNodeId());
                 }
-                rdbmsMemberEventProcessor.notifyMembershipEvent(localNodeId, localGroupId, nodeIdentifiers,
-                                                                MemberEventType.COORDINATOR_CHANGED);
+               try {
+                   performDBOperationsWithTimeout(() -> {
+                       rdbmsMemberEventProcessor.notifyMembershipEvent(localNodeId, localGroupId, nodeIdentifiers,
+                               MemberEventType.COORDINATOR_CHANGED);
+                       return null;
+                   });
+               } catch (ClusterCoordinationException e) {
+                   handleDatabaseDelay(localNodeId, localGroupId, e
+                           , "Error notifying membership event for coordinator change.");
+                   throw e;
+               }
             } else {
                 if (log.isDebugEnabled()) {
                     log.debug("Election resulted in current node becoming a " + NodeState.MEMBER
