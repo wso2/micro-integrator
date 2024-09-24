@@ -312,7 +312,7 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         String apiName = null;
         for (API api : synCtx.getEnvironment().getSynapseConfiguration().getAPIs()) {
             String apiContextPath = api.getContext();
-            if (api.getVersionStrategy().getVersion() != null) {
+            if (StringUtils.isNotBlank(api.getVersionStrategy().getVersion())) {
                 apiContextPath = apiContextPath + "/" + api.getVersionStrategy().getVersion();
             }
             if (RESTUtils.matchApiPath(contextPath, apiContextPath)) {
