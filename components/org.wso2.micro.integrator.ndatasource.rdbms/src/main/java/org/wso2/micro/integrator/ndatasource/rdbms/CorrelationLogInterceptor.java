@@ -183,42 +183,37 @@ public class CorrelationLogInterceptor extends AbstractQueryReport {
 
             String name = method.getName();
             boolean close = CorrelationLogInterceptor.this.compare("close", name);
-            try {
-                //Checks if the method name is of type closed and will not log time taken for those methods
-                if (close && this.closed) {
-                    return null;
-                } else if (CorrelationLogInterceptor.this.compare("isClosed", name)) {
-                    return this.closed;
-                } else if (this.closed) {
-                    throw new SQLException("Statement closed.");
-                } else {
-                    boolean process;
-                    process = CorrelationLogInterceptor.this.isExecute(method, false);
-
-                    long start = System.currentTimeMillis();
-                    Object result = null;
-
-                    if (this.delegate != null) {
-                        result = method.invoke(this.delegate, args);
-                    }
-
-                    //If the query is an execute type of query the time taken is calculated and logged
-                    if (process) {
-                        long delta = System.currentTimeMillis() - start;
-                        CorrelationLogInterceptor.this.reportQuery(this.query, args, name, start, delta);
-                        logQueryDetails(start, delta, name);
-                    }
-
-                    if (close) {
-                        this.closed = true;
-                        this.delegate = null;
-                    }
-
-                    return result;
-                }
-            } catch (Exception e) {
-                log.error("Unable get query run-time", e);
+            //Checks if the method name is of type closed and will not log time taken for those methods
+            if (close && this.closed) {
                 return null;
+            } else if (CorrelationLogInterceptor.this.compare("isClosed", name)) {
+                return this.closed;
+            } else if (this.closed) {
+                throw new SQLException("Statement closed.");
+            } else {
+                boolean process;
+                process = CorrelationLogInterceptor.this.isExecute(method, false);
+
+                long start = System.currentTimeMillis();
+                Object result = null;
+
+                if (this.delegate != null) {
+                    result = method.invoke(this.delegate, args);
+                }
+
+                //If the query is an execute type of query the time taken is calculated and logged
+                if (process) {
+                    long delta = System.currentTimeMillis() - start;
+                    CorrelationLogInterceptor.this.reportQuery(this.query, args, name, start, delta);
+                    logQueryDetails(start, delta, name);
+                }
+
+                if (close) {
+                    this.closed = true;
+                    this.delegate = null;
+                }
+
+                return result;
             }
         }
 
