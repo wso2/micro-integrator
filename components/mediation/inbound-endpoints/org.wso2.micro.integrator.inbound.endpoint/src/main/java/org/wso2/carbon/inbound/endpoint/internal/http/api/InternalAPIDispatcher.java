@@ -28,6 +28,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.apache.synapse.rest.RESTUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +111,11 @@ public class InternalAPIDispatcher {
             subPath = "/";
         }
 
-        for (APIResource resource : internalApi.getResources()) {
+        APIResource[] resources = internalApi.getResources();
+        if (resources == null) {
+            return null;
+        }
+        for (APIResource resource : resources) {
             if (!resource.getMethods().contains(method)) {
                 continue;
             }

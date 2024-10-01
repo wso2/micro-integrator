@@ -79,6 +79,9 @@ public class JWTInMemoryTokenStore extends JWTTokenStore {
 
     @Override
     public JWTTokenInfoDTO getToken(String token) {
+        if (getTokenStore() == null) {
+            return null;
+        }
         return getTokenStore().get(token);
     }
 

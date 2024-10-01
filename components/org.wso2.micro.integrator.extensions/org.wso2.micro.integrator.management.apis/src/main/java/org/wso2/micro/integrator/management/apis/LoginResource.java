@@ -74,7 +74,12 @@ public class LoginResource implements MiApiResource {
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
 
-        if (!JWTConfig.getInstance().getJwtConfigDto().isJwtHandlerEngaged()) {
+        JWTConfig jwtConfig = JWTConfig.getInstance();
+        if (jwtConfig == null || jwtConfig.getJwtConfigDto() == null) {
+            handleServerError(axis2MessageContext, "JWT configuration error");
+            return true;
+        }
+        if (!jwtConfig.getJwtConfigDto().isJwtHandlerEngaged()) {
             LOG.error("/Login is accessible only when JWT based auth handler is engaged");
             handleServerError(axis2MessageContext, "Login is accessible only when JWT based auth handler is engaged");
             return true;
@@ -82,7 +87,7 @@ public class LoginResource implements MiApiResource {
 
         //Init token store
         JWTTokenStore tokenStore =
-                JWTInMemoryTokenStore.getInstance(JWTConfig.getInstance().getJwtConfigDto().getTokenStoreSize());
+                JWTInMemoryTokenStore.getInstance(jwtConfig.getJwtConfigDto().getTokenStoreSize());
 
         //UUID used as unique token
         UUID uuid = UUID.randomUUID();
