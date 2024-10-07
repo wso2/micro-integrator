@@ -730,9 +730,9 @@ public class JdbcHybridRoleManager extends HybridRoleManager {
             DatabaseUtil.closeAllConnections(dbConnection);
         }
         // Authorization cache of user should also be updated if deleted roles are involved
-        if (deletedRoles != null && deletedRoles.length > 0) {
-            userRealm.getAuthorizationManager().clearUserAuthorization(user);
-        }
+//        if (deletedRoles != null && deletedRoles.length > 0) {
+//            userRealm.getAuthorizationManager().clearUserAuthorization(user);
+//        }
     }
 
     /**
