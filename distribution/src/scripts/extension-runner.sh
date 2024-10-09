@@ -123,4 +123,4 @@ if $cygwin; then
 fi
 
 # ----- Execute The Requested Command -----------------------------------------
-$JAVA_HOME/bin/java -Dcarbon.home="$CARBON_HOME" -Dcarbon.config.dir.path="$CARBON_HOME"/conf  -classpath "$CARBON_CLASSPATH" org.wso2.micro.integrator.server.Extensions $*
+$JAVA_HOME/bin/java -Dcarbon.home="$CARBON_HOME" -Dcarbon.config.dir.path="$CARBON_HOME/conf" -Dlogfiles.home="$CARBON_HOME/repository/logs" -classpath "$CARBON_CLASSPATH" org.wso2.micro.integrator.server.Extensions $*
