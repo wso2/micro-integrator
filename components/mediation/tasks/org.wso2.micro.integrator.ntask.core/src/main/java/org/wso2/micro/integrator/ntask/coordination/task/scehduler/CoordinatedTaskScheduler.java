@@ -121,7 +121,7 @@ public class CoordinatedTaskScheduler implements Runnable {
                 // stop all running coordinated tasks.
                 tasks.forEach(task -> {
                     try {
-                        taskManager.stopExecution(task);
+                        taskManager.stopExecutionTemporarily(task);
                     } catch (TaskException e) {
                         LOG.error("Unable to pause the task " + task, e);
                     }
