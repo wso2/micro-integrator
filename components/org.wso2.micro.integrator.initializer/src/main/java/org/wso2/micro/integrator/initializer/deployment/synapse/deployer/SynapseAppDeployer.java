@@ -797,7 +797,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 }
             }
         } catch (Exception e) {
-            log.error("Error occured while deleting the synapse library import");
+            log.warn("Error occured while deleting the synapse library import");
         }
     }
 
