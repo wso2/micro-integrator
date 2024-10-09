@@ -212,6 +212,17 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
         locallyRunningCoordinatedTasks.remove(taskName);
     }
 
+    /**
+     * Temporarily stops the execution of the task Since the task should be able to resume after db recovery.
+     *
+     * @param taskName - Name of the task.
+     * @throws TaskException - Exception.
+     */
+    public void stopExecutionTemporarily(String taskName) throws TaskException {
+        this.pauseLocalTaskTemporarily(taskName);
+        locallyRunningCoordinatedTasks.remove(taskName);
+    }
+
     private void scheduleTask(String taskName) throws TaskException {
         if (this.isMyTaskTypeRegistered()) {
             this.scheduleLocalTask(taskName);

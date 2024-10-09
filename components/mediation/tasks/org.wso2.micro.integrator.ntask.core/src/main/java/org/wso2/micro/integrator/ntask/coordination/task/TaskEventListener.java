@@ -120,7 +120,7 @@ public class TaskEventListener extends MemberEventListener {
         // stop all running coordinated tasks.
         tasks.forEach(task -> {
             try {
-                taskManager.stopExecution(task);
+                taskManager.stopExecutionTemporarily(task);
             } catch (TaskException e) {
                 LOG.error("Unable to pause the task " + task, e);
             }
