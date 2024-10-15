@@ -816,7 +816,7 @@
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
         <cglib.version>2.2</cglib.version>
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
-        <org.apache.cxf.version>2.7.2</org.apache.cxf.version>
+        <org.apache.cxf.version>3.5.9</org.apache.cxf.version>
         <org.codehaus.jackson.version>1.9.12</org.codehaus.jackson.version>
         <org.springframework.ws.wso2.version>3.1.0.wso2v1</org.springframework.ws.wso2.version>
         <org.apache.tomcat>7.0.93</org.apache.tomcat>
