@@ -17,6 +17,8 @@
  */
 package org.wso2.micro.integrator.observability.metric.handler;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -309,8 +311,22 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
      * @return String The api name
      */
     private String getApiName(String contextPath, MessageContext synCtx) {
+        Collection<API> apiList = synCtx.getEnvironment().getSynapseConfiguration().getAPIs();
+        Collection<API> withVersionsApiList = getVersionsApiList(apiList);
+        Collection<API> defaultApiList = getDefaultApiList(apiList);
+        if (!withVersionsApiList.isEmpty()) {
+            String apiName = getResolvedApiName(contextPath, synCtx, withVersionsApiList);
+            if (apiName != null) {
+                return apiName;
+            }
+        }
+        return getResolvedApiName(contextPath, synCtx, defaultApiList);
+    }
+
+    private static String getResolvedApiName(String contextPath, MessageContext synCtx,
+                                                       Collection<API> apiList) {
         String apiName = null;
-        for (API api : synCtx.getEnvironment().getSynapseConfiguration().getAPIs()) {
+        for (API api : apiList) {
             String apiContextPath = api.getContext();
             if (StringUtils.isNotBlank(api.getVersionStrategy().getVersion())) {
                 apiContextPath = apiContextPath + "/" + api.getVersionStrategy().getVersion();
@@ -325,6 +341,26 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
             }
         }
         return apiName;
+    }
+
+    private Collection<API> getVersionsApiList(Collection<API> apiList) {
+        Collection<API> withVersionsApiList = new ArrayList<>();
+        for (API api : apiList) {
+            if (StringUtils.isNotBlank(api.getVersionStrategy().getVersion())) {
+                withVersionsApiList.add(api);
+            }
+        }
+        return withVersionsApiList;
+    }
+
+    private Collection<API> getDefaultApiList(Collection<API> apiList) {
+        Collection<API> defaultApiList = new ArrayList<>();
+        for (API api : apiList) {
+            if (!StringUtils.isNotBlank(api.getVersionStrategy().getVersion())) {
+                defaultApiList.add(api);
+            }
+        }
+        return defaultApiList;
     }
 
     /**
