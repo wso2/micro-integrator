@@ -37,6 +37,7 @@ import org.wso2.micro.integrator.dataservices.core.DBDeployer;
 import org.wso2.micro.integrator.initializer.StartupFinalizer;
 import org.wso2.micro.integrator.initializer.dashboard.HeartBeatComponent;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
+import org.wso2.micro.integrator.initializer.deployment.config.deployer.ConfigDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
 import org.wso2.micro.integrator.initializer.deployment.user.store.deployer.UserStoreDeployer;
@@ -174,6 +175,7 @@ public class AppDeployerServiceComponent {
         cappDeployer.registerDeploymentHandler(new DataSourceCappDeployer());
         cappDeployer.registerDeploymentHandler(new DefaultAppDeployer());
         cappDeployer.registerDeploymentHandler(new SynapseAppDeployer());
+        cappDeployer.registerDeploymentHandler(new ConfigDeployer());
 
         //Add the deployer to deployment engine. This should be done after registering the deployment handlers.
         deploymentEngine.addDeployer(cappDeployer, artifactRepoPath + DeploymentConstants.CAPP_DIR_NAME,
