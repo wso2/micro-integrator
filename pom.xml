@@ -1920,7 +1920,7 @@
         <version.geronimo.jta.spec>1.1</version.geronimo.jta.spec>
         <quartz.orbit.version>2.3.2.wso2v1</quartz.orbit.version>
         <!-- Maven bundle plugin -->
-        <maven.bundle.plugin.version>3.3.0</maven.bundle.plugin.version>
+        <maven.bundle.plugin.version>5.1.9</maven.bundle.plugin.version>
         <apache.http.nio.version>4.4.15.wso2v1</apache.http.nio.version>
         <wso2.caching.version>4.0.3</wso2.caching.version>
         <apache.http.protocol.version>4.4.14.wso2v1</apache.http.protocol.version>
