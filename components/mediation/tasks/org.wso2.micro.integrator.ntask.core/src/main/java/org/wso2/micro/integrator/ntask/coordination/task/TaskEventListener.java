@@ -75,12 +75,6 @@ public class TaskEventListener extends MemberEventListener {
                 LOG.error("Exception occurred while resolving un assigned tasks upon member addition " + nodeDetail
                         .getNodeId(), e);
             }
-        } else if (clusterCoordinator.getThisNodeId().equals(nodeDetail.getNodeId())
-                && isMemberRejoinedAfterUnresponsiveness()) {
-            // This node became unresponsive and rejoined the cluster hence removing all tasks assigned to this node
-            // then start the scheduler again after cleaning the locally running tasks.
-            becameUnresponsive(nodeDetail.getNodeId());
-            reJoined(nodeDetail.getNodeId(), null);
         }
     }
 
@@ -132,15 +126,6 @@ public class TaskEventListener extends MemberEventListener {
         } catch (TaskCoordinationException e) {
             LOG.error("Error while removing the tasks of this node.", e);
         }
-    }
-
-    /**
-     * Check whether the member has rejoined after being unresponsive.
-     *
-     * @return true if the member has rejoined after being unresponsive, false otherwise
-     */
-    public boolean isMemberRejoinedAfterUnresponsiveness() {
-        return taskManager.getLocallyRunningCoordinatedTasks().size() > 0;
     }
 
 
