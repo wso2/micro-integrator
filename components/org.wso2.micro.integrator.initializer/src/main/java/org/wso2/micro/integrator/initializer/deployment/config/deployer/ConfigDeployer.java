@@ -19,9 +19,13 @@ package org.wso2.micro.integrator.initializer.deployment.config.deployer;
 
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.registry.Registry;
+import org.apache.synapse.commons.property.PropertyLoader;
+import org.apache.synapse.transport.nhttp.config.SslSenderTrustStoreHolder;
+import org.apache.synapse.transport.nhttp.config.TrustStoreHolder;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.ApplicationConfiguration;
 import org.wso2.micro.application.deployer.config.Artifact;
@@ -29,12 +33,21 @@ import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 
 public class ConfigDeployer implements AppDeploymentHandler {
 
@@ -42,7 +55,8 @@ public class ConfigDeployer implements AppDeploymentHandler {
 
     private static final String PROPERTY_TYPE = "config/property";
 
-    private static final String PROPERTY_FILE_NAME = "config.properties";
+    private static final String LOCAL_CONFIG_FILE_NAME = "config.properties";
+    private static final String GLOBAL_CONFIG_FILE_NAME = "file.properties";
 
     public static final char URL_SEPARATOR_CHAR = '/';
 
@@ -76,24 +90,83 @@ public class ConfigDeployer implements AppDeploymentHandler {
             if (log.isDebugEnabled()) {
                 log.debug("Deploying config artifact: " + artifact.getName());
             }
-            writePropertyToConf(artifact, parentAppName);
+            writePropertyToMap(artifact);
         });
     }
 
-    private void writePropertyToConf(Artifact artifact, String appName) {
+    private void writePropertyToMap(Artifact artifact) {
         // get the file path of the registry config file
         List<CappFile> files = artifact.getFiles();
         if (files.size() == 1) {
-            String configPath = artifact.getExtractedPath() + File.separator + PROPERTY_FILE_NAME;
-            File regConfigFile = new File(configPath);
-            if (regConfigFile.exists()) {
-                try {
-                    Files.copy(Paths.get(configPath), Paths.get(getHome(), "conf", PROPERTY_FILE_NAME), StandardCopyOption.REPLACE_EXISTING);
+            String globalConfigFilePath = Paths.get(getHome()) + File.separator + "conf" + File.separator + GLOBAL_CONFIG_FILE_NAME;
+            String localConfigFilePath = artifact.getExtractedPath() + File.separator + LOCAL_CONFIG_FILE_NAME;
+            File localConfigFile = new File(localConfigFilePath);
+            File globalConfigFile = new File(globalConfigFilePath);
+            Properties localProperties = new Properties();
+            Properties globalProperties = new Properties();
+            if (localConfigFile.exists()) {
+                try (FileInputStream localFileReader = new FileInputStream(localConfigFile);
+                     FileInputStream globalFileReader = new FileInputStream(globalConfigFile)) {
+                    localProperties.load(localFileReader);
+                    globalProperties.load(globalFileReader);
+                    for (Map.Entry<Object, Object> entry : localProperties.entrySet()) {
+                        String key = entry.getKey().toString();
+                        String propertyValue = System.getenv(key);
+                        if (propertyValue == null) {
+                            propertyValue = System.getProperty(key);
+                            if (propertyValue == null) {
+                                propertyValue = globalProperties.getProperty(key);
+                            }
+                        }
+                        if (PropertyLoader.getInstance().hasKey(key)) {
+                            String oldValue = PropertyLoader.getInstance().getPropertyValue(key);
+                            if (!Objects.equals(oldValue, propertyValue)) {
+                                log.error(String.format("The value:[%s] of the key:[%s] has been " +
+                                        "replaced with the new value:[%s].", oldValue, key, propertyValue));
+                            }
+                        }
+                        if (propertyValue != null) {
+                            if (Objects.equals(entry.getValue().toString(), "cert")) {
+                                // Load the default truststore
+                                char[] password = SslSenderTrustStoreHolder.getInstance().getPassword().toCharArray();
+                                String type = SslSenderTrustStoreHolder.getInstance().getType();
+                                Path trustStorePath = Paths.get(getHome(), SslSenderTrustStoreHolder.getInstance().getLocation());
+                                try (FileInputStream trustStoreStream = new FileInputStream(trustStorePath.toFile())) {
+                                    KeyStore trustStore = KeyStore.getInstance(type);
+                                    trustStore.load(trustStoreStream, password);
+
+                                    // Load the certificate file
+                                    CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+                                    try (FileInputStream certStream = new FileInputStream(propertyValue)) {
+                                        Certificate cert = certFactory.generateCertificate(certStream);
+                                        // Add the certificate to the truststore
+                                        trustStore.setCertificateEntry(key, cert);
+                                        System.out.println("Certificate added with alias: " + key);
+                                    }
+                                    // Save the truststore with the new certificate
+                                    try (FileOutputStream outputStream = new FileOutputStream(trustStorePath.toFile())) {
+                                        trustStore.store(outputStream, password);
+                                        System.out.println("Truststore updated successfully at: " + trustStorePath);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    System.err.println("Failed to import certificate: " + e.getMessage());
+                                }
+                            } else {
+                                PropertyLoader.getInstance().setProperty(key, propertyValue);
+                            }
+                        } else {
+                            log.error(String.format("The value of the key:[%s] is not found.", key));
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    log.debug("Config file not found.:" + e.getMessage());
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    log.error("config/property type must have a single file which declares " +
+                            "config. But " + files.size() + " files found.");
                 }
             } else {
-                log.error("Config file not found at : " + configPath);
+                log.info("No configuration was used in the integration");
             }
         } else {
             log.error("config/property type must have a single file which declares " +
