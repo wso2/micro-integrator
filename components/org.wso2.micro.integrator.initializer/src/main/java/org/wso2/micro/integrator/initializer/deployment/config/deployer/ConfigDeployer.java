@@ -152,9 +152,8 @@ public class ConfigDeployer implements AppDeploymentHandler {
                                     e.printStackTrace();
                                     System.err.println("Failed to import certificate: " + e.getMessage());
                                 }
-                            } else {
-                                PropertyLoader.getInstance().setProperty(key, propertyValue);
                             }
+                            PropertyLoader.getInstance().setProperty(key, propertyValue);
                         } else {
                             log.error(String.format("The value of the key:[%s] is not found.", key));
                         }
