@@ -1,13 +1,12 @@
 # WSO2 Micro Integrator
 
-[![Build Status](https://wso2.org/jenkins/buildStatus/icon?job=products/micro-integrator)](https://wso2.org/jenkins/job/products/job/micro-integrator/)
+[![Build](https://img.shields.io/github/actions/workflow/status/wso2/micro-integrator/all-tests.yml?branch=master&label=)](https://github.com/wso2/micro-integrator/actions/workflows/all-tests.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Stackoverflow](https://img.shields.io/badge/Ask%20for%20help%20on-Stackoverflow-orange)](https://stackoverflow.com/questions/tagged/wso2-micro-integrator)
-[![Discord](https://img.shields.io/badge/Join%20us%20on-Discord-%23e01563.svg)](https://discord.gg/wso2)
+[![Discord](https://img.shields.io/badge/Join%20us%20on-Discord-%23e01563.svg)](https://discord.com/invite/Xa5VubmThw)
 [![Twitter](https://img.shields.io/twitter/follow/wso2.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=wso2)
 
-WSO2 Micro Integrator is the integration runtime of [WSO2 Enterprise Integrator
-(EI)](https://wso2.com/enterprise-integrator/), which is an open-source, hybrid integration platform. Please refer to the [official documentation](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/introduction/) for further information. 
+WSO2 Micro Integrator is an open-source comprehensive integration solution that simplifies your digital transformation journey. The Micro Integrator streamlines connectivity among applications, services, data, and the cloud using a user-friendly, low-code graphical design experience. 
 
 The Micro Integrator runtime is lightweight, fast, scalable, and supports centralized ESB-style integration architectures as well as decentralized microservices architectures:
 
@@ -17,7 +16,7 @@ The Micro Integrator runtime is lightweight, fast, scalable, and supports centra
 -   Decentralized integration architecture
   ![microservices architecture](doc/images/mi-microservices-architecture.png)
 
-Developers can create integrations graphically by using [WSO2 Integration Studio](https://wso2.com/integration/integration-studio/) and deploy them in the Micro Integrator runtime.
+Developers can create integrations graphically by using [WSO2 Micro Integrator Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=WSO2.micro-integrator) and deploy them in the Micro Integrator runtime.
 
 ## Summary
 
@@ -36,16 +35,15 @@ The Micro Integrator provides developers with a flawless experience in developin
 
 The Micro Integrator offers an enhanced experience for container-based architectures by simplifying Docker/Kubernetes deployments. 
 
-Refer the [developer guide](https://ei.docs.wso2.com/en/latest/micro-integrator/develop/intro-integration-development/) in the documentation for details.
+Refer the [developer guide](https://mi.docs.wso2.com/en/latest/develop/intro-integration-development/) in the documentation for details.
 
 ## Getting Started
 
 See the following topics to get started with the product:
-- [Install and setup](https://ei.docs.wso2.com/en/latest/micro-integrator/setup/installation/install_prerequisites/) the Micro integrator
-- [Quick start guide](https://ei.docs.wso2.com/en/latest/micro-integrator/overview/quick-start-guide/)
-- [Developing your first integration](https://ei.docs.wso2.com/en/latest/micro-integrator/develop/integration-development-kickstart/)
+- [Install and setup](https://mi.docs.wso2.com/en/latest/install-and-setup/install-and-setup-overview/) the Micro integrator
+- [Quick start guide](https://mi.docs.wso2.com/en/latest/get-started/quick-start-guide/)
 
-See the [Tutorials](https://ei.docs.wso2.com/en/latest/micro-integrator/use-cases/learn-overview/#tutorials) and [Examples](https://ei.docs.wso2.com/en/latest/micro-integrator/use-cases/learn-overview/#examples) to try out the main integration use cases. You can also find more resources in the [WSO2 Library](https://wso2.com/library/integration/).
+See the [Use Cases](https://mi.docs.wso2.com/en/latest/learn/learn-overview/#integration-use-cases) and [Examples](https://mi.docs.wso2.com/en/latest/learn/learn-overview/#integration-examples) to try out the main integration use cases. You can also find more resources in the [WSO2 Library](https://wso2.com/library/?product=integration).
 
 ## Contributing
 
@@ -56,7 +54,7 @@ the latest development version. The `master` branch holds the latest unreleased 
 
 Please follow the steps below to build WSO2 Micro Integrator from the source code.
 
-1. Clone or download the source code from this repository (https://github.com/wso2/micro-integrator).
+1. Clone or download the source code from this [micro-integrator](https://github.com/wso2/micro-integrator) repository.
 2. Run the maven command `mvn clean install` from the root directory of the repository.
 3. The generated Micro Integrator distribution can be found at `micro-integrator/distribution/target/wso2mi-<version>.zip`.
 
