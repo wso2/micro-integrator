@@ -19,13 +19,11 @@ package org.wso2.micro.integrator.initializer.deployment.config.deployer;
 
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.commons.property.PropertyLoader;
+import org.apache.synapse.commons.property.PropertyHolder;
+import org.apache.synapse.commons.resolvers.ResolverFactory;
 import org.apache.synapse.transport.nhttp.config.SslSenderTrustStoreHolder;
-import org.apache.synapse.transport.nhttp.config.TrustStoreHolder;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.ApplicationConfiguration;
 import org.wso2.micro.application.deployer.config.Artifact;
@@ -34,16 +32,16 @@ import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,6 +55,8 @@ public class ConfigDeployer implements AppDeploymentHandler {
 
     private static final String LOCAL_CONFIG_FILE_NAME = "config.properties";
     private static final String GLOBAL_CONFIG_FILE_NAME = "file.properties";
+    private static final String IS_CERT_DEPLOYMENT_ENABLED = "isCertDeploymentEnabled";
+    private Properties globalProperties;
 
     public static final char URL_SEPARATOR_CHAR = '/';
 
@@ -98,83 +98,146 @@ public class ConfigDeployer implements AppDeploymentHandler {
         // get the file path of the registry config file
         List<CappFile> files = artifact.getFiles();
         if (files.size() == 1) {
-            String globalConfigFilePath = Paths.get(getHome()) + File.separator + "conf" + File.separator + GLOBAL_CONFIG_FILE_NAME;
-            String localConfigFilePath = artifact.getExtractedPath() + File.separator + LOCAL_CONFIG_FILE_NAME;
-            File localConfigFile = new File(localConfigFilePath);
-            File globalConfigFile = new File(globalConfigFilePath);
-            Properties localProperties = new Properties();
-            Properties globalProperties = new Properties();
-            if (localConfigFile.exists()) {
-                try (FileInputStream localFileReader = new FileInputStream(localConfigFile);
-                     FileInputStream globalFileReader = new FileInputStream(globalConfigFile)) {
-                    localProperties.load(localFileReader);
-                    globalProperties.load(globalFileReader);
-                    for (Map.Entry<Object, Object> entry : localProperties.entrySet()) {
-                        String key = entry.getKey().toString();
-                        String propertyValue = System.getenv(key);
-                        if (propertyValue == null) {
-                            propertyValue = System.getProperty(key);
-                            if (propertyValue == null) {
-                                propertyValue = globalProperties.getProperty(key);
-                            }
-                        }
-                        if (PropertyLoader.getInstance().hasKey(key)) {
-                            String oldValue = PropertyLoader.getInstance().getPropertyValue(key);
-                            if (!Objects.equals(oldValue, propertyValue)) {
-                                log.error(String.format("The value:[%s] of the key:[%s] has been " +
-                                        "replaced with the new value:[%s].", oldValue, key, propertyValue));
-                            }
-                        }
-                        if (propertyValue != null) {
-                            if (Objects.equals(entry.getValue().toString(), "cert")) {
-                                // Load the default truststore
-                                char[] password = SslSenderTrustStoreHolder.getInstance().getPassword().toCharArray();
-                                String type = SslSenderTrustStoreHolder.getInstance().getType();
-                                Path trustStorePath = Paths.get(getHome(), SslSenderTrustStoreHolder.getInstance().getLocation());
-                                try (FileInputStream trustStoreStream = new FileInputStream(trustStorePath.toFile())) {
-                                    KeyStore trustStore = KeyStore.getInstance(type);
-                                    trustStore.load(trustStoreStream, password);
-
-                                    // Load the certificate file
-                                    CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-                                    try (FileInputStream certStream = new FileInputStream(propertyValue)) {
-                                        Certificate cert = certFactory.generateCertificate(certStream);
-                                        // Add the certificate to the truststore
-                                        trustStore.setCertificateEntry(key, cert);
-                                        System.out.println("Certificate added with alias: " + key);
-                                    }
-                                    // Save the truststore with the new certificate
-                                    try (FileOutputStream outputStream = new FileOutputStream(trustStorePath.toFile())) {
-                                        trustStore.store(outputStream, password);
-                                        System.out.println("Truststore updated successfully at: " + trustStorePath);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    System.err.println("Failed to import certificate: " + e.getMessage());
-                                }
-                            }
-                            PropertyLoader.getInstance().setProperty(key, propertyValue);
-                        } else {
-                            log.error(String.format("The value of the key:[%s] is not found.", key));
-                        }
-                    }
-                } catch (FileNotFoundException e) {
-                    log.debug("Config file not found.:" + e.getMessage());
-                } catch (IOException e) {
-                    log.error("config/property type must have a single file which declares " +
-                            "config. But " + files.size() + " files found.");
-                }
-            } else {
-                log.info("No configuration was used in the integration");
-            }
+            Path confFolder = Paths.get(getHome(), "conf");
+            Path globalPropertiesFilePath = confFolder.resolve(GLOBAL_CONFIG_FILE_NAME) ;
+            Path serverConfPropertyPath = confFolder.resolve(LOCAL_CONFIG_FILE_NAME);
+            String configFilePath = artifact.getExtractedPath() + File.separator + LOCAL_CONFIG_FILE_NAME;
+            processConfFile(configFilePath, globalPropertiesFilePath.toString(), serverConfPropertyPath.toString());
         } else {
             log.error("config/property type must have a single file which declares " +
                     "config. But " + files.size() + " files found.");
         }
     }
 
+    public void processConfFile(String configFilePath, String globalPropertiesFilePath, String serverConfPropertyPath) {
+        File configFile = new File(configFilePath);
+        // Load capp conf property file
+        Properties configProperties = loadPropertiesFromFile(configFile);
+        // Load global conf property file
+        this.globalProperties = loadPropertiesFromFile(new File(globalPropertiesFilePath));
+        // Load sever conf property file
+        Properties serverConfigProperties = loadPropertiesFromFile(new File(serverConfPropertyPath));
 
-    public static String getHome() {
+        Properties newServerConfigProperties = new Properties();
+        String isCertDeploymentEnabled = getValueOfKey(IS_CERT_DEPLOYMENT_ENABLED);
+        if (isCertDeploymentEnabled == null) {
+            isCertDeploymentEnabled = "true";
+        }
+        PropertyHolder.getInstance().setProperty(IS_CERT_DEPLOYMENT_ENABLED, isCertDeploymentEnabled);
+        if (serverConfigProperties.size() == 0 && configProperties.size() == 0 ) {
+            log.info("No configuration is used in the integration");
+        } else {
+            if (serverConfigProperties.size() > 0) {
+                for (Map.Entry<Object, Object> entry : serverConfigProperties.entrySet()) {
+                    String key = entry.getKey().toString();
+                    String type = entry.getValue().toString();
+                    if (configProperties.containsKey(key)) {
+                        type = configProperties.getProperty(key);
+                        configProperties.remove(key);
+                    }
+                    newServerConfigProperties.setProperty(key, type);
+                    processConfigProperties(key, type);
+                }
+            }
+            if (configProperties.size() > 0) {
+                for (Map.Entry<Object, Object> entry : configProperties.entrySet()) {
+                    String key = entry.getKey().toString();
+                    String type = entry.getValue().toString();
+                    newServerConfigProperties.setProperty(key, type);
+                    processConfigProperties(key, type);
+                }
+            }
+            writeServerConfFile(serverConfPropertyPath, newServerConfigProperties);
+        }
+    }
+
+    public void processConfigProperties(String key, String type) {
+        String value = getValueOfKey(key);
+        if (value != null) {
+            if (Objects.equals(type, "cert")) {
+                deployCert(key, value);
+            }
+            if (PropertyHolder.getInstance().hasKey(key)) {
+                String oldValue = PropertyHolder.getInstance().getPropertyValue(key);
+                if (!Objects.equals(oldValue, value)) {
+                    log.error(String.format("The value:[%s] of the key:[%s] has been " +
+                            "replaced with the new value:[%s].", oldValue, key, value));
+                }
+            }
+            PropertyHolder.getInstance().setProperty(key, value);
+        } else {
+            log.error(String.format("The value of the key:[%s] is not found.", key));
+        }
+    }
+
+    public void deployCert(String key, String path) {
+        if (ResolverFactory.getInstance().getResolver("$config:" + IS_CERT_DEPLOYMENT_ENABLED).resolve().
+                equals("true")) {
+            // Load the truststore properties
+            char[] password = SslSenderTrustStoreHolder.getInstance().getPassword().toCharArray();
+            String type = SslSenderTrustStoreHolder.getInstance().getType();
+            Path trustStorePath = Paths.get(getHome(), SslSenderTrustStoreHolder.getInstance().getLocation());
+            try (FileInputStream trustStoreStream = new FileInputStream(trustStorePath.toFile())) {
+                KeyStore trustStore = KeyStore.getInstance(type);
+                trustStore.load(trustStoreStream, password);
+
+                // Load the certificate file
+                CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+                try (FileInputStream certStream = new FileInputStream(path)) {
+                    Certificate cert = certFactory.generateCertificate(certStream);
+                    // Add the certificate to the truststore
+                    trustStore.setCertificateEntry(key, cert);
+                    log.info("Certificate added with alias: " + key);
+                }
+                // Save the truststore with the new certificate
+                try (FileOutputStream outputStream = new FileOutputStream(trustStorePath.toFile())) {
+                    trustStore.store(outputStream, password);
+                    log.info("Truststore updated successfully at: " + trustStorePath);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("Failed to import certificate: " + e.getMessage());
+            }
+        }
+    }
+
+    public void writeServerConfFile(String file, Properties newServerConfigProperties) {
+        try (FileWriter writer = new FileWriter(file)) {
+            Enumeration<?> propertyNames = newServerConfigProperties.propertyNames();
+            while (propertyNames.hasMoreElements()) {
+                String key = (String) propertyNames.nextElement();
+                String value = newServerConfigProperties.getProperty(key);
+                writer.write(key + ":" + value + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Properties loadPropertiesFromFile(File file) {
+        Properties properties = new Properties();
+        if (file.exists()) {
+            try (FileInputStream serverConfigFileReader = new FileInputStream(file)) {
+                properties.load(serverConfigFileReader);
+            } catch (IOException e) {
+                log.debug("Error occurred while loading properties from file:" + e.getMessage());
+            }
+        }
+        return properties;
+    }
+
+    private String getValueOfKey(String key) {
+        String value = System.getenv(key);
+        if (value == null) {
+            value = System.getProperty(key);
+            if (value == null) {
+                value = this.globalProperties.getProperty(key);
+            }
+        }
+        return value;
+    }
+
+    public String getHome() {
         String carbonHome = System.getProperty("carbon.home");
         if (carbonHome == null || "".equals(carbonHome) || ".".equals(carbonHome)) {
             carbonHome = getSystemDependentPath(new File(".").getAbsolutePath());
@@ -182,8 +245,7 @@ public class ConfigDeployer implements AppDeploymentHandler {
         return carbonHome;
     }
 
-    public static String getSystemDependentPath(String path) {
+    public String getSystemDependentPath(String path) {
         return path.replace(URL_SEPARATOR_CHAR, File.separatorChar);
     }
-
 }

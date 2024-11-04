@@ -170,12 +170,12 @@ public class AppDeployerServiceComponent {
         cappDeployer.init(configCtx);
 
         // Register application deployment handlers
+        cappDeployer.registerDeploymentHandler(new ConfigDeployer());
         cappDeployer.registerDeploymentHandler(new FileRegistryResourceDeployer(
                 synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration().getRegistry()));
         cappDeployer.registerDeploymentHandler(new DataSourceCappDeployer());
         cappDeployer.registerDeploymentHandler(new DefaultAppDeployer());
         cappDeployer.registerDeploymentHandler(new SynapseAppDeployer());
-        cappDeployer.registerDeploymentHandler(new ConfigDeployer());
 
         //Add the deployer to deployment engine. This should be done after registering the deployment handlers.
         deploymentEngine.addDeployer(cappDeployer, artifactRepoPath + DeploymentConstants.CAPP_DIR_NAME,
