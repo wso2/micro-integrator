@@ -210,7 +210,7 @@ public class ConfigDeployer implements AppDeploymentHandler {
                 writer.write(key + ":" + value + "\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Failed to add the config.properties file to the server conf folder: " + e.getMessage());
         }
     }
 
