@@ -312,8 +312,9 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
      */
     private String getApiName(String contextPath, MessageContext synCtx) {
         Collection<API> apiList = synCtx.getEnvironment().getSynapseConfiguration().getAPIs();
-        Collection<API> withVersionsApiList = getVersionsApiList(apiList);
-        Collection<API> defaultApiList = getDefaultApiList(apiList);
+        Collection<API> withVersionsApiList = new ArrayList<>();
+        Collection<API> defaultApiList = new ArrayList<>();
+        updateApiLists(apiList, withVersionsApiList, defaultApiList);
         if (!withVersionsApiList.isEmpty()) {
             String apiName = getResolvedApiName(contextPath, synCtx, withVersionsApiList);
             if (apiName != null) {
@@ -340,24 +341,15 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
         return apiName;
     }
 
-    private Collection<API> getVersionsApiList(Collection<API> apiList) {
-        Collection<API> withVersionsApiList = new ArrayList<>();
+    private void updateApiLists(Collection<API> apiList, Collection<API> withVersionsApiList,
+                                           Collection<API> defaultApiList) {
         for (API api : apiList) {
             if (StringUtils.isNotBlank(api.getVersionStrategy().getVersion())) {
                 withVersionsApiList.add(api);
-            }
-        }
-        return withVersionsApiList;
-    }
-
-    private Collection<API> getDefaultApiList(Collection<API> apiList) {
-        Collection<API> defaultApiList = new ArrayList<>();
-        for (API api : apiList) {
-            if (!StringUtils.isNotBlank(api.getVersionStrategy().getVersion())) {
+            } else {
                 defaultApiList.add(api);
             }
         }
-        return defaultApiList;
     }
 
     /**
