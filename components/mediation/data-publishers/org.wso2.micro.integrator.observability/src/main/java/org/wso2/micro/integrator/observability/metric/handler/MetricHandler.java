@@ -318,11 +318,10 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
             if (RESTUtils.matchApiPath(contextPath, apiContextPath)) {
                 apiName = api.getName();
                 synCtx.setProperty(RESTConstants.PROCESSED_API, api);
-                // if we match to a versioned API, search should stop.
-                // else check other API's to see if there is a match
-                if (StringUtils.isNotEmpty(api.getVersion())) {
-                    break;
-                }
+                // Since the APIs are already sorted in descending order, we should stop at the first match with the context path.
+                // Continuing the loop could result in matching a path that only shares the same starting string.
+                // Ex: /test/ API context path will match with /test/1.0.0
+                break;
             }
         }
         return apiName;
