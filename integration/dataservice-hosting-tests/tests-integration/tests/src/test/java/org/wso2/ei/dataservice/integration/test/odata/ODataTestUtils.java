@@ -48,7 +48,7 @@ public class ODataTestUtils {
     public static final int PRE_CONDITION_FAILED = 412;
     public static final int NOT_FOUND = 404;
 
-    public static Object[] sendPOST(String endpoint, String content, Map<String, String> headers) throws IOException {
+    public static Object[] sendPOST(String endpoint, String content, Map<String, String> headers) throws IOException, InterruptedException {
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(endpoint);
         for (String headerType : headers.keySet()) {
@@ -62,6 +62,7 @@ public class ODataTestUtils {
             httpPost.setEntity(httpEntity);
         }
         HttpResponse httpResponse = httpClient.execute(httpPost);
+        Thread.sleep(1000);
         if (httpResponse.getEntity() != null) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
             String inputLine;
@@ -77,13 +78,14 @@ public class ODataTestUtils {
         }
     }
 
-    public static Object[] sendGET(String endpoint, Map<String, String> headers) throws IOException {
+    public static Object[] sendGET(String endpoint, Map<String, String> headers) throws IOException, InterruptedException {
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(endpoint);
         for (String headerType : headers.keySet()) {
             httpGet.setHeader(headerType, headers.get(headerType));
         }
         HttpResponse httpResponse = httpClient.execute(httpGet);
+        Thread.sleep(1000);
         if (httpResponse.getEntity() != null) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
             String inputLine;
@@ -99,7 +101,7 @@ public class ODataTestUtils {
         }
     }
 
-    public static int sendPUT(String endpoint, String content, Map<String, String> headers) throws IOException {
+    public static int sendPUT(String endpoint, String content, Map<String, String> headers) throws IOException, InterruptedException {
         HttpClient httpClient = new DefaultHttpClient();
         HttpPut httpPut = new HttpPut(endpoint);
         for (String headerType : headers.keySet()) {
@@ -113,10 +115,11 @@ public class ODataTestUtils {
             httpPut.setEntity(httpEntity);
         }
         HttpResponse httpResponse = httpClient.execute(httpPut);
+        Thread.sleep(1000);
         return httpResponse.getStatusLine().getStatusCode();
     }
 
-    public static int sendPATCH(String endpoint, String content, Map<String, String> headers) throws IOException {
+    public static int sendPATCH(String endpoint, String content, Map<String, String> headers) throws IOException, InterruptedException {
         HttpClient httpClient = new DefaultHttpClient();
         HttpPatch httpPatch = new HttpPatch(endpoint);
         for (String headerType : headers.keySet()) {
@@ -130,16 +133,18 @@ public class ODataTestUtils {
             httpPatch.setEntity(httpEntity);
         }
         HttpResponse httpResponse = httpClient.execute(httpPatch);
+        Thread.sleep(1000);
         return httpResponse.getStatusLine().getStatusCode();
     }
 
-    public static int sendDELETE(String endpoint, Map<String, String> headers) throws IOException {
+    public static int sendDELETE(String endpoint, Map<String, String> headers) throws IOException, InterruptedException {
         HttpClient httpClient = new DefaultHttpClient();
         HttpDelete httpDelete = new HttpDelete(endpoint);
         for (String headerType : headers.keySet()) {
             httpDelete.setHeader(headerType, headers.get(headerType));
         }
         HttpResponse httpResponse = httpClient.execute(httpDelete);
+        Thread.sleep(1000);
         return httpResponse.getStatusLine().getStatusCode();
     }
 

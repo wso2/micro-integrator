@@ -1,13 +1,6 @@
-name: Integration tests (Ubuntu, OpenJDK21)
+name: Integration tests (Ubuntu, OpenJDK17)
 
-on:
-  push:
-    branches:
-      - '*'  # Runs on push to any branch
-  pull_request:
-    branches:
-      - '*'  # Runs on any pull request
-  workflow_dispatch:
+on: [push, pull_request]
 
 jobs:
   ubuntu:
@@ -39,10 +32,8 @@ jobs:
           java-version: '11.0.12+7'
       - name: check mvn version
         run: echo "MAVEN_VERSION=$(mvn -v)"
-        continue-on-error: true
       - name: check java version
         run: echo "JAVA_VERSION=$(java -version)"
-        continue-on-error: true
       - name: Build in jdk11
         run: mvn -B clean install -DskipTests --file pom.xml
       - name: Set up JDK 21
@@ -52,16 +43,9 @@ jobs:
           java-version: '21.0.4'
       - name: check mvn version
         run: echo "MAVEN_VERSION=$(mvn -v)"
-        continue-on-error: true
       - name: check java version
         run: echo "JAVA_VERSION=$(java -version)"
-        continue-on-error: true
-#      - name: Build in jdk21
-#        run: mvn -B clean install -DskipTests --file pom.xml
-#        continue-on-error: true
       - name: Print segment
         run: echo "Running build for segment ${{ matrix.profile }}"
-        continue-on-error: true
       - name: JDK 21 Tests
-        run: mvn -B clean install --file integration/pom.xml
-        continue-on-error: true
+        run: mvn -B clean install --file integration/pom.xml -P ${{ matrix.profile }} -fae
