@@ -1,6 +1,13 @@
 name: Integration tests (Ubuntu, OpenJDK21)
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '*'  # Runs on push to any branch
+  pull_request:
+    branches:
+      - '*'  # Runs on any pull request
+  workflow_dispatch:
 
 jobs:
   ubuntu:
@@ -25,20 +32,16 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2
           restore-keys: ${{ runner.os }}-m2
-      - name: Set up JDK 11
+      - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
-          java-version: '11.0.12+7'
+          java-version: '21.0.4'
       - name: check mvn version
         run: echo "MAVEN_VERSION=$(mvn -v)"
       - name: check java version
         run: echo "JAVA_VERSION=$(java -version)"
-      - name: Set JAVA_TOOL_OPTIONS
-        run: |
-          NEW_JAVA_TOOL_OPTIONS="${{ env.JAVA_TOOL_OPTIONS }} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED"
-          echo "JAVA_TOOL_OPTIONS=$NEW_JAVA_TOOL_OPTIONS" >> $GITHUB_ENV  
-      - name: Build in jdk11
+      - name: Build in jdk21
         run: mvn -B clean install -DskipTests --file pom.xml
       - name: Set up JDK 21
         uses: actions/setup-java@v2
@@ -48,3 +51,8 @@ jobs:
       - name: check mvn version
         run: echo "MAVEN_VERSION=$(mvn -v)"
       - name: check java version
+        run: echo "JAVA_VERSION=$(java -version)"
+      - name: Print segment
+        run: echo "Running build for segment ${{ matrix.profile }}"
+      - name: JDK 21 Tests
+        run: mvn -B clean install --file integration/pom.xml -P ${{ matrix.profile }} -fae
