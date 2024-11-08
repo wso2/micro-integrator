@@ -389,10 +389,6 @@ public class ServerConfigurationManager {
         org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
     }
 
-    public void restartMicroIntegrator(Map<String, String> commandMap) throws AutomationUtilException {
-        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer(commandMap);
-    }
-
     /**
      * Restart Server Gracefully  from admin user
      *

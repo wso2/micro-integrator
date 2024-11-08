@@ -103,12 +103,6 @@ if ""%1""==""car""   goto setCar
 if ""%1""==""-car""  goto setCar
 if ""%1""==""--car"" goto setCar
 
-@REM Check if the argument starts with --env-file=
-set "envfile=%~1"
-if "!envfile:~0,11!"=="--env-file=" (
-    set "file_path=!envfile:~11!"
-    call :export_env_file "!file_path!"
-)
 shift
 goto setupArgs
 
@@ -138,40 +132,6 @@ set /p processId= < %CARBON_HOME%\wso2carbon.pid
 echo Stopping the Micro Integrator Server
 taskkill /F /PID %processId%
 goto end
-
-:export_env_file
-setlocal EnableDelayedExpansion
-
-set "file_path=%~1"
-
-REM Check if the file exists
-if not exist "!file_path!" (
-    echo Error: File '!file_path!' not found.
-    exit /b 1
-)
-
-REM Read each line in the file
-for /f "usebackq tokens=1,* delims==" %%A in ("!file_path!") do (
-    set "line=%%A"
-
-    REM Ignore lines that start with '#' (comments) or are empty
-    if not "!line!"=="" (
-        if "!line:~0,1!" neq "#" (
-            set "key=%%A"
-            set "value=%%B"
-
-            REM Trim surrounding whitespace from key and value
-            for /f "tokens=* delims= " %%i in ("!key!") do set "key=%%i"
-            for /f "tokens=* delims= " %%i in ("!value!") do set "value=%%i"
-
-            REM Set the environment variable
-            setx "!key!" "!value!" >nul
-            set "!key!=!value!"
-        )
-    )
-)
-echo Environment variables loaded from !file_path!.
-exit /b 0
 
 rem ----- commandLifecycle -----------------------------------------------------
 :commandLifecycle
