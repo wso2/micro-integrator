@@ -1932,6 +1932,11 @@
         <opencensus.orbit.version>0.31.1.wso2v3</opencensus.orbit.version>
         <graalvm.version>22.3.4</graalvm.version>
         <icu.version>71.1</icu.version>
+        <custom.jvm.options>
+            -Djdk.util.zip.disableZip64ExtraFieldValidation=true
+            -Djdk.nio.zipfs.allowDotZipEntry=true
+            --add-opens=java.base/java.net=ALL-UNNAMED
+        </custom.jvm.options>
     </properties>
 
     <repositories>
@@ -2129,6 +2134,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surefire.plugin.version}</version>
+                    <configuration>
+                        <argLine>
+                            -Djdk.util.zip.disableZip64ExtraFieldValidation=true
+                            -Djdk.nio.zipfs.allowDotZipEntry=true
+                            --add-opens=java.base/java.net=ALL-UNNAMED
+                        </argLine>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
