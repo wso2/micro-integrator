@@ -49,7 +49,7 @@ public class ODataTestUtils {
     public static final int PRE_CONDITION_FAILED = 412;
     public static final int NOT_FOUND = 404;
 
-    public static Object[] sendPOST(String endpoint, String content, Map<String, String> headers) throws IOException, InterruptedException {
+    public static Object[] sendPOST(String endpoint, String content, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPost httpPost = new HttpPost(endpoint);
             for (String headerType : headers.keySet()) {
@@ -82,7 +82,7 @@ public class ODataTestUtils {
         }
     }
 
-    public static Object[] sendGET(String endpoint, Map<String, String> headers) throws IOException, InterruptedException {
+    public static Object[] sendGET(String endpoint, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet httpGet = new HttpGet(endpoint);
             for (String headerType : headers.keySet()) {
@@ -108,7 +108,7 @@ public class ODataTestUtils {
         }
     }
 
-    public static int sendPUT(String endpoint, String content, Map<String, String> headers) throws IOException, InterruptedException {
+    public static int sendPUT(String endpoint, String content, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPut httpPut = new HttpPut(endpoint);
             for (String headerType : headers.keySet()) {
@@ -129,7 +129,7 @@ public class ODataTestUtils {
         }
     }
 
-    public static int sendPATCH(String endpoint, String content, Map<String, String> headers) throws IOException, InterruptedException {
+    public static int sendPATCH(String endpoint, String content, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPatch httpPatch = new HttpPatch(endpoint);
             for (String headerType : headers.keySet()) {
@@ -150,7 +150,7 @@ public class ODataTestUtils {
         }
     }
 
-    public static int sendDELETE(String endpoint, Map<String, String> headers) throws IOException, InterruptedException {
+    public static int sendDELETE(String endpoint, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpDelete httpDelete = new HttpDelete(endpoint);
             for (String headerType : headers.keySet()) {
