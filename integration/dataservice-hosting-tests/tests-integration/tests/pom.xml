@@ -42,7 +42,7 @@
                         -Xmx1024m
                         --add-opens java.base/java.lang=ALL-UNNAMED
                         --add-opens java.base/java.lang.reflect=ALL-UNNAMED
-                        --add-opens java.base/jdk.internal.reflect=ALL-UNNAMED
+                        --add-opens java.base/java.util=ALL-UNNAMED
                     </argLine>
                     <disableXmlReport>false</disableXmlReport>
                     <parallel>false</parallel>
