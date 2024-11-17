@@ -36,7 +36,7 @@ jobs:
         run: echo "JAVA_VERSION=$(java -version)"
       - name: Set JAVA_TOOL_OPTIONS
         run: |
-          NEW_JAVA_TOOL_OPTIONS="${{ env.JAVA_TOOL_OPTIONS }} --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/jdk.internal.reflect=ALL-UNNAMED  --add-opens=java.base/java.util.TreeMap=ALL-UNNAMED  --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.lang.Thread=ALL-UNNAMED"
+          NEW_JAVA_TOOL_OPTIONS="${{ env.JAVA_TOOL_OPTIONS }} --add-opens=java.base/java.net=ALL-UNNAMED"
           echo "JAVA_TOOL_OPTIONS=$NEW_JAVA_TOOL_OPTIONS" >> $GITHUB_ENV
       - name: Build in jdk11
         run: mvn clean install -DskipTests --file pom.xml
