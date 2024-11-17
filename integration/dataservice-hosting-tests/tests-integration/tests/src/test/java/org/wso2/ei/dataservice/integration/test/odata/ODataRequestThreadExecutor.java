@@ -43,28 +43,28 @@ public class ODataRequestThreadExecutor extends Thread {
         case "POST":
             try {
                 ODataTestUtils.sendPOST(endpoint, content, headers);
-            } catch (IOException|InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             break;
         case "PUT":
             try {
                 ODataTestUtils.sendPUT(endpoint, content, headers);
-            } catch (IOException|InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             break;
         case "PATCH":
             try {
                 ODataTestUtils.sendPATCH(endpoint, content, headers);
-            } catch (IOException|InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             break;
         case "DELETE":
             try {
                 ODataTestUtils.sendDELETE(endpoint, headers);
-            } catch (IOException|InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             break;

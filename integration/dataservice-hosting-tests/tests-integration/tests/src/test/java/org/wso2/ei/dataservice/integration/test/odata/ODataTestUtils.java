@@ -49,7 +49,7 @@ public class ODataTestUtils {
     public static final int PRE_CONDITION_FAILED = 412;
     public static final int NOT_FOUND = 404;
 
-    public static Object[] sendPOST(String endpoint, String content, Map<String, String> headers) throws IOException, InterruptedException {
+    public static Object[] sendPOST(String endpoint, String content, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPost httpPost = new HttpPost(endpoint);
             for (String headerType : headers.keySet()) {
@@ -63,7 +63,6 @@ public class ODataTestUtils {
                 httpPost.setEntity(httpEntity);
             }
             try (CloseableHttpResponse httpResponse = httpClient.execute(httpPost)) {
-                Thread.sleep(1000);
                 if (httpResponse.getEntity() != null) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
                     String inputLine;
@@ -83,14 +82,13 @@ public class ODataTestUtils {
         }
     }
 
-    public static Object[] sendGET(String endpoint, Map<String, String> headers) throws IOException, InterruptedException {
+    public static Object[] sendGET(String endpoint, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet httpGet = new HttpGet(endpoint);
             for (String headerType : headers.keySet()) {
                 httpGet.setHeader(headerType, headers.get(headerType));
             }
             try (CloseableHttpResponse httpResponse = httpClient.execute(httpGet)) {
-                Thread.sleep(1000);
                 if (httpResponse.getEntity() != null) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
                     String inputLine;
@@ -110,7 +108,7 @@ public class ODataTestUtils {
         }
     }
 
-    public static int sendPUT(String endpoint, String content, Map<String, String> headers) throws IOException, InterruptedException {
+    public static int sendPUT(String endpoint, String content, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPut httpPut = new HttpPut(endpoint);
             for (String headerType : headers.keySet()) {
@@ -124,7 +122,6 @@ public class ODataTestUtils {
                 httpPut.setEntity(httpEntity);
             }
             try (CloseableHttpResponse response = httpClient.execute(httpPut)) {
-                Thread.sleep(1000);
                 return response.getStatusLine().getStatusCode();
             }
         } catch (IOException e) {
@@ -132,7 +129,7 @@ public class ODataTestUtils {
         }
     }
 
-    public static int sendPATCH(String endpoint, String content, Map<String, String> headers) throws IOException, InterruptedException {
+    public static int sendPATCH(String endpoint, String content, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPatch httpPatch = new HttpPatch(endpoint);
             for (String headerType : headers.keySet()) {
@@ -146,7 +143,6 @@ public class ODataTestUtils {
                 httpPatch.setEntity(httpEntity);
             }
             try (CloseableHttpResponse response = httpClient.execute(httpPatch)) {
-                Thread.sleep(1000);
                 return response.getStatusLine().getStatusCode();
             }
         } catch (IOException e) {
@@ -154,14 +150,13 @@ public class ODataTestUtils {
         }
     }
 
-    public static int sendDELETE(String endpoint, Map<String, String> headers) throws IOException, InterruptedException {
+    public static int sendDELETE(String endpoint, Map<String, String> headers) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpDelete httpDelete = new HttpDelete(endpoint);
             for (String headerType : headers.keySet()) {
                 httpDelete.setHeader(headerType, headers.get(headerType));
             }
             try (CloseableHttpResponse response = httpClient.execute(httpDelete)) {
-                Thread.sleep(1000);
                 return response.getStatusLine().getStatusCode();
             }
         } catch (IOException e) {
