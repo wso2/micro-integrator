@@ -26,6 +26,7 @@ import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.wso2.ei.dataservice.integration.test.odata.ODataTestUtils.getETag;
 import static org.wso2.ei.dataservice.integration.test.odata.ODataTestUtils.sendDELETE;
@@ -58,7 +59,7 @@ public class ODataETagTestCase extends DSSIntegrationTest {
     public void validateETagRetrievalTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES";
         String content = "{\"FILENAME\": \"WSO2PROD\" ,\"TYPE\" : \"dss\"}";
-        Map<String, String> headers = new HashMap<>();
+        ConcurrentHashMap<String, String> headers = new ConcurrentHashMap<>();
         headers.put("Accept", "application/json");
         Object[] response = sendPOST(endpoint, content, headers);
         Assert.assertEquals(response[0], ODataTestUtils.CREATED);
@@ -87,7 +88,7 @@ public class ODataETagTestCase extends DSSIntegrationTest {
     public void validateETagGenerationTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES";
         String content = "{\"FILENAME\": \"WSO2\" ,\"TYPE\" : \"bam\"}";
-        Map<String, String> headers = new HashMap<>();
+        ConcurrentHashMap<String, String> headers = new ConcurrentHashMap<>();
         headers.put("Accept", "application/json");
         Object[] response = sendPOST(endpoint, content, headers);
         Thread.sleep(1000);
@@ -112,7 +113,7 @@ public class ODataETagTestCase extends DSSIntegrationTest {
     @Test(groups = "wso2.dss", description = "etag concurrent handling with put method test", dependsOnMethods = "validateETagGenerationTestCase")
     public void validateETagConcurrentHandlingTestCaseForPutMethod() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES(\'WSO2PROD\')";
-        Map<String, String> headers = new HashMap<>();
+        ConcurrentHashMap<String, String> headers = new ConcurrentHashMap<>();
         headers.put("Accept", "application/json");
         Object[] response = sendGET(endpoint, headers);
         Thread.sleep(1000);
@@ -181,7 +182,7 @@ public class ODataETagTestCase extends DSSIntegrationTest {
     @Test(groups = "wso2.dss", description = "etag concurrent handling with patch method test", dependsOnMethods = "validateETagConcurrentHandlingTestCaseForPutMethod")
     public void validateETagConcurrentHandlingTestCaseForPatchMethod() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES(\'WSO2\')";
-        Map<String, String> headers = new HashMap<>();
+        ConcurrentHashMap<String, String> headers = new ConcurrentHashMap<>();
         headers.put("Accept", "application/json");
         Object[] response = sendGET(endpoint, headers);
         Thread.sleep(1000);
@@ -252,7 +253,7 @@ public class ODataETagTestCase extends DSSIntegrationTest {
             System.out.println("This test is temporarily skipped for this workflow");
             String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES";
             String content = "{\"FILENAME\": \"WSO2PROD\" ,\"TYPE\" : \"dss\"}";
-            Map<String, String> headers = new HashMap<>();
+            ConcurrentHashMap<String, String> headers = new ConcurrentHashMap<>();
             headers.put("Accept", "application/json");
             Object[] response = sendPOST(endpoint, content, headers);
             Thread.sleep(1000);
@@ -314,7 +315,7 @@ public class ODataETagTestCase extends DSSIntegrationTest {
         if (!Boolean.parseBoolean(System.getenv("CI_BUILD_SKIP"))) {
             String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES";
             String content = "{\"FILENAME\": \"WSO2PROD\" ,\"TYPE\" : \"dss\"}";
-            Map<String, String> headers = new HashMap<>();
+            ConcurrentHashMap<String, String> headers = new ConcurrentHashMap<>();
             headers.put("Accept", "application/json");
             Object[] response = sendPOST(endpoint, content, headers);
             Thread.sleep(1000);
@@ -378,7 +379,7 @@ public class ODataETagTestCase extends DSSIntegrationTest {
             System.out.println("This test is temporarily skipped for this workflow");
             String entityEndpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES(\'WSO2PROD\')";
             String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES(\'WSO2PROD\')/TYPE";
-            Map<String, String> headers = new HashMap<>();
+            ConcurrentHashMap<String, String> headers = new ConcurrentHashMap<>();
             headers.put("Accept", "application/json");
             Object[] response = sendGET(entityEndpoint, headers);
             Thread.sleep(1000);
