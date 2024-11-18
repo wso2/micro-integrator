@@ -65,6 +65,7 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
                 "Navigation property reference retrieval failed");
         endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(2)/FILES/$ref";
         response = sendGET(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(response[0], ODataTestUtils.OK);
         Assert.assertTrue(response[1].toString().contains("FILES('WSO2DSS')"),
                 "Navigation property reference retrieval failed");
@@ -76,6 +77,7 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         Object[] response = sendGET(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(response[0], ODataTestUtils.OK);
     }
 
@@ -91,6 +93,7 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
         Assert.assertEquals(response[0], ODataTestUtils.NO_CONTENT);
         endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(5)/FILES/$ref";
         response = sendGET(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(response[0], ODataTestUtils.OK);
         Assert.assertTrue(response[1].toString().contains("FILES('WSO2DSS')"),
                 "Navigation property reference retrieval failed");
@@ -99,9 +102,11 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
                 + "/FILES('WSO2ML')\"} ";
         headers.put("Accept", "application/json");
         int responseCode = sendPUT(endpoint, content, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(responseCode, ODataTestUtils.NO_CONTENT);
         endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES('WSO2ML')/FILERECORDS/$ref";
         response = sendGET(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(response[0], ODataTestUtils.OK);
         Assert.assertTrue(response[1].toString().contains("FILERECORDS(5)"),
                 "Navigation property reference retrieval failed");
@@ -115,14 +120,18 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         int responseCode = sendDELETE(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(responseCode, ODataTestUtils.NO_CONTENT);
         endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(5)/FILES/$ref";
         Object[] response = sendGET(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(response[0], ODataTestUtils.NO_CONTENT);
         endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(1)/FILES/$ref";
         responseCode = sendDELETE(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(responseCode, ODataTestUtils.NO_CONTENT);
         response = sendGET(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(response[0], ODataTestUtils.NO_CONTENT);
     }
 
@@ -135,13 +144,16 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         Object[] response = sendPOST(endpoint, content, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(response[0], ODataTestUtils.CREATED);
         endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(11)/FILES/$ref";
         response = sendGET(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(response[0], ODataTestUtils.OK);
         Assert.assertTrue(response[1].toString().contains("FILES('WSO2DSS')"));
         endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(11)";
         response = sendGET(endpoint, headers);
+        Thread.sleep(1000);
         Assert.assertEquals(response[0], ODataTestUtils.OK);
         Assert.assertTrue(response[1].toString().contains("\"FILENAME\":\"WSO2DSS\""));
     }

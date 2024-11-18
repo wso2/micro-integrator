@@ -42,58 +42,6 @@
             <artifactId>admin-clients</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.localentry.stub</artifactId>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.axis2.wso2</groupId>
-                    <artifactId>axis2</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.proxyadmin.stub</artifactId>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.axis2.wso2</groupId>
-                    <artifactId>axis2</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.sequences.stub</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.task.stub</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.endpoint.stub</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.framework</groupId>
-            <artifactId>org.wso2.carbon.security.mgt.stub</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.aarservices.stub</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.analytics-common</groupId>
             <artifactId>org.wso2.carbon.databridge.commons</artifactId>
             <scope>compile</scope>
@@ -109,27 +57,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
         </dependency>
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo-shaded</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.synapse</groupId>
-            <artifactId>synapse-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.axis2.wso2</groupId>
-                    <artifactId>axis2</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.icegreen</groupId>
