@@ -180,19 +180,21 @@ public class ConfigDeployer implements AppDeploymentHandler {
             try (FileInputStream trustStoreStream = new FileInputStream(trustStorePath.toFile())) {
                 KeyStore trustStore = KeyStore.getInstance(type);
                 trustStore.load(trustStoreStream, password);
+                if (!trustStore.containsAlias(key)) {
 
-                // Load the certificate file
-                CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-                try (FileInputStream certStream = new FileInputStream(path)) {
-                    Certificate cert = certFactory.generateCertificate(certStream);
-                    // Add the certificate to the truststore
-                    trustStore.setCertificateEntry(key, cert);
-                    log.info("Certificate added with alias: " + key);
-                }
-                // Save the truststore with the new certificate
-                try (FileOutputStream outputStream = new FileOutputStream(trustStorePath.toFile())) {
-                    trustStore.store(outputStream, password);
-                    log.info("Truststore updated successfully at: " + trustStorePath);
+                    // Load the certificate file
+                    CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+                    try (FileInputStream certStream = new FileInputStream(path)) {
+                        Certificate cert = certFactory.generateCertificate(certStream);
+                        // Add the certificate to the truststore
+                        trustStore.setCertificateEntry(key, cert);
+                        log.info("Certificate added with alias: " + key);
+                    }
+                    // Save the truststore with the new certificate
+                    try (FileOutputStream outputStream = new FileOutputStream(trustStorePath.toFile())) {
+                        trustStore.store(outputStream, password);
+                        log.info("Truststore updated successfully at: " + trustStorePath);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
