@@ -17,6 +17,8 @@
  */
 package org.wso2.micro.integrator.observability.metric.handler;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -309,8 +311,23 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
      * @return String The api name
      */
     private String getApiName(String contextPath, MessageContext synCtx) {
+        Collection<API> apiList = synCtx.getEnvironment().getSynapseConfiguration().getAPIs();
+        Collection<API> withVersionsApiList = new ArrayList<>();
+        Collection<API> defaultApiList = new ArrayList<>();
+        updateApiLists(apiList, withVersionsApiList, defaultApiList);
+        if (!withVersionsApiList.isEmpty()) {
+            String apiName = getResolvedApiName(contextPath, synCtx, withVersionsApiList);
+            if (apiName != null) {
+                return apiName;
+            }
+        }
+        return getResolvedApiName(contextPath, synCtx, defaultApiList);
+    }
+
+    private static String getResolvedApiName(String contextPath, MessageContext synCtx,
+                                                       Collection<API> apiList) {
         String apiName = null;
-        for (API api : synCtx.getEnvironment().getSynapseConfiguration().getAPIs()) {
+        for (API api : apiList) {
             String apiContextPath = api.getContext();
             if (StringUtils.isNotBlank(api.getVersionStrategy().getVersion())) {
                 apiContextPath = apiContextPath + "/" + api.getVersionStrategy().getVersion();
@@ -318,13 +335,21 @@ public class MetricHandler extends AbstractExtendedSynapseHandler {
             if (RESTUtils.matchApiPath(contextPath, apiContextPath)) {
                 apiName = api.getName();
                 synCtx.setProperty(RESTConstants.PROCESSED_API, api);
-                // Since the APIs are already sorted in descending order, we should stop at the first match with the context path.
-                // Continuing the loop could result in matching a path that only shares the same starting string.
-                // Ex: /test/ API context path will match with /test/1.0.0
                 break;
             }
         }
         return apiName;
+    }
+
+    private void updateApiLists(Collection<API> apiList, Collection<API> withVersionsApiList,
+                                           Collection<API> defaultApiList) {
+        for (API api : apiList) {
+            if (StringUtils.isNotBlank(api.getVersionStrategy().getVersion())) {
+                withVersionsApiList.add(api);
+            } else {
+                defaultApiList.add(api);
+            }
+        }
     }
 
     /**

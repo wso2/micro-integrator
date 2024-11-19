@@ -172,7 +172,10 @@ public class ServiceBusInitializer {
             }
             SynapseEnvironment synapseEnvironment = contextInfo.getSynapseEnvironment();
             List handlers = synapseEnvironment.getSynapseHandlers();
-            if (System.getProperty(ServiceBusConstants.ENABLE_PROMETHEUS_API_PROPERTY) != null) {
+            String prometheusApiEnabled = System.getProperty(ServiceBusConstants.ENABLE_PROMETHEUS_API_PROPERTY);
+            if ("false".equals(prometheusApiEnabled)) {
+                handlers.remove(handlers.stream().filter(c -> c instanceof MetricHandler).findFirst().orElse(null));
+            } else if ("true".equals(prometheusApiEnabled)) {
                 if (!handlers.stream().anyMatch(c -> c instanceof MetricHandler)) {
                     handlers.add(new MetricHandler());
                 }
