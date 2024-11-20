@@ -46,6 +46,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.function.BooleanSupplier;
 import javax.xml.xpath.XPathExpressionException;
@@ -386,6 +387,10 @@ public class ServerConfigurationManager {
      */
     public void restartMicroIntegrator() throws AutomationUtilException {
         org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
+    }
+
+    public void restartMicroIntegrator(Map<String, String> commandMap) throws AutomationUtilException {
+        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer(commandMap);
     }
 
     /**

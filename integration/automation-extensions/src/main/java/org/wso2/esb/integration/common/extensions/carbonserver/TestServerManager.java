@@ -153,6 +153,14 @@ public class TestServerManager {
         log.info("Server restarted successfully ...");
     }
 
+    void restartServer(Map<String, String> commands) throws AutomationFrameworkException {
+        log.info("Preparing to restart the server ...");
+        commandMap.putAll(commands);
+        carbonServer.serverShutdown(portOffset, true);
+        carbonServer.startServerUsingCarbonHome(carbonHome, commandMap);
+        log.info("Server restarted successfully ...");
+    }
+
     void startMIServer() throws AutomationFrameworkException {
 
         log.info("Preparing to start the MI server ...");

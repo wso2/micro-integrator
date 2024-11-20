@@ -27,6 +27,7 @@ import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
 import org.wso2.carbon.automation.extensions.ExtensionConstants;
 
 import javax.xml.xpath.XPathExpressionException;
+import java.util.Map;
 
 public class CarbonServerExtension extends ExecutionListenerExtension {
     private static TestServerManager serverManager;
@@ -75,6 +76,14 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
 
         try {
             serverManager.restartServer();
+        } catch (AutomationFrameworkException e) {
+            throw new RuntimeException("Exception occurred while restarting the server", e);
+        }
+    }
+
+    public static void restartServer(Map<String, String> commandMap) {
+        try {
+            serverManager.restartServer(commandMap);
         } catch (AutomationFrameworkException e) {
             throw new RuntimeException("Exception occurred while restarting the server", e);
         }
