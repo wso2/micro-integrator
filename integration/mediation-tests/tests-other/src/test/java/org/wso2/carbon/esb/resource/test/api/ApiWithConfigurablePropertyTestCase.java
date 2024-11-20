@@ -56,7 +56,7 @@ public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
     @Test(groups = {"wso2.esb"}, description = "Configurable property", priority = 3)
     public void testConfigurablePropertyWithEnvVariable() throws IOException, AutomationUtilException {
         Map<String, String> commands = new HashMap<>();
-        commands.put("--env-file", FrameworkPathUtil.getSystemResourceLocation() + ".env");
+        commands.put("--env-file", FrameworkPathUtil.getSystemResourceLocation() + "test.env");
         serverConfigurationManager.restartMicroIntegrator(commands);
         Map<String, String> headers = new HashMap<>();
         URL endpoint = new URL(getApiInvocationURL("apiConfig/test"));
@@ -72,7 +72,7 @@ public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
         Map<String, String> commands = new HashMap<>();
         commands.put("-Dname", "sys");
         commands.put("-Dmsg", "Hi");
-        commands.put("--env-file", FrameworkPathUtil.getSystemResourceLocation() + ".env");
+        commands.put("--env-file", FrameworkPathUtil.getSystemResourceLocation() + "test.env");
         serverConfigurationManager.restartMicroIntegrator(commands);
         Map<String, String> headers = new HashMap<>();
         URL endpoint = new URL(getApiInvocationURL("apiConfig/test"));

@@ -387,6 +387,21 @@ public class TestMessageContext implements MessageContext {
     public void setMessageFlowTracingState(int tracingState){
     }
 
+    @Override
+    public Object getVariable(String s) {
+        return null;
+    }
+
+    @Override
+    public void setVariable(String s, Object o) {
+        //
+    }
+
+    @Override
+    public Set getVariableKeySet() {
+        return null;
+    }
+
     public int getMessageFlowTracingState(){
         return SynapseConstants.TRACING_OFF;
     }
