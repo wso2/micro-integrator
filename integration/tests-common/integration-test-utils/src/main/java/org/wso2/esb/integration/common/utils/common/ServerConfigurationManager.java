@@ -43,11 +43,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -389,10 +388,6 @@ public class ServerConfigurationManager {
         org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
     }
 
-    public void restartMicroIntegrator(Map<String, String> commandMap) throws AutomationUtilException {
-        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer(commandMap);
-    }
-
     /**
      * Restart Server Gracefully  from admin user
      *
@@ -411,10 +406,10 @@ public class ServerConfigurationManager {
         return processBuilder.start();
     }
 
-    private void waitTill(BooleanSupplier predicate, int maxWaitTime, TimeUnit timeUnit) throws InterruptedException {
-        long time = System.currentTimeMillis() + timeUnit.toMillis(maxWaitTime);
-        while (predicate.getAsBoolean() && System.currentTimeMillis() < time) {
-            TimeUnit.MILLISECONDS.sleep(1);
+    private void waitTill(BooleanSupplier predicate, int maxWaitTime, Duration timeUnit) throws InterruptedException {
+        long endTime = System.currentTimeMillis() + timeUnit.toMillis();
+        while (predicate.getAsBoolean() && System.currentTimeMillis() < endTime) {
+            Thread.sleep(1000);
         }
     }
 

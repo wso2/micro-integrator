@@ -26,10 +26,10 @@ import java.util.Map;
  */
 public class ODataRequestThreadExecutor extends Thread {
 
-    private String httpMethod;
-    private String content;
-    private Map<String, String> headers;
-    private String endpoint;
+    private final String httpMethod;
+    private final String content;
+    private final Map<String, String> headers;
+    private final String endpoint;
 
     public ODataRequestThreadExecutor(String httpMethod, String content, Map<String, String> headers, String endpoint) {
         this.content = content;
