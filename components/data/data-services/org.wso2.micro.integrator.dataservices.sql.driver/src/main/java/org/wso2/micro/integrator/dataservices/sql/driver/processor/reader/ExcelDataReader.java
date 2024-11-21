@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -58,7 +59,7 @@ public class ExcelDataReader extends AbstractFixedDataReader {
                     while (cellItr.hasNext()) {
                         Cell cell = cellItr.next();
                         DataCell dataCell =
-                                new DataCell(cellIndex + 1, cell.getCellType(), extractCellValue(cell));
+                                new DataCell(cellIndex + 1, cell.getCellType().getCode(), extractCellValue(cell));
                         dataRow.addCell(dataCell.getColumnId(), dataCell);
                         cellIndex++;
                     }
@@ -77,13 +78,13 @@ public class ExcelDataReader extends AbstractFixedDataReader {
      */
     private Object extractCellValue(Cell cell) {
         switch (cell.getCellType()) {
-            case Cell.CELL_TYPE_NUMERIC:
+            case NUMERIC:
                 return cell.getNumericCellValue();
-            case Cell.CELL_TYPE_BLANK:
-            case Cell.CELL_TYPE_FORMULA:
-            case Cell.CELL_TYPE_STRING:
+            case BLANK:
+            case FORMULA:
+            case STRING:
                 return cell.getStringCellValue();
-            case Cell.CELL_TYPE_BOOLEAN:
+            case BOOLEAN:
                 return cell.getBooleanCellValue();
             default:
                 return cell.getStringCellValue();
@@ -117,14 +118,14 @@ public class ExcelDataReader extends AbstractFixedDataReader {
             while (itr.hasNext()) {
                 Cell cell = itr.next();
                 if (cell != null) {
-                    int cellType = cell.getCellType();
+                    CellType cellType = cell.getCellType();
                     switch (cellType) {
-                        case Cell.CELL_TYPE_STRING:
+                        case STRING:
                             headers.add(new ColumnInfo(cell.getColumnIndex() + 1,
                                     cell.getStringCellValue(), sheet.getSheetName(), Types.VARCHAR,
                                     cell.getColumnIndex() + 1));
                             break;
-                        case Cell.CELL_TYPE_NUMERIC:
+                        case NUMERIC:
                             headers.add(new ColumnInfo(cell.getColumnIndex() + 1,
                                     String.valueOf(cell.getNumericCellValue()),
                                     sheet.getSheetName(), Types.INTEGER,
