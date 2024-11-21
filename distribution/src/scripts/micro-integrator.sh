@@ -132,7 +132,7 @@ export_env_file() {
   # Read the .env file and export each variable to the environment
   while IFS='=' read -r key value; do
     # Ignore lines starting with '#' (comments) or empty lines
-    if [[ ! "$key" =~ ^# ]] && [[ "$key" != "" ]]; then
+    if [ ! "$key" =~ ^# ] && [ "$key" != "" ]; then
       # Trim surrounding whitespace from key and value
       key=$(echo "$key" | xargs)
       value=$(echo "$value" | xargs)
@@ -168,11 +168,13 @@ do
     else
         args="$args $c"
     fi
+    echo "11111111111111111111111111  $c"
     # Check if the argument starts with --env-file=
-    if [[ "$c" == --env-file=* ]]; then
-      # Extract the file path from the argument
-      file_path="${c#--env-file=}"
-      export_env_file "$file_path"
+    if [ "$c" = "--env-file=*" ]; then
+        echo "_____________________ env file __________"
+        # Extract the file path from the argument
+        file_path="${c#--env-file=}"
+        export_env_file "$file_path"
     fi
 done
 
