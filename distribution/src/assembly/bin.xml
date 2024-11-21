@@ -694,6 +694,9 @@
                 <include>io.netty:netty-tcnative-boringssl-static</include>
                 <!-- need to add this to class path for poi -->
                 <include>org.codehaus.woodstox:stax2-api:jar</include>
+                <!-- poi jars are needed in classpath form the latest version -->
+                <include>org.apache.poi:poi:jar</include>
+                <include>org.apache.poi:poi-ooxml:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>

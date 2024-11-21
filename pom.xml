@@ -1502,6 +1502,16 @@
                 <artifactId>icu4j</artifactId>
                 <version>${icu.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi-ooxml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1641,7 +1651,7 @@
         <jsonassert.version>1.5.1</jsonassert.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
         <bouncycastle.orbit.version>1.78.1.wso2v1</bouncycastle.orbit.version>
-        <orbit.version.poi.ooxml>3.17.0.wso2v1</orbit.version.poi.ooxml>
+        <orbit.version.poi.ooxml>5.3.0.wso2v1</orbit.version.poi.ooxml>
         <org.wso2.json.version>3.0.0.wso2v1</org.wso2.json.version>
         <version.equinox.http.servlet>1.1.400.v20130418-1354</version.equinox.http.servlet>
         <version.tomcat>9.0.85</version.tomcat>
@@ -1667,7 +1677,7 @@
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
         <version.XmlSchema>1.4.7-wso2v8</version.XmlSchema>
         <commons-xmlschema.version>1.4.7</commons-xmlschema.version>
-        <version.commons.codec>1.15</version.commons.codec>
+        <version.commons.codec>1.17.1</version.commons.codec>
         <version.annogen>0.1.0.wso2v1</version.annogen>
         <version.backport.util.concurrent>3.1.0.wso2v1</version.backport.util.concurrent>
         <version.commons.fileupload>1.5.0.wso2v1</version.commons.fileupload>
@@ -1677,7 +1687,7 @@
         <orbit.version.commons.lang>2.6.0.wso2v1</orbit.version.commons.lang>
         <version.geronimo.saaj.spec>1.0.1.wso2v2</version.geronimo.saaj.spec>
         <orbit.version.poi>3.17.0.wso2v1</orbit.version.poi>
-        <orbit.version.poi.scratchpad>3.17.0.wso2v1</orbit.version.poi.scratchpad>
+        <orbit.version.poi.scratchpad>5.3.0.wso2v1</orbit.version.poi.scratchpad>
         <slf4j.version>1.7.36</slf4j.version>
         <version.log4j.core>2.17.1</version.log4j.core>
         <version.jaxb>2.2.5.wso2v1</version.jaxb>
@@ -1765,7 +1775,7 @@
         <carbon.commons.logging.imp.pkg.version>0.0.0</carbon.commons.logging.imp.pkg.version> <!-- todo  org.apache.commons.logging package version changed to this since there are no version in current export, after it was fixed change accordingly (should be able to use carbon.kernel.imp.pkg.version). - rajith-->
         <carbon.kernel.imp.pkg.version>[4.4.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
-        <commons-io.version>2.11.0</commons-io.version>
+        <commons-io.version>2.17.0</commons-io.version>
         <commons-io.orbit.imp.pkg.version>0.0.0</commons-io.orbit.imp.pkg.version> <!-- todo change this once commons-io is corrected to use correct version exports - rajith -->
 
         <jena-arq.orbit.version>1.0.0.wso2v1</jena-arq.orbit.version>
@@ -1777,8 +1787,11 @@
         <opencsv.orbit.version>1.8.wso2v1</opencsv.orbit.version>
         <opencsv.orbit.imp.pkg.version>0.0.0</opencsv.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([1.8.wso2v1,1.9)) after osgi bundle was corrected -->
 
-        <poi-ooxml.orbit.version>3.17.0.wso2v1</poi-ooxml.orbit.version>
+        <poi-ooxml.orbit.version>5.3.0.wso2v1</poi-ooxml.orbit.version>
         <poi-ooxml.orbit.imp.pkg.version>0.0.0</poi-ooxml.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0.wso2v3,4.0.0)) after osgi bundle is corrected - rajith-->
+
+        <poi-ooxml.version>5.3.0</poi-ooxml.version>
+        <poi.version>5.3.0</poi.version>
 
         <commons-collections4.orbit.version>4.4.wso2v1</commons-collections4.orbit.version>
         <commons-collections4.orbit.imp.pkg.version>0.0.0</commons-collections4.orbit.imp.pkg.version>
@@ -1835,7 +1848,7 @@
         <google-oauth-client.orbit.version>1.33.3.wso2v1</google-oauth-client.orbit.version>
         <google-oauth-client.orbit.imp.pkg.version>[1.33.1,2.0)</google-oauth-client.orbit.imp.pkg.version>
 
-        <poi.orbit.version>3.17.0.wso2v1</poi.orbit.version>
+        <poi.orbit.version>5.3.0.wso2v1</poi.orbit.version>
         <poi.orbit.imp.pkg.version>0.0.0</poi.orbit.imp.pkg.version> <!--todo change this to appropriate version range ([3.9.0,4.0.0)) after osgi bundle is corrected - rajith-->
 
         <google-api-client.orbit.version>1.33.1.wso2v2</google-api-client.orbit.version>

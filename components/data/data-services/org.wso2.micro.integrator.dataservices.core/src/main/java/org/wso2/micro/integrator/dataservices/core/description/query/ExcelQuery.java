@@ -110,19 +110,19 @@ public class ExcelQuery extends Query {
                 continue;
             }
             switch (cell.getCellType()) {
-                case HSSFCell.CELL_TYPE_STRING:
+                case STRING:
                     data[i] = cell.getRichStringCellValue().getString();
                     break;
-                case HSSFCell.CELL_TYPE_BLANK:
+                case BLANK:
                     data[i] = "";
                     break;
-                case HSSFCell.CELL_TYPE_BOOLEAN:
+                case BOOLEAN:
                     data[i] = String.valueOf(cell.getBooleanCellValue());
                     break;
-                case HSSFCell.CELL_TYPE_FORMULA:
+                case FORMULA:
                     data[i] = "{formula}";
                     break;
-                case HSSFCell.CELL_TYPE_NUMERIC:
+                case NUMERIC:
                     data[i] = processNumericValue(cell.getNumericCellValue());
                     break;
             }
