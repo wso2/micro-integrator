@@ -131,14 +131,20 @@ export_env_file() {
 
   # Read the .env file and export each variable to the environment
   while IFS='=' read -r key value; do
-    # Ignore lines starting with '#' (comments) or empty lines
-    if [ ! "$key" =~ ^# ] && [ "$key" != "" ]; then
-      # Trim surrounding whitespace from key and value
-      key=$(echo "$key" | xargs)
-      value=$(echo "$value" | xargs)
-      # Export the key-value pair to the environment
-      export "$key=$value"
-    fi
+      # Ignore lines starting with '#' (comments) or empty lines
+      case "$key" in
+          \#*|"")
+              # Skip comments or empty lines
+              continue
+              ;;
+          *)
+              # Trim surrounding whitespace from key and value
+              key=$(echo "$key" | xargs)
+              value=$(echo "$value" | xargs)
+              # Export the key-value pair to the environment
+              export "$key=$value"
+              ;;
+      esac
   done < "$file_path"
 
   echo "Environment variables loaded from $file_path."
@@ -166,11 +172,15 @@ do
         args="$args $c"
     fi
     # Check if the argument starts with --env-file=
-    if [ "$c" == --env-file=* ]; then
-        # Extract the file path from the argument
+    case "$c" in
+      --env-file=*)
         file_path="${c#--env-file=}"
         export_env_file "$file_path"
-    fi
+        ;;
+      *)
+        continue
+        ;;
+    esac
 done
 
 if [ "$CMD" = "--debug" ]; then

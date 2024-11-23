@@ -40,9 +40,6 @@ import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -138,16 +135,6 @@ public class CarbonServerManager {
                 }
 
                 cmdArray = mergePropertiesToCommandArray(parameters, cmdArray);
-                System.out.println("***********************_______________*****************************");
-                System.out.println(Arrays.toString(cmdArray));
-                System.out.println(commandDir.getPath());
-                Path filePath = Paths.get(cmdArray[1]);
-
-                // Read the file content into a string
-                String content = Files.readString(filePath, StandardCharsets.UTF_8);
-                // Print the file content
-                System.out.println(content);
-                System.out.println("****************************************************");
                 process = Runtime.getRuntime().exec(cmdArray, null, commandDir);
             }
 

@@ -131,14 +131,20 @@ export_env_file() {
 
   # Read the .env file and export each variable to the environment
   while IFS='=' read -r key value; do
-    # Ignore lines starting with '#' (comments) or empty lines
-    if [ ! "$key" =~ ^# ] && [ "$key" != "" ]; then
-      # Trim surrounding whitespace from key and value
-      key=$(echo "$key" | xargs)
-      value=$(echo "$value" | xargs)
-      # Export the key-value pair to the environment
-      export "$key=$value"
-    fi
+      # Ignore lines starting with '#' (comments) or empty lines
+      case "$key" in
+          \#*|"")
+              # Skip comments or empty lines
+              continue
+              ;;
+          *)
+              # Trim surrounding whitespace from key and value
+              key=$(echo "$key" | xargs)
+              value=$(echo "$value" | xargs)
+              # Export the key-value pair to the environment
+              export "$key=$value"
+              ;;
+      esac
   done < "$file_path"
 
   echo "Environment variables loaded from $file_path."
@@ -168,14 +174,16 @@ do
     else
         args="$args $c"
     fi
-    echo "11111111111111111111111111  $c"
     # Check if the argument starts with --env-file=
-    if [ "$c" = "--env-file=*" ]; then
-        echo "_____________________ env file __________"
-        # Extract the file path from the argument
+    case "$c" in
+      --env-file=*)
         file_path="${c#--env-file=}"
         export_env_file "$file_path"
-    fi
+        ;;
+      *)
+        continue
+        ;;
+    esac
 done
 
 if [ "$ARGUMENT" = "car" ]; then

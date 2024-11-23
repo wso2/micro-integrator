@@ -29,11 +29,8 @@ import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilExcepti
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +47,7 @@ public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
     @Test(groups = {"wso2.esb"}, description = "Configurable property", priority = 1)
     public void testConfigurablePropertyWithFile() throws IOException {
         Map<String, String> headers = new HashMap<>();
-        URL endpoint = new URL(getApiInvocationURL("apiConfig/test"));
+        URL endpoint = new URL(getApiInvocationURL("apiConfig/test_api"));
         HttpResponse httpResponse = HttpRequestUtil.doGet(endpoint.toString(), headers);
         Assert.assertEquals(httpResponse.getResponseCode(), 200);
         Assert.assertEquals(StringUtils.normalizeSpace(httpResponse.getData()),
@@ -65,7 +62,7 @@ public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
         commands.put("-Dmsg", "Hi");
         serverConfigurationManager.restartMicroIntegrator(commands);
         Map<String, String> headers = new HashMap<>();
-        URL endpoint = new URL(getApiInvocationURL("apiConfig/test"));
+        URL endpoint = new URL(getApiInvocationURL("apiConfig/test_api"));
         HttpResponse httpResponse = HttpRequestUtil.doGet(endpoint.toString(), headers);
         Assert.assertEquals(httpResponse.getResponseCode(), 200);
         Assert.assertEquals(StringUtils.normalizeSpace(httpResponse.getData()),
@@ -76,13 +73,10 @@ public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
     @Test(groups = {"wso2.esb"}, description = "Configurable property", priority = 3)
     public void testConfigurablePropertyWithEnvVariable() throws IOException, AutomationUtilException {
         Map<String, String> commands = new HashMap<>();
-        System.out.println("_________________________________");
-        System.out.println(FrameworkPathUtil.getSystemResourceLocation() + "test.env");
-        System.out.println("_________________________________");
         commands.put("--env-file", FrameworkPathUtil.getSystemResourceLocation() + "test.env");
         serverConfigurationManager.restartMicroIntegrator(commands);
         Map<String, String> headers = new HashMap<>();
-        URL endpoint = new URL(getApiInvocationURL("apiConfig/test"));
+        URL endpoint = new URL(getApiInvocationURL("apiConfig/test_api"));
         HttpResponse httpResponse = HttpRequestUtil.doGet(endpoint.toString(), headers);
         Assert.assertEquals(httpResponse.getResponseCode(), 200);
         Assert.assertEquals(StringUtils.normalizeSpace(httpResponse.getData()),
@@ -96,18 +90,9 @@ public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
         commands.put("-Dname", "sys");
         commands.put("-Dmsg", "Hi");
         commands.put("--env-file", FrameworkPathUtil.getSystemResourceLocation() + "test.env");
-        File env = new File(FrameworkPathUtil.getSystemResourceLocation() + "test.env");
-        if (env.exists()) {
-            System.out.println("________--env-file File Exist_____________");
-        }
-        if (env.canRead()) {
-            System.out.println("________--env-file readable_____________");
-            System.out.println(Files.readString(env.toPath(), StandardCharsets.UTF_8));
-        }
-
         serverConfigurationManager.restartMicroIntegrator(commands);
         Map<String, String> headers = new HashMap<>();
-        URL endpoint = new URL(getApiInvocationURL("apiConfig/test"));
+        URL endpoint = new URL(getApiInvocationURL("apiConfig/test_api"));
         HttpResponse httpResponse = HttpRequestUtil.doGet(endpoint.toString(), headers);
         Assert.assertEquals(httpResponse.getResponseCode(), 200);
         Assert.assertEquals(StringUtils.normalizeSpace(httpResponse.getData()),
