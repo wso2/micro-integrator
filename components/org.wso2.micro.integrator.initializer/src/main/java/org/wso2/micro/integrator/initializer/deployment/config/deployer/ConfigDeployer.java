@@ -125,7 +125,7 @@ public class ConfigDeployer implements AppDeploymentHandler {
         Properties serverConfigProperties = loadPropertiesFromFile(new File(serverConfPropertyPath));
 
         Properties newServerConfigProperties = new Properties();
-        if (serverConfigProperties.size() == 0 && configProperties.size() == 0 ) {
+        if (serverConfigProperties.isEmpty() && configProperties.isEmpty() ) {
             if (log.isDebugEnabled()) {
                 log.debug(String.format("No configuration is used in the integration[%s]", integrationName));
             }
