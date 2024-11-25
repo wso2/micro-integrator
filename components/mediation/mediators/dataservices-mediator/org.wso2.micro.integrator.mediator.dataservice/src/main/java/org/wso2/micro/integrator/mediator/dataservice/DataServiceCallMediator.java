@@ -298,10 +298,6 @@ public class DataServiceCallMediator extends AbstractMediator {
             paramValue = param.getParamValue();
         } else if (param.getParamExpression() != null) {
             paramValue = param.getParamExpression().stringValueOf(msgCtx);
-            if (DataServiceCallMediatorConstants.XML_TYPE.equals(param.getEvaluator()) &&
-                    !isJson(paramValue.trim(), param.getParamExpression())) {
-                paramValue = escapeXMLEnvelope(msgCtx, paramValue);
-            }
         }
         omElement.setText(paramValue);
         payload.addChild(omElement);
@@ -313,33 +309,6 @@ public class DataServiceCallMediator extends AbstractMediator {
     private boolean isJson(String value, SynapsePath expression) {
         return !(value == null || value.trim().isEmpty()) && (value.trim().charAt(0) == '{'
                 || value.trim().charAt(0) == '[') && expression.getPathType().equals(SynapsePath.JSON_PATH);
-    }
-
-    /**
-     * Escapes XML special characters
-     *
-     * @param msgCtx Message Context
-     * @param value  XML String which needs to be escaped
-     * @return XML special char escaped string
-     */
-    private String escapeXMLEnvelope(MessageContext msgCtx, String value) {
-        String xmlVersion = "1.0"; //Default is set to 1.0
-
-        try {
-            xmlVersion = checkXMLVersion(msgCtx);
-        } catch (IOException e) {
-            log.error("Error reading message envelope", e);
-        } catch (SAXException e) {
-            log.error("Error parsing message envelope", e);
-        } catch (ParserConfigurationException e) {
-            log.error("Error building message envelope document", e);
-        }
-
-        if ("1.1".equals(xmlVersion)) {
-            return org.apache.commons.text.StringEscapeUtils.escapeXml11(value);
-        } else {
-            return org.apache.commons.text.StringEscapeUtils.escapeXml10(value);
-        }
     }
 
     /**
