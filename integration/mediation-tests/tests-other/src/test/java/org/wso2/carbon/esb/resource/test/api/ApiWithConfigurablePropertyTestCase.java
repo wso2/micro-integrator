@@ -26,13 +26,18 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.testng.Assert.assertTrue;
 
 public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
 
@@ -41,7 +46,19 @@ public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         serverConfigurationManager = new ServerConfigurationManager(context);
+        File capp = new File(getESBResourceLocation() + File.separator + "config.var" + File.separator +
+                "testApiWithConfigurationProperty_1.0.0.car");
+        System.out.println(capp.getPath());
+        serverConfigurationManager.copyToCarbonapps(capp);
+        System.out.println("____________________________-");
+        System.out.println(carbonLogReader.getLogs());
+        System.out.println("____________________________-");
+        assertTrue(Utils.checkForLog(carbonLogReader,
+                        "Successfully Deployed Carbon Application : testApiWithConfigurationProperty_1.0.0",
+                        20), "Did not receive the expected info log");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Configurable property", priority = 1)
@@ -102,6 +119,7 @@ public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
+        serverConfigurationManager.removeFromCarbonapps("testApiWithConfigurationProperty_1.0.0.car");
         super.cleanup();
     }
 }
