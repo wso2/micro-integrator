@@ -50,12 +50,9 @@ public class EndpointWithConfigurablePropertyTestCase extends ESBIntegrationTest
         serverConfigurationManager = new ServerConfigurationManager(context);
         File capp = new File(getESBResourceLocation() + File.separator + "config.var" + File.separator +
                 "testConfiguration_1.0.0.car");
-        System.out.println("########################################################");
         serverConfigurationManager.copyToCarbonapps(capp);
-        System.out.println(capp.getPath());
-        System.out.println("########################################################");
         assertTrue(Utils.checkForLog(carbonLogReader, "Successfully Deployed Carbon Application : " +
-                        "testConfiguration_1.0.0", 20), "Did not receive the expected info log");
+                "testConfiguration_1.0.0", 20), "Did not receive the expected info log");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Configurable property", priority = 1)

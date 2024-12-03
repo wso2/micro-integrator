@@ -51,14 +51,9 @@ public class ApiWithConfigurablePropertyTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(context);
         File capp = new File(getESBResourceLocation() + File.separator + "config.var" + File.separator +
                 "testApiWithConfigurationProperty_1.0.0.car");
-        System.out.println(capp.getPath());
         serverConfigurationManager.copyToCarbonapps(capp);
-        System.out.println("____________________________-");
-        System.out.println(carbonLogReader.getLogs());
-        System.out.println("____________________________-");
-        assertTrue(Utils.checkForLog(carbonLogReader,
-                        "Successfully Deployed Carbon Application : testApiWithConfigurationProperty_1.0.0",
-                        20), "Did not receive the expected info log");
+        assertTrue(Utils.checkForLog(carbonLogReader, "Successfully Deployed Carbon Application : " +
+                        "testApiWithConfigurationProperty_1.0.0", 20), "Did not receive the expected info log");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Configurable property", priority = 1)
