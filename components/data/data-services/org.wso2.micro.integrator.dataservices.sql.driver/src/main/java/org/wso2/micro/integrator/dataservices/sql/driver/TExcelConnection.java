@@ -85,7 +85,7 @@ public class TExcelConnection extends TConnection {
         } catch (FileNotFoundException e) {
             throw new SQLException("Could not locate the EXCEL datasource in the provided " +
                     "location", e);
-        } catch (IOException | InvalidFormatException e) {
+        } catch (IOException e) {
             throw new SQLException("Error occurred while initializing the EXCEL datasource", e);
         } catch (InterruptedException e) {
             throw new SQLException("Error Acquiring the lock for the workbook path - " + filePath, e);
