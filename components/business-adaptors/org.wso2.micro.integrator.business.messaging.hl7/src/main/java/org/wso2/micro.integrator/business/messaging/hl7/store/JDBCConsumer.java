@@ -51,6 +51,10 @@ public class JDBCConsumer implements MessageConsumer {
     public void setAlive(boolean isAlive) {
     }
 
+    public boolean reInitialize() {
+        return false;
+    }
+
     @Override
     public void setId(int i) {
 
