@@ -118,6 +118,38 @@ if [ -e "$CARBON_HOME/wso2carbon.pid" ]; then
 fi
 
 # ----- Process the input command ----------------------------------------------
+
+# Function to export variables from the given .env file
+export_env_file() {
+  local file_path="$1"
+
+  # Check if the file exists
+  if [ ! -f "$file_path" ]; then
+    echo "Error: File '$file_path' not found."
+    return 1  # Return with an error status
+  fi
+
+  # Read the .env file and export each variable to the environment
+  while IFS='=' read -r key value; do
+      # Ignore lines starting with '#' (comments) or empty lines
+      case "$key" in
+          \#*|"")
+              # Skip comments or empty lines
+              continue
+              ;;
+          *)
+              # Trim surrounding whitespace from key and value
+              key=$(echo "$key" | xargs)
+              value=$(echo "$value" | xargs)
+              # Export the key-value pair to the environment
+              export "$key=$value"
+              ;;
+      esac
+  done < "$file_path"
+
+  echo "Environment variables loaded from $file_path."
+}
+
 args=""
 for c in $*
 do
@@ -139,6 +171,16 @@ do
     else
         args="$args $c"
     fi
+    # Check if the argument starts with --env-file=
+    case "$c" in
+      --env-file=*)
+        file_path="${c#--env-file=}"
+        export_env_file "$file_path"
+        ;;
+      *)
+        continue
+        ;;
+    esac
 done
 
 if [ "$CMD" = "--debug" ]; then
@@ -192,9 +234,10 @@ fi
 # ---------- Handle the SSL Issue with proper JDK version --------------------
 java_version=$("$JAVACMD" -version 2>&1 | awk -F '"' '/version/ {print $2}')
 java_version_formatted=$(echo "$java_version" | awk -F. '{printf("%02d%02d",$1,$2);}')
-if [ $java_version_formatted -lt 0107 ] || [ $java_version_formatted -gt 1100 ]; then
+if [ $java_version_formatted -lt 1100 ] || [ $java_version_formatted -gt 2100 ]; then
    echo " Starting WSO2 MI (in unsupported JDK)"
-   echo " [ERROR] MI is supported only on JDK 1.8, 9, 10 and 11"
+   echo " [ERROR] WSO2 MI is supported only between JDK 11 and JDK 21"
+   exit 0
 fi
 
 CARBON_XBOOTCLASSPATH=""
