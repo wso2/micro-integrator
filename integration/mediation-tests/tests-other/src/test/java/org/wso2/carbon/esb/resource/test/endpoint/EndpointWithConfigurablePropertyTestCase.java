@@ -57,7 +57,6 @@ public class EndpointWithConfigurablePropertyTestCase extends ESBIntegrationTest
 
     @Test(groups = {"wso2.esb"}, description = "Configurable property", priority = 1)
     public void testConfigurablePropertyWithFile() throws IOException {
-
         Map<String, String> headers = new HashMap<>();
         URL endpoint = new URL(getApiInvocationURL("getdata/file"));
         HttpResponse httpResponse = HttpRequestUtil.doGet(endpoint.toString(), headers);
