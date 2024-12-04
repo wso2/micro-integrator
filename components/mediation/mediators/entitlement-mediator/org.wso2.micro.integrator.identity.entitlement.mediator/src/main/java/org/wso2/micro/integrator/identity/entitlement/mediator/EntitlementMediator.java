@@ -37,6 +37,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.SynapseLog;
+import org.apache.synapse.commons.resolvers.ResolverFactory;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.continuation.ContinuationStackManager;
 import org.apache.synapse.continuation.ReliantContinuationState;
@@ -479,9 +480,9 @@ public class EntitlementMediator extends AbstractMediator
                 callback = new UTEntitlementCallbackHandler();
             }
 
-            String remoteServiceUrlResolved = remoteServiceUrl;
-            String remoteServiceUsernameResolved = remoteServiceUserName;
-            String remoteServicePasswordResolved = remoteServicePassword;
+            String remoteServiceUrlResolved = ResolverFactory.getInstance().getResolver(remoteServiceUrl).resolve();
+            String remoteServiceUsernameResolved = ResolverFactory.getInstance().getResolver(remoteServiceUserName).resolve();
+            String remoteServicePasswordResolved = ResolverFactory.getInstance().getResolver(remoteServicePassword).resolve();
 
             if (remoteServiceUrlKey != null && remoteServiceUrlKey.trim().length() > 0) {
                 remoteServiceUrlResolved = resolveRegistryEntryText(synEnv, remoteServiceUrlKey);
