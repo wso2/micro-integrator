@@ -61,6 +61,12 @@
         </packages>
     </test>
 
+    <test name="Synapse-expressions-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.synapse.expression.test"/>
+        </packages>
+    </test>
+
     <!-- Disabled due to jenkins failure with "no space left on device" -->
     <!--<test name="Test-Multiple-servers" preserve-order="true" verbose="2">-->
     <!--<classes>-->
