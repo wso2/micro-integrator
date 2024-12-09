@@ -22,8 +22,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,11 +39,14 @@ public class SynapseExpressionTestCase extends ESBIntegrationTest {
 
     private CarbonLogReader carbonLogReader;
     private static final String targetApiName = "synapseexpression_api";
+    private static final String CAPP_NAME = "SynapseExpressionTestCase_1.0.0.car";
+    private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyAPIExistence(targetApiName);
+        serverConfigurationManager = new ServerConfigurationManager(context);
         carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
     }
@@ -48,6 +54,13 @@ public class SynapseExpressionTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Testcase to test Synapse Expressions to fetch registry, registry " +
             "property, path query and function params")
     public void testSynapseExpressions() throws Exception {
+        File metadataCAPP = new File(
+                getESBResourceLocation() + File.separator + "synapseExpressions" + File.separator +
+                        CAPP_NAME);
+        serverConfigurationManager.copyToCarbonapps(metadataCAPP);
+        assertTrue(Utils.checkForLog(carbonLogReader,
+                "API named 'SynapseExpression_api' has been deployed from file",20), "API Deployment failed");
+
         String contentType = "application/json";
         String payload = "{\"hello\": \"world\"}";
         String url = getApiInvocationURL(targetApiName);
@@ -75,6 +88,7 @@ public class SynapseExpressionTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
+        serverConfigurationManager.removeFromCarbonapps(CAPP_NAME);
         super.cleanup();
     }
 }
