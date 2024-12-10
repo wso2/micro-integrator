@@ -17,7 +17,7 @@ REM  limitations under the License.
 rem ---------------------------------------------------------------------------
 rem Main Script for WSO2 Carbon
 rem
-rem Environment Variable Prequisites
+rem Environment Variable Prerequisites
 rem
 rem   CARBON_HOME   Home of CARBON installation. If not set I will  try
 rem                   to figure it out.
@@ -75,9 +75,13 @@ rem ----- Process the input command -------------------------------------------
 rem Slurp the command line arguments. This loop allows for an unlimited number
 rem of arguments (up to the command line limit, anyway).
 
+set ENV_FILE_PATH=
 
 :setupArgs
 if ""%1""=="""" goto doneStart
+
+:: Check if the argument is --env-file
+if "%~1"=="--env-file" goto getPath
 
 if ""%1""==""-run""     goto commandLifecycle
 if ""%1""==""--run""    goto commandLifecycle
@@ -103,13 +107,33 @@ if ""%1""==""car""   goto setCar
 if ""%1""==""-car""  goto setCar
 if ""%1""==""--car"" goto setCar
 
-@REM Check if the argument starts with --env-file=
-set "envfile=%~1"
-if "!envfile:~0,11!"=="--env-file=" (
-    set "file_path=!envfile:~11!"
-    call :export_env_file "!file_path!"
-)
 shift
+goto setupArgs
+
+:getPath
+shift
+set ENV_FILE_PATH=%1
+goto loadEnvFile
+
+:loadEnvFile
+if not exist "%ENV_FILE_PATH%" (
+    echo Error: File "%ENV_FILE_PATH%" not found.
+) else (
+    :: Read the .env file line by line and set environment variables
+    for /f "usebackq tokens=1,* delims==" %%A in ("%ENV_FILE_PATH%") do (
+        :: Ignore lines starting with # or empty lines
+        if not "%%A"=="" if not "%%A:~0,1%"=="#" (
+            set "key=%%A"
+            set "value=%%B"
+            :: Trim spaces if needed
+            for /f "tokens=* delims= " %%a in ("!key!") do set "key=%%a"
+            for /f "tokens=* delims= " %%b in ("!value!") do set "value=%%b"
+            :: Export the variable to the environment
+            set "!key!=!value!"
+        )
+    )
+    echo Environment variables loaded from "%ENV_FILE_PATH%".
+)
 goto setupArgs
 
 rem ----- commandVersion -------------------------------------------------------
@@ -138,40 +162,6 @@ set /p processId= < %CARBON_HOME%\wso2carbon.pid
 echo Stopping the Micro Integrator Server
 taskkill /F /PID %processId%
 goto end
-
-:export_env_file
-setlocal EnableDelayedExpansion
-
-set "file_path=%~1"
-
-REM Check if the file exists
-if not exist "!file_path!" (
-    echo Error: File '!file_path!' not found.
-    exit /b 1
-)
-
-REM Read each line in the file
-for /f "usebackq tokens=1,* delims==" %%A in ("!file_path!") do (
-    set "line=%%A"
-
-    REM Ignore lines that start with '#' (comments) or are empty
-    if not "!line!"=="" (
-        if "!line:~0,1!" neq "#" (
-            set "key=%%A"
-            set "value=%%B"
-
-            REM Trim surrounding whitespace from key and value
-            for /f "tokens=* delims= " %%i in ("!key!") do set "key=%%i"
-            for /f "tokens=* delims= " %%i in ("!value!") do set "value=%%i"
-
-            REM Set the environment variable
-            setx "!key!" "!value!" >nul
-            set "!key!=!value!"
-        )
-    )
-)
-echo Environment variables loaded from !file_path!.
-exit /b 0
 
 rem ----- commandLifecycle -----------------------------------------------------
 :commandLifecycle
