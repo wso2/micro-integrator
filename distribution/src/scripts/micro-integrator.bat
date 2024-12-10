@@ -81,7 +81,7 @@ set ENV_FILE_PATH=
 if ""%1""=="""" goto doneStart
 
 :: Check if the argument is --env-file
-if "%~1"=="--env-file" goto getPath
+if "%~1"=="--env-file" goto setEnvPath
 
 if ""%1""==""-run""     goto commandLifecycle
 if ""%1""==""--run""    goto commandLifecycle
@@ -110,7 +110,7 @@ if ""%1""==""--car"" goto setCar
 shift
 goto setupArgs
 
-:getPath
+:setEnvPath
 shift
 set ENV_FILE_PATH=%1
 goto loadEnvFile
