@@ -19,6 +19,7 @@
 package org.wso2.carbon.esb.mediator.test.v2;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.http.HttpResponse;
 import org.testng.Assert;
@@ -37,6 +38,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class ScatterGatherTestCase extends ESBIntegrationTest {
 
@@ -79,7 +81,7 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
 
         JsonElement responseJSON = JsonParser.parseString(responsePayload);
         JsonElement expectedJSON = JsonParser.parseString(expectedResponse);
-        assertEquals(responseJSON, expectedJSON, "Response payload mismatched");
+        assertTrue(areJsonElementsEquivalent(expectedJSON, responseJSON), "Response payload mismatched");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Testing Scatter-Gather mediator with JSON and variable output")
@@ -105,6 +107,7 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
                         "{\"name\":\"pet2\",\"type\":\"cat\",\"requestId\":1114567},{\"name\":\"pet3\",\"type\":\"mock-backend\"," +
                         "\"requestId\":1114567}]", DEFAULT_TIMEOUT);
         Assert.assertTrue(logFound, "Scatter Gather result not set to variable");
+        carbonLogReader.stop();
     }
 
     @Test(groups = {"wso2.esb"}, description = "Testing Scatter-Gather mediator with XML body replace")
@@ -155,6 +158,7 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
                         "<requestId>78658</requestId></pet><pet><name>pet2</name><type>dog</type><requestId>78658</requestId>" +
                         "</pet></scatter_response>", DEFAULT_TIMEOUT);
         Assert.assertTrue(logFound, "Scatter Gather result not set to variable");
+        carbonLogReader.stop();
     }
 
     @Test(groups = {"wso2.esb"}, description = "Testing Scatter-Gather mediator with Aggregation condition")
@@ -183,7 +187,7 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
 
         JsonElement responseJSON = JsonParser.parseString(responsePayload);
         JsonElement expectedJSON = JsonParser.parseString(expectedResponse);
-        assertEquals(responseJSON, expectedJSON, "Response payload mismatched");
+        assertTrue(areJsonElementsEquivalent(expectedJSON, responseJSON), "Response payload mismatched");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Testing Scatter-Gather mediator when a path fails")
@@ -212,7 +216,39 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
 
         JsonElement responseJSON = JsonParser.parseString(responsePayload);
         JsonElement expectedJSON = JsonParser.parseString(expectedResponse);
-        assertEquals(responseJSON, expectedJSON, "Response payload mismatched");
+        assertTrue(areJsonElementsEquivalent(expectedJSON, responseJSON), "Response payload mismatched");
+    }
+
+    private static boolean areJsonElementsEquivalent(JsonElement e1, JsonElement e2) {
+
+        if (e1.isJsonObject() && e2.isJsonObject()) {
+            JsonObject obj1 = e1.getAsJsonObject();
+            JsonObject obj2 = e2.getAsJsonObject();
+
+            if (obj1.size() != obj2.size()) {
+                return false;
+            }
+
+            for (String key : obj1.keySet()) {
+                if (!obj2.has(key) || !areJsonElementsEquivalent(obj1.get(key), obj2.get(key))) {
+                    return false;
+                }
+            }
+            return true;
+        } else if (e1.isJsonArray() && e2.isJsonArray()) {
+            if (e1.getAsJsonArray().size() != e2.getAsJsonArray().size()) {
+                return false;
+            }
+
+            for (int i = 0; i < e1.getAsJsonArray().size(); i++) {
+                if (!areJsonElementsEquivalent(e1.getAsJsonArray().get(i), e2.getAsJsonArray().get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return e1.equals(e2);
+        }
     }
 
     private static Document parseXML(String xml) throws IOException, ParserConfigurationException, SAXException {
