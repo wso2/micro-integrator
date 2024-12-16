@@ -94,6 +94,15 @@
             <log>
                 <message>Scatter Gather output = ${var.output_var}</message>
             </log>
+            <payloadFactory media-type="json" template-type="default">
+                <format>{
+                    "response": {
+                    "requestData": ${payload},
+                    "scatterGatherOutput": ${var.output_var}
+                    }
+                    }
+                </format>
+            </payloadFactory>
             <respond/>
         </inSequence>
     </resource>
