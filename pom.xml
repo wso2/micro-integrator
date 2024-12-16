@@ -1722,7 +1722,7 @@
         <org.wso2.carbon.caching.core.version>4.2.0</org.wso2.carbon.caching.core.version>
         <json.smart.version>2.5.0</json.smart.version>
         <google.guava.version>33.0.0-jre</google.guava.version>
-        <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
+        <ca.uhn.hapi.wso2.version>2.4.0.wso2v2</ca.uhn.hapi.wso2.version>
         <junit.version>4.8.2</junit.version>
         <netty.version>4.1.108.Final</netty.version>
         <netty.tcnative.version>2.0.53.Final</netty.tcnative.version>
