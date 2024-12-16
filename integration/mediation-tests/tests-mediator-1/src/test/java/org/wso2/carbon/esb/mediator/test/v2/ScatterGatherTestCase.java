@@ -37,17 +37,18 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class ScatterGatherTestCase extends ESBIntegrationTest {
 
     SimpleHttpClient httpClient = new SimpleHttpClient();
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = {"wso2.esb"}, description = "Testing Scatter-Gather mediator with JSON body replace")
@@ -87,11 +88,32 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
     @Test(groups = {"wso2.esb"}, description = "Testing Scatter-Gather mediator with JSON and variable output")
     public void testScatterGatherJSONVariableOutput() throws IOException, InterruptedException {
 
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
-
         String requestPayload = "{\n" +
                 "    \"requestId\": 1114567\n" +
+                "}";
+        String expected = "{\n" +
+                "   \"response\":{\n" +
+                "      \"requestData\":{\n" +
+                "         \"requestId\":1114567\n" +
+                "      },\n" +
+                "      \"scatterGatherOutput\":[\n" +
+                "         {\n" +
+                "            \"name\":\"pet1\",\n" +
+                "            \"type\":\"dog\",\n" +
+                "            \"requestId\":1114567\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"name\":\"pet2\",\n" +
+                "            \"type\":\"cat\",\n" +
+                "            \"requestId\":1114567\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"name\":\"pet3\",\n" +
+                "            \"type\":\"mock-backend\",\n" +
+                "            \"requestId\":1114567\n" +
+                "         }\n" +
+                "      ]\n" +
+                "   }\n" +
                 "}";
 
         String serviceURL = getMainSequenceURL() + "scatter-gather/json-variable-output";
@@ -99,15 +121,8 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
         String responsePayload = httpClient.getResponsePayload(httpResponse);
 
         JsonElement responseJSON = JsonParser.parseString(responsePayload);
-        JsonElement expectedJSON = JsonParser.parseString(requestPayload);
-        assertEquals(responseJSON, expectedJSON, "Response payload mismatched");
-
-        boolean logFound = carbonLogReader
-                .checkForLog("Scatter Gather output = [{\"name\":\"pet1\",\"type\":\"dog\",\"requestId\":1114567}," +
-                        "{\"name\":\"pet2\",\"type\":\"cat\",\"requestId\":1114567},{\"name\":\"pet3\",\"type\":\"mock-backend\"," +
-                        "\"requestId\":1114567}]", DEFAULT_TIMEOUT);
-        Assert.assertTrue(logFound, "Scatter Gather result not set to variable");
-        carbonLogReader.stop();
+        JsonElement expectedJSON = JsonParser.parseString(expected);
+        assertTrue(areJsonElementsEquivalent(expectedJSON, responseJSON), "Response payload mismatched");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Testing Scatter-Gather mediator with XML body replace")
@@ -135,9 +150,7 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
     @Test(groups = {"wso2.esb"}, description = "Testing Scatter-Gather mediator with XML and variable output")
     public void testScatterGatherXMLVariableOutput() throws IOException, InterruptedException, ParserConfigurationException, SAXException {
 
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
-
+        carbonLogReader.clearLogs();
         String requestPayload = "<root>\n" +
                 "    <requestId>78658</requestId>\n" +
                 "</root>";
@@ -158,7 +171,6 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
                         "<requestId>78658</requestId></pet><pet><name>pet2</name><type>dog</type><requestId>78658</requestId>" +
                         "</pet></scatter_response>", DEFAULT_TIMEOUT);
         Assert.assertTrue(logFound, "Scatter Gather result not set to variable");
-        carbonLogReader.stop();
     }
 
     @Test(groups = {"wso2.esb"}, description = "Testing Scatter-Gather mediator with Aggregation condition")
@@ -262,6 +274,7 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     private void destroy() throws Exception {
 
+        carbonLogReader.stop();
         super.cleanup();
     }
 }
