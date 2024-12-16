@@ -65,7 +65,7 @@ public abstract class InboundRequestProcessorImpl implements InboundRequestProce
      * @param endpointPostfix
      */
     protected void start(InboundTask task, String endpointPostfix) {
-        log.info("Starting the inbound endpoint [" + name + "] " + (startInPausedMode ? "in suspended mode" : "")
+        log.info("Starting the inbound endpoint [" + name + "]" + (startInPausedMode ? " in suspended mode" : "")
                 + ", with coordination " + coordination + ". Interval : " + interval + ". Type : " + endpointPostfix);
         if (coordination) {
             try {
