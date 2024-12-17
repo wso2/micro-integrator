@@ -33,6 +33,9 @@ import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -252,8 +255,16 @@ public class ScatterGatherTestCase extends ESBIntegrationTest {
                 return false;
             }
 
-            for (int i = 0; i < e1.getAsJsonArray().size(); i++) {
-                if (!areJsonElementsEquivalent(e1.getAsJsonArray().get(i), e2.getAsJsonArray().get(i))) {
+            List<JsonElement> list1 = new ArrayList<>();
+            e1.getAsJsonArray().forEach(list1::add);
+            List<JsonElement> list2 = new ArrayList<>();
+            e2.getAsJsonArray().forEach(list2::add);
+
+            list1.sort(Comparator.comparing(JsonElement::toString));
+            list2.sort(Comparator.comparing(JsonElement::toString));
+
+            for (int i = 0; i < list1.size(); i++) {
+                if (!areJsonElementsEquivalent(list1.get(i), list2.get(i))) {
                     return false;
                 }
             }
