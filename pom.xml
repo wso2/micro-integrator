@@ -1669,7 +1669,7 @@
         <orbit.version.hazelcast>3.5.4.wso2v2</orbit.version.hazelcast>
         <orbit.version.tiles>2.0.5.wso2v1</orbit.version.tiles>
         <version.ant>1.7.0.wso2v1</version.ant>
-        <version.xmlbeans>2.3.0</version.xmlbeans>
+        <version.xmlbeans>3.1.0</version.xmlbeans>
         <orbit.version.axiom>1.2.11-wso2v25</orbit.version.axiom>
         <neethi.osgi.version>2.0.4.wso2v5</neethi.osgi.version>
         <version.woden>1.0.0.M9-wso2v1</version.woden>
@@ -1724,7 +1724,7 @@
         <google.guava.version>33.0.0-jre</google.guava.version>
         <ca.uhn.hapi.wso2.version>2.4.0.wso2v2</ca.uhn.hapi.wso2.version>
         <junit.version>4.8.2</junit.version>
-        <netty.version>4.1.108.Final</netty.version>
+        <netty.version>4.1.116.Final</netty.version>
         <netty.tcnative.version>2.0.53.Final</netty.tcnative.version>
         <jacoco.agent.version>0.8.8</jacoco.agent.version>
         <activemq.version>5.2.0</activemq.version>
