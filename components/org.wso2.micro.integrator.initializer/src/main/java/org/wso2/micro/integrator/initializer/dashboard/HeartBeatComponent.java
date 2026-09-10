@@ -23,6 +23,7 @@ import com.google.gson.JsonParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -39,6 +40,15 @@ import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.util.StringUtils;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -47,7 +57,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.COLON;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_GROUP_ID;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_HEARTBEAT_BROADCAST;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_HEARTBEAT_INTERVAL;
+import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_HEARTBEAT_TIMEOUT;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_NODE_ID;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DASHBOARD_CONFIG_URL;
 import static org.wso2.micro.integrator.initializer.dashboard.Constants.DEFAULT_GROUP_ID;
@@ -88,8 +100,20 @@ public class HeartBeatComponent {
         String nodeId = getNodeId();
         long interval = getInterval();
         String mgtApiUrl = getMgtApiUrl();
+        boolean broadcast = isBroadcastEnabled();
+        List<String> configuredTarget = Collections.singletonList(heartbeatApiUrl);
 
-        final HttpPost httpPost = new HttpPost(heartbeatApiUrl);
+        final CloseableHttpClient client;
+        try {
+            client = createHttpClient(getTimeoutMillis());
+        } catch (GeneralSecurityException e) {
+            log.error("Heartbeats are disabled: the TLS client could not be initialised.", e);
+            return;
+        }
+        if (broadcast) {
+            log.info("Heartbeat broadcast is enabled: every address " + heartbeatApiUrl + " resolves to will "
+                    + "receive a copy of each heartbeat.");
+        }
 
         JsonObject heartbeatPayload = new JsonObject();
         heartbeatPayload.addProperty("product", PRODUCT_MI);
@@ -98,45 +122,87 @@ public class HeartBeatComponent {
         heartbeatPayload.addProperty("interval", interval);
         heartbeatPayload.addProperty("mgtApiUrl", mgtApiUrl);
 
-        httpPost.setHeader("Accept", HEADER_VALUE_APPLICATION_JSON);
-        httpPost.setHeader("Content-type", HEADER_VALUE_APPLICATION_JSON);
-
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         Runnable runnableTask = () -> {
+            String payload = heartbeatPayload.toString();
 
-            try (CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(
-                    new SSLConnectionSocketFactory(
-                            SSLContexts.custom().loadTrustMaterial(null,
-                                    (TrustStrategy) new TrustSelfSignedStrategy()).build(),
-                            NoopHostnameVerifier.INSTANCE)).build()) {
-                final StringEntity entity = new StringEntity(heartbeatPayload.toString());
-                httpPost.setEntity(entity);
-                CloseableHttpResponse response = client.execute(httpPost);
-                JsonObject jsonResponse = getJsonResponse(response);
-                if (jsonResponse != null && jsonResponse.get("status").getAsString().equals("success")) {
-                    log.debug("Heartbeat sent successfully.");
-                    if (consecutiveFailureCount >= HEARTBEAT_WARN_THRESHOLD) {
-                        log.info("Heartbeat reporting to dashboard recovered after " + consecutiveFailureCount
-                                + " failed attempts.");
-                    }
-                    consecutiveFailureCount = 0;
-                } else {
-                    log.debug("Error occurred while sending the heartbeat.");
-                }
-            } catch (Exception e) {
-                log.debug("Error occurred while processing the heartbeat.", e);
-                consecutiveFailureCount++;
-                if (consecutiveFailureCount == HEARTBEAT_WARN_THRESHOLD) {
-                    log.warn("Heartbeat reporting to dashboard has failed " + consecutiveFailureCount
-                            + " consecutive times. Dashboard may be unreachable or misconfigured. "
-                            + "For further debugging, please refer debug logs.", e);
-                } else if (consecutiveFailureCount > HEARTBEAT_WARN_THRESHOLD) {
-                    log.warn("Error occurred while processing the heartbeat for " + consecutiveFailureCount
-                            + " consecutive times.", e);
-                }
+            // One payload per tick goes to every replica; each keeps its own view of this node.
+            for (String target : broadcast ? resolveReplicas(heartbeatApiUrl) : configuredTarget) {
+                sendHeartbeat(client, target, payload);
             }
         };
         scheduledExecutorService.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Every address the configured heartbeat host resolves to, as a ready-to-post URL. Pointed at a
+     * Kubernetes headless service, that is one address per Ready ICP replica, so the broadcast set
+     * follows scale up/down with no reconfiguration here.
+     * <p>
+     * Only used when broadcast is enabled, because rewriting the host to an address costs the hostname:
+     * the Host header and TLS SNI carry the address instead, which breaks name-based virtual hosts and
+     * SNI-selected certificates in front of ICP. It also duplicates delivery for any host with several
+     * addresses - including a dual-stack localhost, which resolves to both 127.0.0.1 and ::1.
+     * <p>
+     * New replicas only become visible once the JVM's DNS cache expires, so deployments that scale ICP
+     * must keep networkaddress.cache.ttl well below the heartbeat interval.
+     */
+    private static List<String> resolveReplicas(String heartbeatApiUrl) {
+        try {
+            URI configured = new URI(heartbeatApiUrl);
+            InetAddress[] addresses = InetAddress.getAllByName(configured.getHost());
+            List<String> targets = new ArrayList<>(addresses.length);
+            for (InetAddress address : addresses) {
+                targets.add(new URI(configured.getScheme(), null, address.getHostAddress(),
+                        configured.getPort(), configured.getPath(), configured.getQuery(),
+                        configured.getFragment()).toString());
+            }
+            return targets;
+        } catch (URISyntaxException | UnknownHostException e) {
+            log.debug("Could not resolve ICP replicas from " + heartbeatApiUrl + "; posting to it as configured.",
+                      e);
+            return Collections.singletonList(heartbeatApiUrl);
+        }
+    }
+
+    /**
+     * Best-effort delivery to one replica: a failure is logged and dropped, because the next heartbeat
+     * re-registers this node with whichever replicas missed it.
+     */
+    private static void sendHeartbeat(CloseableHttpClient client, String heartbeatApiUrl, String payload) {
+        HttpPost httpPost = new HttpPost(heartbeatApiUrl);
+        httpPost.setHeader("Accept", HEADER_VALUE_APPLICATION_JSON);
+        httpPost.setHeader("Content-type", HEADER_VALUE_APPLICATION_JSON);
+        httpPost.setEntity(new StringEntity(payload, StandardCharsets.UTF_8));
+        try (CloseableHttpResponse response = client.execute(httpPost)) {
+            JsonObject jsonResponse = getJsonResponse(response);
+            if (jsonResponse != null && jsonResponse.has("status")
+                    && "success".equals(jsonResponse.get("status").getAsString())) {
+                log.debug("Heartbeat sent successfully to " + heartbeatApiUrl);
+            } else {
+                log.debug("Error occurred while sending the heartbeat to " + heartbeatApiUrl);
+            }
+        } catch (IOException e) {
+            log.debug("Error occurred while processing the heartbeat to " + heartbeatApiUrl, e);
+        }
+    }
+
+    /**
+     * One pooled client shared by every tick and every replica; ICP presents a self-signed certificate and
+     * replicas are addressed by IP, so trust is anchored on the self-signed chain with no host matching.
+     */
+    private static CloseableHttpClient createHttpClient(int timeoutMillis) throws GeneralSecurityException {
+        RequestConfig timeouts = RequestConfig.custom()
+                .setConnectTimeout(timeoutMillis)
+                .setConnectionRequestTimeout(timeoutMillis)
+                .setSocketTimeout(timeoutMillis)
+                .build();
+        return HttpClients.custom()
+                .setDefaultRequestConfig(timeouts)
+                .setSSLSocketFactory(new SSLConnectionSocketFactory(
+                        SSLContexts.custom().loadTrustMaterial(null, (TrustStrategy) new TrustSelfSignedStrategy())
+                                   .build(), NoopHostnameVerifier.INSTANCE))
+                .build();
     }
 
     private static String getMgtApiUrl() {
@@ -192,6 +258,29 @@ public class HeartBeatComponent {
             interval = Integer.parseInt(configuredInterval.toString());
         }
         return interval;
+    }
+
+    /**
+     * Whether one heartbeat is delivered to every address the dashboard host resolves to. Off by default:
+     * it is only correct where those addresses are the ICP replicas themselves, as with a Kubernetes
+     * headless service.
+     */
+    private static boolean isBroadcastEnabled() {
+        Object configuredBroadcast = configs.get(DASHBOARD_CONFIG_HEARTBEAT_BROADCAST);
+        return null != configuredBroadcast && Boolean.parseBoolean(configuredBroadcast.toString());
+    }
+
+    /**
+     * How long one delivery attempt may take. Keep it below the heartbeat interval so a replica that
+     * accepts connections but never answers cannot delay the remaining targets past the next tick.
+     */
+    private static int getTimeoutMillis() {
+        long timeout = Constants.DEFAULT_HEARTBEAT_TIMEOUT;
+        Object configuredTimeout = configs.get(DASHBOARD_CONFIG_HEARTBEAT_TIMEOUT);
+        if (null != configuredTimeout) {
+            timeout = Long.parseLong(configuredTimeout.toString());
+        }
+        return (int) TimeUnit.SECONDS.toMillis(timeout);
     }
 
     private static String generateRandomId() {
