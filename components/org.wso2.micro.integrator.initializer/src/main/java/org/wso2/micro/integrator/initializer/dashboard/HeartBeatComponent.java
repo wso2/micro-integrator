@@ -85,13 +85,17 @@ public class HeartBeatComponent {
 
     private static final Log log = LogFactory.getLog(HeartBeatComponent.class);
     private static final Map<String, Object> configs = ConfigParser.getParsedConfigs();
+    private static final int MAX_HEARTBEAT_DELIVERY_THREADS = 10;
+    private static CloseableHttpClient heartbeatClient;
+    private static ScheduledExecutorService heartbeatScheduler;
+    private static ExecutorService heartbeatDeliveryExecutor;
 
-    private static final int HEARTBEAT_WARN_THRESHOLD = 5;
-    // Confined to the single-threaded ScheduledExecutorService created in invokeHeartbeatExecutorService;
-    // do not change the executor to a multi-threaded one without switching this to AtomicInteger.
-    private static int consecutiveFailureCount = 0;
 
-    public static void invokeHeartbeatExecutorService() {
+    public static synchronized void invokeHeartbeatExecutorService() {
+        if (heartbeatScheduler != null && !heartbeatScheduler.isShutdown()) {
+            log.debug("Heartbeat component is already active.");
+            return;
+        }
         // Check if new ICP is configured
         if (ICPHeartBeatComponent.isICPConfigured()) {
             log.info("New ICP configuration detected. Starting ICP heartbeat service.");
@@ -126,8 +130,11 @@ public class HeartBeatComponent {
         heartbeatPayload.addProperty("interval", interval);
         heartbeatPayload.addProperty("mgtApiUrl", mgtApiUrl);
 
-        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        ExecutorService heartbeatDeliveryExecutor = Executors.newCachedThreadPool();
+        final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        final ExecutorService deliveryExecutor = Executors.newFixedThreadPool(MAX_HEARTBEAT_DELIVERY_THREADS);
+        heartbeatClient = client;
+        heartbeatScheduler = scheduler;
+        heartbeatDeliveryExecutor = deliveryExecutor;
         Runnable runnableTask = () -> {
             try {
                 String payload = heartbeatPayload.toString();
@@ -139,7 +146,7 @@ public class HeartBeatComponent {
                         return null;
                     });
                 }
-                heartbeatDeliveryExecutor.invokeAll(deliveries);
+                deliveryExecutor.invokeAll(deliveries);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 log.debug("Heartbeat delivery was interrupted.", e);
@@ -147,7 +154,28 @@ public class HeartBeatComponent {
                 log.debug("Error occurred while processing the heartbeat.", e);
             }
         };
-        scheduledExecutorService.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(runnableTask, 1, interval, TimeUnit.SECONDS);
+    }
+
+    public static synchronized void shutdownHeartbeatExecutorService() {
+
+        if (heartbeatScheduler != null) {
+            heartbeatScheduler.shutdownNow();
+            heartbeatScheduler = null;
+        }
+        if (heartbeatDeliveryExecutor != null) {
+            heartbeatDeliveryExecutor.shutdownNow();
+            heartbeatDeliveryExecutor = null;
+        }
+        if (heartbeatClient != null) {
+            try {
+                heartbeatClient.close();
+            } catch (IOException e) {
+                log.debug("Error occurred while closing the heartbeat HTTP client.", e);
+            } finally {
+                heartbeatClient = null;
+            }
+        }
     }
 
     /**
@@ -169,7 +197,7 @@ public class HeartBeatComponent {
             InetAddress[] addresses = InetAddress.getAllByName(configured.getHost());
             List<String> targets = new ArrayList<>(addresses.length);
             for (InetAddress address : addresses) {
-                targets.add(new URI(configured.getScheme(), null, address.getHostAddress(),
+                targets.add(new URI(configured.getScheme(), null, normalizeHostAddressForUri(address),
                         configured.getPort(), configured.getPath(), configured.getQuery(),
                         configured.getFragment()).toString());
             }
@@ -179,6 +207,11 @@ public class HeartBeatComponent {
                       e);
             return Collections.singletonList(heartbeatApiUrl);
         }
+    }
+
+    private static String normalizeHostAddressForUri(InetAddress address) {
+
+        return address.getHostAddress().replace("%", "%25");
     }
 
     /**
