@@ -31,7 +31,9 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
@@ -51,6 +53,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -105,7 +109,7 @@ public class HeartBeatComponent {
 
         final CloseableHttpClient client;
         try {
-            client = createHttpClient(getTimeoutMillis());
+            client = createHttpClient(getTimeoutMillis(broadcast), broadcast);
         } catch (GeneralSecurityException e) {
             log.error("Heartbeats are disabled: the TLS client could not be initialised.", e);
             return;
@@ -123,12 +127,24 @@ public class HeartBeatComponent {
         heartbeatPayload.addProperty("mgtApiUrl", mgtApiUrl);
 
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        ExecutorService heartbeatDeliveryExecutor = Executors.newCachedThreadPool();
         Runnable runnableTask = () -> {
-            String payload = heartbeatPayload.toString();
-
-            // One payload per tick goes to every replica; each keeps its own view of this node.
-            for (String target : broadcast ? resolveReplicas(heartbeatApiUrl) : configuredTarget) {
-                sendHeartbeat(client, target, payload);
+            try {
+                String payload = heartbeatPayload.toString();
+                List<String> targets = broadcast ? resolveReplicas(heartbeatApiUrl) : configuredTarget;
+                List<Callable<Void>> deliveries = new ArrayList<>(targets.size());
+                for (String target : targets) {
+                    deliveries.add(() -> {
+                        sendHeartbeat(client, target, payload);
+                        return null;
+                    });
+                }
+                heartbeatDeliveryExecutor.invokeAll(deliveries);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.debug("Heartbeat delivery was interrupted.", e);
+            } catch (Exception e) {
+                log.debug("Error occurred while processing the heartbeat.", e);
             }
         };
         scheduledExecutorService.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
@@ -170,39 +186,47 @@ public class HeartBeatComponent {
      * re-registers this node with whichever replicas missed it.
      */
     private static void sendHeartbeat(CloseableHttpClient client, String heartbeatApiUrl, String payload) {
-        HttpPost httpPost = new HttpPost(heartbeatApiUrl);
-        httpPost.setHeader("Accept", HEADER_VALUE_APPLICATION_JSON);
-        httpPost.setHeader("Content-type", HEADER_VALUE_APPLICATION_JSON);
-        httpPost.setEntity(new StringEntity(payload, StandardCharsets.UTF_8));
-        try (CloseableHttpResponse response = client.execute(httpPost)) {
-            JsonObject jsonResponse = getJsonResponse(response);
-            if (jsonResponse != null && jsonResponse.has("status")
-                    && "success".equals(jsonResponse.get("status").getAsString())) {
-                log.debug("Heartbeat sent successfully to " + heartbeatApiUrl);
-            } else {
-                log.debug("Error occurred while sending the heartbeat to " + heartbeatApiUrl);
+        try {
+            HttpPost httpPost = new HttpPost(heartbeatApiUrl);
+            httpPost.setHeader("Accept", HEADER_VALUE_APPLICATION_JSON);
+            httpPost.setHeader("Content-type", HEADER_VALUE_APPLICATION_JSON);
+            httpPost.setEntity(new StringEntity(payload, StandardCharsets.UTF_8));
+            try (CloseableHttpResponse response = client.execute(httpPost)) {
+                JsonObject jsonResponse = getJsonResponse(response);
+                if (jsonResponse != null && jsonResponse.has("status")
+                        && "success".equals(jsonResponse.get("status").getAsString())) {
+                    log.debug("Heartbeat sent successfully to " + heartbeatApiUrl);
+                } else {
+                    log.debug("Error occurred while sending the heartbeat to " + heartbeatApiUrl);
+                }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.debug("Error occurred while processing the heartbeat to " + heartbeatApiUrl, e);
         }
     }
 
     /**
-     * One pooled client shared by every tick and every replica; ICP presents a self-signed certificate and
-     * replicas are addressed by IP, so trust is anchored on the self-signed chain with no host matching.
+     * One client shared by every tick and every replica. Connections are reused only in broadcast mode;
+     * disabling reuse otherwise preserves the previous one-client-per-heartbeat behaviour. ICP presents a
+     * self-signed certificate and replicas are addressed by IP, so trust is anchored on the self-signed chain
+     * with no host matching.
      */
-    private static CloseableHttpClient createHttpClient(int timeoutMillis) throws GeneralSecurityException {
+    private static CloseableHttpClient createHttpClient(int timeoutMillis, boolean broadcast)
+            throws GeneralSecurityException {
         RequestConfig timeouts = RequestConfig.custom()
                 .setConnectTimeout(timeoutMillis)
                 .setConnectionRequestTimeout(timeoutMillis)
                 .setSocketTimeout(timeoutMillis)
                 .build();
-        return HttpClients.custom()
+        HttpClientBuilder clientBuilder = HttpClients.custom()
                 .setDefaultRequestConfig(timeouts)
                 .setSSLSocketFactory(new SSLConnectionSocketFactory(
                         SSLContexts.custom().loadTrustMaterial(null, (TrustStrategy) new TrustSelfSignedStrategy())
-                                   .build(), NoopHostnameVerifier.INSTANCE))
-                .build();
+                                   .build(), NoopHostnameVerifier.INSTANCE));
+        if (!broadcast) {
+            clientBuilder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE);
+        }
+        return clientBuilder.build();
     }
 
     private static String getMgtApiUrl() {
@@ -272,15 +296,25 @@ public class HeartBeatComponent {
 
     /**
      * How long one delivery attempt may take. Keep it below the heartbeat interval so a replica that
-     * accepts connections but never answers cannot delay the remaining targets past the next tick.
+     * accepts connections but never answers cannot delay the remaining targets past the next tick. When
+     * broadcast is disabled, an omitted timeout preserves the previous unbounded delivery behaviour.
      */
-    private static int getTimeoutMillis() {
-        long timeout = Constants.DEFAULT_HEARTBEAT_TIMEOUT;
+    private static int getTimeoutMillis(boolean broadcast) {
         Object configuredTimeout = configs.get(DASHBOARD_CONFIG_HEARTBEAT_TIMEOUT);
-        if (null != configuredTimeout) {
-            timeout = Long.parseLong(configuredTimeout.toString());
+        if (null == configuredTimeout) {
+            return broadcast ? (int) TimeUnit.SECONDS.toMillis(Constants.DEFAULT_HEARTBEAT_TIMEOUT) : 0;
         }
-        return (int) TimeUnit.SECONDS.toMillis(timeout);
+        try {
+            long timeoutMillis = TimeUnit.SECONDS.toMillis(Long.parseLong(configuredTimeout.toString()));
+            if (timeoutMillis > 0 && timeoutMillis <= Integer.MAX_VALUE) {
+                return (int) timeoutMillis;
+            }
+        } catch (NumberFormatException e) {
+            // Fall through and use the default timeout.
+        }
+        log.warn("Invalid heartbeat timeout '" + configuredTimeout + "'. Using the default value of "
+                + Constants.DEFAULT_HEARTBEAT_TIMEOUT + " seconds.");
+        return (int) TimeUnit.SECONDS.toMillis(Constants.DEFAULT_HEARTBEAT_TIMEOUT);
     }
 
     private static String generateRandomId() {
