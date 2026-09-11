@@ -52,10 +52,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -132,6 +134,7 @@ public class HeartBeatComponent {
 
         final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         final ExecutorService deliveryExecutor = Executors.newFixedThreadPool(MAX_HEARTBEAT_DELIVERY_THREADS);
+        final Set<String> inFlight = ConcurrentHashMap.newKeySet();
         heartbeatClient = client;
         heartbeatScheduler = scheduler;
         heartbeatDeliveryExecutor = deliveryExecutor;
@@ -139,22 +142,28 @@ public class HeartBeatComponent {
             try {
                 String payload = heartbeatPayload.toString();
                 List<String> targets = broadcast ? resolveReplicas(heartbeatApiUrl) : configuredTarget;
-                List<Callable<Void>> deliveries = new ArrayList<>(targets.size());
                 for (String target : targets) {
-                    deliveries.add(() -> {
-                        sendHeartbeat(client, target, payload);
-                        return null;
-                    });
+                    if (!inFlight.add(target)) {
+                        continue;
+                    }
+                    try {
+                        deliveryExecutor.submit(() -> {
+                            try {
+                                sendHeartbeat(client, target, payload);
+                            } finally {
+                                inFlight.remove(target);
+                            }
+                        });
+                    } catch (RejectedExecutionException e) {
+                        inFlight.remove(target);
+                        log.debug("Heartbeat delivery was rejected for " + target, e);
+                    }
                 }
-                deliveryExecutor.invokeAll(deliveries);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                log.debug("Heartbeat delivery was interrupted.", e);
             } catch (Exception e) {
                 log.debug("Error occurred while processing the heartbeat.", e);
             }
         };
-        scheduler.scheduleWithFixedDelay(runnableTask, 1, interval, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(runnableTask, 1, interval, TimeUnit.SECONDS);
     }
 
     public static synchronized void shutdownHeartbeatExecutorService() {
