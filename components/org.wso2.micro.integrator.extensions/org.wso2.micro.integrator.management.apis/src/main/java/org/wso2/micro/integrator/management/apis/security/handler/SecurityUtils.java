@@ -245,8 +245,10 @@ public class SecurityUtils {
      * This method first checks if the IS_ADMIN_USER property is set in the MessageContext
      * (which can be set by any authentication/authorization handler such as ICP JWT, OAuth, etc.).
      *
-     * Admin users always have edit permissions. For non-admin users, the edit permission depends
-     * on the configuration: if make_non_admin_users_read_only == true, they cannot edit; otherwise, they can.
+     * When no user is set, edit permission follows the {@code management_api.allow_anonymous_users}
+     * configuration flag. Admin users always have edit permissions. For non-admin users, the edit permission
+     * depends on the configuration: if make_non_admin_users_read_only == true, they cannot edit; otherwise,
+     * they can.
      *
      * @param messageContext the message context that may contain the IS_ADMIN_USER property
      * @param userName the name of the user to check for edit permissions
@@ -255,7 +257,8 @@ public class SecurityUtils {
      */
     public static boolean canUserEdit(MessageContext messageContext, String userName) throws UserStoreException {
         if (userName == null) {
-            return true;
+            // No user set: follow the allow_anonymous_users configuration flag.
+            return canAnonymousUserEdit();
         }
         // Return true if non-admin users can edit, or if user is admin (short-circuits to avoid unnecessary lookup)
         return !isNonAdminUsersReadOnly() || isAdmin(messageContext, userName);
