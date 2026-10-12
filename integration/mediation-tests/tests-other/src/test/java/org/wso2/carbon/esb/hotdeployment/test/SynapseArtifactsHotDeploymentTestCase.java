@@ -22,9 +22,12 @@ import org.awaitility.Awaitility;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
 import java.io.File;
@@ -72,9 +75,19 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
     private final String cAppName = "HotDeploymentCompositeApplication";
     private final String cAppName2 = "SampleCappCompositeExporter";
 
+    private ServerConfigurationManager serverConfigurationManager;
+
     @BeforeClass(alwaysRun = true)
     public void deployService() throws Exception {
         super.init();
+        // The management API deploy/undeploy helpers reach the server unauthenticated, which is only
+        // permitted when allow_anonymous_users is enabled. Apply the test config that opts in before
+        // copying artifacts so hot deployment is exercised against the restarted server.
+        serverConfigurationManager = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
+                getESBResourceLocation() + File.separator + "server" + File.separator + "conf" + File.separator
+                        + "deployment.toml"));
         copyArtifactsToDeploymentDirectory();
     }
 
@@ -198,6 +211,9 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void unDeployService() throws Exception {
         super.cleanup();
+        if (serverConfigurationManager != null) {
+            serverConfigurationManager.restoreToLastConfiguration();
+        }
     }
 
     private void copyArtifactsToDeploymentDirectory() throws IOException {
