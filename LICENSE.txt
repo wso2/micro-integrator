@@ -126,7 +126,7 @@ opentelemetry-all_1.57.0.wso2v3.jar                                             
 org.wso2.micro.integrator.mediator.datamapper.engine_4.7.0.jar                                      bundle         apache2
 org.wso2.micro.integrator.analytics.data.publisher.util_4.7.0.jar                                   bundle         apache2
 org.apache.commons.commons-pool2_2.8.0.jar                                                          bundle         apache2
-synapse-fix-transport_4.1.0.wso2v78.jar                                                             bundle         apache2
+synapse-fix-transport_4.1.0.wso2v79.jar                                                             bundle         apache2
 com.google.guava_33.5.0.jre.jar                                                                     bundle         apache2
 opencsv_1.8.0.wso2v1.jar                                                                            bundle         apache2
 opencsv-1.8.jar                                                                                     jarinbundle    apache2
@@ -156,7 +156,7 @@ axis2-transport-udp_2.0.0.wso2v91.jar                                           
 commons-collections_3.2.2.wso2v1.jar                                                                bundle         apache2
 com.fasterxml.jackson.datatype.jackson-datatype-jsr310_2.22.3.jar                                   bundle         apache2
 org.eclipse.equinox.p2.engine_2.8.0.v20230509-0902.jar                                              bundle         epl2
-synapse-extensions_4.1.0.wso2v78.jar                                                                bundle         apache2
+synapse-extensions_4.1.0.wso2v79.jar                                                                bundle         apache2
 org.wso2.carbon.databridge.commons.binary_5.2.67.jar                                                bundle         apache2
 bcutil_1.86.0.jar                                                                                   bundle         bouncy
 org.wso2.carbon.databridge.commons.thrift_5.2.67.jar                                                bundle         apache2
@@ -183,7 +183,7 @@ org.eclipse.equinox.p2.metadata.repository_1.4.0.v20210315-2228.jar             
 org.apache.commons.commons-codec_1.22.0.jar                                                         bundle         apache2
 org.eclipse.equinox.p2.director_2.5.0.v20210325-0750.jar                                            bundle         epl2
 org.eclipse.equinox.simpleconfigurator_1.5.200.v20240209-1053.jar                                   bundle         epl2
-synapse-vfs-transport_4.1.0.wso2v78.jar                                                             bundle         apache2
+synapse-vfs-transport_4.1.0.wso2v79.jar                                                             bundle         apache2
 org.wso2.orbit.javax.transaction.jta_1.1.0.wso2v2.jar                                               bundle         apache2
 org.eclipse.equinox.simpleconfigurator.manipulator_2.3.100.v20240201-0843.jar                       bundle         epl2
 org.eclipse.equinox.p2.repository.tools_2.3.0.v20210325-0750.jar                                    bundle         epl2
@@ -217,7 +217,7 @@ commons-collections4_4.5.0.wso2v1.jar                                           
 commons-collections4-4.5.0.jar                                                                      jarinbundle    apache2
 org.eclipse.jdt.core.compiler.batch_3.10.2.v20150120-1634.jar                                       bundle         epl1
 org.wso2.micro.integrator.osgi.security_4.7.0.jar                                                   bundle         apache2
-synapse-commons_4.1.0.wso2v78.jar                                                                   bundle         apache2
+synapse-commons_4.1.0.wso2v79.jar                                                                   bundle         apache2
 com.google.gson_2.14.0.jar                                                                          bundle         apache2
 org.mongodb.driver-sync_4.11.5.jar                                                                  bundle         apache2
 org.eclipse.equinox.p2.repository_2.5.0.v20201013-0853.jar                                          bundle         epl2
@@ -330,12 +330,12 @@ org.wso2.micro.integrator.mediation.security_4.7.0.jar                          
 org.osgi.service.component_1.5.1.202212101352.jar                                                   bundle         apache2
 org.wso2.micro.integrator.crypto.impl_4.7.0.jar                                                     bundle         apache2
 org.wso2.micro.integrator.core_4.7.0.jar                                                            bundle         apache2
-synapse-nhttp-transport_4.1.0.wso2v78.jar                                                           bundle         apache2
+synapse-nhttp-transport_4.1.0.wso2v79.jar                                                           bundle         apache2
 rampart-core_1.7.0.wso2v9.jar                                                                       bundle         apache2
 org.wso2.micro.integrator.initializer_4.7.0.jar                                                     bundle         apache2
 org.wso2.micro.integrator.identity.entitlement.mediator_4.7.0.jar                                   bundle         apache2
 org.wso2.caching_4.0.3.jar                                                                          bundle         apache2
-synapse-samples_4.1.0.wso2v78.jar                                                                   bundle         apache2
+synapse-samples_4.1.0.wso2v79.jar                                                                   bundle         apache2
 org.yaml.snakeyaml_2.6.0.jar                                                                        bundle         apache2
 org.tukaani.xz_1.9.0.jar                                                                            bundle         0bsd
 json-schema-validator-all_2.2.14.wso2v1.jar                                                         bundle         apache2
@@ -344,9 +344,9 @@ net.minidev.accessors-smart_2.6.0.jar                                           
 org.wso2.carbon.identity.entitlement.stub_4.7.55.jar                                                bundle         apache2
 org.wso2.carbon.securevault_4.7.0.jar                                                               bundle         apache2
 io.dropwizard.metrics.core_3.2.6.jar                                                                bundle         apache2
-synapse-core_4.1.0.wso2v78.jar                                                                      bundle         apache2
+synapse-core_4.1.0.wso2v79.jar                                                                      bundle         apache2
 commons-configuration2_2.15.1.wso2v2.jar                                                            bundle         apache2
-synapse-tasks_4.1.0.wso2v78.jar                                                                     bundle         apache2
+synapse-tasks_4.1.0.wso2v79.jar                                                                     bundle         apache2
 org.wso2.carbon.framework.exporter_4.11.19.jar                                                      bundle         apache2
 org.eclipse.equinox.p2.touchpoint.natives_1.4.0.v20210326-2048.jar                                  bundle         epl2
 org.osgi.service.event_1.4.1.202109301733.jar                                                       bundle         apache2
