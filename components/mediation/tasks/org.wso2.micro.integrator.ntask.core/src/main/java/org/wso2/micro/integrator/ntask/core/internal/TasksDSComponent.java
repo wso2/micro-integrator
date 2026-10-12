@@ -171,6 +171,7 @@ public class TasksDSComponent {
             boolean isCoordinationEnabled =
                     TaskHandlingConfigUtils.isStockCoordination() && coordinationConfigured;
             if (isCoordinationEnabled) {
+                log.info("coordination hardening disabled — stock task handling");
                 log.info("Initializing task coordination.");
                 DataSource coordinationDataSource = (DataSource) coordinationDatasourceObject;
                 clusterCoordinator = new ClusterCoordinator(coordinationDataSource);
@@ -395,7 +396,6 @@ public class TasksDSComponent {
             TaskHandlingConfigUtils.install(CoordinationBootstrapState.STOCK, null);
             readinessRegistry.raise(HARDENING_DISABLED_CONDITION, CoordinationReadinessRegistry.ConditionClass.GATE,
                     "coordination hardening disabled — stock task handling");
-            log.info("coordination hardening disabled — stock task handling");
             return;
         }
         if (!"true".equalsIgnoreCase(masterRaw.trim())) {
