@@ -87,11 +87,12 @@ public class HeartBeatComponent {
 
     private static final Log log = LogFactory.getLog(HeartBeatComponent.class);
     private static final Map<String, Object> configs = ConfigParser.getParsedConfigs();
+    private static final int HEARTBEAT_WARN_THRESHOLD = 5;
+    private static final Map<String, Integer> heartbeatFailures = new ConcurrentHashMap<>();
     private static final int MAX_HEARTBEAT_DELIVERY_THREADS = 10;
     private static CloseableHttpClient heartbeatClient;
     private static ScheduledExecutorService heartbeatScheduler;
     private static ExecutorService heartbeatDeliveryExecutor;
-
 
     public static synchronized void invokeHeartbeatExecutorService() {
         if (heartbeatScheduler != null && !heartbeatScheduler.isShutdown()) {
@@ -176,6 +177,7 @@ public class HeartBeatComponent {
             heartbeatDeliveryExecutor.shutdownNow();
             heartbeatDeliveryExecutor = null;
         }
+        heartbeatFailures.clear();
         if (heartbeatClient != null) {
             try {
                 heartbeatClient.close();
@@ -238,12 +240,23 @@ public class HeartBeatComponent {
                 if (jsonResponse != null && jsonResponse.has("status")
                         && "success".equals(jsonResponse.get("status").getAsString())) {
                     log.debug("Heartbeat sent successfully to " + heartbeatApiUrl);
+                    Integer failures = heartbeatFailures.remove(heartbeatApiUrl);
+                    if (failures != null && failures >= HEARTBEAT_WARN_THRESHOLD) {
+                        log.info("Heartbeat reporting to dashboard recovered after " + failures
+                                + " failed attempts for " + heartbeatApiUrl);
+                    }
                 } else {
                     log.debug("Error occurred while sending the heartbeat to " + heartbeatApiUrl);
                 }
             }
         } catch (Exception e) {
             log.debug("Error occurred while processing the heartbeat to " + heartbeatApiUrl, e);
+            int failures = heartbeatFailures.merge(heartbeatApiUrl, 1, Integer::sum);
+            if (failures >= HEARTBEAT_WARN_THRESHOLD) {
+                log.warn("Heartbeat reporting to dashboard has failed " + failures
+                        + " consecutive times for " + heartbeatApiUrl
+                        + ". Dashboard may be unreachable or misconfigured.", e);
+            }
         }
     }
 
