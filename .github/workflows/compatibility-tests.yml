@@ -1,0 +1,152 @@
+name: Compatibility tests (OS / JDK)
+
+# Runs integration tests for a given MI source ref on any combination of Linux OS (container image) and JDK.
+# The tests and the MI server both run inside the OS image under test; the host runner only builds the pack
+# (or downloads it) and provides Docker.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch or tag whose integration tests are run, e.g. v4.2.0. Must match the pack version.'
+        required: true
+        default: 'master'
+      distribution_url:
+        description: 'URL of a wso2mi-<version>.zip to test. Leave empty to build the pack from the ref. Requires a released ref.'
+        required: false
+        default: ''
+      os_images:
+        description: 'Comma-separated container images of the OS under test, e.g. ubuntu:26.04,rockylinux:9'
+        required: true
+        default: 'ubuntu:26.04'
+      jdk_versions:
+        description: 'Comma-separated JDK feature versions to test with, e.g. 17,21'
+        required: true
+        default: '21'
+      jdk_distribution:
+        description: 'JDK distribution installed in the OS image'
+        type: choice
+        options:
+          - temurin
+          - corretto
+          - microsoft
+        default: 'temurin'
+      profiles:
+        description: 'Comma-separated Maven profiles from integration/pom.xml'
+        required: true
+        default: 'smoke-tests'
+      build_jdk:
+        description: 'JDK version used on the host to build the pack (11 or 17 for 4.2.x, 21 for current master)'
+        required: true
+        default: '21'
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      os_images: ${{ steps.split.outputs.os_images }}
+      jdk_versions: ${{ steps.split.outputs.jdk_versions }}
+      profiles: ${{ steps.split.outputs.profiles }}
+    steps:
+      - name: Build test matrix from inputs
+        id: split
+        env:
+          OS_IMAGES: ${{ inputs.os_images }}
+          JDK_VERSIONS: ${{ inputs.jdk_versions }}
+          PROFILES: ${{ inputs.profiles }}
+        run: |
+          to_json() { echo "$1" | jq -Rc 'split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))'; }
+          echo "os_images=$(to_json "$OS_IMAGES")" >> "$GITHUB_OUTPUT"
+          echo "jdk_versions=$(to_json "$JDK_VERSIONS")" >> "$GITHUB_OUTPUT"
+          echo "profiles=$(to_json "$PROFILES")" >> "$GITHUB_OUTPUT"
+
+  test:
+    needs: matrix
+    name: ${{ matrix.os_image }} / JDK ${{ matrix.jdk_version }} / ${{ matrix.profile }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        os_image: ${{ fromJSON(needs.matrix.outputs.os_images) }}
+        jdk_version: ${{ fromJSON(needs.matrix.outputs.jdk_versions) }}
+        profile: ${{ fromJSON(needs.matrix.outputs.profiles) }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+          path: mi
+      # The runner script comes from the workflow's own branch so it is available when testing old tags.
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: .github/scripts/compatibility
+          path: compat
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-compat-${{ inputs.ref }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Set up build JDK ${{ inputs.build_jdk }}
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: ${{ inputs.build_jdk }}
+      - name: Set JAVA_TOOL_OPTIONS
+        run: |
+          echo "JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED" >> "$GITHUB_ENV"
+      - name: Build pack from source
+        if: inputs.distribution_url == ''
+        working-directory: mi
+        run: mvn -B clean install -DskipTests --file pom.xml
+      - name: Use provided pack
+        if: inputs.distribution_url != ''
+        working-directory: mi
+        env:
+          DISTRIBUTION_URL: ${{ inputs.distribution_url }}
+        run: |
+          version=$(mvn -B -q -N help:evaluate -Dexpression=project.version -DforceStdout)
+          zip="distribution/target/wso2mi-${version}.zip"
+          mkdir -p distribution/target
+          curl -fsSL --retry 3 -o "$zip" "$DISTRIBUTION_URL"
+          if ! unzip -l "$zip" | grep -q " wso2mi-${version}/bin/"; then
+            echo "::error::Pack does not contain wso2mi-${version}/. The ref '${{ inputs.ref }}' must match the pack version."
+            exit 1
+          fi
+          # Integration modules resolve the pack (and the parent POM) from the local Maven repository.
+          mvn -B -N install
+          mvn -B install:install-file -Dfile="$zip" -DgroupId=org.wso2.ei -DartifactId=wso2mi \
+            -Dversion="$version" -Dpackaging=zip
+      - name: Run ${{ matrix.profile }} on ${{ matrix.os_image }} with JDK ${{ matrix.jdk_version }}
+        env:
+          OS_IMAGE: ${{ matrix.os_image }}
+          TEST_PROFILE: ${{ matrix.profile }}
+          JDK_VERSION: ${{ matrix.jdk_version }}
+          JDK_DISTRIBUTION: ${{ inputs.jdk_distribution }}
+        run: |
+          cp compat/.github/scripts/compatibility/run-integration-tests.sh mi/.compat-run.sh
+          docker run --rm --network host \
+            -v "$GITHUB_WORKSPACE/mi:/ws" -w /ws \
+            -v "$HOME/.m2/repository:/m2" \
+            -e TEST_PROFILE -e JDK_VERSION -e JDK_DISTRIBUTION -e JAVA_TOOL_OPTIONS \
+            "$OS_IMAGE" sh /ws/.compat-run.sh
+      - name: Write summary
+        if: always()
+        run: |
+          echo "### ${{ matrix.os_image }} / JDK ${{ matrix.jdk_version }} / ${{ matrix.profile }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Ref: \`${{ inputs.ref }}\`, pack: ${{ inputs.distribution_url != '' && 'downloaded' || 'built from source' }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f mi/compatibility-env.md ]; then cat mi/compatibility-env.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Sanitize artifact name
+        if: always()
+        id: name
+        run: echo "value=$(echo '${{ matrix.os_image }}-jdk${{ matrix.jdk_version }}-${{ matrix.profile }}' | tr ':/' '--')" >> "$GITHUB_OUTPUT"
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ steps.name.outputs.value }}
+          path: |
+            mi/compatibility-env.md
+            mi/integration/**/target/surefire-reports/
+            mi/integration/**/target/carbontmp*/**/repository/logs/
+          if-no-files-found: ignore
