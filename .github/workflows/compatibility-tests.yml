@@ -39,6 +39,10 @@ on:
         description: 'JDK version used on the host to build the pack (11 or 17 for 4.2.x, 21 for current master)'
         required: true
         default: '21'
+      maven_version:
+        description: 'Maven version used on the host and in the OS image (Maven 3.10+ rejects duplicate dependency declarations)'
+        required: true
+        default: '3.9.9'
 
 jobs:
   matrix:
@@ -92,6 +96,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ inputs.build_jdk }}
+      - name: Set up Maven ${{ inputs.maven_version }}
+        env:
+          MAVEN_VERSION: ${{ inputs.maven_version }}
+        run: |
+          curl -fsSL --retry 3 \
+            "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
+            | tar -xz -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
+      - name: Check Maven version
+        run: mvn -v
       - name: Set JAVA_TOOL_OPTIONS
         run: |
           echo "JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-} -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true --add-opens=java.base/java.net=ALL-UNNAMED" >> "$GITHUB_ENV"
@@ -123,12 +137,13 @@ jobs:
           TEST_PROFILE: ${{ matrix.profile }}
           JDK_VERSION: ${{ matrix.jdk_version }}
           JDK_DISTRIBUTION: ${{ inputs.jdk_distribution }}
+          MAVEN_VERSION: ${{ inputs.maven_version }}
         run: |
           cp compat/.github/scripts/compatibility/run-integration-tests.sh mi/.compat-run.sh
           docker run --rm --network host \
             -v "$GITHUB_WORKSPACE/mi:/ws" -w /ws \
             -v "$HOME/.m2/repository:/m2" \
-            -e TEST_PROFILE -e JDK_VERSION -e JDK_DISTRIBUTION -e JAVA_TOOL_OPTIONS \
+            -e TEST_PROFILE -e JDK_VERSION -e JDK_DISTRIBUTION -e MAVEN_VERSION -e JAVA_TOOL_OPTIONS \
             "$OS_IMAGE" sh /ws/.compat-run.sh
       - name: Write summary
         if: always()
