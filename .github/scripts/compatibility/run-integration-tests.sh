@@ -128,8 +128,10 @@ install_maven() {
 
 write_env_report() {
     os_name="$(. /etc/os-release && echo "${PRETTY_NAME:-$NAME}")"
-    java_version="$("$JAVA_HOME/bin/java" -version 2>&1 | head -n 1)"
-    java_vendor="$("$JAVA_HOME/bin/java" -XshowSettings:properties -version 2>&1 | awk -F'= ' '/java.vendor =/ {print $2}')"
+    # Unset JAVA_TOOL_OPTIONS so the JVM's "Picked up ..." banner is not taken as the version line.
+    java_version="$(env -u JAVA_TOOL_OPTIONS "$JAVA_HOME/bin/java" -version 2>&1 | head -n 1)"
+    java_vendor="$(env -u JAVA_TOOL_OPTIONS "$JAVA_HOME/bin/java" -XshowSettings:properties -version 2>&1 \
+        | awk -F'= ' '/java.vendor =/ {print $2}')"
     {
         echo "| Item | Value |"
         echo "|---|---|"
