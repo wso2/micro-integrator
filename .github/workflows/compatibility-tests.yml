@@ -80,11 +80,13 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
           path: mi
+          persist-credentials: false
       # The runner script comes from the workflow's own branch so it is available when testing old tags.
       - uses: actions/checkout@v6
         with:
           sparse-checkout: .github/scripts/compatibility
           path: compat
+          persist-credentials: false
       - name: Cache Maven packages
         uses: actions/cache@v4
         with:
@@ -100,7 +102,7 @@ jobs:
         env:
           MAVEN_VERSION: ${{ inputs.maven_version }}
         run: |
-          curl -fsSL --retry 3 \
+          curl -fsSL --retry 3 --proto '=https' --proto-redir '=https' \
             "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
             | tar -xz -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
@@ -122,7 +124,7 @@ jobs:
           version=$(mvn -B -q -N help:evaluate -Dexpression=project.version -DforceStdout)
           zip="distribution/target/wso2mi-${version}.zip"
           mkdir -p distribution/target
-          curl -fsSL --retry 3 -o "$zip" "$DISTRIBUTION_URL"
+          curl -fsSL --retry 3 --proto '=https' --proto-redir '=https' -o "$zip" "$DISTRIBUTION_URL"
           if ! unzip -l "$zip" | grep -q " wso2mi-${version}/bin/"; then
             echo "::error::Pack does not contain wso2mi-${version}/. The ref '${{ inputs.ref }}' must match the pack version."
             exit 1

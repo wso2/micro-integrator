@@ -110,11 +110,29 @@ jdk_download_url() {
     esac
 }
 
+# Downloads a .tar.gz over HTTPS only (including redirects) and extracts it into the given directory.
+# Some vendor links redirect to an HTML page when a build does not exist (e.g. Microsoft JDK 21 for Alpine),
+# so the archive is verified before extraction.
+download_and_extract() {
+    dl_url="$1"
+    dl_dest="$2"
+    dl_archive="$(mktemp)"
+    curl -fsSL --retry 3 --proto '=https' --proto-redir '=https' -o "$dl_archive" "$dl_url" \
+        || fail "Download failed (only HTTPS is allowed): $dl_url"
+    if ! tar -tzf "$dl_archive" > /dev/null 2>&1; then
+        rm -f "$dl_archive"
+        fail "$dl_url did not return a .tar.gz archive; the build may not exist for this OS/architecture"
+    fi
+    mkdir -p "$dl_dest"
+    tar -xzf "$dl_archive" -C "$dl_dest" --strip-components=1
+    rm -f "$dl_archive"
+}
+
 install_jdk() {
     url="$(jdk_download_url)"
     log "Installing JDK from $url"
-    mkdir -p /opt/jdk
-    curl -fsSL --retry 3 "$url" | tar -xz -C /opt/jdk --strip-components=1
+    download_and_extract "$url" /opt/jdk
+    [ -x /opt/jdk/bin/java ] || fail "No bin/java found in the archive from $url"
     JAVA_HOME=/opt/jdk
     export JAVA_HOME
 }
@@ -122,8 +140,7 @@ install_jdk() {
 install_maven() {
     url="https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
     log "Installing Maven ${MAVEN_VERSION}"
-    mkdir -p /opt/maven
-    curl -fsSL --retry 3 "$url" | tar -xz -C /opt/maven --strip-components=1
+    download_and_extract "$url" /opt/maven
 }
 
 write_env_report() {
