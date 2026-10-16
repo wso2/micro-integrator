@@ -13,6 +13,7 @@
 #   MAVEN_VERSION     Maven version to install (default: 3.9.9)
 #   MAVEN_REPO        Local Maven repository mounted into the container (default: /m2)
 #   ENV_REPORT        File to write the detected OS/JDK details to (default: compatibility-env.md)
+#   LANG / LC_ALL     Locale for the JVM (default: C.UTF-8)
 
 set -eu
 
@@ -21,6 +22,12 @@ JDK_URL="${JDK_URL:-}"
 MAVEN_VERSION="${MAVEN_VERSION:-3.9.9}"
 MAVEN_REPO="${MAVEN_REPO:-/m2}"
 ENV_REPORT="${ENV_REPORT:-compatibility-env.md}"
+
+# Base OS images set no locale, which makes JDK 11/17 default to ASCII (ANSI_X3.4-1968) and garbles
+# non-ASCII payloads. Real hosts and the WSO2 Docker images run with a UTF-8 locale, so default to one.
+LANG="${LANG:-C.UTF-8}"
+LC_ALL="${LC_ALL:-$LANG}"
+export LANG LC_ALL
 
 log() {
     echo "==> $*"
@@ -156,6 +163,7 @@ write_env_report() {
         echo "| OS | ${os_name} |"
         echo "| Kernel (host) | $(uname -r) |"
         echo "| Architecture | $(uname -m) |"
+        echo "| Locale | ${LC_ALL} |"
         echo "| JDK | ${java_version} (${java_vendor}) |"
     } > "$ENV_REPORT"
     cat "$ENV_REPORT"
