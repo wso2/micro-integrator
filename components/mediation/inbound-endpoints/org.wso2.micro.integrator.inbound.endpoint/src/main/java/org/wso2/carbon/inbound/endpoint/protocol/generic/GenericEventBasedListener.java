@@ -113,6 +113,7 @@ public class GenericEventBasedListener extends InboundOneTimeTriggerEventBasedPr
             eventConsumer = (GenericEventBasedConsumer) cons
                     .newInstance(properties, name, synapseEnvironment, injectingSeq, onErrorSeq, coordination,
                                  sequential);
+            GenericEventBasedConsumerRegistry.register(name, eventConsumer);
         } catch (NoSuchMethodException e) {
             handleException("Required constructor is not implemented.", e);
         } catch (InvocationTargetException e) {
@@ -135,6 +136,28 @@ public class GenericEventBasedListener extends InboundOneTimeTriggerEventBasedPr
         } catch (Exception e) {
             log.error("Could not start Generic Event Based Processor. Error starting up scheduler. Error: " + e
                     .getLocalizedMessage());
+        }
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            super.destroy();
+        } finally {
+            if (eventConsumer != null) {
+                GenericEventBasedConsumerRegistry.unregister(name, eventConsumer);
+            }
+        }
+    }
+
+    @Override
+    public void destroy(boolean removeTask) {
+        try {
+            super.destroy(removeTask);
+        } finally {
+            if (eventConsumer != null) {
+                GenericEventBasedConsumerRegistry.unregister(name, eventConsumer);
+            }
         }
     }
 

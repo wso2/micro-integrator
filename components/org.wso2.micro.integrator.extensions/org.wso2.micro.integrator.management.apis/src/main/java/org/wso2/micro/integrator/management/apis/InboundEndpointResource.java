@@ -31,6 +31,8 @@ import org.apache.synapse.inbound.InboundEndpoint;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.carbon.inbound.endpoint.protocol.generic.GenericEventBasedConsumer;
+import org.wso2.carbon.inbound.endpoint.protocol.generic.GenericEventBasedConsumerRegistry;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.core.util.AuditLogger;
@@ -176,7 +178,8 @@ public class InboundEndpointResource extends APIResource {
 
             inboundObject.put(Constants.NAME, inboundEndpoint.getName());
             inboundObject.put("protocol", inboundEndpoint.getProtocol());
-            inboundObject.put(Constants.STATUS, getInboundEndpointState(inboundEndpoint));
+            Map<String, Object> health = getConsumerHealth(inboundEndpoint);
+            inboundObject.put(Constants.STATUS, getInboundEndpointState(inboundEndpoint, health));
 
             jsonBody.getJSONArray(Constants.LIST).put(inboundObject);
         }
@@ -216,7 +219,11 @@ public class InboundEndpointResource extends APIResource {
         inboundObject.put("protocol", inboundEndpoint.getProtocol());
         inboundObject.put("sequence", inboundEndpoint.getInjectingSeq());
         inboundObject.put("error", inboundEndpoint.getOnErrorSeq());
-        inboundObject.put(Constants.STATUS, getInboundEndpointState(inboundEndpoint));
+        Map<String, Object> health = getConsumerHealth(inboundEndpoint);
+        inboundObject.put(Constants.STATUS, getInboundEndpointState(inboundEndpoint, health));
+        if (health != null) {
+            inboundObject.put("health", new JSONObject(health));
+        }
 
         String statisticState = inboundEndpoint.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;
         inboundObject.put(Constants.STATS, statisticState);
@@ -251,11 +258,30 @@ public class InboundEndpointResource extends APIResource {
      *         - {@code INACTIVE_STATUS} if the inbound endpoint is deactivated.
      *         - {@code ACTIVE_STATUS} otherwise.
      */
-    private String getInboundEndpointState(InboundEndpoint inboundEndpoint) {
+    private String getInboundEndpointState(InboundEndpoint inboundEndpoint, Map<String, Object> health) {
+        // health is the one map the caller read for this endpoint, so status and health describe the same instant.
+        if (health != null && health.get(Constants.STATUS) instanceof String) {
+            // One of active, standby, connected, recovering, stopped or failed (design 7.12).
+            return (String) health.get(Constants.STATUS);
+        }
         if (inboundEndpoint.isDeactivated()) {
             return INACTIVE_STATUS;
         }
         return ACTIVE_STATUS;
+    }
+
+    private Map<String, Object> getConsumerHealth(InboundEndpoint inboundEndpoint) {
+        GenericEventBasedConsumer consumer = GenericEventBasedConsumerRegistry.get(inboundEndpoint.getName());
+        if (consumer == null) {
+            return null;
+        }
+        try {
+            return consumer.getHealth();
+        } catch (Throwable t) {
+            // A consumer compiled against an older base class, or a failing provider, never breaks the API.
+            LOG.debug("Health not available for inbound endpoint " + inboundEndpoint.getName(), t);
+            return null;
+        }
     }
 
     /**
