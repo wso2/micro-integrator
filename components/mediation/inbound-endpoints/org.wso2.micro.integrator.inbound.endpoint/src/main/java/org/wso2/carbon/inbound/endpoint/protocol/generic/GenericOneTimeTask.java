@@ -51,7 +51,20 @@ public class GenericOneTimeTask extends OneTimeTriggerInboundTask implements Loc
         logger.debug("One time task executing.");
         if (!firstRunDone) {
             firstRunDone = true;
-            eventBasedConsumer.listen();
+            synchronized (lifecycleLock) {
+                if (stopped) {
+                    return;
+                }
+                try {
+                    eventBasedConsumer.listen();
+                } catch (Exception e) {
+                    logger.error("Failed to start the event based consumer. Retrying in " + relistenDelay + " ms.", e);
+                    nextRelistenTime = System.currentTimeMillis() + relistenDelay;
+                    relistenDelay = Math.min(relistenDelay * 2, MAX_RELISTEN_DELAY_MS);
+                    relistenRequested = true;
+                    setReTrigger();
+                }
+            }
             return;
         }
         // Every later execution is a re-trigger raised by requestRelisten().

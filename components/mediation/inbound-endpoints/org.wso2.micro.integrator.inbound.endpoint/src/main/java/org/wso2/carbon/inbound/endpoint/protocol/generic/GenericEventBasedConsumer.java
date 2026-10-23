@@ -33,6 +33,7 @@ import org.apache.synapse.mediators.base.SequenceMediator;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Properties;
 
 public abstract class GenericEventBasedConsumer {
@@ -81,6 +82,17 @@ public abstract class GenericEventBasedConsumer {
      * This method needs to be implemented when pausing the inbound.
      */
     public abstract void pause();
+
+    /**
+     * Health of the consumer for the management API. The default has no health to report. A consumer that
+     * tracks its broker connection returns a map of string, long or integer values with at least a
+     * "status" entry.
+     *
+     * @return the health map, or null when the consumer does not report health
+     */
+    public Map<String, Object> getHealth() {
+        return null;
+    }
 
     void setOneTimeTask(GenericOneTimeTask oneTimeTask) {
         this.oneTimeTask = oneTimeTask;
